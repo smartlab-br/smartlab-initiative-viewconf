@@ -1,0 +1,2199 @@
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "02_11_03_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "02_05_08_00"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'porcentagem'
+      - prop: "description"
+        fixed: "Taxa de formalidade"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "02_08_08_00"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'porcentagem'
+      - prop: "description"
+        fixed: "Jovens que não estudavam nem estavam ocupados"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "02_06_04_00"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Número de microempreendedores individuais"
+      - prop: 'comment'
+        # template: "({0}, {1})"
+        template: "(Portal do Empreendedor-MEI, {0})"
+        args:
+          # - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+# ===============================================
+secoes:
+  - id: "oportunidade_unico"
+    name: ""
+    cards:
+# ===============================================
+      - id: "line_dinamica_emprego"
+        chart_type: "LINE"
+        title:
+          fixed: "Dinâmica do emprego formal (série histórica CAGED)"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_11_01_00"
+            year: 'min'
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        description:
+          - type: "text"
+            title: ""
+            content:
+              template: "Os dados do Cadastro Geral de Empregados e Desempregados (CAGED) indicam, no município de referência, o comportamento do saldo, a diferença entre o número de admissões (em azul) e desligamentos (em vermelho) de empregos formais celetistas, anualmente, desde {0}."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: '02_11_01_00'
+                year: 'min'
+              args:
+                - id: "02_11_01_00"
+                  named_prop: "nu_competencia"
+        # preloaded:
+        #   prop: "centralindicadores"
+        #   function: "slice"
+        #   id: ["02_11_01_00", "02_11_02_00"]  
+        #   options:
+        #     formatters:
+        #       - id: "vl_indicador"
+        #         format: 'inteiro'
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_curto,ds_agreg_primaria,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'02_11_01_00'-'02_11_02_00',and,le-nu_competencia-nu_competencia_max&ordenacao=cd_indicador"
+          args:
+            - named_prop: "idLocalidade"
+            # - named_prop: "idLocalidadeD6"
+            # - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Quantidade'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          hide_legend: false
+          legend_field: "ds_agreg_primaria"
+          colorArray: ["#377EB8","#E41A1C"]  # blue / red
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "bar_serie_empregos_formais"
+        title: 
+          fixed: "Número de Empregos Formais – CLT"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_04_02_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "02_04_02_00"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_04_02_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'EMPREGOS'
+                  - prop: "comment"
+                    named_prop: 'nu_competencia'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de vínculos de emprego em 31 de dezembro de {0} e, ao lado, a evolução da série histórica desses dados."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['02_04_02_00']
+                year: "max"
+              args:
+                - named_prop: 'nu_competencia'
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_04_02_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                default: 0
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['02_04_02_00']
+            options:
+              formatters:
+                - id: "vl_indicador"
+                  format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "fmt_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          hide_legend: true
+          color: "#238B45"
+        source:
+          desc_field: "ds_fonte"
+# ===============================================
+      - id: "mapa_empregos_formais"
+        title:
+          fixed: "Empregos formais"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A RAIS é um Registro Administrativo, de periodicidade anual, criada com a finalidade de suprir as necessidades de controle, de estatísticas e de informações às entidades governamentais da área social. Constitui um instrumento imprescindível para o cumprimento das normas legais, como também é de fundamental importância para o acompanhamento e a caracterização do mercado de trabalho formal. O crescimento é calculado de forma a mostrar quanto o mercado formal de trabalho adiciona de número de vínculos na média ao ano em termos percentuais ao que já existe no mercado."
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_11_01_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["02_11_01_00", "02_11_02_00", "02_11_03_00"]
+                  year: "max"
+                args:
+                  - prop: "value"
+                    id: "02_11_03_00"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "SALDO LÍQUIDO DE EMPREGOS FORMAIS CELETISTAS"
+                  - prop: "comment"
+                    template: "{0} criados, {1} perdidos"
+                    # preloaded:
+                    #   prop: "centralindicadores"
+                    #   function: "slice"
+                    #   id: ["02_11_01_00", "02_11_02_00"]
+                    #   year: "max"
+                    args:
+                      - id: "02_11_01_00"
+                        named_prop: "vl_indicador"
+                        format: "inteiro"
+                      - id: "02_11_02_00"
+                        named_prop: "vl_indicador"
+                        format: "inteiro"
+                    
+              # - relevance: 'high'
+              #   cls: 'xs12 md6'
+              #   preloaded:
+              #     prop: "centralindicadores"
+              #     function: "slice"
+              #     id: "02_11_02_00"
+              #     year: "max"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'vl_indicador'
+              #       format: 'real'
+              #       collapse: true
+              #       precision: 1
+              #       default: "Sem Registros"
+              #     - prop: "description"
+              #       fixed: "Número de empregos perdidos"
+              # - relevance: 'low'
+              #   cls: 'xs12 md6'
+              #   preloaded:
+              #     prop: "centralindicadores"
+              #     function: "slice"
+              #     id: "02_11_01_00"
+              #     year: "max"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'media_uf'
+              #       format: 'real'
+              #       collapse: true
+              #       precision: 1
+              #       default: "Sem Registros"
+              #     - prop: "description"
+              #       fixed: "Média da UF de criação de empregos"
+              #     - prop: "comment"
+              #       function: "minicard_calc_percentage" 
+              #       fn_args:
+              #         - named_prop: "vl_indicador"
+              #         - named_prop: 'media_uf'
+              #       color_changing: 
+              #         base_value_prop: 'media_uf'
+              #         compared_value_prop: 'vl_indicador'
+              #         gt_color: 'green'
+              #         eq_color: 'blue'
+              #         lt_color: 'red'
+              # - relevance: 'low'
+              #   cls: 'xs12 md6'
+              #   preloaded:
+              #     prop: "centralindicadores"
+              #     function: "slice"
+              #     id: "02_11_01_00"
+              #     year: "max"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'media_br'
+              #       format: 'real'
+              #       collapse: true
+              #       precision: 1
+              #       default: "Sem Registros"
+              #     - prop: "description"
+              #       fixed: "Média nacional de criação de empregos"
+              #     - prop: "comment"
+              #       function: "minicard_calc_percentage" 
+              #       fn_args:
+              #         - named_prop: "vl_indicador"
+              #         - named_prop: 'media_br'
+              #       color_changing: 
+              #         base_value_prop: 'media_br'
+              #         compared_value_prop: 'vl_indicador'
+              #         gt_color: 'green'
+              #         eq_color: 'blue'
+              #         lt_color: 'red'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o saldo do número de empregos formais criados e perdidos em  {0}. No mapa, {1} está em destaque. A escala de cores varia do saldo negativo (vermelho) para o saldo positivo de criação de empregos (azul)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['02_11_01_00']
+                year: 'max'
+              args:
+                - id: "02_11_01_00"
+                  named_prop: "nu_competencia"
+                  format: "inteiro"
+                - id: "02_11_01_00"
+                  named_prop: "nm_municipio_uf"
+            
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_11_01_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{2},and,eq-cd_indicador-'02_11_03_00',and,eq-nu_competencia-'2018'"
+          args:
+            - named_prop: "idLocalidade"
+            - named_prop: "idLocalidadeD6"
+            - named_prop: "cd_uf"
+          options:
+            recalc_min_max: true
+            calcs:
+              - id: "deviation_empform"
+                function: "get_bipolar_scale"
+                fn_args: 
+                  - fixed: 'vl_indicador'
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_empform'
+          colorScale:
+            type: "bipolar"
+            color_array: 
+              positive: "#6CB1D9"
+              negative: "#DB6565"
+              zero: "#ffffff"
+        source:
+          desc_field: "ds_fonte"
+# ===============================================
+      - id: "bar_taxa_participacao"
+        type: "multiple-charts"
+        title: 
+          fixed: "Taxa de participação"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A Taxa de Participação é medida dividindo a População Economicamente Ativa (PEA) de 16 a 64 anos pela População em Idade Ativa (PIA) da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está participando no mercado de trabalho em relação ao potencial ativo dessa população. Por exemplo, essa métrica demonstra que um significativo aporte laboral e produtivo das mulheres é subestimado e não se reflete na taxa de participação."
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_01_06_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+            
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_01_06_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    precision: 0
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Participação no mercado de trabalho"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a taxa de participação no mercado de trabalho municipal da população de 16 a 64 anos de idade em {0}. Nos gráficos, comparam-se as taxas em diferentes grupos: rural/urbano e mulheres/homens."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "02_01_06_00"
+              args:
+                - named_prop: "nu_competencia"
+
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_01_06_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        charts:
+          - id: "bar_rural_urbano"
+            cls: "xs12 md6"
+            title: "Taxa de participação no mercado de trabalho - Rural/Urbano"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_01_07_00', '02_01_08_00']
+              options:
+                calcs:
+                  # - id: "bar_description"
+                  #   function: "concat_values"
+                  #   fn_args:
+                  #     - named_prop: 'ds_agreg_primaria' 
+                  #     - fixed: '-'
+                  #     - named_prop: 'vl_indicador'
+                  #     - fixed: '%'
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              order_field: "vl_indicador"
+              # colorArray: ['#9b97c7','#5b3495']
+              multi: true
+              colorScale:
+                name: "BuGn"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_homens_mulheres"
+            cls: "xs12 md6"
+            title: "Taxa de participação no mercado de trabalho - Homens/Mulheres"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_01_09_00', '02_01_10_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+                  # - id: "bar_description"
+                  #   function: "concat_values"
+                  #   fn_args:
+                  #     - named_prop: 'ds_agreg_primaria' 
+                  #     - fixed: '-'
+                  #     - named_prop: 'vl_indicador'
+                  #     - fixed: '%'
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              order_field: "vl_indicador"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+# ===============================================
+      - id: "bar_nivel_ocupacao"
+        type: "multiple-charts"
+        title: 
+          fixed: "Nível de ocupação"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O Nível de Ocupação é medido dividindo a População Ocupada de 16 a 64 anos pela População em Idade Ativa (PIA) de 16 a 64 anos da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está ocupada no mercado de trabalho em relação ao potencial ativo dessa população."
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_02_08_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_02_08_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    precision: 0
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Ocupação"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o nível de ocupação da população de 16 a 64 anos de idade em {0}. Nos gráficos, comparam-se as taxas em diferentes grupos: rural/urbano, mulheres/homens e negros/brancos."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "02_02_08_00"
+              args:
+                - named_prop: "nu_competencia"
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_02_08_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        charts:
+          - id: "bar_nivel_ocupacao_rural_urbano"
+            cls: "xs12 md4"
+            title: "Nível de ocupação - Rural/Urbano"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_02_09_00', '02_02_10_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              order_field: "vl_indicador"
+              colorScale:
+                name: "BuGn"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_nivel_ocupacao_homem_mulher"
+            cls: "xs12 md4"
+            title: "Nível de ocupação - Homens/Mulheres"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_02_11_00', '02_02_12_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              order_field: "vl_indicador"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_nivel_ocupacao_brancos_negros"
+            cls: "xs12 md4"
+            title: "Nível de ocupação - Brancos/Negros"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_02_13_00', '02_02_14_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              order_field: "vl_indicador"
+              colorScale:
+                name: "YlOrBr"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+# ===============================================
+      - id: "bar_taxa_desocupacao"
+        type: "multiple-charts"
+        title:
+          fixed: "Taxa de desocupação"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A Taxa de Desocupação é medido dividindo o número de pessoas desocupada de 16 a 64 anos pela População Economicamente Ativa (PEA) da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está desocupada no mercado de trabalho em relação ao potencial de população que poderia estar economicamente ativa. O Censo 2010 considerou como desocupada na semana de referência a pessoa sem trabalho na semana de referência, mas que estava disponível para assumir um trabalho nessa semana e que tomou alguma providência efetiva para conseguir trabalho no período de referência de 30 dias, sem ter tido qualquer trabalho ou após terem saído do último trabalho que teve nesse período."
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_03_08_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_03_08_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    precision: 0
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Desocupação"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a taxa de desocupação da população de 16 a 64 anos de idade em 2010. Nos gráficos, comparam-se as taxas em diferentes grupos: urbano/rural, homens/mulheres e brancos/negros."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "02_03_08_00"
+              args:
+                - named_prop: "nu_competencia"
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_03_08_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        charts:
+          - id: "bar_taxa_desocupacao_rural_urbano"
+            cls: "xs12 md4"
+            title: "Taxa de desocupação - Rural/Urbano"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_03_09_00', '02_03_10_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              order_field: "vl_indicador"
+              colorScale:
+                name: "BuGn"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_taxa_desocupacao_homem_mulher"
+            cls: "xs12 md4"
+            title: "Taxa de desocupação - Homens/Mulheres"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_03_11_00', '02_03_12_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              chart_size: "tall"
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              order_field: "vl_indicador"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_taxa_desocupacao_brancos_negros"
+            cls: "xs12 md4"
+            title: "Taxa de desocupação - Brancos/Negros"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_03_13_00', '02_03_14_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              chart_size: "tall"
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              order_field: "vl_indicador"
+              colorScale:
+                name: "YlOrBr"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+# ===============================================
+      - id: "mapa_trabalho_formal_informal"
+        title:
+          fixed: "População em trabalhos formais e informais"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A população em trabalhos formais e informais mede a quantidade de população efetivamente ocupada, independente de quantos vínculos cada pessoa tem ou deixa de ter. É importante medir o contingente de população ocupada em trabalhos informais, pois estas são o público-alvo de políticas de formalização."
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_08_02_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_08_02_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                      precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Número de empregos formais"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_08_04_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                      precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Número de empregos informais"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_08_09_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Empregos formais em relação à população ocupada"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_08_11_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Empregos informais em relação à população ocupada"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de empregos formais (com carteira assinada) e informais (sem carteira assinada) em {0} e a participação percentual dos empregos formais e informais na população ocupada total. É importante observar o ranking do município em relação ao número total de trabalhos informais e o no mapa em relação ao percentual de empregos informais na população ocupada, pois este contingente populacional é alvo de políticas de formalização de emprego. No mapa, {1} está em destaque. A escala de cores varia da menor participação percentual (branco) para a maior participação percentual de trabalhos informais na população ocupada (vermelho escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_08_02_00"
+              args:
+                - id: "01_08_02_00"
+                  named_prop: "nu_competencia"
+                  format: "inteiro"
+                - id: "01_08_02_00"
+                  named_prop: "nm_municipio_uf"
+          
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_05_08_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_complementary_text'
+                fixed: ', em número de empregos informais'
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_complementary_text'
+                fixed: ', em número de empregos informais'
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_08_11_00'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            recalc_min_max: true
+            calcs:
+              - id: "deviation_empform"
+                function: "get_bipolar_scale"
+                fn_args: 
+                  - fixed: 'vl_indicador'
+            formatters:
+              - id: "vl_indicador"
+                format: 'porcentagem'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_empform'
+          colorScale:
+            name: 'Reds'
+            order: "asc"
+            # inv_function:
+            #   name: 'inv_deviation'
+            #   args:
+            #     - first_row_prop: 'media_uf'
+        source:
+          desc_field: "ds_fonte"
+
+        
+# ===============================================
+      - id: "bar_taxa_formalidade"
+        type: "multiple-charts"
+        title:
+          fixed: "Taxa de formalidade"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A Taxa de Formalidade corresponde à participação do somatório dos trabalhadores com carteira assinada, inclusive os trabalhadores domésticos, dos militares e funcionários públicos estatutários, dos empregadores e dos trabalhadores por conta própria que contribuem para a previdência social, na estrutura ocupacional total."
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_05_08_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_05_08_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Formalidade"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a taxa de formalidade da população de 16 a 64 anos em {0}. A seguir, nos gráficos, comparam-se as taxas em diferentes grupos: urbano/rural, homens/mulheres, brancos/negros."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: '02_05_08_00'
+              args:
+                - named_prop: "nu_competencia"
+              
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_05_08_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+
+        charts:
+          - id: "bar_taxa_formalidade_rural_urbano"
+            cls: "xs12 md4"
+            title: "Taxa de formalidade - Rural/Urbano"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_05_09_00', '02_05_10_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              colorScale:
+                name: "BuGn"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_taxa_formalidade_homem_mulher"
+            cls: "xs12 md4"
+            title: "Taxa de formalidade - Homens/Mulheres"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_05_11_00', '02_05_12_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_taxa_formalidade_branco_negro"
+            cls: "xs12 md4"
+            title: "Taxa de formalidade - Brancos/Negros"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_05_13_00', '02_05_14_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              colorScale:
+                name: "YlOrBr"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+# ===============================================
+      - id: "bar_microempreendedores_individuais"
+        title:
+          fixed: "Microempreendedores Individuais"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O microempreendedor individual é quem tem um negócio ou trabalha por conta própria e fatura até R$ 81 mil por ano."
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_06_04_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_06_04_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                      precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Número de MEIs"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_06_04_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_uf'
+                    format: 'real'
+                    precision: 1
+                    collapse:
+                      format: 'real'
+                      precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média da UF"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_06_04_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_br'
+                    format: 'real'
+                    precision: 1
+                    collapse:
+                      format: 'real'
+                      precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média nacional"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de trabalhadoras e trabalhadores formalizados na condição de Microempreendedor Individual (MEI). No mapa, {0} está em destaque. A escala de cores varia da menor quantidade (branco) para a maior quantidade de MEIs (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: '02_06_04_00'
+              args:
+                  - named_prop: "nm_municipio_uf"
+          # - type: "text"
+          #   title: ""
+          #   content:
+          #     template: "No mapa, apresenta-se perspectiva comparativa quanto ao número de MEIs por município na unidade federativa. {0} está destacada com linhas pretas. A escala de cores varia do branco (menor quantidade de MEIs) para o azul (maior quantidade de MEIs)."
+          #     preloaded:
+          #       prop: "centralindicadores"
+          #       function: "slice"
+          #       id: ['02_06_04_00']
+          #     args:
+          #         - id: "02_06_04_00"
+          #           named_prop: "nm_municipio_uf"
+
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_06_04_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+          
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_curto,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{2},and,eq-cd_indicador-'02_06_04_00'"
+          args:
+            - named_prop: "idLocalidade"
+            - named_prop: "idLocalidadeD6"
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_mei"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_curto'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_mei'
+        source:
+          desc_field: "ds_fonte"
+# ===============================================
+      - id: "bar_taxa_desocupacao_juvenil"
+        type: "multiple-charts"
+        title:
+          fixed: "Taxa de desocupação juvenil"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A Taxa de Desocupação Juvenil é medido dividindo o número de pessoas desocupada de 15 a 24 anos pela População Economicamente Ativa (PEA) da mesma faixa etária, multiplicado por 100. O Censo 2010 considerou como desocupada na semana de referência a pessoa sem trabalho na semana de referência, mas que estava disponível para assumir um trabalho nessa semana e que tomou alguma providência efetiva para conseguir trabalho no período de referência de 30 dias, sem ter tido qualquer trabalho ou após terem saído do último trabalho que teve nesse período. "
+          - type: "text"
+            title: "Observação importante"
+            content:
+              fixed: "A desagregação da Taxa de Desocupação total para a faixa etária de 15 a 24 anos é relevante porque o Trabalho Decente é um direito das jovens gerações, sendo fundamental para garantir oportunidades de ocupação de qualidade no presente, tornando também factível a construção de melhores trajetórias ocupacionais futuras."
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_07_08_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_07_08_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Desocupação juvenil"
+              
+          - type: "text"
+            title: ""
+            content:
+              template: "Nesta perspectiva, destaca-se a taxa de desocupação juvenil da população de 15 a 24 anos de idade em {0}. A seguir, nos gráficos, comparam-se as taxas em diferentes grupos: rural/urbano, homens/mulheres, negros/brancos."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "02_07_08_00"
+              args:
+                - named_prop: "nu_competencia"
+                  format: "inteiro"
+
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_07_08_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        charts:
+          - id: "bar_taxa_desocupacao_juvenil_rural_urbano"
+            cls: "xs12 md4"
+            title: "Taxa de desocupação juvenil - Rural/Urbano"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_07_09_00', '02_07_10_00']
+              options:
+                calcs:
+                  # - id: "bar_description"
+                  #   function: "concat_values"
+                  #   fn_args:
+                  #     - named_prop: 'ds_agreg_secundaria' 
+                  #     - fixed: '-'
+                  #     - named_prop: 'vl_indicador'
+                  #     - fixed: '%'
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              colorScale:
+                name: "BuGn"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_taxa_desocupacao_juvenil_homens_mulheres"
+            cls: "xs12 md4"
+            title: "Taxa de desocupação juvenil - Homens/Mulheres"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_07_11_00', '02_07_12_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_taxa_desocupacao_juvenil_brancos_negros"
+            cls: "xs12 md4"
+            title: "Taxa de desocupação juvenil - Brancos/Negros"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_07_13_00', '02_07_14_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              colorScale:
+                name: "YlOrBr"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+# ===============================================
+      - id: "bar_jovens_nao_estudam"
+        type: "multiple-charts"
+        title:
+          fixed: "Jovens que não estudavam nem estavam ocupados"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A proporção de jovens que não estudavam, nem estavam ocupados é medida através da combinação das taxas de desocupação e de frequência à escola."
+          - type: "text"
+            title: "Observação importante"
+            content:
+              fixed: "Essa métrica é relevante porque tanto a escola como o Trabalho Decente é um direito das jovens gerações, sendo fundamental para garantir oportunidades de ocupação de qualidade no presente, tornando também factível a construção de melhores trajetórias ocupacionais futuras. Existe também a preocupação racial e de gênero, pois o não estudar, nem trabalhar pode recair proporcionalmente mais sobre alguma categoria de população, o que indica um problema estrutural na região em destaque."
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_08_08_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_08_08_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Proporção"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_08_08_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_uf'
+                    format: 'porcentagem'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média da UF"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_08_08_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_br'
+                    format: 'porcentagem'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média nacional"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a proporção de jovens de 15 a 24 anos que nem estudavam, nem estavam ocupados em {0}. Nos gráficos, comparam-se as proporções em diferentes grupos: urbano/rural, mulheres/homens, negros/brancos."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: '02_08_08_00'
+              args:
+                - named_prop: "nu_competencia"
+                  format: 'inteiro'
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_08_08_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        charts:
+          - id: "bar_jovens_nao_estudam_rural_urbano"
+            cls: "xs12 md4"
+            title: "Jovens que não estudavam nem estavam ocupados - Rural/Urbano"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_08_09_00', '02_08_10_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              colorScale:
+                name: "BuGn"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_jovens_nao_estudam_homens_mulheres"
+            cls: "xs12 md4"
+            title: "Jovens que não estudavam nem estavam ocupados - Homens/Mulheres"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_08_11_00', '02_08_12_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+          - id: "bar_jovens_nao_estudam_brancos_negros"
+            cls: "xs12 md4"
+            title: "Jovens que não estudavam nem estavam ocupados - Brancos/Negros"
+            type: "BAR"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ['02_08_13_00', '02_08_14_00']
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Porcentagem'
+                value: 'vl_indicador'
+            options:
+              orientation: "vertical"
+              id: "cd_indicador"
+              x: "cd_indicador"
+              y: "vl_indicador"
+              text: "calc_bar_description"
+              colorScale:
+                name: "YlOrBr"
+                type: "singleHue"
+                levels: 4
+                order: 'desc'
+              hide_legend: true
+              show_y_axis: false
+            source:
+              desc_field: "ds_fonte"
+# ===============================================
+      - id: "mapa_potencial_aprendizes"
+        title:
+          fixed: "Potencial de Contratação de Aprendizes"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A aprendizagem é um contrato de trabalho especial, ajustado por escrito e por tempo determinado, em que o empregador se compromete a assegurar às pessoas entre 14 e 24 anos formação técnico-profissional metódica, compatível com o seu desenvolvimento físico, moral e psicológico, e o aprendiz, a executar com zelo e diligência, as tarefas necessárias à sua execução."
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "12_03_06_00"
+            year: 'max'
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              # - relevance: 'high'
+              #   cls: 'xs12'
+              #   preloaded:
+              #     prop: "centralindicadores"
+              #     function: "slice"
+              #     id: "12_03_05_00"
+              #     year: 'max'
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'vl_indicador'
+              #       format: 'inteiro'
+              #       precision: 1
+              #       collapse:
+              #         format: 'real'
+              #         precision: 1
+              #       default: "Não há"
+              #     - prop: "description"
+              #       fixed: "POTENCIAL DE CONTRATAÇÃO DE APRENDIZES"
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "12_03_03_00"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    precision: 1
+                    collapse:
+                      format: 'real'
+                      precision: 1
+                    default: "Não há"
+                  - prop: "description"
+                    fixed: "TOTAL DE COTAS DE APRENDIZAGEM"
+              # - relevance: 'high'
+              #   cls: 'xs12 md6'
+              #   preloaded:
+              #     prop: "centralindicadores"
+              #     function: "slice"
+              #     id: "12_03_04_00"
+              #     year: 'max'
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'vl_indicador'
+              #       format: 'inteiro'
+              #       precision: 1
+              #       collapse:
+              #         format: 'real'
+              #         precision: 1
+              #       default: "Não há"
+              #     - prop: "description"
+              #       fixed: "TOTAL DE APRENDIZES CONTRATADOS"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o potencial de cotas para a contratação de aprendizes, de acordo com as informações oriundas da {0}. No mapa ao lado, a escala de cores varia do menor (branco) para o maior número de vagas (azul). Note-se que alguns municípios não possuem empresas obrigadas ao cumprimento da cota."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: '12_03_06_00'
+                year: 'max'
+              args:
+                - named_prop: "ds_fonte"
+                - named_prop: "nm_municipio_uf"
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "12_03_03_00"
+              year: 'max'
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'12_03_03_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_empform"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_empform'
+          colorScale:
+            order: "asc"
+        source:
+          desc_field: "ds_fonte"          

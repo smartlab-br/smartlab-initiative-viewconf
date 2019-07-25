@@ -1,0 +1,220 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "03_02_01_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'monetario'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "03_04_01_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'auto'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+# ========================================================
+secoes:
+  - id: "rendimentos_unica"
+    name: ""
+# ========================================================
+    cards:
+      - id: "mapa_rendimento"
+        title: 
+          fixed: "Rendimento do trabalho principal da população ocupada de 16 a 64 anos"
+        title_comment:
+          template: "Brasil, {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "03_02_01_00"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Através do Censo é calculado o valor do rendimento do trabalho principal da população ocupada de 16 a 64 anos. São consideradas como ocupadas pessoas que exerceram trabalho, remunerado ou sem remuneração, ou que tinham trabalho remunerado do qual estavam temporariamente afastadas. Considerou-se como principal o único trabalho que a pessoa tinha na semana de referência. Para a pessoa que tinha mais de um trabalho na semana de referência, ou seja, para a pessoa ocupada em mais de um empreendimento nessa semana, adotaram-se os seguintes critérios, na ordem enumerada, para definir o principal: 1. aquele em que a pessoa habitualmente trabalhava o maior número de horas por semana; 2. em caso de igualdade no número de horas habitualmente trabalhadas por semana, aquele que proporcionava habitualmente maior rendimento mensal; e 3. em caso de igualdade também no rendimento, aquele em que a pessoa tinha mais tempo de permanência no empreendimento, contado até o último dia da semana de referência."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "03_02_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    precision: 0
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'RENDIMENTO MÉDIO'
+                  - prop: "comment"
+                    template: "{0} salários mínimos à época"
+                    args:
+                      - function: "calc_proportion" 
+                        fn_args:
+                          - named_prop: "vl_indicador"
+                          - fixed: 510
+                        format: "real"
+                        default: "Sem Registros"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o valor do rendimento médio real do trabalho principal da população ocupada de 16 a 64 anos de idade no ano de {0} (e o valor equivalente em salários mínimos à época). No mapa, a escala de cores varia menor valor (branco) maior valor do rendimento médio (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "03_02_01_00"
+                year: "max"
+              args:
+                - named_prop: 'nu_competencia'
+                - named_prop: 'nm_municipio_uf'
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          fixed: "/indicadoresestaduais?categorias=cd_mun_ibge,nm_uf,cd_dimensao,ds_indicador_curto,cd_indicador,nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'03_02_01_00',and,eq-nu_competencia-nu_competencia_max"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'monetario'
+                precision: 2
+              - id: "rank_br"
+                format: 'inteiro'
+            calcs:
+              - id: "nr_salarios"
+                format: 'real'
+                function: "calc_proportion_ds"
+                fn_args:
+                  - named_prop: "vl_indicador"
+                  - fixed: 510
+        headers:
+          - text: 'Estado'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_curto'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+          - text: 'Qtde. Salários Mínimos Equivalentes (SM = R$ 510)'
+            value: 'calc_nr_salarios'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codigo"
+          value_field: 'vl_indicador'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_rend_gini_municipio"
+        title: 
+          fixed: "Concentração de renda do trabalho"
+        title_comment:
+          template: "Brasil, {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "03_04_01_00"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O índice GINI mensura a desigualdade de uma distribuição, variando de 0 (igualdade máxima, todos detém a mesma quantidade de renda) até 1 (concentração absoluta ou desigualdade máxima, uma pessoa detém toda a renda). Considerou-se como principal o único trabalho que a pessoa tinha na semana de referência. Para a pessoa que tinha mais de um trabalho na semana de referência, ou seja, para a pessoa ocupada em mais de um empreendimento nessa semana, adotaram-se os seguintes critérios, na ordem enumerada, para definir o principal: 1. aquele em que a pessoa habitualmente trabalhava o maior número de horas por semana; 2. em caso de igualdade no número de horas habitualmente trabalhadas por semana, aquele que proporcionava habitualmente maior rendimento mensal; e 3. em caso de igualdade também no rendimento, aquele em que a pessoa tinha mais tempo de permanência no empreendimento, contado até o último dia da semana de referência."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "03_04_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'real'
+                    precision: 3
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Índice GINI'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em {0}, o valor do Índice de GINI do rendimento do trabalho principal da população de 16 a 64 anos ocupada com rendimento é destacado como indicador de concentração de renda, em comparação com o valor do Brasil. No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor concentração de renda) para o vermelho (maior concentração de renda)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "03_04_01_00"
+                year: "max"
+              args:
+                - named_prop: 'nu_competencia'
+                - named_prop: 'nm_municipio_uf'
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresestaduais?categorias=cd_mun_ibge,nm_uf,cd_dimensao,ds_indicador_radical,ds_indicador_curto,cd_indicador,nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'03_04_01_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'real'
+                precision: 3
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codigo"
+          value_field: 'vl_indicador'
+          colorScale:
+            name: 'Reds'
+          indicadores: ["03_04_01_00"]
+        source:
+          desc_field: "ds_fonte"

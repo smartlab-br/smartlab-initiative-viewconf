@@ -1,0 +1,311 @@
+title_sup: "Observatório da Erradicação do"
+title: "Trabalho Escravo"
+title_sub: "e do Tráfico de Pessoas"
+new: false
+subtitle: "ENTENDA, COMPARE, ACESSE OS DADOS, PARTICIPE"
+imagem: "te"
+theme:
+  toolbar:
+    title: "Smartlab - Observatório do Trabalho Escravo"
+tematicos:
+  - dataset: "trabalho_escravo_agr"    
+ranking_cards:
+  - title: "Municípios com maior prevalência de resgates "
+    cls: "xs12 sm6 xl3 pa-3"
+    api: 
+      fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_rgt'&limit=5"
+    args:
+      - prop: 'localidade'
+        named_prop: "nm_municipio_uf"
+      - prop: 'vl_indicador'
+        named_prop: "agr_sum_vl_indicador"
+        format: "inteiro"
+      - prop: 'rank'
+        named_prop: "agr_rank_dense_sum_vl_indicador"
+  - title: "Principais municípios de naturalidade dos resgatados"
+    cls: "xs12 sm6 xl3 pa-3"
+    api: 
+      fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-%27te_nat%27&limit=5"
+    args:
+      - prop: 'localidade'
+        named_prop: "nm_municipio_uf"
+      - prop: 'vl_indicador'
+        named_prop: "agr_sum_vl_indicador"
+        format: "inteiro"
+      - prop: 'rank'
+        named_prop: "agr_rank_dense_sum_vl_indicador"
+  - title: "Principais municípios onde os resgatados declaram residir"
+    cls: "xs12 sm6 xl3 pa-3"
+    api: 
+      fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-%27te_res%27&limit=5"
+    args:
+      - prop: 'localidade'
+        named_prop: "nm_municipio_uf"
+      - prop: 'vl_indicador'
+        named_prop: "agr_sum_vl_indicador"
+        format: "inteiro"
+      - prop: 'rank'
+        named_prop: "agr_rank_dense_sum_vl_indicador"
+  - title: "Municípios com maior número de inspeções realizadas"
+    cls: "xs12 sm6 xl3 pa-3"
+    api: 
+      fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-%27te_inspecoes%27&limit=5"
+    args:
+      - prop: 'localidade'
+        named_prop: "nm_municipio_uf"
+      - prop: 'vl_indicador'
+        named_prop: "agr_sum_vl_indicador"
+        format: "inteiro"
+      - prop: 'rank'
+        named_prop: "agr_rank_dense_sum_vl_indicador"
+prevalencia:
+  id: "mapa_prev_brasil"
+  chart_type: "MAP_LEAFLET"
+  title: 
+    fixed: "Distribuição Geográfica"
+  title_comment:
+    template: "{0} a {1}"
+    api: 
+      template: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+    args:
+      - named_prop: "nu_competencia_min"
+      - named_prop: "nu_competencia_max"
+  # info:
+  #   - type: "text"
+  #     title: "Sobre"
+  #     content:
+  #       fixed: ""
+  api:
+    fixed: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'"
+  chart_options:
+    colorArray: ["rgba(25, 125, 25, 0.7)", "rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
+    type: 'bubbles'
+    indicadores: ["te_rgt","te_nat","te_res"]
+    lat: 'latitude'
+    long: 'longitude'
+    tooltip_function: 'obsTETooltip'
+    height_proportion: 1
+    radius:
+      base: 10000
+      multiplier: 400000
+    tiles_url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+    tiles_attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
+  source:
+    desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+    link: ""
+  footer:
+    - type: "text"
+      class: "pa-0"
+      content:
+        fixed: "<a class='accent--text' href='https://smartlabbr.org/escravo-v1' target='_blank'>Acesse a versão anterior deste Observatório</a>"
+  description:
+    - id: "selectlayer"
+      type: "switch-group"
+      switches:
+        - id: "te_rgt"
+          cls: "xs12"
+          default: true
+          color: "green accent-4"
+          label: "RESGATES"
+          # minicards:
+          #   - relevance: 'high'
+          #     preloaded:
+          #       prop: "trabalho_escravo_agr"
+          #       function: "slice"
+          #       id: "te_rgt"
+          #     args:
+          #       - prop: "value"
+          #         named_prop: 'agr_sum_vl_indicador'
+          #         format: 'inteiro'
+          #         default: "Sem Registros"
+          #       - prop: "description"
+          #         fixed: "Resgates"
+        - id: "te_nat"
+          cls: "xs12"
+          default: true
+          color: "red"
+          label: "NATURALIDADE APURADA"
+          # minicards:
+          #   - relevance: 'high'
+          #     preloaded:
+          #       prop: "trabalho_escravo_agr"
+          #       function: "slice"
+          #       id: "te_nat"
+          #     args:
+          #       - prop: "value"
+          #         named_prop: 'agr_sum_vl_indicador'
+          #         format: 'inteiro'
+          #         default: "Sem Registros"
+          #       - prop: "description"
+          #         fixed: "Naturalidade Apurada"
+        - id: "te_res"
+          cls: "xs12"
+          default: true
+          color: "light-blue"
+          label: "RESIDÊNCIA APURADA"
+          # minicards:
+          #   - relevance: 'high'
+          #     preloaded:
+          #       prop: "trabalho_escravo_agr"
+          #       function: "slice"
+          #       id: "te_res"
+          #     args:
+          #       - prop: "value"
+          #         named_prop: 'agr_sum_vl_indicador'
+          #         format: 'inteiro'
+          #         default: "Sem Registros"
+          #       - prop: "description"
+          #         fixed: "Residência Apurada"
+      event: 'selection'
+    - type: "text"
+      cls: "ma-0 pa-0"
+      content:
+        cls: "pa-0"
+        fixed: "O Observatório Digital de Trabalho Escravo e do Tráfico de Pessoas busca fomentar a gestão eficiente e transparente de políticas públicas, de programas e de projetos de prevenção e de erradicação do trabalho escravo, de modo que essas ações sejam cada vez mais orientadas por resultados e baseadas em evidências. Busca-se, além disso, fomentar o aprimoramento dos sistemas de coleta de informações e a padronização (com integração) dos bancos de dados existentes, de diferentes fontes, relevantes para a causa. Com isso, os diagnósticos e o conhecimento produzidos sobre o tema serão cada vez mais precisos.<br/><br/>
+                Adotam-se, neste estudo, três premissas: (i) escravidão é uma indústria organizada com conceitos e estatutos de análise próprios. (ii) essa indústria se distribui de forma estruturada pelo território brasileiro. (iii) como uma indústria organizada e espacialmente estruturada, o trabalho escravo possui curvas de oferta e de demanda.<br/><br/>
+                A curva de oferta do trabalho escravo é desenhada com base nos locais de naturalidade de trabalhadores resgatados e está relacionada ao grau de vulnerabilidade experimentado por segmentos populacionais específicos. A vulnerabilidade socioeconômica (e em nível de desenvolvimento humano) facilita o aliciamento dessas pessoas por exploradores. Assim, a curva de oferta do trabalho escravo está radicada em fatores como pobreza, desigualdade de renda, concentração da posse da terra, violência, entre outros.<br/><br/>
+                A curva de demanda do trabalho escravo é desenhada com base nos locais de resgate, ou seja, naqueles municípios onde houve operações de agentes estatais que resultaram na libertação de trabalhadores. Do ponto de vista geográfico, trata-se geralmente de territórios de dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal.<br/><br/>
+                Lugares de residência declarada possuem características híbridas. Além de marcados por desigualdades de desenvolvimento humano, renda, disparidades territoriais e inequidades de base identitária (como os municípios de naturalidade), frequentemente são locais de maior dinamismo econômico - ou se localizam proximamente a territórios com esse dinamismo. Tendem, também, a constituir ponto de vulnerabilidade de trabalhadores quanto ao aliciamento."
+      read_more_limit: "620"
+  description_right:
+    - id: "minicards_right"
+      class: "pr-0 pl-2 pb-0 pt-0"
+      type: "minicards"
+      rowCalss: "pa-1"
+      cards:
+        - relevance: "high"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "orange pa-3"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_rgt'"
+          # preloaded:
+          #   prop: "trabalho_escravo_agr"
+          #   function: "slice"
+          #   id: "te_rgt"
+          args:
+            - prop: "value"
+              fixed: "53.741"
+            - prop: "description"
+              template: "Resgatados desde 1995<sup>1</sup>"
+              args:
+                - named_prop: "nu_competencia_min"
+                - named_prop: "nu_competencia_max"
+        - relevance: "high"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "green accent-4 pa-3"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_rgt'"
+          # preloaded:
+          #   prop: "trabalho_escravo_agr"
+          #   function: "slice"
+          #   id: "te_rgt"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              template: "Resgates<sup>2</sup><br/>({0} a {1})"
+              args:
+                - named_prop: "nu_competencia_min"
+                - named_prop: "nu_competencia_max"
+        - relevance: "high"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "red pa-3"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_nat'"
+          # preloaded:
+          #   prop: "trabalho_escravo_agr"
+          #   function: "slice"
+          #   id: "te_nat"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              template: "Naturalidade apurada (SD)<sup>3</sup><br/>({0} a {1})"
+              args:
+                - named_prop: "nu_competencia_min"
+                - named_prop: "nu_competencia_max"
+        - relevance: "high"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "light-blue pa-3"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_res'"
+          # preloaded:
+          #   prop: "trabalho_escravo_agr"
+          #   function: "slice"
+          #   id: "te_res"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              template: "Residência apurada (SD)<sup>3</sup><br/>({0} a {1})"
+              args:
+                - named_prop: "nu_competencia_min"
+                - named_prop: "nu_competencia_max"
+    - type: "text"
+      content:
+        fixed: "1. Entre 1995 a 2018, segundo a Inspeção do Trabalho (Ministério da Economia), foram realizados mais de 50 mil resgates. A coleta de dados vem melhorando sobretudo desde 2002, com a Lei 10.608/2002 (seguro-desemprego destinado a resgatados). Este Observatório analisa com mais detalhamento os dados dos benefícios de seguro-desemprego de resgatados requeridos na série histórica desde 2003. A qualidade desses dados é comparativamente mnelhor por se tratar de despesas oficiais. Não obstante, deficiências e lacunas apuradas têm sido comunicadas às autoridades de inspeção para que promovam mais aprimoramentos na coleta.<br/><br/>
+                2. O total de resgates de 2003 a 2018 foi calculado com base em informações do Banco de Dados COETE (Inspeção do trabalho), que também inclui trabalhadores resgatados mas que não receberam o Seguro-Desemprego.<br/><br/>
+                3. O total de resgatados com naturalidade e residência declaradas foi calculado com base nos dados do seguro-desemprego e se restringe aos resgatados que se habilitaram ao recebimento do benefício. O foco nesses dado, além de considerar apenas os resgates reconhecidos pelo Estado na forma da Lei 10.608/2002, permite desagregar as informações ao nível municipal, o que é essencial às políticas públicas de prevenção e combate. Além disso, pode-se com eles traçar perfis de vulnerabilidade à exploração."
+  mapa_filtros:
+    - id: "selectlayer"
+      type: "switch-group"
+      switches:
+        - id: "te_rgt"
+          cls: "xs12"
+          default: true
+          color: "green accent-4"
+          label: "RESGATES"
+        - id: "te_nat"
+          cls: "xs12"
+          default: true
+          color: "red"
+          label: "NATURALIDADE APURADA"
+        - id: "te_res"
+          cls: "xs12"
+          default: true
+          color: "light-blue"
+          label: "RESIDÊNCIA APURADA"
+      event: 'selection'
+    - id: "select_uf"
+      type: "select"
+      label: "UF"
+      title: "Unidade Federativa"
+      api:
+        fixed: "/te/indicadoresestaduais?categorias=cd_uf,nm_uf&agregacao=distinct&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'&ordenacao=nm_uf"
+      args:
+        - prop: "id"
+          named_prop: "cd_uf"
+        - prop: "label"
+          named_prop: "nm_uf"
+      selection:
+        event: "selection"
+        rules:
+          filter: ",and,eq-cd_uf-{0}"
+          api:
+            args:
+              - named_prop: "cd_uf"
+    - type: "slider"
+      id: "slider_ano"
+      range: true
+      title: "Período"
+      api: 
+        fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+      args:
+        - prop: "min"
+          named_prop: "nu_competencia_min"
+        - prop: "max"
+          named_prop: "nu_competencia_max"
+      selection:
+        event: "selection"
+        rules:
+          filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+          api:
+            args:
+              - named_prop: "value_min"
+              - named_prop: "value_max"

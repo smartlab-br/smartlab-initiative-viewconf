@@ -1,0 +1,629 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "trabalho_escravo_agr"
+      function: "slice"
+      id: ['te_rgt']
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Trabalhadores resgatados em situação de Trabalho Forçado"
+      - prop: 'comment'
+        template: "(De {0} a {1})"
+        api: 
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_rgt'"
+        args:
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
+    chart:
+      id: "line_te_rgt"
+      type: "LINE"
+      api: 
+        template: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge_dv-{0},and,eq-cd_indicador-'te_rgt'"
+        args:
+          - named_prop: "idLocalidade"
+        options:
+          formatters:
+            - id: "vl_indicador"
+              format: 'inteiro'
+      headers:
+        - text: 'Ano'
+          align: 'left'
+          value: 'nu_competencia'
+        - text: 'Nº resgatados do trabalho escravo'
+          value: 'fmt_vl_indicador'
+      options:
+        id: 'cd_indicador'
+        x: 'nu_competencia'
+        y: "vl_indicador"
+        x_options:
+          axis: false
+        y_options:
+          axis: false
+        hide_legend: true
+        color: "#00C853"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "trabalho_escravo_agr"
+      function: "slice"
+      id: ['te_nat']
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Trabalhadores resgatados naturais em situação de Trabalho Forçado"
+      - prop: 'comment'
+        template: "(De {0} a {1})"
+        api: 
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+        args:
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
+    chart:
+      id: "line_te_nat"
+      type: "LINE"
+      api: 
+        template: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge_dv-{0},and,eq-cd_indicador-'te_nat'"
+        args:
+          - named_prop: "idLocalidade"
+        options:
+          formatters:
+            - id: "vl_indicador"
+              format: 'inteiro'
+      headers:
+        - text: 'Ano'
+          align: 'left'
+          value: 'nu_competencia'
+        - text: 'Nº resgatados do trabalho escravo - naturais'
+          value: 'fmt_vl_indicador'
+      options:
+        id: 'cd_indicador'
+        x: 'nu_competencia'
+        y: "vl_indicador"
+        x_options:
+          axis: false
+        y_options:
+          axis: false
+        hide_legend: true
+        color: "red"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "trabalho_escravo_agr"
+      function: "slice"
+      id: ['te_res']
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Trabalhadores resgatados residentes em situação de Trabalho Forçado"
+      - prop: 'comment'
+        template: "(De {0} a {1})"
+        api: 
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_res'"
+        args:
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
+    chart:
+      id: "line_te_res"
+      type: "LINE"
+      api: 
+        template: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge_dv-{0},and,eq-cd_indicador-'te_res'"
+        args:
+          - named_prop: "idLocalidade"
+        options:
+          formatters:
+            - id: "vl_indicador"
+              format: 'inteiro'
+      headers:
+        - text: 'Ano'
+          align: 'left'
+          value: 'nu_competencia'
+        - text: 'Nº resgatados do trabalho escravo - residentes'
+          value: 'fmt_vl_indicador'
+      options:
+        id: 'cd_indicador'
+        x: 'nu_competencia'
+        y: "vl_indicador"
+        x_options:
+          axis: false
+        y_options:
+          axis: false
+        hide_legend: true
+        color: "#03A9F4"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "trabalho_escravo_agr"
+      function: "slice"
+      id: ['te_rgt']
+    args:
+      - prop: "value"
+        function: "calc_average_by_year"
+        fn_args:
+          - fixed: 0
+          - named_prop: "nu_competencia_min"
+          - named_prop: "agr_sum_vl_indicador"
+          - named_prop: "nu_competencia_max"
+        format: "real"
+        default: "Nenhum"
+      - prop: "description"
+        fixed: "Média de resgatados por ano"
+      - prop: 'comment'
+        template: "(De {0} a {1})"
+        api: 
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_res'"
+        args:
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
+# ===================================================
+secoes:
+  - id: "perfil_trabalho_escravo"
+    name: "Resgatados Naturais ou Residentes na UF"
+    cards:
+# =====================================================
+      - id: "treemap_te_ocupacao"
+        type: "multiple-charts"
+        title: 
+          fixed: "Ocupações mais frequentes"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "No gráfico ao lado, destaca-se o perfil das vítimas resgatadas quanto à atividade laboral desempenhada no momento do resgate. Essas informações permitem identificar de um lado os riscos específicos existentes em determinadas atividades econômicas e cadeias produtivas e, de outro lado, vulnerabilidades relacionadas a padrões sociodemográficos e identitários. Foram considerados apenas os registros com especificação das ocupações, de forma a permitir a percepção da participação proporcional de cada uma no total."
+        source:
+          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."    
+        charts:
+          - id: "treemap_te_nat_ocupacoes"
+            cls: "xs12 md6"
+            title: "Ocupações - Resgatados Naturais da UF"
+            type: "TREEMAP"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_nat_ocup_atual'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_vl_indicador"
+                      format: 'inteiro'
+            headers:
+              - text: 'Ocupação'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Qtde'
+                value: 'fmt_agr_sum_vl_indicador'
+            options:
+              id: "ds_agreg_primaria"
+              size: "agr_sum_vl_indicador"
+              text: "ds_agreg_primaria"
+              hide_legend: true
+              colorScale:
+                name: "Reds"
+            # source:
+            #   fixed: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+          - id: "treemap_te_res_ocupacoes"
+            cls: "xs12 md6"
+            title: "Ocupações - Resgatados Residentes na UF"
+            type: "TREEMAP"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_res_ocup_atual'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_vl_indicador"
+                      format: 'inteiro'
+            headers:
+              - text: 'Ocupação'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Qtde'
+                value: 'fmt_agr_sum_vl_indicador'
+            options:
+              id: "ds_agreg_primaria"
+              size: "agr_sum_vl_indicador"
+              text: "ds_agreg_primaria"
+              hide_legend: true
+              colorScale:
+                name: "Blues"
+            # source:
+            #   fixed: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."    
+# =====================================================
+      - id: "treemap_te_raca"
+        type: "multiple-charts"
+        title: 
+          fixed: "Raça"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "No gráfico ao lado, destaca-se o perfil das vítimas quanto à raça dos resgatados. Essas informações permitem identificar vulnerabilidades relacionadas a padrões sociodemográficos e identitários. Foram considerados apenas os registros com especificação da raça, de forma a permitir a percepção da participação proporcional de cada uma no total."
+        source:
+          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."    
+        
+        charts:
+          - id: "treemap_te_nat_raca"
+            cls: "xs12 md6"
+            title: "Raça - Resgatados Naturais da UF"
+            type: "TREEMAP"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_nat_raca',and,ne-ds_agreg_primaria-'>Não Informado'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_vl_indicador"
+                      format: 'inteiro'
+            headers:
+              - text: 'Raça'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Qtde'
+                value: 'fmt_agr_sum_vl_indicador'
+            options:
+              id: "ds_agreg_primaria"
+              size: "agr_sum_vl_indicador"
+              text: "ds_agreg_primaria"
+              hide_legend: true
+              colorScale:
+                name: "Reds"
+            # source:
+            #   desc_field: "ds_fonte"                    
+          - id: "treemap_te_res_raca"
+            cls: "xs12 md6"
+            title: "Raça - Resgatados Residentes na UF"
+            type: "TREEMAP"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_res_raca',and,ne-ds_agreg_primaria-'>Não Informado'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_vl_indicador"
+                      format: 'inteiro'
+            headers:
+              - text: 'Raça'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Qtde'
+                value: 'fmt_agr_sum_vl_indicador'
+            options:
+              id: "ds_agreg_primaria"
+              size: "agr_sum_vl_indicador"
+              text: "ds_agreg_primaria"
+              hide_legend: true
+              colorScale:
+                name: "Blues"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# =====================================================
+      - id: "treemap_te_cnae"
+        type: "multiple-charts"
+        title: 
+          fixed: "Setores Econômicos mais frequentemente Envolvidos"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "No gráfico ao lado, destacam-se os setores econômicos mais frequentemente envolvidos nos resgates. Essas informações permitem identificar riscos específicos existentes em determinadas atividades econômicas e cadeias produtivas. Foram considerados apenas os registros com especificação dos setores, de forma a permitir a percepção da participação proporcional de cada um no total."
+        source:
+          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+        charts:
+          - id: "treemap_te_nat_cnae"
+            cls: "xs12 md6"
+            title: "Setores Econômicos - Resgatados Naturais da UF"
+            type: "TREEMAP"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_nat_cnae',and,ne-ds_agreg_primaria-'Ignorado',and,ne-ds_agreg_primaria-'Nao Se Aplica'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_vl_indicador"
+                      format: 'inteiro'
+            headers:
+              - text: 'Setor Econômico'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Qtde'
+                value: 'fmt_agr_sum_vl_indicador'
+            options:
+              id: "ds_agreg_primaria"
+              size: "agr_sum_vl_indicador"
+              text: "ds_agreg_primaria"
+              hide_legend: true
+              colorScale:
+                name: "Reds"
+            # source:
+            #   desc_field: "ds_fonte"                    
+          - id: "treemap_te_res_cnae"
+            cls: "xs12 md6"
+            title: "Setores Econômicos - Resgatados Residentes na UF"
+            type: "TREEMAP"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_res_cnae',and,ne-ds_agreg_primaria-'Ignorado',and,ne-ds_agreg_primaria-'Nao Se Aplica'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_vl_indicador"
+                      format: 'inteiro'
+            headers:
+              - text: 'Setor Econômico'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Qtde'
+                value: 'fmt_agr_sum_vl_indicador'
+            options:
+              id: "ds_agreg_primaria"
+              size: "agr_sum_vl_indicador"
+              text: "ds_agreg_primaria"
+              hide_legend: true
+              colorScale:
+                name: "Blues"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# =====================================================
+      - id: "treemap_te_escolaridade"
+        type: "multiple-charts"
+        title: 
+          fixed: "Escolaridade"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "No gráfico ao lado, destaca-se o perfil das vítimas quanto à escolaridade dos resgatados. Essas informações permitem identificar vulnerabilidades relacionadas a padrões sociodemográficos. Foram considerados apenas os registros com especificação da escolaridade, de forma a permitir a percepção da participação proporcional de cada uma no total."
+        source:
+          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+        charts:
+          - id: "treemap_te_nat_escolaridade"
+            cls: "xs12 md6"
+            title: "Escolaridade - Resgatados Naturais da UF"
+            type: "TREEMAP"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_nat_instrucao',and,ne-ds_agreg_primaria-'>Ignorado'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_vl_indicador"
+                      format: 'inteiro'
+            headers:
+              - text: 'Escolaridade'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Qtde'
+                value: 'fmt_agr_sum_vl_indicador'
+            options:
+              id: "ds_agreg_primaria"
+              size: "agr_sum_vl_indicador"
+              text: "ds_agreg_primaria"
+              hide_legend: true
+              colorScale:
+                name: "Reds"
+            # source:
+            #   desc_field: "ds_fonte"                    
+          - id: "treemap_te_res_escolaridade"
+            cls: "xs12 md6"
+            title: "Escolaridade - Resgatados Residentes na UF"
+            type: "TREEMAP"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_res_instrucao',and,ne-ds_agreg_primaria-'>Ignorado'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_vl_indicador"
+                      format: 'inteiro'
+            headers:
+              - text: 'Escolaridade'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Qtde'
+                value: 'fmt_agr_sum_vl_indicador'
+            options:
+              id: "ds_agreg_primaria"
+              size: "agr_sum_vl_indicador"
+              text: "ds_agreg_primaria"
+              hide_legend: true
+              colorScale:
+                name: "Blues"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# =====================================================
+      - id: "bar_te_idade_sexo"
+        type: "multiple-charts"
+        title: 
+          fixed: "Perfil Etário e de Sexo"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "No gráfico ao lado, destaca-se o perfil etário e de sexo das vítimas. Essas informações permitem identificar vulnerabilidades relacionadas a padrões sociodemográficos, com foco na perspectiva etária e de sexo. Foram considerados apenas os registros com especificação do sexo e da idade, de forma a permitir a percepção da participação proporcional de cada uma no total."
+        source:
+          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+        charts:
+          - id: "bar_te_nat_idade_sexo"
+            cls: "xs12 md6"
+            title: "Perfil Etário e de Sexo - Resgatados Naturais da UF"
+            type: "BAR"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_nat_sexo_idade'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: 'agr_sum_vl_indicador'
+                    function: 'oppose'
+                    fn_args:
+                      - fixed: 'ds_agreg_primaria'
+                      - fixed: 'Feminino'
+                      - fixed: 'agr_sum_vl_indicador'
+                  - id: 'agr_count_abs'
+                    function: 'absolute'
+                    fn_args:
+                      - fixed: 'calc_agr_sum_vl_indicador'
+                  - id: 'faixa_etaria'
+                    function: 'get_faixa_etaria'
+                    fn_args:
+                      - fixed: 'ds_agreg_secundaria'
+                  - id: 'faixa_etaria_bin'
+                    function: 'get_bin_faixa_etaria'
+                    fn_args:
+                      - fixed: 'ds_agreg_secundaria'
+            headers:
+              - text: 'Sexo'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Faixa etária'
+                align: 'left'
+                value: 'calc_faixa_etaria'
+              - text: 'Qtde'
+                value: 'calc_agr_count_abs'
+            options:
+              id: "ds_agreg_primaria"
+              x: "calc_agr_sum_vl_indicador"
+              y: "calc_faixa_etaria_bin"
+              text: "calc_faixa_etaria"
+              orientation: "horizontal"
+              stacked: true
+              legend: true
+              legend_field: "ds_agreg_primaria"
+              show_x_axis: false
+            source:
+              desc_field: "ds_fonte"                    
+          - id: "bar_te_res_idade_sexo"
+            cls: "xs12 md6"
+            title: "Perfil Etário e de Sexo - Resgatados Residentes na UF"
+            type: "BAR"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_res_sexo_idade'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: 'agr_sum_vl_indicador'
+                    function: 'oppose'
+                    fn_args:
+                      - fixed: 'ds_agreg_primaria'
+                      - fixed: 'Feminino'
+                      - fixed: 'agr_sum_vl_indicador'
+                  - id: 'agr_count_abs'
+                    function: 'absolute'
+                    fn_args:
+                      - fixed: 'calc_agr_sum_vl_indicador'
+                  - id: 'faixa_etaria'
+                    function: 'get_faixa_etaria'
+                    fn_args:
+                      - fixed: 'ds_agreg_secundaria'
+                  - id: 'faixa_etaria_bin'
+                    function: 'get_bin_faixa_etaria'
+                    fn_args:
+                      - fixed: 'ds_agreg_secundaria'
+            headers:
+              - text: 'Sexo'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Faixa etária'
+                align: 'left'
+                value: 'calc_faixa_etaria'
+              - text: 'Qtde'
+                value: 'calc_agr_count_abs'
+            options:
+              id: "ds_agreg_primaria"
+              x: "calc_agr_sum_vl_indicador"
+              y: "calc_faixa_etaria_bin"
+              text: "calc_faixa_etaria"
+              orientation: "horizontal"
+              stacked: true
+              show_x_axis: false
+              legend_field: "ds_agreg_primaria"
+            source:
+              desc_field: "ds_fonte"                    

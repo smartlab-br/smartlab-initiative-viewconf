@@ -1,0 +1,149 @@
+api_obj_collection:
+  - name: "chart_data"
+    endpoint: 
+      categorias: 'cd_indicador,ds_indicador_radical,vl_indicador,nm_municipio,nm_municipio_uf,nm_uf,cd_uf,nu_competencia,nu_competencia_min,nu_competencia_max,rank_uf,rank_uf_total,rank_br,rank_br_total,ds_fonte'
+      filtros:
+        template: 'eq-cd_indicador-{},and,eq-cd_municipio_ibge_dv-{}'
+        args:
+          - prop: 'cd_indicador'
+          - prop: 'cd_analysis_unit'
+      order:
+        fixed: "nu_competencia"
+    instances:
+      - name: 'desc_data'
+        type: 'max'
+        named_prop: 'nu_competencia'
+    formatters:
+      - prop: "fmt_vl_indicador"
+        named_prop: "vl_indicador"
+        format: 'inteiro'
+title: 
+  template: "{} - Série Histórica"
+  args:
+    - base_object: "desc_data"
+      named_prop: "ds_indicador_radical"
+title_comment:
+  template: "{}, {}-{}"
+  args:
+    - base_object: "desc_data"
+      named_prop: nm_municipio_uf
+    - base_object: "desc_data"
+      named_prop: nu_competencia_min
+    - base_object: "desc_data"
+      named_prop: nu_competencia_max
+info:
+  - type: "text"
+    title: "Sobre a métrica"
+    content:
+      fixed: ""
+      # template: "Os dados brutos analisados, com base no banco de dados do IBGE, têm as seguintes referências:<br/>Tema: {}<br/>Subtema: {}<br/>Nome: {}<br/>Fonte: {}<br/>Ano: {}Código: {}"
+      # args:
+      #   - base_object: "desc_data"
+      #     named_prop: "tema"
+      #   - base_object: "desc_data"
+      #     named_prop: "sub_tema"
+      #   - base_object: "desc_data"
+      #     named_prop: "ds_indicador"
+      #   - base_object: "desc_data"
+      #     named_prop: "ds_fonte"
+      #   - base_object: "desc_data"
+      #     named_prop: "nu_ano_indicador"
+      #   - base_object: "desc_data"
+      #     named_prop: "cd_indicador"
+  - type: "text"
+    title: "Referência"
+    content: 
+      template: "Indicador: {}"
+      args:
+        - base_object: "desc_data"
+          named_prop: "cd_indicador"
+description:
+  - type: "minicards"
+    cards:
+      - relevance: "high"
+        cls: "xs12 md6"
+        args:
+          - prop: "value"
+            base_object: "desc_data"
+            named_prop: "vl_indicador"
+            format: 'inteiro'
+            # multiplier: 10000
+          - prop: "description"
+            template: "{0} a cada {1} trabalhadores"
+            args:
+              - base_object: "term_ocorrencia"
+                named_prop: "value"
+              - base_object: "coef_vl_indicador"
+                named_prop: "value"
+                format: "inteiro"
+          - prop: "comment"
+            base_object: "desc_data"
+            named_prop: "nu_competencia"
+  - type: "text"
+    title: ""
+    content:
+      template: "Em destaque, informações sobre {} em número de casos a cada {} trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, a série histórica da taxa para o período considerado."
+      args:
+        - base_object: "desc_data"
+          named_prop: "ds_indicador_radical"
+        - base_object: "coef_vl_indicador"
+          named_prop: "label"
+          # format: "inteiro"
+  - type: "ranking"
+    args:
+      - prop: 'regional_rank'
+        base_object: "desc_data"
+        named_prop: "rank_uf"
+        format: 'inteiro'
+        default: 0
+      - prop: 'regional_total'
+        base_object: "desc_data"
+        named_prop: "rank_uf_total"
+        format: 'inteiro'
+        default: 0
+      - prop: 'national_rank'
+        base_object: "desc_data"
+        named_prop: "rank_br"
+        format: 'inteiro'
+        default: 0
+      - prop: 'national_total'
+        base_object: "desc_data"
+        named_prop: "rank_br_total"
+        format: 'inteiro'
+        default: 0
+chart_type: "BAR"
+chart_data: "chart_data"
+reform_options:
+  calcs:
+    - id: "bar_description"
+      function: "applyInterpolReplaceDatasetParam"
+      fn_args:
+        - fixed:
+            template: "{} {} em {}"
+            keep_template: true
+            args:
+              - as_is: true
+                named_prop: "vl_indicador"
+                format: "inteiro"
+              - base_object: "term_ocorrencia"
+                named_prop: "value"
+              - base_object: "coef_vl_indicador"
+                named_prop: "label"
+headers:
+  - text: "Ano"
+    align: "left"
+    value: "nu_competencia"
+  - text: "Taxa de Prevalência"
+    value: "calc_bar_description"
+chart_options: 
+  id: "nu_competencia"
+  x: "nu_competencia"
+  y: "vl_indicador"
+  text: "calc_bar_description"
+  show_x_axis: true
+  show_y_axis: false
+  orientation: "vertical"
+  hide_legend: true
+  color: "#238B45"
+source: 
+  desc_field: "ds_fonte"

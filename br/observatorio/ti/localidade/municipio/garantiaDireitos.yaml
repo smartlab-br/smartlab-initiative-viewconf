@@ -1,0 +1,829 @@
+#==================================================================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: ["06_03_04_31"]
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: 'FONTE: {0}'
+        args:
+          - named_prop: "ds_fonte"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: ["06_01_02_01", "06_01_02_02"]
+      year: "2010"
+      combine:
+      - id: "proibido_abs"
+        desc: "Em trabalho proibido"
+        function: 'calc_subtraction'
+        fn_args:
+          - id: "06_01_02_01"
+            named_prop: "vl_indicador"
+          - id: "06_01_02_02"
+            named_prop: "vl_indicador"
+    args:
+      - id: "proibido_abs"
+        prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Adolescentes ocupados fora da condição de Aprendiz<br/>14 a 15 anos"
+      - prop: 'comment'
+        named_prop: "nu_competencia"
+#==================================================================================================
+secoes:
+  - id: "garantia_direitos_trabalho_infantil"
+    name: "Ações de fiscalização"
+    cards:
+#==================================================================================================
+      - id: "line_fiscalizacao_infantil"
+        title: 
+          fixed: "Ações de fiscalização de trabalho infantil"
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            template: "/indicadoresmunicipais?categorias=nm_municipio_uf,nu_competencia_min,nu_competencia_max&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'06_01_04_01'"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: 'nu_competencia_min'
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Corresponde ao número de crianças e adolescentes resgatados de situação irregular de trabalho infantil oriundas das ações de fiscalização planejadas e executadas pela Secretaria de Inspeção do Trabalho do Ministério do Trabalho."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "No mês de junho de 1999, a 87ª Reunião da Conferência Internacional do Trabalho (CIT) aprovou por unanimidade a Convenção sobre a Proibição das Piores Formas de Trabalho Infantil e a Ação Imediata para a sua Eliminação, 1999 (nº 182), da Organização Internacional do Trabalho (OIT). Até agosto de 2018, um expressivo contingente de 181 países (cerca de 98,0% dos 185 Estados-Membros da OIT) tinha ratificado a referida Convenção, proporção sem precedentes em quase um século de história da Organização. O Brasil ratificou a Convenção nº 182 em 2 de fevereiro de 2000.<br/>
+                      <b>Vale destacar que o Brasil também ratificou, em 28 de junho de 2001, a Convenção sobre a Idade Mínima para Admissão a Emprego, 1973 (nº 138) e estabeleceu na legislação nacional a proibição do trabalho infantil até os 16 anos, exceto na condição de aprendiz a partir dos 14 anos.</b> Esta Convenção, adotada pela OIT em 28 de junho de 1973, foi ratificada por 171 dos seus 185 Estados-Membros, o correspondente a 92,4% do total.<br/>
+                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+        msg_nodata:
+          desc: "Conforme dados oriundos do Sistema de Informações sobre Focos de Trabalho Infantil no Brasil (SITI), do Ministério do Trabalho, não foram realizadas ações de fiscalização no município entre os anos de 2007 a 2017.  Nas fiscalizações, não foram localizadas nenhuma criança ou adolescente, de 0 a 17 anos, em situação irregular de trabalho naquele período."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "06_01_04_01"
+                  year: "2007-2017"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Total no município'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "06_01_04_05"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    named_prop: 'nu_competencia'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de fiscalizações contra o trabalho infantil acumuladas desde 2007. No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. {0} está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade), o que permite identificar localidades com baixa presença do Estado."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['06_01_04_01']
+              args:
+                - named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br&filtros=eq-cd_uf-{2},and,eq-cd_indicador-'06_01_04_01'"
+          args:
+            - named_prop: "idLocalidade"
+            - named_prop: "idLocalidadeD6"
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_fisc_infantil"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Nº de fiscalizações dos trabalho infantil'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_fisc_infantil'
+        source:
+          desc_field: "ds_fonte"
+# ===============================================
+      - id: "acoes_municipais_trabalho_infantil_headline"
+        type: "headline"
+        title:
+          fixed: "Ações municipais"
+#==================================================================================================
+      - id: "map_acoes_busca"
+        title: 
+          fixed: "Ações ou medidas de busca ativa de Crianças e Adolescentes fora da escola"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_01"
+# #==================================================================================================
+      - id: "map_acoes_evasao"
+        title: 
+          fixed: "Ações ou medidas para a diminuição da evasão escolar"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_02"
+#==================================================================================================
+      - id: "map_comissão_direito_crianca"
+        title: 
+          fixed: "Comissão para Promoção do direito de Crianças e Adolescentes à convivência familiar e comunitária"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_03"
+#==================================================================================================
+      - id: "map_comite_enfrentamento_violencia"
+        title: 
+          fixed: "Comitê para o Enfrentamento à Violência sexual contra Crianças e Adolescentes"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_04"
+#==================================================================================================
+      - id: "map_conselho_direitos_crianca"
+        title: 
+          fixed: "Conselho de direitos da criança e do adolescente"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_05"
+#==================================================================================================
+      - id: "map_conselho_tutelar"
+        title: 
+          fixed: "Conselho tutelar"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_06"
+#==================================================================================================
+      - id: "map_fundos_direitos_crianca"
+        title: 
+          fixed: "Fundos de direitos da criança e do adolescente"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_07"
+#==================================================================================================
+      - id: "map_legislacao_plano_enfrentamento"
+        title: 
+          fixed: "Legislação que institua Plano de Enfrentamento à Violência Sexual contra Crianças e Adolescentes"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_08"
+#==================================================================================================
+      - id: "map_acoes_enfrentamento_erradicacao"
+        title: 
+          fixed: "Ações e Programas de Enfrentamento e erradicação do Trabalho Infantil"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_10"
+#==================================================================================================
+      - id: "map_acoes_promocao_lazer"
+        title: 
+          fixed: "Ações e Programas de promoção de lazer para Crianças e Adolescentes"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_11"
+#==================================================================================================
+      - id: "map_acoes_promocao_direitos"
+        title: 
+          fixed: "Ações e Programas de promoção dos direitos das Crianças e Adolescentes"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_12"
+#==================================================================================================
+      - id: "map_conferencias_direitos_politicas"
+        title: 
+          fixed: "Conferencias sobre direitos ou políticas para a Criança e o Adolescente - até 4 anos antes da pesquisa"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_16"
+# # ===============================================
+#       - id: "atuacao_mpt_trabalho_infantil_headline"
+#         type: "headline"
+#         title:
+#           fixed: "Atuação do MPT no Combate ao Trabalho Infantil"
+# #==================================================================================================
+#       - id: "map_acp_ajuizadas"
+#         title: 
+#           fixed: "Ações Civis Públicas Ajuizadas"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_01_07"
+#             year: "max"
+#           args:
+#             - named_prop: "nm_municipio_uf"
+#             - named_prop: 'nu_competencia_min'
+#               format: "inteiro" 
+#             - named_prop: 'nu_competencia_max'
+#               format: "inteiro" 
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_01_07"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_01_07',and,eq-cd_mun_ibge-{0}"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Total no município'
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresestaduais?categorias=nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_01_07',and,eq-cd_uf-{0}"
+#                   args:
+#                     - named_prop: "cd_uf"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Total na UF'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Ações Civis Públicas Ajuizadas pelo MPT para o tema Trabalho Infantil. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_01_07'"
+#           args:
+#             - named_prop: "cd_uf"
+#           options:
+#             calcs:
+#               - id: "deviation_acoes"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Município'
+#             align: 'left'
+#             value: 'nm_municipio'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Quantidade'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_mun_ibge'
+#           topo_key: "codarea"
+#           value_field: 'calc_deviation_acoes'
+#         source:
+#           desc_field: "ds_fonte"
+
+# #==================================================================================================
+#       - id: "map_tac_firmados"
+#         title: 
+#           fixed: "Termos de Compromisso de Ajustamento de Conduta Firmados"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_07_07"
+#             year: "max"
+#           args:
+#             - named_prop: "nm_municipio_uf"
+#             - named_prop: 'nu_competencia_min'
+#               format: "inteiro" 
+#             - named_prop: 'nu_competencia_max'
+#               format: "inteiro" 
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_07_07"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_07_07',and,eq-cd_mun_ibge-{0}"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Total no município'
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresestaduais?categorias=nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_07_07',and,eq-cd_uf-{0}"
+#                   args:
+#                     - named_prop: "cd_uf"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Total na UF'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Termos de Compromisso de Ajustamento de Conduta Firmados pelo MPT para o tema Trabalho Infantil. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_07_07'"
+#           args:
+#             - named_prop: "cd_uf"
+#           options:
+#             calcs:
+#               - id: "deviation_acoes"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Município'
+#             align: 'left'
+#             value: 'nm_municipio'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Quantidade'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_mun_ibge'
+#           topo_key: "codarea"
+#           value_field: 'calc_deviation_acoes'
+#         source:
+#           desc_field: "ds_fonte"
+
+# #==================================================================================================
+#       - id: "map_recomendacoes_expedidas"
+#         title: 
+#           fixed: "Recomendações Expedidas"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_06_07"
+#             year: "max"
+#           args:
+#             - named_prop: "nm_municipio_uf"
+#             - named_prop: 'nu_competencia_min'
+#               format: "inteiro" 
+#             - named_prop: 'nu_competencia_max'
+#               format: "inteiro" 
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_06_07"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_06_07',and,eq-cd_mun_ibge-{0}"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Total no município'
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresestaduais?categorias=nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_06_07',and,eq-cd_uf-{0}"
+#                   args:
+#                     - named_prop: "cd_uf"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Total na UF'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Recomendações Expedidas pelo MPT para o tema Trabalho Infantil. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_06_07'"
+#           args:
+#             - named_prop: "cd_uf"
+#           options:
+#             calcs:
+#               - id: "deviation_acoes"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Município'
+#             align: 'left'
+#             value: 'nm_municipio'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Quantidade'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_mun_ibge'
+#           topo_key: "codarea"
+#           value_field: 'calc_deviation_acoes'
+#         source:
+#           desc_field: "ds_fonte"
+
+# #==================================================================================================
+#       - id: "map_denuncias_recebidas"
+#         title: 
+#           fixed: "Denúncias Recebidas"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_02_07"
+#             year: "max"
+#           args:
+#             - named_prop: "nm_municipio_uf"
+#             - named_prop: 'nu_competencia_min'
+#               format: "inteiro" 
+#             - named_prop: 'nu_competencia_max'
+#               format: "inteiro" 
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_02_07"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_02_07',and,eq-cd_mun_ibge-{0}"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Total no município'
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresestaduais?categorias=nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_02_07',and,eq-cd_uf-{0}"
+#                   args:
+#                     - named_prop: "cd_uf"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Total na UF'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Denúncias Recebidas pelo MPT para o tema Trabalho Infantil. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_02_07'"
+#           args:
+#             - named_prop: "cd_uf"
+#           options:
+#             calcs:
+#               - id: "deviation_acoes"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Município'
+#             align: 'left'
+#             value: 'nm_municipio'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Quantidade'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_mun_ibge'
+#           topo_key: "codarea"
+#           value_field: 'calc_deviation_acoes'
+#           colorScale:
+#             name: 'Reds'
+#         source:
+#           desc_field: "ds_fonte"
+
+# #==================================================================================================
+#       - id: "map_investigacoes_instauradas"
+#         title: 
+#           fixed: "Investigações Instauradas"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_03_07"
+#             year: "max"
+#           args:
+#             - named_prop: "nm_municipio_uf"
+#             - named_prop: 'nu_competencia_min'
+#               format: "inteiro" 
+#             - named_prop: 'nu_competencia_max'
+#               format: "inteiro" 
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_03_07"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_03_07',and,eq-cd_mun_ibge-{0}"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Total no município'
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresestaduais?categorias=nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_03_07',and,eq-cd_uf-{0}"
+#                   args:
+#                     - named_prop: "cd_uf"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Total na UF'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Investigações Instauradas pelo MPT para o tema Trabalho Infantil. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_03_07'"
+#           args:
+#             - named_prop: "cd_uf"
+#           options:
+#             calcs:
+#               - id: "deviation_acoes"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Município'
+#             align: 'left'
+#             value: 'nm_municipio'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Quantidade'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_mun_ibge'
+#           topo_key: "codarea"
+#           value_field: 'calc_deviation_acoes'
+#         source:
+#           desc_field: "ds_fonte"
+# ===============================================
+      - id: "protecao_social_trabalho_infantil_headline"
+        type: "headline"
+        title:
+          fixed: "Outras Ações de Proteção Social"
+# # ====================================================          
+#       - id: "mapa_canal_denuncia"
+#         title: 
+#           fixed: "Existência de canal de Denúncias contra Trabalho Infantil"
+#         card_template: "tIndicadorTopoJsonMunicipio"
+#         datasource: "indicadoresmunicipais"
+#         cd_indicador: "06_03_04_36"
+#         term:
+#           template: "localidade-{0}"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_atencao_psicossocial"
+        title: 
+          fixed: "Centros de Atenção Psicossocial"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_26"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_convivencia"
+        title: 
+          fixed: "Centros de Convivência"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_10"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_geracao_trabalho"
+        title: 
+          fixed: "Centros de Geração de Trabalho e Renda Profissional"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_13"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_juventude"
+        title: 
+          fixed: "Centros de Juventude"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_11"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_ref_assistencia_social"
+        title: 
+          fixed: "Centros de Referência de Assistência Social"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_08"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_ref__espec_assistencia_social"
+        title: 
+          fixed: "Centros de Referência Especializado de Assistência Social"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_09"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_unidades_atendimento_adolescente"
+        title: 
+          fixed: "Unidades de Atendimento ao Adolescente em Conflito"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_12"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 

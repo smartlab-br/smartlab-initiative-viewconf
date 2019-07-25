@@ -1,0 +1,113 @@
+secoes:
+  - id: "seguridade_bolsafamilia"
+    name: "Bolsa Família"
+    indicadores:
+      - nm_indicador: 'beneficiarios_Bolsa_Familia'
+        nu_ano_indicador: '2013'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'pop_domic_Bolsa_Familia'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'repasse_Bolsa_Familia'
+        nu_ano_indicador: '2013'
+        formato: 'monetario'
+        indicador: []
+    cards:
+      - id: "treemap_bolsa_uf"
+        chart_type: "TREEMAP"
+        title: "Distribuição da Bolsa Família na Região (2013)"
+        api_endpoint: "/indicadoresmunicipais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nm_municipio_mun,nu_ano_indicador,ds_fonte,vl_indicador&valor=vl_indicador&agregacao=pct_sum&ordenacao=-vl_indicador&filtros=eq-cd_uf_mun-{0},and,eq-nu_ano_indicador-2013,and,in-nm_indicador-'beneficiarios_Bolsa_Familia'"
+        formatters:
+          - id: 'agr_pct_sum_vl_indicador'
+            formato: 'porcentagem'
+            casasDecimais: 1
+        headers:
+          - text: 'Estado'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Qtde'
+            value: 'vl_indicador'
+        chart_options:
+          pct_field: "fmt_agr_pct_sum_vl_indicador"
+          id: "fmt_size"
+          name_field: "nm_uf"
+          size: "vl_indicador"
+          limit: 20
+          format_function: "replace_text_namepercent"
+        description: ""
+  - id: "seguridade_BPC"
+    name: "BPC"
+    indicadores:
+      - nm_indicador: 'beneficiarios_total_BPC'
+        nu_ano_indicador: '2013'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'repasse_total_BPC'
+        nu_ano_indicador: '2013'
+        formato: 'monetario'
+        indicador: []
+    cards:
+      - id: "treemap_bpc_uf"
+        chart_type: "TREEMAP"
+        title: "Beneficiários do Benefício de Prestação Continuada - BPC (2013)"
+        api_endpoint: "/indicadoresestaduais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nu_ano_indicador,ds_fonte,vl_indicador&valor=vl_indicador&agregacao=pct_sum&ordenacao=-vl_indicador&filtros=eq-cd_uf-{0},and,eq-nu_ano_indicador-2013,and,in-nm_indicador-'beneficiarios_idosos_BPC'-'beneficiarios_defic_BPC'"
+        formatters:
+          - id: 'agr_pct_sum_vl_indicador'
+            formato: 'porcentagem'
+            casasDecimais: 1
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'vl_indicador'
+        chart_options:
+          pct_field: "fmt_agr_pct_sum_vl_indicador"
+          id: "fmt_size"
+          name_field: "ds_indicador_radical"
+          size: "vl_indicador"
+          limit: 20
+          removeFromLabel: ["Total de ","beneficiárias ", "beneficiários ", "do Benefício de Prestação Continuada (BPC)"]
+          format_function: "replace_text_namepercent"
+        description: ""
+      - id: "bar_bpc_repasse_uf"
+        chart_type: "BAR"
+        title: "Valor Repassado pelo Benefício de Prestação Continuada - BPC (2013)"
+        api_endpoint: "/indicadoresestaduais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nu_ano_indicador,ds_fonte,vl_indicador&filtros=eq-cd_uf-{0},and,eq-nu_ano_indicador-2013,and,in-nm_indicador-'repasse_idosos_BPC'-'repasse_defic_BPC'"
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Repasse'
+            value: 'vl_indicador'
+        chart_options:
+          id: "nm_indicador"
+          text: "nm_indicador"
+          y: "vl_indicador"
+          x: "nm_indicador"
+          legend: false
+          orientation: "vertical"
+          removeFromLabel: ["Valor Repassado pelo Benefício de Prestação Continuada (BPC) a ","(em reais)","(em"]
+          format_function: "number_currency"
+        description: "texto texto texto ..."
+  - id: "seguridade_previ"
+    name: "Previdência Social"
+    indicadores:
+      - nm_indicador: 'contaprop_previ'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'domic_progsocial'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'ocup_previ'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'valor_beneficios_previ'
+        nu_ano_indicador: '2014'
+        formato: 'monetario'
+        indicador: []

@@ -1,0 +1,499 @@
+# Revisitar os hiperparâmetros
+title: "Classificação estatística de municípios em potencial de resgates de trabalho escravo"
+subtitle: "Estudo temático (por <a class=\"accent--text\" href=\"smartlabbr.org\">SmartLab</a>)"
+imagem: "obs_te"
+theme:
+  toolbar:
+    title: "Smartlab - Observatório Digital do Trabalho Infantil - Estudo temático"
+texto: "Este estudo temático objetiva usar algoritmos de classificação para identificar, no universo contrafactual, municípios que não sofreram inspeção e que poderiam produzir resgates expressivos, baseados na similaridade dos indicadores municipais e no histórico de operações de resgate de trabalho escravo."
+# ===================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_rgt'"
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Total de Resgates no Brasil"
+      - prop: "comment"
+        template: "De {0} a {1}"
+        args:
+          - named_prop: nu_competencia_min
+          - named_prop: nu_competencia_max
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/te/indicadoresnacionais?categorias=nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_rgt_per_insp',and,eq-nu_competencia-nu_competencia_max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'real'
+      - prop: "description"
+        template: "Média de resgates por inspeção"
+      - prop: "comment"
+        named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/te/ml/exposicaonaturais?categorias=validate_acc,validate_fscore&limit=1"
+    args:
+      - prop: "value"
+        named_prop: 'validate_acc'
+        format: 'porcentagem'
+        multiplier: 100
+      - prop: "description"
+        template: "Acurácia geral do modelo (egressos naturais)"
+      - prop: "comment"
+        template: "F-score: {0}"
+        args:
+          - named_prop: "validate_fscore"
+            format: "real"
+            precision: 3
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/te/ml/exposicaoresgate?categorias=validate_acc,validate_fscore&limit=1"
+    args:
+      - prop: "value"
+        named_prop: 'validate_acc'
+        format: 'porcentagem'
+        multiplier: 100
+      - prop: "description"
+        template: "Acurácia geral do modelo (resgates)"
+      - prop: "comment"
+        template: "F-score: {0}"
+        args:
+          - named_prop: "validate_fscore"
+            format: "real"
+            precision: 3
+# ===================================================
+secoes:
+  - id: "estudo_potencial_rgt_intro"
+    cards:
+# ====================================================     
+      - id: "entenda_o_estudo"
+        title: 
+          fixed: "Entenda o estudo"
+        type: "text"
+        description:
+          - type: "text"
+            title: "Entenda o estudo"
+            content:
+              fixed: "<p style='color: red'>Rever o texto e, depois, fazer interpolação com dados do dataset (agora está hardcoded).</p>Em um país em desenvolvimento com dimensões continentais como o Brasil, com tão diversas configurações econômicas e culturais, enfrentar eficientemente a escravidão moderna é um grande desafio. De 2003 a 2018, 44.229 pessoas forma resgatadas de condições degradantes de trabalho em 3.318 inspeções (13,33 resgates por inspeção). 2.006 diligências em 766 dos 5.570 municípios brasileiros (uma cobertura de 13,75%) tiveram ao menos um resgate. Se adicionarmos as 1.847 inspeções sem resgate, a cobertura é elevada a 37,9%, com 2.112 localidades com ao menos uma inspeção. No entanto, isso revela uma taxa de sucesso (ao menos um resgate) de 52,06%. Desde 2015, o número de diligências tem reduzido, retornando ao patamar observado no período de 2003-2007.<br/><br/>Diante da indisponibilidade de recursos para garantir uma cobertura maior, faz-se necessário fazer priorização com base no potencial de resgates. Além disso, há localidades que não foram alvos de inspeção, mas que podem ter intensa atividade ilegal. Identificar novos pontos de interesse para investigação é, portanto, interessante para desarticular a ação de exploradores.<br/><br/>Nesse sentido, usando dados de indicadores municipais e de inspeções prévias, o Smartlab produziu e aplicou um modelo estatístico de classificação, visando observar, a partir de similaridades de municípios, quais poderiam ter, caso inspecionados, maior impacto em número de resgates. O modelo resultante teve uma acurácia de X% na validação (f-score de Y) e fora aplicado no universo contrafactual, para fins de alerta ou sinalização.<br/><br/>Espera-se que, uma vez que se façam inspeções nessas localidades, o modelo possa ser aprimorado, melhorando sua acurácia."
+              columns: 3
+  - id: "estudo_potencial_rgt_autores"
+    cards:
+      - id: "autores_do_estudo"
+        title: 
+          fixed: "Autores e Parceiros"
+        type: "text"
+        description:
+          - type: "text"
+            title: "Autores e Parceiros"
+            content:
+              fixed: "Smartlab"
+  # Seção
+  - id: "estudo_potencial_nat_historia"
+    name: "Naturalidade dos Egressos"
+    cards:
+# ====================================================  
+      - id: "card_potencial_numero_naturais"
+        title: 
+          fixed: "Brasil - Classificação de grau de exposição por UF"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaonaturais?categorias=low_max,medium_max,high_max&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'high_max'
+                    format: 'real'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: "naturais"
+                  - prop: "comment"  
+                    fixed: 'Maior ocorrência verificada'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaonaturais?categorias=low_max,medium_max,high_max&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'medium_max'
+                    format: 'real'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: "naturais"
+                  - prop: "comment"  
+                    fixed: 'Limite do MEDIO'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaonaturais?categorias=low_max,medium_max,high_max&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'low_max'
+                    format: 'real'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: "naturais"
+                  - prop: "comment"  
+                    fixed: 'Limite do BAIXO'
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/te/ml/exposicaonaturais?categorias=cd_uf,nm_uf&valor=nvl_indicador&agregacao=sum"
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Classificação'
+            value: 'agr_sum_nvl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          topology: "uf"
+          value_field: 'agr_sum_nvl_indicador'
+          colorScale:
+            name: "Reds"
+        source:
+          fixed: "Smartlab"
+# ====================================================  
+      - id: "card_potencial_numero_naturais_mun"
+        title: 
+          fixed: "Provável exposição de municípos a ceder pessoas a trabalho escravo - por UF"
+        description:
+          - id: "select_uf"
+            type: "select"
+            label: "Selecione"
+            target: 
+              range: "uf"
+              scope: "municipio"
+            api:
+              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf"
+            args:
+              - prop: "id"
+                named_prop: "cd_uf"
+              - prop: "label"
+                named_prop: "nm_uf"
+            selection:
+              event: "selection"
+              rules:
+                api:
+                  template: "/te/ml/exposicaonaturais?categorias=cd_mun_ibge,fact,nvl_indicador,vl_indicador&filtros=eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaonaturais?categorias=cd_uf&valor=vl_indicador&agregacao=count&pivot=vl_indicador&filtros=eq-fact-true,and,eq-cd_uf-23"
+                api_reactive:
+                  template: "/te/ml/exposicaonaturais?categorias=cd_uf&valor=vl_indicador&agregacao=count&pivot=vl_indicador&filtros=eq-fact-true,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'ALTO'
+                    default: 0
+                  - prop: "description"
+                    template: "Grau: ALTO"
+                  - prop: "comment"
+                    fixed: "Factual"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaonaturais?categorias=cd_uf&valor=vl_indicador&agregacao=count&pivot=vl_indicador&filtros=eq-fact-false,and,eq-cd_uf-23"
+                api_reactive:
+                  template: "/te/ml/exposicaonaturais?categorias=cd_uf&valor=vl_indicador&agregacao=count&pivot=vl_indicador&filtros=eq-fact-false,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'ALTO'
+                    default: 0
+                  - prop: "description"
+                    template: "Grau: ALTO"
+                  - prop: "comment"
+                    fixed: "Contrafactual"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaonaturais?categorias=validate_acc,validate_fscore_label&limit=1&filtros=eq-cd_uf-23"
+                api_reactive:
+                  template: "/te/ml/exposicaonaturais?categorias=validate_acc,validate_fscore_label&limit=1&filtros=eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: "validate_acc"
+                    format: "porcentagem"
+                    multiplier: 100
+                  - prop: "description"
+                    template: "Acurácia do Modelo"
+                  - prop: "comment"
+                    template: "F-score: {0}"
+                    args:
+                      - named_prop: "validate_fscore_label"
+                        format: "real"
+                        precision: 3
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/te/ml/exposicaonaturais?categorias=cd_mun_ibge,nm_municipio_uf,fact,nvl_indicador,vl_indicador&filtros=eq-cd_uf-23"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Exposição ao trabalho escravo'
+            value: 'vl_indicador'
+          - text: 'Fato'
+            value: 'fact'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'nvl_indicador'
+          colorScale:
+            name: "Reds"
+        source:
+          fixed: "Smartlab"
+# ====================================================  
+      - id: "treemap_feature_importance_naturais"
+        title:
+          fixed: "Influência de features no modelo de classificação"
+        description: 
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto entra aqui"
+        chart_type: "TREEMAP"
+        api: 
+          fixed: "/te/ml/exposicaonaturais/features?categorias=cd_indicador,ds_indicador_curto,importancia"
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_curto'
+          - text: 'Importância'
+            value: 'importancia'
+        chart_options:
+          id: "cd_indicador"
+          text: "ds_indicador_curto"
+          size: "importancia"
+          colorScale:
+            order: "desc"
+        source:
+          fixed: "Smartlab"
+  # Seção
+  - id: "estudo_potencial_rgt_historia"
+    name: "Resgates"
+    cards:
+# ====================================================  
+      - id: "card_potencial_numero_resgates"
+        title: 
+          fixed: "Brasil - Classificação de potencial de resgates por inspeção em UF"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaoresgate?categorias=low_max,medium_max,high_max&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'high_max'
+                    format: 'real'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: "resgates por inspeção"
+                  - prop: "comment"  
+                    fixed: 'Maior ocorrência verificada'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaoresgate?categorias=low_max,medium_max,high_max&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'medium_max'
+                    format: 'real'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: "resgates por inspeção"
+                  - prop: "comment"  
+                    fixed: 'Limite do MEDIO'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaoresgate?categorias=low_max,medium_max,high_max&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'low_max'
+                    format: 'real'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: "resgates por inspeção"
+                  - prop: "comment"  
+                    fixed: 'Limite do BAIXO'
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/te/ml/exposicaoresgate?categorias=cd_uf,nm_uf&valor=nvl_indicador&agregacao=sum"
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Classificação'
+            value: 'agr_sum_nvl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          topology: "uf"
+          value_field: 'agr_sum_nvl_indicador'
+          colorScale:
+            name: "Reds"
+        source:
+          fixed: "Smartlab"
+# ====================================================  
+      # - id: "fake_headline"
+      #   type: "headline"
+      #   title:
+      #     fixed: "Meu título"
+# ====================================================  
+      - id: "card_potencial_numero_resgates_mun"
+        title: 
+          fixed: "Provável potencial de resgates por inspeção em municípos - por UF"
+        description:
+          - id: "select_uf"
+            type: "select"
+            label: "Selecione"
+            target: 
+              range: "uf"
+              scope: "municipio"
+            api:
+              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf"
+            args:
+              - prop: "id"
+                named_prop: "cd_uf"
+              - prop: "label"
+                named_prop: "nm_uf"
+            selection:
+              event: "selection"
+              rules:
+                api:
+                  template: "/te/ml/exposicaoresgate?categorias=cd_mun_ibge,fact,nvl_indicador,vl_indicador&filtros=eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaoresgate?categorias=cd_uf&valor=vl_indicador&agregacao=count&pivot=vl_indicador&filtros=eq-fact-true,and,eq-cd_uf-23"
+                api_reactive:
+                  template: "/te/ml/exposicaoresgate?categorias=cd_uf&valor=vl_indicador&agregacao=count&pivot=vl_indicador&filtros=eq-fact-true,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'ALTO'
+                    default: 0
+                  - prop: "description"
+                    template: "Grau: ALTO"
+                  - prop: "comment"
+                    fixed: "Factual"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaoresgate?categorias=cd_uf&valor=vl_indicador&agregacao=count&pivot=vl_indicador&filtros=eq-fact-false,and,eq-cd_uf-23"
+                api_reactive:
+                  template: "/te/ml/exposicaoresgate?categorias=cd_uf&valor=vl_indicador&agregacao=count&pivot=vl_indicador&filtros=eq-fact-false,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'ALTO'
+                    default: 0
+                  - prop: "description"
+                    template: "Grau: ALTO"
+                  - prop: "comment"
+                    fixed: "Contrafactual"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/ml/exposicaoresgate?categorias=validate_acc,validate_fscore_label&limit=1&filtros=eq-cd_uf-23"
+                api_reactive:
+                  template: "/te/ml/exposicaoresgate?categorias=validate_acc,validate_fscore_label&limit=1&filtros=eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: "validate_acc"
+                    format: "porcentagem"
+                    multiplier: 100
+                  - prop: "description"
+                    template: "Acurácia do Modelo"
+                  - prop: "comment"
+                    template: "F-score: {0}"
+                    args:
+                      - named_prop: "validate_fscore_label"
+                        format: "real"
+                        precision: 3
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/te/ml/exposicaoresgate?categorias=cd_mun_ibge,nm_municipio_uf,fact,nvl_indicador,vl_indicador&filtros=eq-cd_uf-23"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Potencial de resgates por inspeção'
+            value: 'vl_indicador'
+          - text: 'Fato'
+            value: 'fact'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'nvl_indicador'
+          colorScale:
+            name: "Reds"
+        source:
+          fixed: "Smartlab"
+# ====================================================  
+      - id: "treemap_feature_importance"
+        title:
+          fixed: "Influência de features no modelo de classificação"
+        description: 
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto entra aqui"
+        chart_type: "TREEMAP"
+        api: 
+          fixed: "/te/ml/exposicaoresgate/features?categorias=cd_indicador,ds_indicador_curto,importancia"
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_curto'
+          - text: 'Importância'
+            value: 'importancia'
+        chart_options:
+          id: "cd_indicador"
+          text: "ds_indicador_curto"
+          size: "importancia"
+          colorScale:
+            order: "desc"
+        source:
+          fixed: "Smartlab"
+      

@@ -1,0 +1,723 @@
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "trabalho_escravo_agr"
+      function: "slice"
+      id: ['te_ope']
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+        default: 'Nenhuma'
+        zero: 'Nenhuma'
+      - prop: "description"
+        fixed: "Operações de Combate ao Trabalho Escravo"
+      - prop: 'comment'
+        template: "(De {0} a {1})"
+        api: 
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_ope'"
+        args:
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   preloaded:
+  #     prop: "centralindicadores"
+  #     function: "slice"
+  #     id: "00_01_03_02"
+  #     year: "max"
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'vl_indicador'
+  #       format: 'inteiro'
+  #     - prop: "description"
+  #       named_prop: "ds_indicador_radical"
+  #     - prop: 'comment'
+  #       template: "({0}, {1})"
+  #       args:
+  #         - named_prop: "ds_fonte"
+  #         - named_prop: "nu_competencia"
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   preloaded:
+  #     prop: "centralindicadores"
+  #     function: "slice"
+  #     id: "00_01_02_02"
+  #     year: "max"
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'vl_indicador'
+  #       format: 'inteiro'
+  #     - prop: "description"
+  #       named_prop: "ds_indicador_radical"
+  #     - prop: 'comment'
+  #       template: "({0}, {1})"
+  #       args:
+  #         - named_prop: "ds_fonte"
+  #         - named_prop: "nu_competencia"
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   preloaded:
+  #     prop: "centralindicadores"
+  #     function: "slice"
+  #     id: "00_01_01_02"
+  #     year: "max"
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'vl_indicador'
+  #       format: 'inteiro'
+  #     - prop: "description"
+  #       named_prop: "ds_indicador_radical"
+  #     - prop: 'comment'
+  #       template: "({0}, {1})"
+  #       args:
+  #         - named_prop: "ds_fonte"
+  #         - named_prop: "nu_competencia"
+# ========================================================
+secoes:
+  - id: "garantia_trabalho_escravo"
+    name: "Operações de Combate ao Trabalho Escravo"
+    cards:
+# ========================================================
+      - id: "mapa_op_resgatados_escravo"
+        title: 
+          fixed: "Operações de Combate ao Trabalho Escravo e Resgates"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_ope'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        msgNoData:
+          desc: "No período, não houve operações de resgates de trabalhadores em condição análoga à de escravo no país."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "trabalho_escravo_agr"
+                  function: "slice"
+                  id: ['te_ope', 'te_inspecoes']
+                args:
+                  - id: "te_ope"
+                    prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'OPERAÇÕES'
+                  - prop: "comment"
+                    template: "{0} inspeções"
+                    args:
+                      - id: "te_inspecoes"
+                        named_prop: "agr_sum_vl_indicador"
+                        format: 'inteiro'
+                        default: "Sem Registros"
+                        zero: "Nenhum"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "trabalho_escravo_agr"
+                  function: "slice"
+                  id: ['te_rgt', 'te_insp_rgt']
+                  options:
+                    combine:
+                    - id: "resg_inspecao"
+                      desc: "Resgatados por inspeção"
+                      function: "calc_proportion"
+                      fn_args:
+                        - id: "te_rgt"
+                          named_prop: "agr_sum_vl_indicador"
+                        - id: "te_insp_rgt"
+                          named_prop: "agr_sum_vl_indicador"
+                args:
+                  - id: "te_insp_rgt"
+                    prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'INSPEÇÕES COM RESGATE'
+                  - prop: "comment"
+                    template: "{0} resgatados/inspeção"
+                    args:
+                      - id: "resg_inspecao"
+                        named_prop: "vl_indicador"
+                        format: 'real'
+                        default: "Sem Registros"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de operações de combate ao trabalho escravo no país. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade) de inspeções com resgate."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          fixed: "/te/indicadoresestaduais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_insp_rgt'"
+          options:
+            calcs:
+              - id: "deviation_resg"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Nº inspeções do trabalho escravo com resgate'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_deviation_resg'
+          colorScale:
+            name: 'Reds'
+        source:
+          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+          link: ""
+# ===============================================
+      - id: "garantia_acoes_estaduais_headline"
+        type: "headline"
+        title:
+          fixed: "Ações Estaduais"
+#==================================================================================================
+      - id: "map_pm_trafico_humanos"
+        title: 
+          fixed: "Ações da Polícia Militar de Enfrentamento ao Tráfico de seres humanos"
+        card_template: "t1"
+        datasource: "estadicuf"
+        cd_indicador: "90_06_01_01"
+#==================================================================================================
+      # - id: "map_enfrentamento_trabalho_escravo"
+      #   title: 
+      #     fixed: "Ações de Enfrentamento ao Trabalho Escravo"
+      #   card_template: "t1"
+      #   datasource: "estadicuf"
+      #   cd_indicador: "90_06_01_02"
+#==================================================================================================
+      # - id: "map_reinsercao_vitimas"
+      #   title: 
+      #     fixed: "Ações de Enfrentamento do trabalho forçado ou escravo e reinserção de suas vítimas"
+      #   card_template: "t1"
+      #   datasource: "estadicuf"
+      #   cd_indicador: "90_06_01_03"
+#==================================================================================================
+      - id: "map_comissao_trabalho_escravo"
+        title: 
+          fixed: "Comitê ou Comissão de Enfrentamento do Trabalho Escravo"
+        card_template: "t1"
+        datasource: "estadicuf"
+        cd_indicador: "90_06_01_04"
+# ===============================================
+      - id: "garantia_acoes_municipais_headline"
+        type: "headline"
+        title:
+          fixed: "Ações Municipais"
+#==================================================================================================
+      - id: "map_acoes_enf_trab_escravo_mun"
+        title: 
+          fixed: "Ações de Enfrentamento ao Trabalho Escravo"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_01_02"
+#==================================================================================================
+      - id: "map_acoes_reinsercao_vitimas_mun"
+        title: 
+          fixed: "Ações de Enfrentamento do trabalho forçado ou escravo e reinserção de suas vítimas"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_01_03"
+#==================================================================================================
+      - id: "map_comite_enf_trabalho_escravo_mun"
+        title: 
+          fixed: "Comitê e Comissáo de Enfrentamento do Trabalho Escravo"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_01_04"
+# # ===============================================
+#       - id: "garantia_mpt_headline"
+#         type: "headline"
+#         title:
+#           fixed: "Atuação do MPT no combate ao Trabalho Escravo e Tráfico de Pessoas"
+# #==========================================
+#       - id: "mapa_acoes_mpt_sst"
+#         title: 
+#           fixed: "MPT - Ações Civis Públicas Ajuizadas"
+#         title_comment:
+#           template: "Brasil, de {0} a {1}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_01_02"
+#             year: "max"
+#           args:
+#             - named_prop: 'nu_competencia_min'
+#             - named_prop: 'nu_competencia_max'
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_01_02"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_01_02'"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'ACPs'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Ações Civis Públicas Ajuizadas pelo MPT para o tema Trabalho Escravo e Tráfico de Pessoas no país.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           fixed: "/indicadoresestaduais?categorias=cd_uf,sg_uf,nm_uf,cd_dimensao,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=ne-vl_indicador-0,and,eq-cd_indicador-'00_01_01_02'"
+#           options:
+#             calcs:
+#               - id: "deviation_acoes"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Qtde'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'calc_deviation_acoes'
+#         source:
+#           desc_field: "ds_fonte"
+# #==========================================
+#       - id: "mapa_tacs_mpt_sst"
+#         title: 
+#           fixed: "MPT - Termos de Compromisso de Ajustamento de Conduta Firmados"
+#         title_comment:
+#           template: "Brasil, de {0} a {1}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_07_02"
+#             year: "max"
+#           args:
+#             - named_prop: 'nu_competencia_min'
+#             - named_prop: 'nu_competencia_max'
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_07_02"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_07_02'"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: 'TACs'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Termos de Compromisso de Ajustamento de Conduta Firmados pelo MPT para o tema Trabalho Escravo e Tráfico de Pessoas no país.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           fixed: "/indicadoresestaduais?categorias=cd_uf,sg_uf,nm_uf,cd_dimensao,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=ne-vl_indicador-0,and,eq-cd_indicador-'00_01_07_02'"
+#           options:
+#             calcs:
+#               - id: "deviation_tacs"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Qtde'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'calc_deviation_tacs'
+#         source:
+#           desc_field: "ds_fonte"
+# #==========================================
+#       - id: "mapa_recomendacoes_mpt_sst"
+#         title: 
+#           fixed: "MPT - Recomendações Expedidas"
+#         title_comment:
+#           template: "Brasil, de {0} a {1}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_06_02"
+#             year: "max"
+#           args:
+#             - named_prop: 'nu_competencia_min'
+#             - named_prop: 'nu_competencia_max'
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_06_02"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_06_02'"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Recomendações<br/>Expedidas'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Recomendações Expedidas pelo MPT para o tema Trabalho Escravo e Tráfico de Pessoas no país. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api:
+#           fixed: "/indicadoresestaduais?categorias=cd_uf,sg_uf,nm_uf,cd_dimensao,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=ne-vl_indicador-0,and,eq-cd_indicador-'00_01_06_02'"
+#           options:
+#             calcs:
+#               - id: "deviation_rec"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Qtde'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'calc_deviation_rec'
+#         source:
+#           desc_field: "ds_fonte"
+# #==========================================
+#       - id: "mapa_denuncias_mpt_sst"
+#         title: 
+#           fixed: "MPT - Denúncias Recebidas"
+#         title_comment:
+#           template: "Brasil, de {0} a {1}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_02_02"
+#             year: "max"
+#           args:
+#             - named_prop: 'nu_competencia_min'
+#             - named_prop: 'nu_competencia_max'
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_02_02"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_02_02'"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Denúncias<br/>Recebidas'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Denúncias Recebidas pelo MPT para o tema Trabalho Escravo e Tráfico de Pessoas no país. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api:
+#           fixed: "/indicadoresestaduais?categorias=cd_uf,sg_uf,nm_uf,cd_dimensao,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=ne-vl_indicador-0,and,eq-cd_indicador-'00_01_02_02'"
+#           options:
+#             calcs:
+#               - id: "deviation_denunc"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Qtde'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'calc_deviation_denunc'
+#           colorScale:
+#             name: 'Reds'
+#         source:
+#           desc_field: "ds_fonte"
+# #==========================================
+#       - id: "mapa_investig_mpt_sst"
+#         title: 
+#           fixed: "MPT - Investigações Instauradas"
+#         title_comment:
+#           template: "Brasil, de {0} a {1}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_03_02"
+#             year: "max"
+#           args:
+#             - named_prop: 'nu_competencia_min'
+#             - named_prop: 'nu_competencia_max'
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_03_02"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_03_02'"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhuma"
+#                   - prop: "description"
+#                     fixed: 'Investigações<br/>Instauradas'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Investigações Instauradas pelo MPT para o tema Trabalho Escravo e Tráfico de Pessoas no país. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api:
+#           fixed: "/indicadoresestaduais?categorias=cd_uf,sg_uf,nm_uf,cd_dimensao,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=ne-vl_indicador-0,and,eq-cd_indicador-'00_01_03_02'"
+#           options:
+#             calcs:
+#               - id: "deviation_investig"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Qtde'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'calc_deviation_investig'
+#         source:
+#           desc_field: "ds_fonte"
+# #==========================================
+#       - id: "mapa_promo_mpt_sst"
+#         title: 
+#           fixed: "MPT - Procedimentos Promocionais de Políticas Públicas Iniciados"
+#         title_comment:
+#           template: "Brasil, de {0} a {1}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "00_01_05_02"
+#             year: "max"
+#           args:
+#             - named_prop: 'nu_competencia_min'
+#             - named_prop: 'nu_competencia_max'
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+#               preloaded:
+#                 prop: "centralindicadores"
+#                 function: "slice"
+#                 id: "00_01_05_02"
+#                 year: "max"
+#               args:
+#                 - named_prop: 'ds_indicador_radical'
+#                 - named_prop: 'ds_fonte'
+#                 - named_prop: 'nu_competencia_min'
+#                 - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_05_02'"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: 'Procedimentos<br/>Promocionais'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de Procedimentos Promocionais de Políticas Públicas Iniciados pelo MPT para o tema Trabalho Escravo e Tráfico de Pessoas no país. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+#         chart_type: "MAP_TOPOJSON"
+#         api:
+#           fixed: "/indicadoresestaduais?categorias=cd_uf,sg_uf,nm_uf,cd_dimensao,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=ne-vl_indicador-0,and,eq-cd_indicador-'00_01_05_02'"
+#           options:
+#             calcs:
+#               - id: "deviation_promo"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Qtde'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'calc_deviation_promo'
+#         source:
+#           desc_field: "ds_fonte"
+          

@@ -1,0 +1,124 @@
+api_obj_collection:
+  - name: "chart_data"
+    endpoint: 
+      categorias: 'cd_indicador,ds_indicador_radical,ds_agreg_primaria,vl_indicador,nm_uf,cd_uf,nu_competencia,nu_competencia_min,nu_competencia_max,rank_br,rank_br_total,ds_fonte'
+      filtros:
+        template: 'eq-cd_indicador-{},and,eq-cd_uf-{}'
+        args:
+          - prop: 'cd_indicador'
+          - prop: 'cd_analysis_unit'
+      order:
+        fixed: "nu_competencia"
+    formatters:
+      - prop: "fmt_vl_indicador"
+        named_prop: "vl_indicador"
+        format: 'inteiro'
+    instances:
+      - name: 'desc_data'
+        type: 'max'
+        named_prop: 'nu_competencia'
+  - name: "agregacao_data"
+    endpoint: 
+      categorias: 'nu_competencia_min,nu_competencia_max'
+      valor: 'vl_indicador'
+      agregacao: 'sum'
+      filtros:
+        template: 'eq-cd_indicador-{},and,eq-cd_uf-{}'
+        args:
+          - prop: 'cd_indicador'
+          - prop: 'cd_analysis_unit'
+    instances:
+      - name: 'agreg_data'
+        type: 'first_occurence'
+  - name: "indicador_data"
+    endpoint: 
+      categorias: 'cd_indicador,ds_indicador_radical,ds_agreg_primaria,nu_competencia_min,nu_competencia_max'
+      filtros:
+        template: 'eq-cd_indicador-{}'
+        args:
+          - prop: 'cd_indicador'
+      limit: '1'
+    instances:
+      - name: 'indic_data'
+        type: 'first_occurence'
+title: 
+  template: "{} - Série Histórica"
+  args:
+    - base_object: "indic_data"
+      named_prop: "ds_agreg_primaria"
+title_comment:
+  template: "{}, de {} a {}"
+  args:
+    - base_object: "term_localidade"
+      named_prop: "value"
+    - base_object: "indic_data"
+      named_prop: nu_competencia_min
+    - base_object: "indic_data"
+      named_prop: nu_competencia_max
+info:
+  - type: "text"
+    title: "Sobre a métrica"
+    content:
+      fixed: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções."
+  - type: "text"
+    title: "Referência"
+    content: 
+      template: "Indicador: {}"
+      args:
+        - base_object: "indic_data"
+          named_prop: "cd_indicador"
+msgNoData:
+  desc: "No período, não houve notificações relacionadas ao trabalho no Sistema de Informação de Agravos de Notificação (SINAN), para a UF selecionada."
+description:
+  - type: "minicards"
+    cards:
+      - relevance: "high"
+        cls: "xs12 md6"
+        args:
+          - prop: "value"
+            base_object: "agreg_data"
+            named_prop: "agr_sum_vl_indicador"
+            format: "inteiro"
+          - prop: "description"
+            fixed: "CASOS NOTIFICADOS"
+  - type: "text"
+    title: ""
+    content:
+      template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {}. Nesta versão, somente foram considerados as doenças e agravos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério da Saúde. No gráfico a seguir, destaca-se a evolução da série histórica."
+      args:
+        - base_object: "desc_data"
+          named_prop: "ds_indicador_radical"
+  # - type: "ranking"
+  #   args:
+  #     - prop: 'national_rank'
+  #       base_object: "desc_data"
+  #       named_prop: "rank_br"
+  #       format: 'inteiro'
+  #       default: 0
+  #     - prop: 'national_total'
+  #       base_object: "desc_data"
+  #       named_prop: "rank_br_total"
+  #       format: 'inteiro'
+  #       default: 0
+chart_type: "BAR"
+chart_data: "chart_data"
+headers:
+  - text: "Ano"
+    align: "left"
+    value: "nu_competencia"
+  - text: "Indicador"
+    value: "ds_indicador_radical"
+  - text: "Valor"
+    value: "fmt_vl_indicador"
+chart_options: 
+  id: "nu_competencia"
+  x: "nu_competencia"
+  y: "vl_indicador"
+  text: "fmt_vl_indicador"
+  show_x_axis: true
+  show_y_axis: false
+  orientation: "vertical"
+  hide_legend: true
+  color: "#238B45"
+source: 
+  desc_field: "ds_fonte"

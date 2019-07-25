@@ -1,0 +1,2083 @@
+# ========================================================
+principais:
+  - relevance: 'lead'
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "01_17_03_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'porcentagem'
+        precision: 2
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+        # fixed: "TAXA GEOMÉTRICA DE CRESCIMENTO ANUAL DA POPULAÇÃO DE 2010 A 2018"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "01_16_01_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'auto'
+        collapse:
+          format: 'auto'
+      - prop: "description"
+        named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead'
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "06_01_09_01"
+      year: "max"
+    args:
+      - prop: "value"
+        function: "calc_class_idh"
+        fn_args:
+          - named_prop: "vl_indicador" 
+          - fixed : true
+          - fixed : true
+          - fixed : true
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead'
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: ["01_14_10_00", "01_15_01_00"]
+      year: "2018"
+      combine:
+      - id: "pob_perc"
+        desc: "Porcentagem da população em situação de pobreza ou extrema pobreza"
+        format: 'porcentagem'
+        function: 'calc_percentage'
+        fn_args:
+          - id: "01_14_10_00"
+            year: "2018"
+            named_prop: "vl_indicador"
+          - id: "01_15_01_00"
+            year: "2018"
+            named_prop: "vl_indicador"
+    args:
+      - id: "pob_perc"
+        prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'porcentagem'
+      - prop: "description"
+        fixed: "Porcentagem da população em situação de pobreza ou extrema pobreza"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - id: "pob_perc"
+            named_prop: "ds_fonte"
+          - id: "pob_perc"
+            named_prop: "nu_competencia"
+# ========================================================
+secoes:
+  - id: "ecosocial_unica"
+    name: ""
+    cards:
+# ========================================================
+      - id: "mapa_pib_brasil"
+        title:
+          fixed: "Produto Interno Bruto - PIB"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_16_01_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O produto interno bruto (PIB) representa a soma de todos os bens e serviços finais produzidos numa determinada região durante um período determinado. É um dos indicadores mais utilizados para quantificar a atividade econômica de uma região."
+        # msg_nodata:
+        #   desc: "Dados não encontrados"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'auto'
+                    collapse:
+                      format: 'auto'
+                  - prop: "description"
+                    fixed: "PIB"
+                  # - prop: "comment"
+                  #   fixed: "Aprox."
+              - relevance: 'high'
+                cls: 'xs12 md5'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'pct_uf'
+                    format: 'porcentagem'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "DO PIB DA UF"
+              - relevance: 'low'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_uf'
+                    format: 'auto'
+                    collapse:
+                      format: 'auto'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média da UF"
+                  - prop: "comment"
+                    function: "minicard_calc_percentage" 
+                    fn_args:
+                      - named_prop: "vl_indicador"
+                      - named_prop: 'media_uf'
+                    color_changing: 
+                      base_value_prop: 'media_uf'
+                      compared_value_prop: 'vl_indicador'
+              - relevance: 'low'
+                cls: 'xs12 md5'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_br'
+                    format: 'auto'
+                    collapse:
+                      format: 'auto'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média nacional"
+                  - prop: "comment"
+                    function: "minicard_calc_percentage" 
+                    fn_args:
+                      - named_prop: "vl_indicador"
+                      - named_prop: 'media_br'
+                    color_changing: 
+                      base_value_prop: 'media_br'
+                      compared_value_prop: 'vl_indicador'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o PIB do município para o ano indicado e a participação no PIB da UF. Compara-se referido valor com a média da UF e do Brasil, tendo em vista a concentração do PIB em certas localidades e regiões. No mapa, {0} está em destaque. A escala de cores varia do menor valor (branco) ao maior valor (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_16_01_00"
+                year: "max"
+              args:
+                - named_prop: 'nm_municipio_uf'
+
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "01_16_01_00"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+          
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_curto,ds_indicador_prefixo,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_16_01_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_pib"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: "auto"
+              - id: "pct_uf"
+                format: 'porcentagem'
+                precision: 2
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_curto'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+          - text: 'Participação na UF'
+            value: 'fmt_pct_uf'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_pib'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_pibpc_municipio"
+        title:
+          fixed: "Produto Interno Bruto (PIB) per capita"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_16_02_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Corresponde a toda riqueza gerada pela economia do município em determinado ano, dividido por sua população residente."
+          - type: "text"
+            title: "Observação Importante:"
+            content:
+              fixed: "Ainda que seja um indicador importante, vale chamar a atenção para o fato de que o PIB per capita municipal depende de outras variáveis que podem se alterar por fatores que vão, desde aspectos migratórios, à implantação de atividades produtivas que podem funcionar como um verdadeiro enclave no território dos municípios, gerando a possível interpretação de que os valores per capita obtidos possam estar sendo internalizados na economia do respectivo município, o que nem sempre acontece. Portanto, é preciso atentar para o fato de que há uma diferença substancial entre o volume de produção/renda gerada no município (expresso pelo valor do PIB) e a renda efetivamente apropriada/internalizada pelo município e suas respectivas famílias residentes."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_02_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    precision: 0
+                    collapse:
+                      format: 'monetario'
+                      precision: 0
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "PIB per capita"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_02_00"
+                  year: "max"
+                args:
+                  - prop: "description"
+                    fixed: "Média da UF"
+                  - prop: "comment"
+                    function: "minicard_calc_percentage" 
+                    fn_args:
+                      - named_prop: "vl_indicador"
+                      - named_prop: 'media_uf'
+                    color_changing: 
+                      base_value_prop: 'media_uf'
+                      compared_value_prop: 'vl_indicador'
+                  - prop: "value"
+                    named_prop: 'media_uf'
+                    format: 'monetario'
+                    precision: 0
+                    collapse: 
+                      format: 'monetario'
+                      precision: 0
+                    default: "Sem Registros"
+              - relevance: 'low'
+                cls: 'xs12 md5'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_02_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_br'
+                    format: 'monetario'
+                    precision: 0
+                    collapse: 
+                      format: 'real'
+                      precision: 0
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média nacional"
+                  - prop: "comment"
+                    function: "minicard_calc_percentage" 
+                    fn_args:
+                      - named_prop: "vl_indicador"
+                      - named_prop: 'media_br'
+                    color_changing: 
+                      base_value_prop: 'media_br'
+                      compared_value_prop: 'vl_indicador'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o PIB per capita municipal para o ano indicado. Diante da disparidade de valores, é importante notar a posição do município no ranking e em relação à média da UF e do Brasil. No mapa, {0} está em destaque. A escala de cores varia do menor valor (branco) ao maior valor (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_16_02_00"
+                year: "max"
+              args:
+                - named_prop: 'nm_municipio_uf'
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "01_16_02_00"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_curto,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_16_02_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_pibpc"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'monetario'
+                precision: 2
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_curto'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_pibpc'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_vab_municipio"
+        title:
+          fixed: "Valor Adicionado Bruto - VAB"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_03_07_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Valor que a atividade agrega aos bens e serviços consumidos no seu processo produtivo."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_03_07_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'auto'
+                  - prop: "description"
+                    fixed: "SERVIÇOS, INCLUSIVE ADMINISTRAÇÃO PÚBLICA"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["01_16_06_00", "01_16_07_00"]
+                  year: "max"
+                  combine:
+                  - id: "adm_perc"
+                    desc: "Porcentagem da AP dentro do VAB"
+                    format: 'porcentagem'
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "01_16_06_00"
+                        named_prop: "vl_indicador"
+                      - id: "01_16_07_00"
+                        named_prop: "vl_indicador"
+                args:
+                  - prop: "value"
+                    id: "adm_perc"
+                    format: 'porcentagem'
+                    named_prop: 'vl_indicador'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "APENAS ADMINISTRAÇÃO PÚBLICA"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_03_06_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Indústria"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_03_05_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Agropecuária"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque o VAB, que inclui indústria, agropecuária e serviços (que por sua vez inclui gastos correntes da Administração Pública). Também em destaque o VAB da Administração Pública, a alta participação da Administração Pública no VAB de um município indica que a atividade econômica é incipiente naquela localidade, havendo portanto grande dependência do Poder Público municipal, que se configura, muitas vezes, como o maior empregador e gerador de riqueza da localidade. No mapa, {0} está em destaque. A escala de cores varia da menor participação (branco) à maior participação (vermelho), da Administração Pública no VAB."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_03_07_00"
+              args:
+                - named_prop: 'nm_municipio_uf'
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,in-cd_indicador-'01_16_06_00'-'01_16_07_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            place_id_field: 'cd_mun_ibge'
+            combine:
+            - id: "adm_perc"
+              desc: "Porcentagem da Adm. Pública dentro do VAB"
+              format: 'porcentagem'
+              function: 'calc_percentage'
+              fn_args:
+                - id: "01_16_06_00"
+                  named_prop: "vl_indicador"
+                - id: "01_16_07_00"
+                  named_prop: "vl_indicador"
+            slice:
+              id: "adm_perc"
+              year: "max"
+            formatters:
+              - id: "vl_indicador"
+                format: 'porcentagem'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'vl_indicador'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_populacao_municipio"
+        title:
+          fixed: "População residente"
+        title_comment:
+          template: "{0} - {1} Urbana, {2} Rural ({3})"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ["06_03_01_06", "06_03_01_04"]
+            year: "max"
+          args:
+            - id: "06_03_01_06"
+              named_prop: "nm_municipio_uf"
+            - id: "06_03_01_06"
+              named_prop: "vl_indicador"
+              format: "porcentagem"
+              default: "Sem Registros"
+              multiplier: 100
+            - id: "06_03_01_04"
+              named_prop: "vl_indicador"
+              format: "porcentagem"
+              default: "Sem Registros"
+              multiplier: "100"
+            - id: "06_03_01_06"
+              named_prop: "nu_competencia"
+              default: "Sem Registros"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A população total é oriunda do recenseamento populacional, que corresponde ao total de habitantes residentes na localidade."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_17_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: "Habitantes ({0})"
+                    args:
+                      - named_prop: "nu_competencia"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_15_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    template: "População estimada ({0})"
+                    args:
+                      - named_prop: "nu_competencia"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_15_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_uf'
+                    format: 'real'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média da UF"
+                  - prop: "comment"
+                    template: "{0} ({1})"
+                    args:
+                      - function: "minicard_calc_percentage" 
+                        fn_args:
+                          - named_prop: "vl_indicador"
+                          - named_prop: 'media_uf'
+                      - named_prop: "nu_competencia"
+                    # fixed: "Comentário opcional"
+                    color_changing: 
+                      base_value_prop: 'media_uf'
+                      compared_value_prop: 'vl_indicador'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_15_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_br'
+                    format: 'real'
+                    collapse: 
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média nacional"
+                  - prop: "comment"
+                    template: "{0} ({1})"
+                    args:
+                      - function: "minicard_calc_percentage" 
+                        fn_args:
+                          - named_prop: "vl_indicador"
+                          - named_prop: 'media_br'
+                      - named_prop: "nu_competencia"
+                    color_changing: 
+                      base_value_prop: 'media_br'
+                      compared_value_prop: 'vl_indicador'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a população do município em {0} e {1}. A densidade populacional em {2} era de {3} hab./km2. De acordo com a concentração populacional, é possível situar a localidade no ranking e em relação à média da UF e do Brasil. No mapa, {4} está em destaque. A escala de cores varia da menor quantidade (branco) para a maior quantidade de habitantes (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ["01_17_01_00", "01_15_01_00", "06_03_01_08"]
+                year: "max"
+              args:
+                - id: "01_17_01_00"
+                  named_prop: "nu_competencia"
+                - id: "01_15_01_00"
+                  named_prop: "nu_competencia"
+                - id: "06_03_01_08"
+                  named_prop: "nu_competencia"
+                - id: "06_03_01_08"
+                  named_prop: "vl_indicador"
+                  format: "real"
+                - id: "01_15_01_00"
+                  named_prop: "nm_municipio_uf"
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "01_15_01_00"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_15_01_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_pop"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "pct_uf"
+                format: 'porcentagem'
+                precision: 2
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Total'
+            value: 'fmt_vl_indicador'
+          - text: 'Participação na UF'
+            value: 'fmt_pct_uf'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_pop'
+        source:
+          desc: "IBGE: Censo Demográfico 2010 e Estimativas de População"
+# ========================================================
+      - id: "mapa_cresc_pop_municipio"
+        title:
+          fixed: "Taxa geométrica de crescimento anual da população"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_17_03_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - function: "get_period_from_string"
+              fn_args:
+                - named_prop: "ds_indicador_curto"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A população total é oriunda do recenseamento populacional, que corresponde ao total de habitantes residentes na localidade."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_17_03_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    function: "calc_average_by_year"
+                    format: 'porcentagem'
+                    precision: 2
+                    fn_args:
+                      - fixed: "0"
+                      - fixed: "2010"
+                      - named_prop: "vl_indicador"
+                      - named_prop: "nu_competencia"
+                  - prop: "comment"
+                    template: "{0} ANUAL"
+                    args:
+                      - function: "minicard_value_check"
+                        fn_args:
+                          - named_prop: "vl_indicador"
+                          - fixed: '0'
+                          - fixed: "ACRÉSCIMO"
+                          - fixed: "DECRÉSCIMO"
+                    color_changing: 
+                      compared_value_prop: 'vl_indicador'
+                      gt_color: 'blue'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_17_03_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    function: "calc_average_by_year"
+                    format: 'porcentagem'
+                    precision: 2
+                    fn_args:
+                      - fixed: "0"
+                      - fixed: "2010"
+                      - named_prop: "vl_indicador_uf"
+                      - named_prop: "nu_competencia"
+                  - prop: "description"
+                    template: "{0} ANUAL<br/> MÉDIA DA UF"
+                    args:
+                      - function: "minicard_value_check"
+                        fn_args:
+                          - named_prop: "vl_indicador_uf"
+                          - fixed: '0'
+                          - fixed: "ACRÉSCIMO"
+                          - fixed: "DECRÉSCIMO"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_17_03_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    function: "calc_average_by_year"
+                    format: 'porcentagem'
+                    precision: 2
+                    fn_args:
+                      - fixed: "0"
+                      - fixed: "2010"
+                      - named_prop: "vl_indicador_br"
+                      - named_prop: "nu_competencia"
+                  - prop: "description"
+                    template: "{0} ANUAL<br/> MÉDIA NACIONAL"
+                    args:
+                      - function: "minicard_value_check"
+                        fn_args:
+                          - named_prop: "vl_indicador_br"
+                          - fixed: '0'
+                          - fixed: "ACRÉSCIMO"
+                          - fixed: "DECRÉSCIMO"
+          - type: "text"
+            title: ""
+            content:
+              template: "Por aproximação, o dinamismo populacional de {0} apresentou a variação em destaque. A taxa de crescimento populacional revela a dinâmica populacional no longo prazo. Municípios com acréscimo de população sugerem aumento da atividade econômica, ao passo que municípios que perdem habitantes indicam situação preocupante. No mapa, {0} está em destaque. A variação de cores vai do azul (crescimento) ao vermelho (redução da população), passando pelo branco (nenhuma mudança), conforme a escala em destaque."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ["01_17_03_00"]
+                year: "max"
+              args:
+                - named_prop: "nm_municipio_uf"
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "01_17_03_00"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_17_03_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            recalc_min_max: true
+            calcs:
+              - id: "deviation_crescimento"
+                function: "get_bipolar_scale"
+                fn_args: 
+                  - fixed: 'vl_indicador'
+            formatters:
+              - id: "vl_indicador"
+                format: 'porcentagem'
+                precision: 2
+                signed: true
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Variação da população'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_crescimento'
+          colorScale:
+            name: 'RdYlBu'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "multi_populacao"
+        type: "multiple-charts"
+        title:
+          fixed: "População ocupada"
+        title_comment:
+          template: "{0} - 18 a 64 anos ({1})"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_04_04_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "A população ocupada é contada através do Censo, o qual considera como ocupadas pessoas que exerceram trabalho, remunerado ou sem remuneração, ou que tinham trabalho remunerado do qual estavam temporariamente afastadas."
+          - type: "text"
+            title: "Observação Importante:"
+            content:
+              fixed: "A soma da população com carteira assinada e sem carteira assinada, no destaque, não é igual a 100% pois a população ocupada é classificada, além dessas duas categorias, em conta própria, empregadores, não remunerados e produção para o próprio consumo, sendo a soma de todas essas categorias o total."
+        description: 
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_17_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: "Habitantes ({0})"
+                    args:
+                      - named_prop: "nu_competencia"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_04_04_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: "População ocupada"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_08_09_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Com carteira assinada"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_08_11_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Sem carteira assinada"
+                      
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a população ocupada de 16 a 64 anos e os percentuais com carteira e sem carteira assinada em {0}. O primeiro gráfico mostra a distribuição nos setores econômicos e o segundo nas diferentes categorias ocupadas."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_17_01_00"
+                year: "max"
+              args:
+                - named_prop: "nu_competencia"
+              
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "01_04_04_00"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        charts:
+# ========================================================
+          - id: "treemap_popocup_areas_municipio"
+            title: "População ocupada - Distribuição nos setores econômicos"
+            cls: "xs12 md6"
+            type: "TREEMAP"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ["01_04_01_00","01_04_02_00","01_04_03_00"]
+              year: "max"
+              options:
+                formatters:
+                - id: "vl_indicador"
+                  format: 'inteiro'
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Qtde'
+                value: 'fmt_vl_indicador'
+            options:
+              
+              id: "cd_indicador"
+              text: "ds_agreg_primaria"
+              size: "vl_indicador"
+              colorScale:
+                name: "BuGn"
+                type: "singleHue"
+                levels: 6
+                order: 'asc'
+            source:
+              desc_field: "ds_fonte"
+# ========================================================
+          - id: "treemap_popocup_categoria_municipio"
+            title: "População ocupada - Distribuição nas categorias"
+            cls: "xs12 md6"
+            type: "TREEMAP"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ["01_08_03_00","01_08_05_00","01_08_06_00","01_08_02_00","01_08_04_00","01_08_07_00","01_08_08_00"]
+              year: "max"
+              options:
+                formatters:
+                  - id: "vl_indicador"
+                    format: 'inteiro'
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Qtde'
+                value: 'fmt_vl_indicador'
+            options:
+              chart_size: "tall"
+              id: "cd_indicador"
+              text: "ds_agreg_primaria"
+              size: "vl_indicador"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 6
+                order: 'asc'
+            source:
+              desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_gini_municipio"
+        title: 
+          fixed: "Concentração de renda domiciliar"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_09_01_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O índice GINI mensura a desigualdade de uma distribuição, variando de 0 (igualdade máxima, todos detém a mesma quantidade de renda) até 1 (concentração absoluta ou desigualdade máxima, uma pessoa detém toda a renda)."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_09_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'real'
+                    precision: 3
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Índice GINI"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_09_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: "vl_indicador_uf"
+                    format: 'real'
+                    precision: 3
+                  - prop: "description"
+                    fixed: "Índice GINI DA UF"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a concentração de renda, medida pelo índice de GINI de distribuição do rendimento domiciliar em {0}. Quanto maior o índice, que vai de 0 a 1, maior a concentração. Destaca-se, ainda, a posição da localidade em ranking da unidade federativa e do Brasil, bem como o índice da UF. No mapa, {1} está em destaque. A escala de cores varia da menor (branco) à maior concentração (vermelho)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_09_01_00"
+                year: "max"
+              args:
+                - named_prop: 'nu_competencia'
+                - named_prop: 'nm_municipio_uf'
+
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "01_09_01_00"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_09_01_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'real'
+                precision: 3
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'vl_indicador'
+          colorScale:
+            name: "Reds"
+            order: 'asc'
+        source:
+          desc_field: "ds_fonte"
+      # - id: "bar_freq_escola_municipio"
+      #   title:
+      #     fixed: "Taxa de frequência líquida à escola"
+      #   info:
+      #     - type: "text"
+      #       title: "Sobre a métrica"
+      #       content:
+      #         fixed: "A Taxa de Frequência Líquida a estabelecimentos de ensino permite identificar a proporção de pessoas de uma determinada faixa etária que frequenta escola na série adequada, conforme a adequação série-idade do sistema educacional brasileiro, em relação ao total de pessoas na mesma faixa etária. A Taxa de Frequência Líquida é importante para visualizar a frequência condicional ao atraso escolar, o que permite uma visão mais completa da situação escolar do município em questão."
+      #   description:
+      #     - type: "text"
+      #       title: ""
+      #       content:
+      #         template: "No ano de {0}, {1} das crianças de 6 a 14 anos de idade residentes no município frequentavam o ensino fundamental, {2} dos adolescentes de 15 a 17 frequentavam o ensino médio e {3} dos jovens de 18 a 24 frequentavam o ensino superior."
+      #         preloaded:
+      #           prop: "centralindicadores"
+      #           function: "slice"
+      #           id: ["01_10_01_00","01_10_08_00","01_10_15_00"]
+      #           value_defs:
+      #             - id: "01_10_01_00"
+      #               props:
+      #                 - id: "nu_competencia"
+      #                 - id: "vl_indicador"
+      #                   format: 'porcentagem'
+      #                   precision: 1
+      #             - id: "01_10_08_00"
+      #               props:
+      #                 - id: "vl_indicador"
+      #                   format: 'porcentagem'
+      #                   precision: 1
+      #             - id: "01_10_15_00"
+      #               props:
+      #                 - id: "vl_indicador"
+      #                   format: 'porcentagem'
+      #                   precision: 1
+      #     - type: "text"
+      #       title: "OBS/Pendências"
+      #       content:
+      #         fixed: "Continha uma formação para não implementar ainda essa métrica. O gráfico deve ser excluído?"
+      #   chart_type: "BAR"
+      #   preloaded:
+      #     prop: "centralindicadores"
+      #     function: "slice"
+      #     id: ["01_10_01_00","01_10_08_00","01_10_15_00"]
+      #   formatters:
+      #     - id: "vl_indicador"
+      #       format: 'porcentagem'
+      #   headers:
+      #     - text: 'Indicador'
+      #       align: 'left'
+      #       value: 'ds_indicador_radical'
+      #     - text: 'Ano'
+      #       align: 'left'
+      #       value: 'nu_competencia'
+      #     - text: 'Taxa de Frequência'
+      #       value: 'fmt_vl_indicador'
+      #   chart_options:
+      #     id: "ds_indicador_radical"
+      #     text: "ds_indicador_radical"
+      #     x: "cd_indicador"
+      #     y: "vl_indicador"
+      #     orientation: "vertical"
+      #     colorScale:
+      #       name: "Set1"
+      #   source:
+      #     desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_taxa_alfab_municipio"
+        title:
+          fixed: "Taxa de alfabetização"
+        title_comment:
+          template: "{0} - População de 15 anos ou mais de idade ({1})"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_11_09_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Percentual e número absoluto de pessoas de 15 anos ou mais de idade que sabem ler e escrever pelo menos um bilhete simples no idioma que conhecem, na população total da mesma faixa etária, em determinado espaço geográfico, no ano considerado."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_11_09_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Alfabetizados<br/>15 anos ou mais"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_12_12_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: "Analfabetos<br/>15 a 24 anos"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_11_08_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Analfabetos<br/>15 anos ou mais"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_12_06_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Analfabetos<br/>15 a 24 anos"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a taxa de alfabetização do município em {0} e a quantidade de analfabetos por faixa etária. Diante da disparidade da taxa de alfabetização e da população analfabeta entre os municípios, é importante identificar a posição deste no ranking e em relação à média da UF e do Brasil. No mapa, {1} está em destaque. A escala de cores varia da menor taxa (branco) para a maior taxa de alfabetização (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_11_09_00"
+                year: "max"
+              args:
+                - named_prop: 'nu_competencia'
+                - named_prop: 'nm_municipio_uf'
+
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "01_11_09_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_11_09_00'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'porcentagem'
+                precision: 1
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Taxa de Alfabetização'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'vl_indicador'
+          colorScale:
+            order: 'asc'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "treemap_pop_instrucao_municipio"
+        title:
+          fixed: "Pessoas de 15 anos ou mais segundo o nível de instrução"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_13_05_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem instrução ou com o ensino fundamental incompleto: pessoa que nunca frequentou escola ou creche; que frequentava ou frequentou creche, curso pré-escolar, classe de alfabetização ou curso de alfabetização de jovens e adultos; frequentava curso de ensino fundamental; frequentou curso elementar; ou frequentou, mas não concluiu curso de ensino fundamental, 1º grau ou médio 1º ciclo. Ensino fundamental completo ou médio incompleto: pessoa que concluiu curso de ensino fundamental, 1º grau ou médio 1º ciclo; frequentava da 1ª a 3ª série de curso de ensino médio; ou frequentou, mas não concluiu o ensino médio ou 2º grau. Ensino médio completo ou superior incompleto: pessoa que frequentava a 4ª série do ensino médio; concluiu o ensino médio, 2º grau ou médio 2º ciclo; ou frequentava ou frequentou, mas não concluiu, curso superior. Ensino superior completo: pessoa que concluiu curso superior; ou frequentava ou frequentou curso de mestrado, doutorado ou especialização de nível superior."
+        description: 
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_13_05_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Sem instrução ou com <br/>fundamental incompleto"
+              - relevance: 'high'
+                cls: 'xs12 md5'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_13_10_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    precision: 1
+                  - prop: "description"
+                    fixed: "Do total"
+              - relevance: 'low'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_13_02_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Ensino fundamental completo <br/>ou médio incompleto"
+              - relevance: 'low'
+                cls: 'xs12 md5'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_13_03_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Ensino médio completo ou superior incompleto"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a quantidade de pessoas, em {0}, sem instrução ou com ensino fundamental incompleto na localidade, bem como as informações dos níveis de instrução subsequentes. Toda a população de 15 anos ou mais de idade deve ter concluído o ensino fundamental pelo sistema brasileiro."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_13_05_00"
+                year: "max"
+              args:
+                - named_prop: 'nu_competencia'
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "01_13_05_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+
+        chart_type: "TREEMAP"
+        preloaded:
+          prop: "centralindicadores"
+          function: "slice"
+          id: ['01_13_05_00','01_13_02_00','01_13_03_00','01_13_06_00']
+          year: "2010"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_agreg_primaria'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          text: "ds_agreg_primaria"
+          size: "vl_indicador"
+          colorScale:
+            name: "BuGn"
+            type: "singleHue"
+            levels: 6
+            order: 'asc'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_pobreza_extrema_pobreza"
+        title: 
+          fixed: "Pobreza e extrema pobreza"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_14_11_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "O Programa Bolsa Família atende às famílias que vivem em situação de pobreza e de extrema pobreza. Seus objetivos alcançam outras metas correlatas como a escolarização e a erradicação do trabalho infantil. Foi utilizado um limite de renda para definir esses dois patamares. Assim, podem fazer parte do Programa: todas as famílias com renda por pessoa de até R$ 85,00 mensais; famílias com renda por pessoa entre R$ 85,01 e R$ 170,00 mensais, desde que tenham crianças ou adolescentes de 0 a 17 anos."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["01_14_10_00", "01_15_01_00"]
+                  year: "max"
+                  combine:
+                  - id: "pbf_perc"
+                    desc: "Porcentagem da população em situação de pobreza ou extrema pobreza"
+                    format: 'porcentagem'
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "01_14_10_00"
+                        named_prop: "vl_indicador"
+                      - id: "01_15_01_00"
+                        named_prop: "vl_indicador"
+                args:
+                  - prop: "value"
+                    id: "pbf_perc"
+                    format: 'porcentagem'
+                    named_prop: 'vl_indicador'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "População em situação de pobreza <br/>ou extrema pobreza"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_15_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    template: "Habitantes residentes<br/>Estimado ({0})"
+                    args:
+                      - named_prop: "nu_competencia"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_14_10_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Beneficiários do Bolsa Família"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["01_14_11_00", "01_14_12_00"]
+                  year: "max"
+                args:
+                  - prop: "value"
+                    id: "01_14_11_00"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Famílias beneficiárias"
+                  - prop: "comment"
+                    template: "{0} por família"
+                    args:
+                      - id: "01_14_12_00"
+                        named_prop: "vl_indicador"
+                        format: "monetario"
+                        default: "Sem Registros"
+                        precision: 2
+          - type: "text"
+            title: ""
+            content:
+              template: "Segundo dados do Cadastro Único, em destaque está o número de beneficiários do Programa Bolsa Família (PBF) no mês de maio de {0} e o percentual da população beneficiária em situação de pobreza e de extrema pobreza. É destacado também o número de famílias beneficiadas pelo PBF e o valor do benefício médio repassado por família. No mapa, {1} está em destaque. A escala de cores varia do menor percentual (branco) para o maior percentual da população no PBF (vermelho)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_14_10_00"
+                year: "max"
+              args:
+                - named_prop: "nu_competencia"
+                - named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_14_10_00'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_bolsa_fam"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'População beneficiada'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_bolsa_fam'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_idhm_municipio"
+        title: 
+          fixed: "Índice de Desenvolvimento Humano (IDH) Municipal"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "06_01_09_01"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Índice de Desenvolvimento Humano (IDH) é uma medida comparativa que vai de 0 a 1 usada para classificar os países e municípios pelo seu grau de 'desenvolvimento humano'. A classificação é dividida em desenvolvidos (desenvolvimento humano muito alto, IDH 0,8 a 1,0), em desenvolvimento (desenvolvimento humano médio e alto, IDH de 0,6 a 0,79) e subdesenvolvidos (desenvolvimento humano baixo e muito baixo, IDH de 0 a 0,59). A estatística é composta a partir de três componentes: “vida longa e saudável”, medida pela expectativa de vida ao nascer; “acesso ao conhecimento”, medido pela escolaridade da população adulta e fluxo escolar da população jovem; e, “padrão de vida”, medido pelo PIB per capita. Cada ano, os países membros da ONU são classificados de acordo com essas medidas.<br/><br/>
+              <table class='table-info'>
+              <th colspan=2>Classificação IDH</th>
+              <tr><td>Muito Alto</td><td>0,800 ou superior</td></tr>
+              <tr><td>Alto</td><td>0,700 a 0,799</td></tr>
+              <tr><td>Médio</td><td>0,600 a 0,699</td></tr>
+              <tr><td>Baixo</td><td>0,500 a 0,599</td></tr>
+              <tr><td>Muito Baixo</td><td>abaixo de 0,500</td></tr>
+              </table>"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "06_01_09_01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    format: 'auto'
+                    precision: 3
+                    named_prop: 'vl_indicador'
+                  - prop: "description"
+                    fixed: "IDH Municipal"
+
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "06_01_09_01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    function: "calc_class_idh"
+                    fn_args:
+                      - named_prop: "vl_indicador" 
+                      - fixed : false
+                      - fixed : false
+                      - fixed : true
+                  - prop: "description"
+                    function: "minicard_get_class_idh"
+                    fn_args:
+                      - named_prop: "vl_indicador"
+
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "06_01_09_01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_uf'
+                    format: 'real'
+                    precision: 3
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "IDH da UF"
+
+          - type: "text"
+            title: ""
+            content:
+              # template: "O Índice de Desenvolvimento Humano (IDH) do município é de {0}, classificado como {1}. Diante da disparidade do IDH de alguns municípios, é importante estar atento ao ordenamento do IDH dentro da unidade federativa e do país e também da posição em relação à média do IDH municipal da unidade federativa e do país. Os gráficos demonstram qual é posição do IDH do município em relação ao estado e o país e também em relação à média do estado e do país."
+              template: "Em destaque, o IDH-M do município em {0}, classificado como {1}. Diante da disparidade do IDH de alguns municípios, é importante identificar a posição deste no ranking e em relação à média da UF e do Brasil. No mapa, {2} está em destaque. A escala de cores varia do menor (vermelho) para  o maior IDH (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "06_01_09_01"
+                year: "max"
+              args:
+                - named_prop: "nu_competencia"
+                  format: 'inteiro'
+                - function: "calc_class_idh"
+                  fn_args:
+                    - named_prop: "vl_indicador" 
+                    - fixed : false
+                    - fixed : false
+                    - fixed : false
+                - named_prop: "nm_municipio_uf"
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "06_01_09_01"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+          - id: "select_idh"
+            type: "select"
+            label: "Selecione"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ["06_01_09_02", "06_01_09_03", "06_01_09_04"]
+              year: "max"
+            args:
+              - prop: "id"
+                named_prop: "cd_indicador"
+              - prop: "label"
+                named_prop: "ds_indicador_curto"
+            selection:
+              event: "selection"
+              rules:
+                api:
+                  template: "/indicadoresmunicipais?categorias=nm_municipio,cd_uf,cd_dimensao,ds_indicador,ds_indicador_radical,ds_indicador_curto,ds_indicador_prefixo,cd_indicador,nu_competencia,cd_mun_ibge,ds_fonte,vl_indicador,rank_uf,rank_br,rank_uf_total,rank_br_total,pct_uf,pct_br,media_uf,media_br,vl_indicador_br,vl_indicador_uf&filtros=eq-cd_indicador-'{0}',and,eq-cd_uf-{1},and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "cd_indicador"
+                    - named_prop: "cd_uf"
+          - type: "text"
+            title: ""
+            content:
+              template: "IDH-Renda: {0} <br/> IDH-Longevidade: {1} <br/> IDH-Educação: {2}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ["06_01_09_02", "06_01_09_03", "06_01_09_04"]
+                year: "max"
+              args:
+                - id: "06_01_09_02"
+                  function: "calc_class_idh"
+                  fn_args:
+                    - named_prop: "vl_indicador"
+                    - fixed : true
+                    - fixed : true
+                - id: "06_01_09_03"
+                  function: "calc_class_idh"
+                  fn_args:
+                    - named_prop: "vl_indicador"
+                    - fixed : true
+                    - fixed : true   
+                - id: "06_01_09_04"
+                  function: "calc_class_idh"
+                  fn_args:
+                    - named_prop: "vl_indicador"
+                    - fixed : true
+                    - fixed : true
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_01_09_01',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            recalc_min_max: true
+            calcs:
+              - id: "deviation_idh"
+                function: "get_bipolar_scale"
+                fn_args: 
+                  - fixed: 'vl_indicador'
+                  - fixed: 0.6 
+              # - id: "idh_level"
+              #   function: "get_idh_level"
+            formatters:
+              - id: "vl_indicador"
+                format: 'real'
+                precision: 3
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'IDH'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_idh'
+          colorScale:
+            name: "RdYlBu"
+            order: 'asc'
+        source:
+          desc_field: "ds_fonte"

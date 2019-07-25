@@ -1,0 +1,367 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "12_02_23_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "12_01_02_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        named_prop: "nu_competencia"
+# ========================================================
+secoes:
+  - id: "empresas_unica"
+    name: ""
+    cards:
+# ========================================================
+      - id: "multi_empresas"
+        type: "multiple-charts"
+        title: 
+          fixed: "Empresas e organizações por setor"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "12_02_23_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O Cadastro Central de Empresas (CEMPRE) do IBGE é formado por empresas e outras organizações e suas respectivas unidades locais formalmente constituídas, registradas no CNPJ (Cadastro Nacional de Pessoa Jurídica). Sua atualização ocorre anualmente, a partir das pesquisas econômicas anuais do IBGE, nas áreas de Indústria, Comércio, Construção e Serviços, e de registros administrativos, como a RAIS."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "As empresas, independentemente do seu porte, são a principal fonte de crescimento econômico, incluindo a geração de empregos e a promoção de Trabalho Decente, e estão na base da atividade econômica e do desenvolvimento na grande maioria dos países.<br/>
+                      Uma análise simples do dinamismo econômico de um município pode ser realizada pela observação do número de empresas ali estabelecidas e do número de unidades locais, compreendidas como o lugar onde estas empresas exercem suas atividades."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "12_02_23_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Total de empresas'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "12_02_38_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'APENAS ADMINISTRAÇÃO PÚBLICA'
+              - relevance: 'low'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "12_02_23_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_uf'
+                    format: 'inteiro'
+                    collapse: 
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "EMPRESAS NA UF"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a quantidade total de empresas e outras organizações empregadoras na localidade, acompanhada do valor correspondente à Administração Pública em {0}. No gráfico, apresenta-se a distribuição por setor."       
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "12_02_38_00"
+                year: "max"
+              args:
+                - named_prop: 'nu_competencia'
+        charts:
+# ========================================================
+          - id: "bar_empresas"
+            title: "Número de Empresas por Classificação de Atividades"
+            type: "TREEMAP"
+            preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['12_02_24_00','12_02_25_00','12_02_26_00','12_02_27_00','12_02_28_00','12_02_29_00','12_02_30_00','12_02_31_00','12_02_32_00','12_02_33_00','12_02_34_00','12_02_35_00','12_02_36_00','12_02_37_00','12_02_38_00','12_02_39_00','12_02_40_00','12_02_41_00','12_02_42_00','12_02_43_00','12_02_44_00']
+                year: "max"
+                options:
+                  formatters:
+                    - id: "vl_indicador"
+                      format: 'inteiro'
+            headers:
+              - text: 'Atividade'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Qtde'
+                value: 'fmt_vl_indicador'
+            options:
+              id: "cd_indicador"
+              size: "vl_indicador"
+              text: "ds_agreg_primaria"
+              hide_legend: true
+              colorScale:
+                name: "BuGn"
+                type: "singleHue"
+                # levels: 8
+                order: 'asc'
+              # removed_text_list: ["Empresas e outras organizações, por seção da classificação de atividades (CNAE 2.0) - ", ", 2007", ", 2015"]
+          # - id: "treemap_empresas_2015"
+          #   title: "Distribuição da empresas em 2015"
+          #   type: "TREEMAP"
+          #   preloaded:
+          #       prop: "centralindicadores"
+          #       function: "slice"
+          #       id: ['12_02_24_00','12_02_25_00','12_02_26_00','12_02_27_00','12_02_28_00','12_02_29_00','12_02_30_00','12_02_31_00','12_02_32_00','12_02_33_00','12_02_34_00','12_02_35_00','12_02_36_00','12_02_37_00','12_02_38_00','12_02_39_00','12_02_40_00','12_02_41_00','12_02_42_00','12_02_43_00','12_02_44_00']
+          #   formatters:
+          #     - id: "vl_indicador"
+          #       format: 'inteiro'
+          #   headers:
+          #     - text: 'Indicador'
+          #       align: 'left'
+          #       value: 'ds_indicador_radical'
+          #     - text: 'Ano'
+          #       align: 'left'
+          #       value: 'nu_competencia'
+          #     - text: 'Qtde'
+          #       value: 'fmt_vl_indicador'
+          #   options:
+          #     id: "cd_indicador"
+          #     size: "vl_indicador"
+          #     text: "ds_indicador_radical"
+          #     colorScale:
+          #       name: "RdYlBu"
+          #       order: "desc"
+          #     removed_text_list: [", por seção da classificação de atividades (CNAE 2.0)",", 2015"]
+            source:
+              desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_evolucao_estab"
+        title: 
+          fixed: "Evolução da quantidade de estabelecimentos (unidades locais) e empresas"
+        title_comment:
+          template: "{0}, de 2007 e 2015"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "12_02_23_00"
+          args:
+            - id: '12_02_23_00' 
+              named_prop: "nm_municipio_uf"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "12_01_01_00"
+                  year: "2007"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "ESTABELECIMENTOS NO MUNICÍPIO"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "12_01_02_00"
+                  year: "2015"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "ESTABELECIMENTOS NO MUNICÍPIO"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "12_01_01_00"
+                  year: "2007"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_uf'
+                    format: 'inteiro'
+                    collapse: 
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "ESTABELECIMENTOS NA UF"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "12_01_02_00"
+                  year: "2015"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_uf'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "ESTABELECIMENTOS NA UF"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              # template: "Os números em destaque apontam, segundo dados do Cadastro Central de Empresas (CEMPRE) do IBGE, a evolução da quantidade de estabelecimentos de empresas e organizações em geral na localidade, em números de 2007 e 2015. No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa quanto à variação do número de estabelecimento empresariais nos dois anos de referência. {0} está destacado em linhas pretas. A escala de cores varia do vermelho (eventual variação negativa) para o azul (variação positiva)."
+              template: "Em destaque, a evolução da quantidade de estabelecimentos de empresas e organizações em geral na localidade, em números de 2007 e 2015. No mapa, {0} está em destaque. A escala de cores varia de um saldo negativo (vermelho escuro) para o saldo positivo na criação de estabelecimentos e empresas (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['12_01_03_00']
+              args:
+                - named_prop: "nm_municipio_uf"
+          # - type: "text"
+          #   title: "Pendências"
+          #   content:
+          #     fixed: "Arrumar o nome do indicador no banco de dados para correta exibição no tooltip do gráfico."
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "12_01_03_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{2},and,eq-cd_indicador-'12_01_03_00'"
+          args:
+            - named_prop: "idLocalidade"
+            - named_prop: "idLocalidadeD6"
+            - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'porcentagem'
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Variação do número de estabelecimentos'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'vl_indicador'
+          colorScale:
+            name: 'RdBu'
+        source:
+          desc_field: "ds_fonte"

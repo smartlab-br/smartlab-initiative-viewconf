@@ -1,0 +1,98 @@
+api_obj_collection:
+  - name: "chart_data"
+    endpoint: 
+      categorias: 'cd_mun_ibge,cd_indicador,ds_indicador_radical,ds_agreg_primaria,vl_indicador,nm_municipio,nm_municipio_uf,nm_uf,cd_uf,nu_competencia,nu_competencia_min,nu_competencia_max,rank_uf,rank_uf_total,rank_br,rank_br_total,ds_fonte'
+      filtros:
+        template: 'eq-cd_indicador-{},and,eq-cd_uf-{},and,eq-nu_competencia-nu_competencia_max'
+        args:
+          - prop: 'cd_indicador'
+          - prop: 'cd_analysis_unit'
+            function: "slice"
+            args:
+              - fixed: 0
+              - fixed: 2
+    formatters:
+      - prop: "fmt_vl_indicador"
+        named_prop: "vl_indicador"
+        format: 'inteiro'
+    instances:
+      - name: 'desc_data'
+        type: 'from_id'
+        named_prop: 'cd_mun_ibge'
+  - name: "indicador_data"
+    endpoint: 
+      categorias: 'cd_indicador,ds_indicador_radical,ds_agreg_primaria,nu_competencia_min,nu_competencia_max'
+      filtros:
+        template: 'eq-cd_indicador-{}'
+        args:
+          - prop: 'cd_indicador'
+      limit: '1'
+    instances:
+      - name: 'indic_data'
+        type: 'first_occurence'
+title: 
+  template: "{}"
+  args:
+    - base_object: "indic_data"
+      named_prop: "ds_indicador_radical"
+title_comment:
+  template: "{}, {}"
+  args:
+    - base_object: "term_localidade"
+      named_prop: "value"
+    - base_object: "indic_data"
+      named_prop: "nu_competencia_max"
+info:
+  - type: "text"
+    title: "Referência"
+    content: 
+      template: "Indicador: {} - {}"
+      args:
+        - base_object: "indic_data"
+          named_prop: "cd_indicador"
+        - base_object: "indic_data"
+          named_prop: "ds_indicador_radical"
+msgNoData:
+  desc: "No período, não houve informações sobre a localidade selecionada."
+description:
+  - type: "minicards"
+    cards:
+      - relevance: "high"
+        cls: "xs12 md6"
+        args:
+          - prop: "value"
+            base_object: "desc_data"
+            named_prop: "vl_indicador"
+            format: 'inteiro'
+          - prop: "description"
+            base_object: "indic_data"
+            named_prop: "ds_indicador_radical"
+  - type: "text"
+    title: ""
+    content:
+      template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {}. A escala de cores varia da menor quantidade (branco) para a maior quantidade (azul escuro). A localidade está em destaque."
+      args:
+        - base_object: "desc_data"
+          named_prop: "ds_indicador_radical"
+chart_type: "MAP_TOPOJSON"
+chart_data: "chart_data"
+headers:
+  - text: "Município"
+    align: "left"
+    value: "nm_municipio"
+  - text: "Ano"
+    align: "left"
+    value: "nu_competencia"
+  - text: "Indicador"
+    value: "ds_indicador_radical"
+  - text: "Valor"
+    value: "fmt_vl_indicador"
+chart_options: 
+  id_field: "cd_mun_ibge"
+  topo_key: "codarea"
+  value_field: "vl_indicador"
+  tiles_url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+  colorScale: 
+    name: "Blues"
+source: 
+  desc_field: "ds_fonte"

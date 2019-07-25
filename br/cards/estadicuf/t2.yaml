@@ -1,0 +1,111 @@
+api_obj_collection:
+  - name: "chart_data"
+    endpoint: 
+      categorias: 'spai_ds,ds_fonte,spai_vl_indicador,spai_vl_indicador_txt,nm_uf,cd_uf,nu_ano_indicador,tema,sub_tema,ds_indicador,cd_indicador,spai_ds_texto,presenca_total_br,pct_presenca_br,cd_indicador_spai'
+      filtros:
+        template: 'eq-cd_indicador_spai-{},and,eq-nu_ano_indicador-nu_ano_indicador_max'
+        args:
+          - prop: 'cd_indicador'
+    instances:
+      - name: 'desc_data'
+        type: 'from_id'
+        named_prop: 'cd_uf'
+title: 
+  template: "{}"
+  args:
+    - base_object: "desc_data"
+      named_prop: "spai_ds"
+title_comment:
+  template: "{}, em {}, na época da pesquisa"
+  args:
+    - base_object: "desc_data"
+      named_prop: nm_uf
+    - base_object: "desc_data"
+      named_prop: nu_ano_indicador
+      format: 'inteiro'
+info:
+  - type: "text"
+    title: "Sobre a métrica"
+    content:
+      template: "Os dados brutos analisados, com base no banco de dados do IBGE, têm as seguintes referências:<br/>Tema: {}<br/>Subtema: {}<br/>Nome: {}<br/>Fonte: {}<br/>Ano: {}Código: {}"
+      args:
+        - base_object: "desc_data"
+          named_prop: "tema"
+        - base_object: "desc_data"
+          named_prop: "sub_tema"
+        - base_object: "desc_data"
+          named_prop: "ds_indicador"
+        - base_object: "desc_data"
+          named_prop: "ds_fonte"
+        - base_object: "desc_data"
+          named_prop: "nu_ano_indicador"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador"
+  - type: "text"
+    title: "Referência"
+    content: 
+      template: "Gráfico/Mapa: {}<br/>Título/Subtítulo: {}<br/>Minicards: {}<br/>Texto: {}"
+      args:
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+description:
+  - type: "minicards"
+    cards:
+      - relevance: "high"
+        cls: "xs12 md6"
+        args:
+          - prop: "value"
+            base_object: "desc_data"
+            named_prop: "spai_vl_indicador_txt"
+          - prop: "description"
+            fixed: 'nesta UF'
+      - relevance: "high"
+        cls: "xs12 md6"
+        args: 
+          - prop: "value"
+            base_object: "desc_data"
+            named_prop: "presenca_total_br"
+            format: 'inteiro'
+            default: "Nenhuma"
+          - prop: "description"
+            fixed: "Das 27 UFs possuem"
+  - type: "text"
+    title: ""
+    content:
+      template: "Em destaque, a situação da UF quanto à existência de {} em seu âmbito. No mapa, a UF é destacada e comparada a distintas unidades federativas do país quanto à presença dessas ações do poder público. O azul indica a presença e o cinza a ausência."
+      args:
+        - base_object: "desc_data"
+          named_prop: "spai_ds_texto"
+chart_type: "MAP_TOPOJSON"
+chart_data: "chart_data"
+headers:
+  - text: "UF"
+    align: "left"
+    value: "nm_uf"
+  - text: "Indicador"
+    align: "left"
+    value: "spai_ds"
+  - text: "Existe"
+    value: "spai_vl_indicador_txt"
+chart_options: 
+  id_field: "cd_uf"
+  topo_key: "codigo"
+  value_field: "spai_vl_indicador"
+  topology: "uf"
+  tiles_url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+  colorScale: 
+    type: "fixed"
+    color_array: 
+      0: "#BCBCBC"
+      1: "#6187c1"
+      4: "transparent"
+      5: "#d3e5f6"
+      99: "transparent"
+source: 
+  desc_field: "ds_fonte"

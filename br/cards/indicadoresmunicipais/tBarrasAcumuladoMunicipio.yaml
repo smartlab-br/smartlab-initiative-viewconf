@@ -1,0 +1,106 @@
+api_obj_collection:
+  - name: "chart_data"
+    endpoint: 
+      categorias: 'cd_indicador,ds_indicador_radical,ds_agreg_primaria,vl_indicador,nu_competencia,nu_competencia_min,nu_competencia_max,ds_fonte'
+      filtros:
+        template: 'eq-cd_indicador-{}'
+        args:
+          - prop: 'cd_indicador'
+          - prop: 'cd_analysis_unit'
+      order:
+        fixed: "nu_competencia"
+    instances:
+      - name: 'desc_data'
+        type: 'max'
+        named_prop: 'nu_competencia'
+    formatters:
+      - prop: "fmt_vl_indicador"
+        named_prop: "vl_indicador"
+        format: "inteiro"
+title: 
+  template: "{}"
+  args:
+    - base_object: "desc_data"
+      named_prop: "ds_indicador_radical"
+title_comment:
+  template: "{}, de {} a {}"
+  args:
+    - base_object: "desc_data"
+      named_prop: nm_municipio_uf
+    - base_object: "desc_data"
+      named_prop: nu_competencia_min
+    - base_object: "desc_data"
+      named_prop: nu_competencia_max
+info:
+  - type: "text"
+    title: "Sobre a métrica"
+    content:
+      fixed: ""
+      # template: "Os dados brutos analisados, com base no banco de dados do IBGE, têm as seguintes referências:<br/>Tema: {}<br/>Subtema: {}<br/>Nome: {}<br/>Fonte: {}<br/>Ano: {}Código: {}"
+      # args:
+      #   - base_object: "desc_data"
+      #     named_prop: "tema"
+      #   - base_object: "desc_data"
+      #     named_prop: "sub_tema"
+      #   - base_object: "desc_data"
+      #     named_prop: "ds_indicador"
+      #   - base_object: "desc_data"
+      #     named_prop: "ds_fonte"
+      #   - base_object: "desc_data"
+      #     named_prop: "nu_ano_indicador"
+      #   - base_object: "desc_data"
+      #     named_prop: "cd_indicador"
+  - type: "text"
+    title: "Referência"
+    content: 
+      template: "Indicador: {}"
+      args:
+        - base_object: "desc_data"
+          named_prop: "cd_indicador"
+description:
+  - type: "minicards"
+    cards:
+      - relevance: "high"
+        cls: "xs12 md6"
+        args:
+          - prop: "value"
+            base_object: "desc_data"
+            named_prop: "vl_indicador"
+            format: 'real'
+            collapse: 
+              format: 'real'
+              precision: 1
+            default: "Sem Registros"
+          - prop: "description"
+            fixed: "Dias perdidos"
+          - prop: "comment"
+            base_object: "desc_data"
+            named_prop: "nu_competencia"
+  - type: "text"
+    title: ""
+    content:
+      template: "Em destaque, informações sobre {}. A soma da duração de cada benefício concedido permite identificar o número de dias de trabalho perdidos, que revela não apenas perdas humanitárias e familiares, mas também econômicas, em matéria de produtividade de empregadores e da economia em geral. No gráfico ao lado, a série histórica em dias perdidos acumulados ao longo dos anos."
+      args:
+        - base_object: "desc_data"
+          named_prop: "ds_indicador_radical"
+chart_type: "BAR"
+chart_data: "chart_data"
+headers:
+  - text: 'Indicador'
+    value: 'ds_indicador_radical'
+  - text: 'Ano'
+    align: 'left'
+    value: 'nu_competencia'
+  - text: 'Total de Benefícios'
+    value: 'fmt_vl_indicador'
+chart_options:
+  x: "nu_competencia"
+  y: "vl_indicador"
+  id: "id"
+  orientation: "vertical"
+  accum: true
+  stacked: true
+  text: "nu_competencia"
+  legend_field: "ds_agreg_primaria"
+source:
+  desc_field: "ds_fonte"

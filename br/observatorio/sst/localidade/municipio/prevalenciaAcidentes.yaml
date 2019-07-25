@@ -1,0 +1,206 @@
+# ====================================================          
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "10_13_01_01"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        multiplier: 10000
+        collapse:
+          format: 'real'
+      - prop: "description"
+        # named_prop: "ds_indicador_radical"
+        fixed: "CASOS A CADA 10.000 TRABALHADORES<br/>Prevalência de Acidentes de Trabalho"
+      - prop: 'comment'
+        template: "({0})"
+        args:
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "10_13_01_02"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        multiplier: 100000
+        collapse:
+          format: 'real'
+      - prop: "description"
+        # named_prop: "ds_indicador_radical"
+        fixed: "CASOS A CADA 100.000 TRABALHADORES<br/>Mortalidade no Trabalho"
+      - prop: 'comment'
+        template: "({0})"
+        args:
+          - named_prop: "nu_competencia"
+# ====================================================          
+secoes:
+  - id: "prevalencia_acidentes"
+    name: "Notificações de Acidentes de Trabalho (CAT)"
+    cards:
+# ===============================================
+      - id: "bar_priori_municipios"
+        title: 
+          fixed: "Maiores Prevalências de Notificações de Acidentes de Trabalho"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_13_01_01"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_13_01_01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    multiplier: 10000
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    # named_prop: "ds_indicador_radical"
+                    fixed: "CASOS A CADA 10.000 TRABALHADORES<br/>Prevalência de Acidentes de Trabalho"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, informações sobre Prevalência de Notificações de Acidentes de Trabalho em número de casos a cada 10 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se as 10 unidades geográficas com as maiores prevalências para o ano considerado."
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "10_13_01_01"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        chart_type: "BAR"
+        api:
+          template: "/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,sg_uf,cd_mun_ibge,vl_indicador,rank_uf,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'10_13_01_01',and,eq-cd_uf-{0}&ordenacao=rank_uf&limit=10"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "rankMun"
+                function: "calc_addition_ids_ds"
+                fn_args:
+                  - named_prop: "rank_uf"
+                  - named_prop: "cd_mun_ibge"
+              - id: "bar_description"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed:
+                      template: "{0} ({1} casos em 10 mil)"
+                      args:
+                        - named_prop: "nm_municipio_uf"
+                        - named_prop: "vl_indicador"
+                          format: "inteiro"
+                          multiplier: 10000
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+                multiplier: 10000
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Nº de casos a cada 10 mil trabalhadores'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'rank_br'
+        footnote: "Prevalências de Notificações de Acidentes de Trabalho - Casos a cada 10.000 trabalhadores expostos ao risco"
+        chart_options:
+          id: "cd_mun_ibge"
+          x: "calc_rankMun"
+          y: "vl_indicador"
+          text: "calc_bar_description"
+          hide_legend: true
+          orientation: "vertical"
+          show_x_axis: false
+          show_y_axis: false
+          color: "#238B45"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "bar_prev_acid_empregados"
+        title: 
+          fixed: "Prevalência de Acidentes de Trabalho - Série Histórica"
+        card_template: "tPrevalenciaBarSerieHistoricaMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "10_13_01_01"
+        coefficient: "vl_indicador-10000-10 mil"
+        term: "ocorrencia-casos"
+# ====================================================          
+      - id: "topo_prev_acid_empregados"
+        title: 
+          fixed: "Prevalência de Acidentes de Trabalho - Distribuição Geográfica"
+        card_template: "tPrevalenciaTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "10_13_01_01"
+        coefficient: "vl_indicador-10000-10 mil"
+        term: "ocorrencia-casos"
+# ====================================================          
+      - id: "bar_prev_com_morte"
+        title: 
+          fixed: "Mortalidade no Trabalho (Acidentes de Trabalho com Morte) - Série Histórica"
+        card_template: "tPrevalenciaBarSerieHistoricaMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "10_13_01_02"
+        coefficient: "vl_indicador-100000-100 mil"
+        term: "ocorrencia-casos"
+# ====================================================          
+      - id: "topo_prev_com_morte"
+        title: 
+          fixed: "Mortalidade no Trabalho (Acidentes de Trabalho com Morte) - Distribuição Geográfica"
+        card_template: "tPrevalenciaTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "10_13_01_02"
+        coefficient: "vl_indicador-100000-100 mil"
+        term: "ocorrencia-casos"

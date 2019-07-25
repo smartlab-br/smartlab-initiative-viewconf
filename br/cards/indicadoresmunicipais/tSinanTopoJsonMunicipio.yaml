@@ -1,0 +1,121 @@
+api_obj_collection:
+  - name: "chart_data"
+    endpoint: 
+      categorias: 'cd_mun_ibge,cd_indicador,ds_indicador_radical,ds_agreg_primaria,vl_indicador,nm_municipio,nm_municipio_uf,nm_uf,cd_uf,nu_competencia,nu_competencia_min,nu_competencia_max,rank_uf,rank_uf_total,rank_br,rank_br_total,ds_fonte'
+      filtros:
+        template: 'eq-cd_indicador-{},and,eq-cd_uf-{},and,eq-nu_competencia-nu_competencia_max'
+        args:
+          - prop: 'cd_indicador'
+          - prop: 'cd_analysis_unit'
+            function: "slice"
+            args:
+              - fixed: 0
+              - fixed: 2
+    formatters:
+      - prop: "fmt_vl_indicador"
+        named_prop: "vl_indicador"
+        format: 'inteiro'
+    instances:
+      - name: 'desc_data'
+        type: 'from_id'
+        named_prop: 'cd_mun_ibge'
+  - name: "indicador_data"
+    endpoint: 
+      categorias: 'cd_indicador,ds_indicador_radical,ds_agreg_primaria,nu_competencia_min,nu_competencia_max'
+      filtros:
+        template: 'eq-cd_indicador-{}'
+        args:
+          - prop: 'cd_indicador'
+      limit: '1'
+    instances:
+      - name: 'indic_data'
+        type: 'first_occurence'
+title: 
+  template: "{} - Distribuição Geográfica"
+  args:
+    - base_object: "indic_data"
+      named_prop: "ds_agreg_primaria"
+title_comment:
+  template: "{}, {}"
+  args:
+    - base_object: "term_localidade"
+      named_prop: "value"
+    - base_object: "indic_data"
+      named_prop: "nu_competencia_max"
+info:
+  - type: "text"
+    title: "Sobre a métrica"
+    content:
+      fixed: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções."
+  - type: "text"
+    title: "Referência"
+    content: 
+      template: "Indicador: {}"
+      args:
+        - base_object: "indic_data"
+          named_prop: "cd_indicador"
+msgNoData:
+  desc: "No período, não houve notificações relacionadas ao trabalho no Sistema de Informação de Agravos de Notificação (SINAN), para o município selecionado."
+description:
+  - type: "minicards"
+    cards:
+      - relevance: "high"
+        cls: "xs12 md6"
+        args:
+          - prop: "value"
+            base_object: "desc_data"
+            named_prop: "vl_indicador"
+            format: 'inteiro'
+          - prop: "description"
+            fixed: "CASOS NOTIFICADOS"
+  - type: "text"
+    title: ""
+    content:
+      template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {}. Nesta versão, somente foram considerados as doenças e agravos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério da Saúde. No gráfico a seguir, a escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). O município selecionado está em destaque."
+      args:
+        - base_object: "desc_data"
+          named_prop: "ds_indicador_radical"
+  # - type: "ranking"
+  #   args:
+  #     - prop: 'regional_rank'
+  #       base_object: "desc_data"
+  #       named_prop: "rank_uf"
+  #       format: 'inteiro'
+  #       default: 0
+  #     - prop: 'regional_total'
+  #       base_object: "desc_data"
+  #       named_prop: "rank_uf_total"
+  #       format: 'inteiro'
+  #       default: 0
+  #     - prop: 'national_rank'
+  #       base_object: "desc_data"
+  #       named_prop: "rank_br"
+  #       format: 'inteiro'
+  #       default: 0
+  #     - prop: 'national_total'
+  #       base_object: "desc_data"
+  #       named_prop: "rank_br_total"
+  #       format: 'inteiro'
+  #       default: 0
+chart_type: "MAP_TOPOJSON"
+chart_data: "chart_data"
+headers:
+  - text: "Município"
+    align: "left"
+    value: "nm_municipio"
+  - text: "Ano"
+    align: "left"
+    value: "nu_competencia"
+  - text: "Indicador"
+    value: "ds_indicador_radical"
+  - text: "Valor"
+    value: "fmt_vl_indicador"
+chart_options: 
+  id_field: "cd_mun_ibge"
+  topo_key: "codarea"
+  value_field: "vl_indicador"
+  tiles_url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+  colorScale: 
+    name: "Reds"
+source: 
+  desc_field: "ds_fonte"

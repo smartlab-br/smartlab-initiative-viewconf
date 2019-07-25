@@ -1,0 +1,130 @@
+secoes:
+  - id: "oportunidade_mercado"
+    name: "Mercado de Trabalho"
+    indicadores:
+      - nm_indicador: 'mei'
+        nu_ano_indicador: '2013'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'ocup_total'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+    cards:
+      - id: "line_empformal"
+        chart_type: "LINE"
+        title: "Número de Empregos Formais"
+        api_endpoint: "/indicadoresregionais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nu_ano_indicador,ds_fonte,vl_indicador&filtros=eq-cd_regiao-{0},and,eq-nm_indicador-'empform_total'"
+        headers:
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_ano_indicador'
+          - text: 'Qtde'
+            value: 'vl_indicador'
+        chart_options:
+          id: "ds_indicador_radical"
+          x: "nu_ano_indicador"
+          y: "vl_indicador"
+          format_function: "number_number"
+        description: "bla bla bla"
+      - id: "line_empcriadoperdido"
+        chart_type: "LINE"
+        title: "Postos de trabalho criados/perdidos (CAGED)"
+        api_endpoint: "/indicadoresregionais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nu_ano_indicador,ds_fonte,vl_indicador&filtros=eq-cd_regiao-{0},and,in-nm_indicador-'empform_criados_caged'-'empform_perdidos_caged'"
+        headers:
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_ano_indicador'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'vl_indicador'
+        chart_options:
+          multi: true
+          id: "ds_indicador_radical"
+          x: "nu_ano_indicador"
+          y_function: "absolute"
+          format_function: "number_number"
+        description: "bla bla bla"
+      - id: "bar_empsetores"
+        chart_type: "BAR"
+        title: "Concentração dos Vínculos Formais no Município por Grandes Setores (2015)"
+        api_endpoint: "/indicadoresregionais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nu_ano_indicador,ds_fonte,vl_indicador&filtros=eq-cd_regiao-{0},and,eq-nu_ano_indicador-2015,and,in-nm_indicador-'empform_agr'-'empform_com'-'empform_conciv'-'empform_ind'-'empform_serv'"
+        headers:
+          - text: 'Setor'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'vl_indicador'
+        chart_options:
+          id: "ds_indicador_radical"
+          text: "ds_indicador_radical"
+          y: "ds_indicador_radical"
+          x: "vl_indicador"
+          removeFromLabel: ["Número de empregos formais - "]
+        description: "texto texto texto ..."
+  - id: "oportunidade_populacao"
+    name: "População"
+    indicadores:
+      - nm_indicador: 'trabdomest'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'fem_filho0a3'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+    cards:
+      - id: "treemap_popocup_areas"
+        chart_type: "TREEMAP"
+        title: "População Ocupada entre 16 a 64 anos nos Grandes Setores (2010)"
+        api_endpoint: "/indicadoresregionais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nu_ano_indicador,ds_fonte,vl_indicador&valor=vl_indicador&agregacao=pct_sum&ordenacao=-vl_indicador&filtros=eq-cd_regiao-{0},and,eq-nu_ano_indicador-2010,and,in-nm_indicador-'ocup_agr'-'ocup_ind'-'ocup_serv'"
+        formatters:
+          - id: 'agr_pct_sum_vl_indicador'
+            formato: 'porcentagem'
+            casasDecimais: 1
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'vl_indicador'
+        chart_options:
+          pct_field: "fmt_agr_pct_sum_vl_indicador"
+          id: "fmt_size"
+          name_field: "ds_indicador_radical"
+          size: "vl_indicador"
+          limit: 20
+          removeFromLabel: ["População Ocupada (16 a 64 anos) - "]
+          format_function: "replace_text_namepercent"
+        description: "texto texto texto ..."
+  - id: "oportunidade_educacao"
+    name: "Educação" 
+    indicadores:
+      - nm_indicador: 'analfab'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'nemnem'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+    cards:
+      - id: "bar_educacao"
+        chart_type: "BAR"
+        title: "Grau de Instrução - pessoas de 15 anos ou mais de idade (2010)"
+        api_endpoint: "/indicadoresregionais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nu_ano_indicador,ds_fonte,vl_indicador&filtros=eq-cd_regiao-{0},and,eq-nu_ano_indicador-2010,and,in-nm_indicador-'analfab'-'seminstrfund'-'fundmed'-'medsup'-'supcompl'"
+        headers:
+          - text: 'Setor'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'vl_indicador'
+        chart_options:
+          id: "ds_indicador_radical"
+          text: "ds_indicador_radical"
+          y: "ds_indicador_radical"
+          x: "vl_indicador"
+          removeFromLabel: ["Pessoas com ","Pessoas "," (15 anos ou mais de idade)"," (15 anos ou mais)"]
+        description: "texto texto texto ..."

@@ -1,0 +1,319 @@
+# ===================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "09_01_01_88"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'real'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "09_01_06_88"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'real'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "10_10_01_91"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'real'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "10_10_01_92"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'real'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+# ===================================================
+secoes:
+  - id: "duracao_unica"
+    name: ""
+    cards:
+# ===================================================
+      - id: "bar_duracao"
+        type: "multiple-charts"
+        title: 
+          fixed: "Duração do afastamento"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            template: "/sst/beneficios?categorias=nm_uf&valor=ano_beneficio&agregacao=MIN,MAX&filtros=eq-cd_uf-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "agr_min_ano_beneficio"
+            - named_prop: "agr_max_ano_beneficio"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        # title_comment:
+        #   template: "{0}"
+        #   preloaded:
+        #     prop: "centralindicadores"
+        #     function: "slice"
+        #     id: "02_01_06_00"
+        #   args:
+        #     - named_prop: "nu_competencia"
+        #       format: "inteiro"
+            
+        description:
+          # - type: "minicards"
+          #   cards:
+          #     - relevance: 'high'
+          #       cls: 'xs12 md7'
+          #       preloaded:
+          #         prop: "centralindicadores"
+          #         function: "slice"
+          #         id: "02_01_06_00"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'vl_indicador'
+          #           format: 'porcentagem'
+          #           collapse: true
+          #           precision: 0
+          #           default: "Sem Registros"
+          #         - prop: "description"
+          #           named_prop: "nm_municipio_uf"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto...<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>"
+        charts:
+          - id: "bar_frequencia"
+            cls: "xs12 md4"
+            title: "Total de Afastamentos (Frequência)"
+            type: "BAR"
+            api: 
+              template: "/sst/beneficios?categorias=ano_beneficio&agregacao=count&filtros=eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_count"
+                      format: 'inteiro'
+            headers:
+              - text: 'Ano'
+                align: 'left'
+                value: 'ano_beneficio'
+              - text: 'Total de Benefícios'
+                value: 'fmt_agr_count'
+            options:
+              x: "ano_beneficio"
+              y: "agr_count"
+              orientation: "vertical"
+              text: "ano_beneficio"
+              color: "#238B45"
+          - id: "bar_dias"
+            cls: "xs12 md4"
+            title: "Total de Dias de Afastamento"
+            type: "BAR"
+            api: 
+              template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_dias_perdidos&agregacao=SUM&filtros=eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_qt_dias_perdidos"
+                      format: 'inteiro'
+            headers:
+              - text: 'Ano'
+                align: 'left'
+                value: 'ano_beneficio'
+              - text: 'Qtde de dias perdidos'
+                value: 'fmt_agr_sum_qt_dias_perdidos'
+            options:
+              x: "ano_beneficio"
+              y: "agr_sum_qt_dias_perdidos"
+              orientation: "vertical"
+              text: "ano_beneficio"
+              color: "#88419d"
+          - id: "bar_duracao_media"
+            cls: "xs12 md4"
+            title: "Duração Média por benefício"
+            type: "BAR"
+            api: 
+              template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_dias_perdidos&agregacao=AVG&filtros=eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_avg_qt_dias_perdidos"
+                      format: 'real'
+            headers:
+              - text: 'Ano'
+                align: 'left'
+                value: 'ano_beneficio'
+              - text: 'Duração média(dias)'
+                value: 'fmt_agr_avg_qt_dias_perdidos'
+            options:
+              x: "ano_beneficio"
+              y: "agr_avg_qt_dias_perdidos"
+              orientation: "vertical"
+              text: "ano_beneficio"
+              color: "#da5f19"
+# ===================================================
+      - id: "bar_despesa"
+        type: "multiple-charts"
+        title: 
+          fixed: "Despesa com a Previdência"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            template: "/sst/beneficios?categorias=nm_uf&valor=ano_beneficio&agregacao=MIN,MAX&filtros=eq-cd_uf-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "agr_min_ano_beneficio"
+            - named_prop: "agr_max_ano_beneficio"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        # title_comment:
+        #   template: "{0}"
+        #   preloaded:
+        #     prop: "centralindicadores"
+        #     function: "slice"
+        #     id: "02_01_06_00"
+        #   args:
+        #     - named_prop: "nu_competencia"
+        #       format: "inteiro"
+            
+        description:
+          # - type: "minicards"
+          #   cards:
+          #     - relevance: 'high'
+          #       cls: 'xs12 md7'
+          #       preloaded:
+          #         prop: "centralindicadores"
+          #         function: "slice"
+          #         id: "02_01_06_00"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'vl_indicador'
+          #           format: 'porcentagem'
+          #           collapse: true
+          #           precision: 0
+          #           default: "Sem Registros"
+          #         - prop: "description"
+          #           named_prop: "nm_municipio_uf"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto...<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>"
+        charts:
+          - id: "bar_despesa_total"
+            cls: "xs12 md6"
+            title: "Total de Despesas da Previdência"
+            type: "BAR"
+            api: 
+              template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&filtros=eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_qt_despesa_total"
+                      format: 'monetario'
+            headers:
+              - text: 'Ano'
+                align: 'left'
+                value: 'ano_beneficio'
+              - text: 'Despesa'
+                value: 'fmt_agr_sum_qt_despesa_total'
+            options:
+              x: "ano_beneficio"
+              y: "agr_sum_qt_despesa_total"
+              orientation: "vertical"
+              text: "ano_beneficio"
+              color: "#238B45"
+          - id: "bar_despesa_media"
+            cls: "xs12 md6"
+            title: "Média de Despesas"
+            type: "BAR"
+            api: 
+              template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=AVG&filtros=eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_avg_qt_despesa_total"
+                      format: 'monetario'
+            headers:
+              - text: 'Ano'
+                align: 'left'
+                value: 'ano_beneficio'
+              - text: 'Média de Despesas'
+                value: 'fmt_agr_avg_qt_despesa_total'
+            options:
+              x: "ano_beneficio"
+              y: "agr_avg_qt_despesa_total"
+              orientation: "vertical"
+              text: "ano_beneficio"
+              color: "#88419d"

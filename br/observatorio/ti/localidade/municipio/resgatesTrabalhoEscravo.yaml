@@ -1,0 +1,264 @@
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/te/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_nat_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,eq-cd_mun_ibge-{0}"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Crianças e Adolescentes Naturais da Localidade Resgatados do Trabalho Escravo"
+      - prop: 'comment'
+        fixed: "(De 2003 a 2018)"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/te/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_res_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,eq-cd_mun_ibge-{0}"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Crianças e Adolescentes que Declararam residir na Localidade Resgatados do Trabalho Escravo"
+      - prop: 'comment'
+        fixed: "(De 2003 a 2018)"
+        
+    # chart:
+    #   id: "line_te_rgt"
+    #   type: "LINE"
+    #   api: 
+    #     fixed: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_nat_idade',and,lt-cast(ds_agreg_primaria as smallint)-18"
+    #     options:
+    #       formatters:
+    #         - id: "agr_sum_vl_indicador"
+    #           format: 'inteiro'
+    #   headers:
+    #     - text: 'Ano'
+    #       align: 'left'
+    #       value: 'nu_competencia'
+    #     - text: 'Nº resgatados do trabalho escravo'
+    #       value: 'fmt_agr_sum_vl_indicador'
+    #   options:
+    #     id: 'cd_indicador'
+    #     x: 'nu_competencia'
+    #     y: "agr_sum_vl_indicador"
+    #     x_options:
+    #       axis: false
+    #     y_options:
+    #       axis: false
+    #     hide_legend: true
+    #     color: "#00C853"
+
+# ========================================================
+secoes:
+  - id: 'prevalencia_geografico'
+    name: ''
+    cards:
+# ========================================================
+      - id: "mapa_resgatados_escravo_naturais"
+        title: 
+          fixed: "Naturalidade de Crianças e Adolescentes Resgatados do Trabalho Escravo"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/te/indicadoresnacionais?categorias=nu_competencia_min, nu_competencia_max&filtros=eq-cd_indicador-'te_nat'&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "Esse tipo de informação ajuda gestores na definição de regiões geográficas prioritárias para atividades de combate e prevenção, as quais também obedecem a lógica das curvas de oferta e de demanda do trabalho escravo no Brasil. Ilustrativamente, locais de maior intensidade de resgates devem ser prioritários quanto a atividades de inspeção do trabalho, sobretudo quanto às operações promovidas pela Divisão de Fiscalização para Erradicação do Trabalho Escravo (DETRAE – Ministério do Trabalho) e pelas equipes interinstitucionais do Grupo Especial de Fiscalização Móvel, conjuntamente com as ações coordenadas no âmbito das Superintendências Regionais do Trabalho nos Estados. Nesses locais, a orquestração interinstitucional fomenta e facilita a atuação efetiva e eficiente de operadores da lei, incluindo as forças policiais, da Justiça e do Ministério Público.<br/><br/>
+                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/te/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_nat_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,eq-cd_mun_ibge-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Nenhum"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Resgatados Naturais do Município'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de crianças e adolescentes vítimas do trabalho escravo  de acordo com o local de nascimento, considerando os registros com naturalidade apurada desde 2003, quando se iniciou o pagamento do benefício do seguro-desemprego para resgatados. No mapa ao lado, apresenta-se a perspectiva comparativa entre diferentes unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Locais de naturalidade de vítimas apresentam vulnerabilidades em nível de desenvolvimento humano e socioeconômico. No longo prazo, esses fatores (associados a pobreza, baixa escolaridade, desigualdade e violência, entre outros) contribuem para o aliciamento.<br/><br/>"
+              api:
+                template: "/te/indicadoresestaduais?categorias=nu_competencia_min&limit=1&filtros=eq-cd_indicador-'te_nat_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,eq-cd_uf-{0}"
+                args:
+                  - named_prop: "cd_uf"
+              args:
+                - named_prop: "nu_competencia_min"
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_nat"
+            range: true
+            title: ""
+            api: 
+              template: "/te/indicadoresestaduais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "cd_uf"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_nat_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_resg_naturais"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Nº resgatados do trabalho escravo - Naturalidade apurada'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_resg_naturais'
+          colorScale:
+            name: 'Reds'
+# ========================================================
+# /te/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_res_idade',and,lt-cast(ds_agreg_primaria as smallint)-18
+      - id: "mapa_resgatados_escravo_residentes"
+        title: 
+          fixed: "Residência Declarada de Crianças e Adolescentes Resgatados do Trabalho Escravo"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/te/indicadoresnacionais?categorias=nu_competencia_min, nu_competencia_max&filtros=eq-cd_indicador-'te_res'&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "Esse tipo de informação ajuda gestores na definição de regiões geográficas prioritárias para atividades de combate e prevenção, as quais também obedecem a lógica das curvas de oferta e de demanda do trabalho escravo no Brasil. Ilustrativamente, locais de maior intensidade de resgates devem ser prioritários quanto a atividades de inspeção do trabalho, sobretudo quanto às operações promovidas pela Divisão de Fiscalização para Erradicação do Trabalho Escravo (DETRAE – Ministério do Trabalho) e pelas equipes interinstitucionais do Grupo Especial de Fiscalização Móvel, conjuntamente com as ações coordenadas no âmbito das Superintendências Regionais do Trabalho nos Estados. Nesses locais, a orquestração interinstitucional fomenta e facilita a atuação efetiva e eficiente de operadores da lei, incluindo as forças policiais, da Justiça e do Ministério Público.<br/><br/>
+                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/te/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_res_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,eq-cd_mun_ibge-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Nenhum"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Resgatados Residentes no Município'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de crianças e adolescentes vítimas do trabalho escravo de acordo com o local de residência declarada, considerando os registros com residência apurada desde 2003, quando se iniciou o pagamento do benefício do seguro-desemprego para resgatados. No mapa ao lado, apresenta-se a perspectiva comparativa entre diferentes unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Lugares de residência declarada possuem características híbridas. Além de marcados por desigualdades de desenvolvimento humano, renda, disparidades territoriais e inequidades de base identitária (como os municípios de naturalidade), frequentemente são locais de maior dinamismo econômico, ou se localizam proximamente a territórios com esse dinamismo. Tendem, também, a constituir ponto de vulnerabilidade de trabalhadores quanto ao aliciamento.<br/><br/>"
+              api:
+                template: "/te/indicadoresestaduais?categorias=nu_competencia_min&limit=1&filtros=eq-cd_indicador-'te_res_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,eq-cd_uf-{0}"
+                args:
+                  - named_prop: "cd_uf"
+              args:
+                - named_prop: "nu_competencia_min"
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_res"
+            range: true
+            title: ""
+            api: 
+              template: "/te/indicadoresestaduais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_res_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "cd_uf"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_res_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_resg_residentes"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Nº resgatados do trabalho escravo - Residência apurada'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_resg_residentes'
+          colorScale:
+            name: 'Reds'

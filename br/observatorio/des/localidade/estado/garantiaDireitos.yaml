@@ -1,0 +1,793 @@
+#==========================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "00_01_03_06"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        default: "Sem Registros"
+        zero: "Nenhuma"
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "00_01_02_06"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        default: "Sem Registros"
+        zero: "Nenhuma"
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "00_01_01_06"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        default: "Sem Registros"
+        zero: "Nenhuma"
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+#==========================================
+secoes:
+  - id: "garantia_MPT"
+    name: "Atuação do MPT em defesa da Igualdade de Oportunidades"
+    cards:
+#==========================================
+      - id: "mapa_acoes_mpt_sst"
+        title: 
+          fixed: "MPT - Ações Civis Públicas Ajuizadas"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "00_01_01_06"
+            year: "max"
+          args:
+            - named_prop: 'nm_uf'
+            - named_prop: 'nu_competencia_min'
+              format: "inteiro" 
+            - named_prop: 'nu_competencia_max'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "00_01_01_06"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresestaduais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_01_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Total na UF'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_01_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'TOTAL NO PAÍS'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de Ações Civis Públicas Ajuizadas pelo MPT para o tema Igualdade de Oportunidades na unidade federativa.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['00_01_01_06']
+                year: "max"
+              args:
+                - named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_01_06'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "deviation_acoes"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_acoes'
+        source:
+          desc_field: "ds_fonte"
+#==========================================
+      - id: "mapa_tacs_mpt_sst"
+        title: 
+          fixed: "MPT - Termos de Compromisso de Ajustamento de Conduta Firmados"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "00_01_07_06"
+            year: "max"
+          args:
+            - named_prop: 'nm_uf'
+            - named_prop: 'nu_competencia_min'
+              format: "inteiro" 
+            - named_prop: 'nu_competencia_max'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "00_01_07_06"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresestaduais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_07_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Total na UF'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_07_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'TOTAL NO PAÍS'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de Termos de Compromisso de Ajustamento de Conduta Firmados pelo MPT para o tema Igualdade de Oportunidades na unidade federativa.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['00_01_07_06']
+                year: "max"
+              args:
+                - named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_07_06'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "deviation_tacs"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_tacs'
+        source:
+          desc_field: "ds_fonte"
+#==========================================
+      - id: "mapa_recomendacoes_mpt_sst"
+        title: 
+          fixed: "MPT - Recomendações Expedidas"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "00_01_06_06"
+            year: "max"
+          args:
+            - named_prop: 'nm_uf'
+            - named_prop: 'nu_competencia_min'
+              format: "inteiro" 
+            - named_prop: 'nu_competencia_max'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "00_01_06_06"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresestaduais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_06_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Total na UF'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_06_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'TOTAL NO PAÍS'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de Recomendações Expedidas pelo MPT para o tema Igualdade de Oportunidades na unidade federativa. No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['00_01_06_06']
+                year: "max"
+              args:
+                - named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_06_06'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "deviation_rec"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_rec'
+        source:
+          desc_field: "ds_fonte"
+#==========================================
+      - id: "mapa_denuncias_mpt_sst"
+        title: 
+          fixed: "MPT - Denúncias Recebidas"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "00_01_02_06"
+            year: "max"
+          args:
+            - named_prop: 'nm_uf'
+            - named_prop: 'nu_competencia_min'
+              format: "inteiro" 
+            - named_prop: 'nu_competencia_max'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "00_01_02_06"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresestaduais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_02_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Total na UF'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_02_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'TOTAL NO PAÍS'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de Denúncias Recebidas pelo MPT para o tema Igualdade de Oportunidades na unidade federativa. No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['00_01_02_06']
+                year: "max"
+              args:
+                - named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_02_06'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "deviation_denunc"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_denunc'
+          colorScale:
+            name: 'Reds'
+        source:
+          desc_field: "ds_fonte"
+#==========================================
+      - id: "mapa_investig_mpt_sst"
+        title: 
+          fixed: "MPT - Investigações Instauradas"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "00_01_03_06"
+            year: "max"
+          args:
+            - named_prop: 'nm_uf'
+            - named_prop: 'nu_competencia_min'
+              format: "inteiro" 
+            - named_prop: 'nu_competencia_max'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "00_01_03_06"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresestaduais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_03_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Total na UF'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_03_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'TOTAL NO PAÍS'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de Investigações Instauradas pelo MPT para o tema Igualdade de Oportunidades na unidade federativa. No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['00_01_03_06']
+                year: "max"
+              args:
+                - named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_03_06'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "deviation_investig"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_investig'
+        source:
+          desc_field: "ds_fonte"
+#==========================================
+      - id: "mapa_mediacoes_mpt_sst"
+        title: 
+          fixed: "MPT - Mediações e Arbitragens"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "00_01_04_06"
+            year: "max"
+          args:
+            - named_prop: 'nm_uf'
+            - named_prop: 'nu_competencia_min'
+              format: "inteiro" 
+            - named_prop: 'nu_competencia_max'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "00_01_04_06"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresestaduais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_04_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Total na UF'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_04_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'TOTAL NO PAÍS'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de Mediações e Arbitragens realizadas pelo MPT para o tema Igualdade de Oportunidades na unidade federativa. No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['00_01_04_06']
+                year: "max"
+              args:
+                - named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_04_06'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "deviation_med"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_med'
+        source:
+          desc_field: "ds_fonte"
+#==========================================
+      - id: "mapa_promo_mpt_sst"
+        title: 
+          fixed: "MPT - Procedimentos Promocionais de Políticas Públicas Iniciados"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "00_01_05_06"
+            year: "max"
+          args:
+            - named_prop: 'nm_uf'
+            - named_prop: 'nu_competencia_min'
+              format: "inteiro" 
+            - named_prop: 'nu_competencia_max'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: De {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "00_01_05_06"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresestaduais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_05_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Total na UF'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'00_01_05_06'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'TOTAL NO PAÍS'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de Procedimentos Promocionais de Políticas Públicas Iniciados pelo MPT para o tema Igualdade de Oportunidades na unidade federativa. No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['00_01_05_06']
+                year: "max"
+              args:
+                - named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'00_01_05_06'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "deviation_promo"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_promo'
+        source:
+          desc_field: "ds_fonte"

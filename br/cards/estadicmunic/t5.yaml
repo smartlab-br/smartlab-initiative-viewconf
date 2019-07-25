@@ -1,0 +1,176 @@
+api_obj_collection:
+  - name: "chart_data"
+    endpoint: 
+      categorias: 'spai_ds,ds_fonte,spai_vl_indicador,spai_vl_indicador_txt,nm_uf,cd_uf,nu_ano_indicador,tema,sub_tema,ds_indicador,cd_indicador,spai_ds_texto,presenca_total_br,pct_presenca_br,presenca_total_uf,pct_presenca_uf,cd_mun_ibge,nm_municipio,nm_municipio_uf,rank_pct_uf,cd_indicador_spai,total_br,sg_uf,total_uf'
+      filtros:
+        template: 'eq-cd_indicador_spai-{},and,eq-cd_uf-{},and,eq-nu_ano_indicador-nu_ano_indicador_max'
+        args:
+          - prop: 'cd_indicador'
+          - prop: 'cd_analysis_unit'
+            function: "slice"
+            args:
+              - fixed: 0
+              - fixed: 2
+    instances:
+      - name: 'desc_data'
+        type: 'from_id'
+        named_prop: 'cd_mun_ibge'
+  - name: "br_data"
+    endpoint: 
+      categorias: 'spai_ds,ds_fonte,nm_uf,cd_uf,nu_ano_indicador,tema,sub_tema,ds_indicador,cd_indicador,spai_ds_texto,presenca_total_br,pct_presenca_br,presenca_total_uf,pct_presenca_uf,cd_indicador_spai,total_br,sg_uf,total_uf'
+      agregacao: 'distinct'
+      filtros:
+        template: 'eq-cd_indicador_spai-{},and,eq-nu_ano_indicador-nu_ano_indicador_max'
+        args:
+          - prop: 'cd_indicador'
+    instances:
+      - name: 'max_uf_data'
+        type: 'max'
+        named_prop: 'pct_presenca_uf'
+      - name: 'min_uf_data'
+        type: 'min'
+        named_prop: 'pct_presenca_uf'
+title: 
+  template: "{}"
+  args:
+    - base_object: "desc_data"
+      named_prop: "spai_ds"
+title_comment:
+  template: "{}, em {}, na época da pesquisa"
+  args:
+    - base_object: "desc_data"
+      named_prop: nm_municipio_uf
+    - base_object: "desc_data"
+      named_prop: nu_ano_indicador
+      format: 'inteiro'
+info:
+  - type: "text"
+    title: "Sobre a métrica"
+    content:
+      template: "Os dados brutos analisados, com base no banco de dados do IBGE, têm as seguintes referências:<br/>Tema: {}<br/>Subtema: {}<br/>Nome: {}<br/>Fonte: {}<br/>Ano: {}Código: {}"
+      args:
+        - base_object: "desc_data"
+          named_prop: "tema"
+        - base_object: "desc_data"
+          named_prop: "sub_tema"
+        - base_object: "desc_data"
+          named_prop: "ds_indicador"
+        - base_object: "desc_data"
+          named_prop: "ds_fonte"
+        - base_object: "desc_data"
+          named_prop: "nu_ano_indicador"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador"
+  - type: "text"
+    title: "Referência"
+    content: 
+      template: "Gráfico/Mapa: {}<br/>Título/Subtítulo: {}<br/>Minicards: {}<br/>Texto: {}"
+      args:
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+description:
+  - type: "minicards"
+    cards:
+      - relevance: "high"
+        cls: "xs12 md6"
+        args:
+          - prop: "value"
+            base_object: "desc_data"
+            named_prop: "spai_vl_indicador_txt"
+          - prop: "description"
+            fixed: "no município"
+          - prop: "comment"
+            template: "De um total de {0} municípios"
+            args:
+              - base_object: "desc_data"
+                named_prop: "total_uf"
+                format: "inteiro"
+      - relevance: "high"
+        cls: "xs12 md6"
+        args: 
+          - prop: "value"
+            base_object: "desc_data"
+            named_prop: "pct_presenca_uf"
+            format: 'porcentagem'
+            precision: 2
+          - prop: "description"
+            fixed: "dos municípios<br/>da UF possuem"
+      # - relevance: "high"
+      #   cls: "xs12 md6"
+      #   args: 
+      #     - prop: "value"
+      #       base_object: "max_uf_data"
+      #       named_prop: "sg_uf"
+      #     - prop: "description"
+      #       fixed: "TEM A MAIOR % DE<br/>MUNICÍPIOS COM A AÇÃO"
+      #     - prop: "comment"
+      #       template: "{0}, {1} de {2} municípios"
+      #       args:
+      #         - base_object: "max_uf_data"
+      #           named_prop: "pct_presenca_uf"
+      #           format: "porcentagem"
+      #         - base_object: "max_uf_data"
+      #           named_prop: "presenca_total_uf"
+      #           format: "inteiro"
+      #         - base_object: "max_uf_data"
+      #           named_prop: "total_uf"
+      #           format: "inteiro"
+      # - relevance: "high"
+      #   cls: "xs12 md6"
+      #   args: 
+      #     - prop: "value"
+      #       base_object: "min_uf_data"
+      #       named_prop: "sg_uf"
+      #     - prop: "description"
+      #       fixed: "TEM A MENOR % DE<br/>MUNICÍPIOS COM A AÇÃO"
+      #     - prop: "comment"
+      #       template: "{0}, {1} de {2} municípios"
+      #       args:
+      #         - base_object: "min_uf_data"
+      #           named_prop: "pct_presenca_uf"
+      #           format: "porcentagem"
+      #         - base_object: "min_uf_data"
+      #           named_prop: "presenca_total_uf"
+      #           format: "inteiro"
+      #         - base_object: "min_uf_data"
+      #           named_prop: "total_uf"
+      #           format: "inteiro"
+  - type: "text"
+    title: ""
+    content:
+      template: "Em destaque, a situação do município em relação à existência de {} em seu âmbito. No mapa, a localidade é comparada com distintos municípios da mesma unidade federativa quanto à presença dessa ação do poder público. O azul indica a presença e o cinza a ausência."
+      args:
+        - base_object: "desc_data"
+          named_prop: "spai_ds_texto"
+chart_type: "MAP_TOPOJSON"
+chart_data: "chart_data"
+headers:
+  - text: "Município"
+    align: "left"
+    value: "nm_municipio"
+  - text: "Indicador"
+    align: "left"
+    value: "spai_ds"
+  - text: "Existe"
+    value: "spai_vl_indicador_txt"
+chart_options: 
+  id_field: "cd_mun_ibge"
+  topo_key: "codarea"
+  value_field: "spai_vl_indicador"
+  tiles_url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+  colorScale: 
+    type: "fixed"
+    color_array: 
+      0: "#BCBCBC"
+      1: "#6187c1"
+      4: "transparent"
+      5: "#d3e5f6"
+      99: "transparent"
+source: 
+  desc_field: "ds_fonte"

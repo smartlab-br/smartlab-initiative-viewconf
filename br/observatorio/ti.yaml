@@ -1,0 +1,467 @@
+title_sup: "Observatório da Prevenção e da Erradicação do"
+title: "Trabalho Infantil"
+subtitle: "ENTENDA, COMPARE, ACESSE OS DADOS, PARTICIPE"
+imagem: "ti"
+theme:
+  toolbar:
+    title: "Smartlab - Observatório do Trabalho Infantil"
+tematicos:
+  - dataset: "censo_agro_2017"    
+prevalencia:
+  id: "mapa_prev_brasil"
+  chart_type: "MAP_LEAFLET"
+  title: 
+    fixed: "Crianças e Adolescentes no Trabalho"
+  api:
+    # CENSO DEMOGRÁFICO 2010
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'censo_2010'-codigo,ds_indicador_radical,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_01_01_01',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0"
+    # CENSO AGROPECUARIO 2017
+    - fixed: "/ti/censoagromunicipal?categorias=latitude,longitude,cod_mun-cd_mun_ibge,nm_municipio_uf,'censo_agro'-codigo,'Menores de 14 anos ocupados em estabelecimentos agropecuários'-ds_indicador_radical,'agro_menores'-cd_indicador&valor=qt_ocupados_menores14&agregacao=sum&calcs=ln_norm_pos_part&filtros=ne-qt_ocupados_menores14-0"
+    # PROVA BRASIL 2017
+    - fixed: "/ti/provabrasil?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'prova_brasil'-codigo,ds_indicador-ds_indicador_radical,cd_tr_fora&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,eq-nu_ano_prova_brasil-2017,and,eq-cd_tr_fora-1"
+    # AEAT/CATWEB
+    - fixed: "/sst/cats?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'cat_menores'-codigo,'Notificação de Acidentes com vítimas menores de 18 anos'-ds_indicador_radical&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=lt-idade_cat-18,and,ne-idade_cat-0"
+    # SINAN 2018
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'sinan'-codigo,ds_indicador_radical,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_05_13_00'"
+    # SEGURO DESEMPREGO - Resgates naturais
+    - fixed: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'te_nat'-codigo,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'te_nat_idade',and,lt-cast(ds_agreg_primaria as smallint)-18"
+    # SEGURO DESEMPREGO - Resgates residentes
+    # - fixed: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'te_res'-codigo,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'te_res_idade',and,lt-cast(ds_agreg_primaria as smallint)-18"
+    # MAPEAR
+    - fixed: "/ti/mapear?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'mapear'-codigo,cd_indicador&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=count&filtros=eq-1-1" 
+    # RAIS 2019
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'aprendizes'-codigo,ds_indicador_radical,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'12_03_03_00',and,eq-nu_competencia-nu_competencia_max"
+
+  headers:
+    - text: 'Município'
+      align: 'left'
+      value: 'nm_municipio_uf'
+    - text: 'Ano'
+      align: 'left'
+      value: 'nu_competencia'
+    - text: 'Indicador'
+      value: 'ds_indicador_radical'
+    - text: 'Quantidade'
+      value: 'agr_sum_vl_indicador'
+      # value: 'agr_count_cd_municipio_ibge'
+      format: "inteiro"
+  chart_options:
+    colorArray: ["#303F9F", "#00BCD4", "#9C27B0", "#00C853", "#795548", "#FF9800","#F44336","#03A9F4","#000000"]
+    type: 'bubbles'
+    indicadores: ["censo_2010","censo_agro","prova_brasil","aprendizes","cat_menores","sinan","te_nat","te_res","mapear"]
+    id_field: 'codigo'
+    lat: 'latitude'
+    long: 'longitude'
+    height_proportion: 1
+    tooltip_function: 'obsTITooltip'
+    radius:
+      base: 10000
+      multiplier: 800000
+    tiles_url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+    tiles_attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
+  description:
+    - id: "select_ti"
+      type: "switch-group"
+      class: "pr-0 pl-2 pb-0 pt-0"
+      switches:
+        - id: "censo_2010"
+          cls: "xs12 blue-title "
+          default: false
+          color: "indigo darken-2"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            desc_position: 'right'
+            api:
+              fixed: "/indicadoresmunicipais?categorias=nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_01_01_01',and,eq-nu_competencia-nu_competencia_max"
+            # options:
+              # formatters:
+              #   - id: "agr_sum_vl_indicador"
+              #     format: "inteiro"
+            args:
+              - prop: "value"
+                named_prop: 'agr_sum_vl_indicador'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                fixed: "Crianças e adolescentes<br/>ocupados<sup>1</sup>"
+              - prop: "comment"
+                template: "Fonte: IBGE - Censo Demográfico, {0}"
+                args:
+                  - named_prop: "nu_competencia"
+        - id: "prova_brasil"
+          cls: "xs12 blue-title "
+          default: true
+          color: "purple"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            desc_position: 'right'
+            api: 
+              fixed: "/ti/provabrasil?categorias=nu_ano_prova_brasil&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,eq-cd_tr_fora-1,and,eq-nu_ano_prova_brasil-2017"
+            args:
+              - prop: "value"
+                named_prop: 'agr_sum_vl_indicador'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                fixed: "Declararam Trabalhar<br/>fora de casa em 2017<sup>2</sup>"
+              - prop: "comment"
+                template: "Fonte: Prova Brasil, {0} (apenas nos 5º e 9º anos)"
+                args:
+                  - named_prop: "nu_ano_prova_brasil"
+        - id: "censo_agro"
+          cls: "xs12 blue-title "
+          default: false
+          color: "cyan"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            desc_position: 'right'
+            api:
+              fixed: "/ti/censoagronacional?categorias=tot_ocup_men14"
+            # options:
+              # formatters:
+              #   - id: "agr_sum_vl_indicador"
+              #     format: "inteiro"
+            args:
+              - prop: "value"
+                named_prop: 'tot_ocup_men14'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                fixed: "Menores de 14 anos ocupados<br/>em estabelecimentos agropecuários<sup>3</sup>"
+              - prop: "comment"
+                template: "IBGE - Censo Agropecuário, 2017"
+                args:
+                  - named_prop: "nu_competencia"
+        - id: "cat_menores"
+          cls: "xs12 blue-title "
+          default: false
+          color: "brown"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            desc_position: 'right'
+            api: 
+              fixed: "/sst/cats?categorias=1&valor=cd_municipio_ibge,ano_cat,ano_cat&agregacao=COUNT,MAX,MIN&filtros=lt-idade_cat-18,and,ne-idade_cat-0"
+            args:
+              - prop: "value"
+                named_prop: 'agr_count_cd_municipio_ibge'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                fixed: "Em seus empregos,<br/>sofreram acidentes<sup>4</sup>"
+              - prop: "comment"
+                template: "Fonte: AEAT/CatWeb, {0}-{1}"
+                args:
+                  - named_prop: "agr_min_ano_cat"
+                  - named_prop: "agr_max_ano_cat"
+        - id: "sinan"
+          cls: "xs12"
+          default: false
+          color: "orange"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            desc_position: 'right'
+            api: 
+              fixed: "/indicadoresmunicipais?categorias=nu_competencia_min, nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_13_00'"
+            args:
+              - prop: "value"
+                named_prop: 'agr_sum_vl_indicador'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                fixed: "Sofreram acidentes<br/>notificados no SINAN<sup>5</sup>"
+              - prop: "comment"
+                template: "Fonte: Ministério da Saúde/SVS - SINAN, {0}-{1}"
+                args:
+                  # - named_prop: "ds_fonte"
+                  - named_prop: "nu_competencia_min"
+                  - named_prop: "nu_competencia_max"
+        - id: "te_nat"
+          cls: "xs12 blue-title "
+          default: false
+          color: "red"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            desc_position: 'right'
+            api: 
+              fixed: "/te/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_nat_idade',and,lt-cast(ds_agreg_primaria as smallint)-18"
+            args:
+              - prop: "value"
+                named_prop: 'agr_sum_vl_indicador'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                fixed: "Resgatados do Trabalho Escravo<br/>com local de naturalidade identificada<sup>6</sup>"
+              - prop: "comment"
+                template: "Fonte: Seguro Desemprego, {0}-{1}"
+                args:
+                  - named_prop: "nu_competencia_min"
+                  - named_prop: "nu_competencia_max"
+        # - id: "te_res"
+        #   cls: "xs12"
+        #   default: false
+        #   color: "light-blue"
+        #   minicards:
+        #   - relevance: 'low'
+        #     rowClass: 'pa-0'
+        #     desc_position: 'right'
+        #     api: 
+        #       fixed: "/te/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_res_idade',and,lt-cast(ds_agreg_primaria as smallint)-18"
+        #     args:
+        #       - prop: "value"
+        #         named_prop: 'agr_sum_vl_indicador'
+        #         format: 'inteiro'
+        #         default: "Sem Registros"
+        #       - prop: "description"
+        #         fixed: "Resgatados do Trabalho Escravo<br/>Residindo na Localidade<sup>6</sup>"
+        #       - prop: "comment"
+        #         template: "Fonte: Seguro Desemprego, {0}-{1}"
+        #         args:
+        #           - named_prop: "nu_competencia_min"
+        #           - named_prop: "nu_competencia_max"
+        # - id: "te_rgt"
+        #   cls: "xs12"
+        #   label: "Local de Resgate"
+        #   default: false
+        #   color: "green accent-4"
+        - id: "mapear"
+          cls: "xs12 blue-title "
+          default: false
+          color: "black"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            desc_position: 'right'
+            api: 
+              fixed: "/ti/mapear?categorias=1&agregacao=count"      
+            args:
+              - prop: "value"
+                named_prop: 'agr_count'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                fixed: "Pontos em risco de exploração sexual<br/>comercial em Rodovias e Estradas Federais<sup>7</sup>"
+              - prop: "comment"
+                fixed: "Fonte: Mapear/PRF"
+        - id: "aprendizes"
+          cls: "xs12 blue-title "
+          default: true
+          color: "green accent-4"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            desc_position: 'right'
+            api: 
+              fixed: "/indicadoresmunicipais?categorias=nu_competencia,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'12_03_03_00',and,eq-nu_competencia-nu_competencia_max"
+            args:
+              - prop: "value"
+                named_prop: 'agr_sum_vl_indicador'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                fixed: "POTENCIAL DE COTAS<br/>DE APRENDIZAGEM<sup>8</sup>"
+              - prop: "comment"
+                template: "Fonte: RAIS e CAGED/Ministério da Economia, {0}"
+                args:
+                  # - named_prop: "ds_fonte"
+                  - named_prop: "nu_competencia"
+      event: 'selection'
+    - type: "text"
+      class: "pr-0 pl-2 pb-0 pt-0"
+      content:
+        cls: "pa-0"
+        fixed: "No mapa ao lado, observa-se a distribuição geográfica de diferentes ocorrências no mundo do trabalho que afetam crianças e adolescentes pela 
+        perspectiva dos riscos, violações e desafios à proteção integral dessas pessoas em desenvolvimento (trabalho fora de casa, acidentes de trabalho e 
+        tráfico de pessoas, tanto pela perspectiva do trabalho forçado quanto da exploração sexual comercial) e das  oportunidades (formação profissional 
+        mediante aprendizagem). Nas diferentes dimensões deste observatório, esses dados foram explorados com mais detalhes e serão expandidos ao longo 
+        do tempo. Ative ou desative os itens acima conforme as perspectivas a serem enfatizadas."
+  description_bottom:
+    - type: "text"
+      class: "pa-0"
+      cls: "ma-0 pa-0"
+      content:
+        cls: "pa-0"
+        fixed: "Entre 1992 e 2015, 5,7 milhões crianças e adolescentes deixaram de trabalhar no Brasil (redução de 68%). Entretanto, ainda há 2,7 milhões de crianças e adolescentes em situação de trabalho infantil no país, 59% meninos e 41% meninas. A maioria dessa população está nas regiões Nordeste (852 mil) e Sudeste (854 mil), seguidas das regiões Sul (432 mil), Norte (311 mil) e Centro-Oeste (223 mil). Todas as regiões apresentam maior incidência de trabalho infantil em atividades que não são agrícolas, exceto a região Norte. A faixa etária de 14 a 17 anos concentra 83,7% dos casos, mas o trabalho infantil entre crianças de cinco a nove anos aumentou 12,3% entre 2014 e 2015, de 70 mil para 79 mil. Conhecer as diferentes formas de manifestação do trabalho infantil no Brasil é relevante para que políticas de repressão e prevenção observem características de cada localidade, sobretudo com foco na realidade de municípios, cenário por excelência da implementação de políticas públicas."
+  description_right:
+    - type: "text"
+      cls: "ma-0 pa-0"
+      content:
+        cls: "caption pa-0"
+        fixed: "1. O Censo Demográfico desempenha papel estratégico no mapeamento detalhado do trabalho infantil por alcançar a totalidade dos municípios brasileiros. Os dados de 2010 (a serem atualizados em 2020), do ponto de vista censitário, são os mais atuais de uma série histórica estatística fundamental para políticas públicas de prevenção e erradicação, a envolver a adequada distribuição dos recursos financeiros no âmbito do pacto federativo e servindo como referência para o desenvolvimento de outras pesquisas e levantamentos de informações no âmbito do Sistema Estatístico Nacional. As informações da série histórica (2010, 2020, 2030) do Censo Demográfico têm uma importância adicional e estratégica: a avaliação da efetiva implementação da Agenda 2030 para os 5.570 municípios brasileiros.<br/><br/>
+                2. Em 2017, a Prova Brasil (SAEB), promovida pelo INEP/MEC, foi de caráter censitário, atingindo todas as escolas públicas brasileiras (em escolas privadas, ela foi amostral). Um dos questionários dos alunos abordou o tema do trabalho fora da casa. Os resultados mais recentes dessa pesquisa associada à Prova Brasil trazem grande oportunidade de colher dados mais atualizados sobre o trabalho fora de casa com respostas espontâneas dos alunos, sobretudo de escolas públicas. Os pontos no mapa representam respondentes de 5º e 9º anos que declararam trabalhar fora de casa. Observe-se nesta plataforma foram utilizados os microdados do INEP, em que se identificam também casos de alunos maiores de 18 anos, dada a distorção idade-série.<br/><br/>
+                3. Dados do Censo Agropecuário do IBGE, de 2017, trazem informações sobre trabalho infantil de menores de 14 anos de idade em estabelecimentos agropecuários. Para o Brasil e Unidades Federativas, foram também compiladas informações de acordo com os laços de parentesco com o produtor. Esses dados coletados pelo IBGE ajudam a pensar a política de prevenção e erradicação do trabalho infantil especificamente em áreas rurais, considerados aspectos culturais de tolerância ao fenômeno, principalmente em relação ao vínculo de parentesco. Esta dimensão ganha relevância estratégica dado o contexto: desde 2015, observa-se aumento da pobreza e da desigualdade no campo e nas florestas. O trabalho infantil em meio rural possui particularidades distintas daquele observado em ambientes urbanos. Com esta dimensão, o fenômeno pode ser mais facilmente compreendido em seu contexto. A eventual diferença entre a soma dos valores das unidades federativas e dos municípios se deve a valores inibidos em nível municipal para evitar a identificação dos informantes, dado o pequeno número de estabelecimentos.<br/><br/>
+                4. Consideram-se as ocorrências em vínculos de emprego (de acordo com oAnuário Estatístico de Acidentes de Trabalho e o banco de dados de Comunicações de Acidentes de Trabalho - CatWeb), compilados para o Observatório de Segurança e Saúde no Trabalho.<br/><br/>
+                5. Consideram-se as ocorrências do SINAN (Sistema Nacional de Agravos de Notificação), incluindo todos os trabalhadores entre 0 e 17 anos atendidos pelo SUS no período. O SINAN é alimentado sobretudo por notificações de casos de doenças e agravos da lista nacional de doenças de notificação compulsória (Portaria MS nº 4/2017), que inclui casos envolvendo crianças e adolescentes, inclusive no mercado informal.<br/><br/>
+                6. A perspectiva \"Resgatados do Trabalho Escravo\" apresenta informações sobre locais de naturalidade de crianças e adolescentes resgatadas do trabalho escravo, a revelar vulnerabilidades em nível de desenvolvimento humano.<br/><br/>
+                7. O mapeamento dos pontos vulneráveis à exploração sexual de crianças e adolescentes nas rodovias e estradas federais (MAPEAR, projeto da Polícia Rodoviária Federal com o apoio de diversos parceiros) tornou-se referência no delineamento de ações para o enfrentamento dessa grave violação de direitos humanos. As ações realizadas para compor este mapeamento têm vasta abrangência, percorrendo em torno de 71.000 quilômetros de rodovias e estradas federais, distribuídos pelos 26 estados e o Distrito Federal. A atuação exemplar da Polícia Rodoviária Federal brasileira no campo rendeu relevante levantamento de dados para o combate ao tráfico de pessoas para fins de exploração sexual comercial em uma de suas piores formas, em que a violência agride crianças e adolescentes. Nesta plataforma, utilizam-se tecnologias de cruzamento e visualização de dados para potencializar as ações e o fluxo de informações de relevância pública, sobretudo pela desagregação e georreferenciamento ao nível dos municípios envolvidos.<br/><br/>
+                8. Do ponto de vista das oportunidades, destacam-se no mapa as vagas correspondentes às cotas de aprendizagem profissional, de acordo com as informações oriundas da Secretaria de Inspeção do Trabalho do Ministério da Economia, com base na RAIS e no CAGED (fevereiro de 2019). Note-se que alguns municípios não possuem empresas obrigadas ao cumprimento da cota.<br/><br/>"
+  mapa_filtros:
+    - id: "select_ti"
+      type: "switch-group"
+      class: "pr-0 pl-2 pb-0 pt-0"
+      switches:
+        - id: "censo_2010"
+          cls: "xs12 blue-title "
+          default: false
+          color: "indigo darken-2"
+          minicards:
+          - relevance: 'low'
+            api: 
+              fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,ds_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_01_01_01',and,eq-nu_competencia-nu_competencia_max"
+            args:
+              - prop: "description"
+                fixed: "Crianças e adolescentes ocupados"
+              - prop: "comment"
+                template: "Fonte: IBGE - Censo Demográfico, {0}"
+                args:
+                  - id: "06_01_01_01"
+                    named_prop: "nu_competencia"
+        - id: "prova_brasil"
+          cls: "xs12 blue-title "
+          default: true
+          color: "purple"
+          minicards:
+          - relevance: 'low'
+            api: 
+              fixed: "/ti/provabrasil?categorias=nu_ano_prova_brasil&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,eq-cd_tr_fora-1,and,eq-nu_ano_prova_brasil-2017"
+            args:
+              - prop: "description"
+                fixed: "Declararam Trabalhar fora de casa em 2017"
+              - prop: "comment"
+                template: "Fonte: Prova Brasil, {0} (apenas nos 5º e 9º anos)"
+                args:
+                  - named_prop: "nu_ano_prova_brasil"
+        - id: "censo_agro"
+          cls: "xs12 blue-title "
+          default: false
+          color: "cyan"
+          minicards:
+          - relevance: 'low'
+            args:
+              - prop: "description"
+                fixed: "Menores de 14 anos ocupados em estabelecimentos agropecuários"
+              - prop: "comment"
+                fixed: "IBGE - Censo Agropecuário, 2017"
+        - id: "cat_menores"
+          cls: "xs12 blue-title "
+          default: false
+          color: "brown"
+          minicards:
+          - relevance: 'low'
+            api: 
+              fixed: "/sst/cats?categorias=1&valor=cd_municipio_ibge,ano_cat,ano_cat&agregacao=COUNT,MAX,MIN&filtros=lt-idade_cat-18,and,ne-idade_cat-0"
+            args:
+              - prop: "description"
+                fixed: "Em seus empregos, sofreram acidentes"
+              - prop: "comment"
+                template: "Fonte: AEAT/CatWeb, {0}-{1}"
+                args:
+                  - named_prop: "agr_min_ano_cat"
+                  - named_prop: "agr_max_ano_cat"
+        - id: "sinan"
+          cls: "xs12"
+          default: false
+          color: "orange"
+          minicards:
+          - relevance: 'low'
+            api: 
+              fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_13_00'"
+            args:
+              - prop: "description"
+                fixed: "Sofreram acidentes notificados no SINAN"
+              - prop: "comment"
+                template: "Fonte: Ministério da Saúde/SVS - SINAN, {0}-{1}"
+                args:
+                  # - named_prop: "ds_fonte"
+                  - named_prop: "nu_competencia_min"
+                  - named_prop: "nu_competencia_max"
+        - id: "te_nat"
+          cls: "xs12 blue-title "
+          default: false
+          color: "red"
+          minicards:
+          - relevance: 'low'
+            api: 
+              fixed: "/te/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_nat_idade',and,lt-cast(ds_agreg_primaria as smallint)-18"
+            args:
+              - prop: "description"
+                fixed: "Resgatados do Trabalho Escravo com local de naturalidade identificada"
+              - prop: "comment"
+                template: "Fonte: Seguro Desemprego, {0}-{1}"
+                args:
+                  - named_prop: "nu_competencia_min"
+                  - named_prop: "nu_competencia_max"
+        # - id: "te_res"
+        #   cls: "xs12"
+        #   default: false
+        #   color: "light-blue"
+        #   minicards:
+        #   - relevance: 'low'
+        #     api: 
+        #       fixed: "/te/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_res_idade',and,lt-cast(ds_agreg_primaria as smallint)-18"
+        #     args:
+        #       - prop: "description"
+        #         fixed: "Resgatados do Trabalho Escravo Residindo na Localidade"
+        #       - prop: "comment"
+        #         template: "Fonte: Seguro Desemprego, {0}-{1}"
+        #         args:
+        #           - named_prop: "nu_competencia_min"
+        #           - named_prop: "nu_competencia_max"
+        # - id: "te_rgt"
+        #   cls: "xs12"
+        #   label: "Local de Resgate"
+        #   default: false
+        #   color: "green accent-4"
+        - id: "mapear"
+          cls: "xs12 blue-title "
+          default: false
+          color: "black"
+          minicards:
+          - relevance: 'low'
+            api: 
+              fixed: "/ti/mapear?categorias=1&agregacao=count"      
+            args:
+              - prop: "description"
+                fixed: "Pontos em risco de exploração sexual comercial em Rodovias e Estradas Federais"
+              - prop: "comment"
+                fixed: "Fonte: Mapear/PRF"
+        - id: "aprendizes"
+          cls: "xs12 blue-title "
+          default: true
+          color: "green accent-4"
+          minicards:
+          - relevance: 'low'
+            api: 
+              fixed: "/indicadoresmunicipais?categorias=nu_competencia,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'12_03_03_00',and,eq-nu_competencia-nu_competencia_max"
+            args:
+              - prop: "description"
+                fixed: "Oportunidades de aprendizagem profissional"
+              - prop: "comment"
+                template: "Fonte: RAIS e CAGED/Ministério da Economia, {0}"
+                args:
+                  # - named_prop: "ds_fonte"
+                  - named_prop: "nu_competencia"
+      event: 'selection'
+    - id: "select_uf"
+      type: "select"
+      label: "UF"
+      title: "Unidade Federativa"
+      api:
+        fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf&agregacao=distinct&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,in-cd_indicador-'06_01_01_06'-'06_01_05_01',and,eq-nu_competencia-nu_competencia_max&ordenacao=nm_uf"
+      args:
+        - prop: "id"
+          named_prop: "cd_uf"
+        - prop: "label"
+          named_prop: "nm_uf"
+      selection:
+        event: "selection"
+        rules:
+          filter: ",and,eq-cd_uf-{0}"
+          api:
+            args:
+              - named_prop: "cd_uf"

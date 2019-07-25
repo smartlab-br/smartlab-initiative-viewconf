@@ -1,0 +1,161 @@
+api_obj_collection:
+  - name: "chart_data"
+    endpoint: 
+      categorias: 'spai_ds,ds_fonte,nm_uf,cd_uf,nu_ano_indicador,tema,sub_tema,ds_indicador,cd_indicador,spai_ds_texto,presenca_total_br,pct_presenca_br,presenca_total_uf,pct_presenca_uf,rank_pct_uf,cd_indicador_spai,total_br,sg_uf,total_uf'
+      agregacao: 'distinct'
+      filtros:
+        template: 'eq-cd_indicador_spai-{},and,eq-nu_ano_indicador-nu_ano_indicador_max'
+        args:
+          - prop: 'cd_indicador'
+    formatters:
+      - prop: "fmt_pct_presenca_uf"
+        named_prop: "pct_presenca_uf"
+        format: "porcentagem"
+        precision: 2
+      - prop: "fmt_presenca_total_uf"
+        named_prop: "presenca_total_uf"
+        format: "inteiro"
+    instances:
+      - name: 'desc_data'
+        type: 'first_occurence'
+      - name: 'max_uf_data'
+        type: 'max'
+        named_prop: 'pct_presenca_uf'
+      - name: 'min_uf_data'
+        type: 'min'
+        named_prop: 'pct_presenca_uf'
+title: 
+  template: "{}"
+  args:
+    - base_object: "desc_data"
+      named_prop: "spai_ds"
+title_comment:
+  template: "Brasil, em {}, na época da pesquisa"
+  args:
+    - base_object: "desc_data"
+      named_prop: nu_ano_indicador
+      format: 'inteiro'
+info:
+  - type: "text"
+    title: "Sobre a métrica"
+    content:
+      template: "Os dados brutos analisados, com base no banco de dados do IBGE, têm as seguintes referências:<br/>Tema: {}<br/>Subtema: {}<br/>Nome: {}<br/>Fonte: {}<br/>Ano: {}Código: {}"
+      args:
+        - base_object: "desc_data"
+          named_prop: "tema"
+        - base_object: "desc_data"
+          named_prop: "sub_tema"
+        - base_object: "desc_data"
+          named_prop: "ds_indicador"
+        - base_object: "desc_data"
+          named_prop: "ds_fonte"
+        - base_object: "desc_data"
+          named_prop: "nu_ano_indicador"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador"
+  - type: "text"
+    title: "Referência"
+    content: 
+      template: "Gráfico/Mapa: {}<br/>Título/Subtítulo: {}<br/>Minicards: {}<br/>Texto: {}"
+      args:
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+        - base_object: "desc_data"
+          named_prop: "cd_indicador_spai"
+description:
+  - type: "minicards"
+    cards:
+      - relevance: "high"
+        cls: "xs12 md6"
+        args:
+          - prop: "value"
+            base_object: "desc_data"
+            named_prop: "presenca_total_br"
+            format: "inteiro"
+          - prop: "description"
+            template: "de {0} municípios<br/>brasileiros"
+            args:
+              - base_object: "desc_data"
+                named_prop: "total_br"
+                format: "inteiro"
+      - relevance: "high"
+        cls: "xs12 md6"
+        args: 
+          - prop: "value"
+            base_object: "desc_data"
+            named_prop: "pct_presenca_br"
+            format: 'porcentagem'
+            precision: 1
+          - prop: "description"
+            fixed: "do total de municípios"
+      # - relevance: "high"
+      #   cls: "xs12 md6"
+      #   args: 
+      #     - prop: "value"
+      #       base_object: "max_uf_data"
+      #       named_prop: "sg_uf"
+      #     - prop: "description"
+      #       fixed: "TEM A MAIOR % DE<br/>MUNICÍPIOS COM A AÇÃO"
+      #     - prop: "comment"
+      #       template: "{0}, {1} de {2} municípios"
+      #       args:
+      #         - base_object: "max_uf_data"
+      #           named_prop: "pct_presenca_uf"
+      #           format: "porcentagem"
+      #         - base_object: "max_uf_data"
+      #           named_prop: "presenca_total_uf"
+      #           format: "inteiro"
+      #         - base_object: "max_uf_data"
+      #           named_prop: "total_uf"
+      #           format: "inteiro"
+      # - relevance: "high"
+      #   cls: "xs12 md6"
+      #   args: 
+      #     - prop: "value"
+      #       base_object: "min_uf_data"
+      #       named_prop: "sg_uf"
+      #     - prop: "description"
+      #       fixed: "TEM A MENOR % DE<br/>MUNICÍPIOS COM A AÇÃO"
+      #     - prop: "comment"
+      #       template: "{0}, {1} de {2} municípios"
+      #       args:
+      #         - base_object: "min_uf_data"
+      #           named_prop: "pct_presenca_uf"
+      #           format: "porcentagem"
+      #         - base_object: "min_uf_data"
+      #           named_prop: "presenca_total_uf"
+      #           format: "inteiro"
+      #         - base_object: "min_uf_data"
+      #           named_prop: "total_uf"
+      #           format: "inteiro"
+  - type: "text"
+    title: ""
+    content:
+      template: "Em destaque, a situação da UF em relação aos municípios de seu âmbito nos quais se apurou haver {}. No mapa, comparam-se distintos municípios quanto à existência dessa ação do poder público. A escala vai do branco (menor percentual) para o azul (maior percentual de municípios na UF)."
+      args:
+        - base_object: "desc_data"
+          named_prop: "spai_ds_texto"
+chart_type: "MAP_TOPOJSON"
+chart_data: "chart_data"
+headers:
+  - text: "UF"
+    align: "left"
+    value: "nm_uf"
+  - text: "Indicador"
+    align: "left"
+    value: "spai_ds"
+  - text: "Porcentagem de municípios"
+    value: "fmt_pct_presenca_uf"
+  - text: "Número de municípios"
+    value: "fmt_presenca_total_uf"
+chart_options: 
+  id_field: "cd_uf"
+  topo_key: "codigo"
+  value_field: "pct_presenca_uf"
+  tiles_url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+source: 
+  desc_field: "ds_fonte"

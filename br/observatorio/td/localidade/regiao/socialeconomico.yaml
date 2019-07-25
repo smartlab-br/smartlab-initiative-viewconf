@@ -1,0 +1,105 @@
+secoes:
+  - id: 'ecosocial_populacao'
+    name: 'População'
+    indicadores:
+      - nm_indicador: 'pop'
+        nu_ano_indicador: '2014'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'pop_urb'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'pop_rur'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+    cards:
+      - id: "treemap_urbana_rural_municipio"
+        chart_type: "TREEMAP"
+        title: "População Urbana e Rural"
+        api_endpoint: "/indicadoresregionais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nu_ano_indicador,ds_fonte,vl_indicador&valor=vl_indicador&agregacao=pct_sum&filtros=eq-cd_regiao-{0},and,eq-nu_ano_indicador-2010,and,in-nm_indicador-'pop_urb'-'pop_rur'"
+        formatters:
+          - id: 'agr_pct_sum_vl_indicador'
+            formato: 'porcentagem'
+            casasDecimais: 1
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'vl_indicador'
+        chart_options:
+          pct_field: "fmt_agr_pct_sum_vl_indicador"
+          id: "fmt_size"
+          name_field: "ds_indicador_radical"
+          size: "vl_indicador"
+          limit: 20
+          removeFromLabel: ["População Residente - "]
+          format_function: "replace_text_namepercent"
+        source:
+          desc_field: "ds_fonte"
+          link_field: null
+        description: "texto texto texto ..."
+      - id: "treemap_pop_raca"
+        chart_type: "TREEMAP"
+        title: "População Residente por Raça/Cor"
+        api_endpoint: "/indicadoresregionais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nu_ano_indicador,ds_fonte,vl_indicador&valor=vl_indicador&agregacao=pct_sum&filtros=eq-cd_regiao-{0},and,eq-nu_ano_indicador-2010,and,in-nm_indicador-'pop_ama'-'pop_bra'-'pop_indig'-'pop_par'-'pop_pre'"
+        formatters:
+          - id: 'agr_pct_sum_vl_indicador'
+            formato: 'porcentagem'
+            casasDecimais: 1
+        headers:
+          - text: 'Raça/Cor'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'vl_indicador'
+        chart_options:
+          pct_field: "fmt_agr_pct_sum_vl_indicador"
+          id: "fmt_size"
+          name_field: "ds_indicador_radical"
+          size: "vl_indicador"
+          limit: 20
+          removeFromLabel: ["População Residente - "]
+          format_function: "replace_text_namepercent"
+        description: "texto texto texto ..."
+  - id: "ecosocial_economia"
+    name: "Economia"
+    indicadores:
+      - nm_indicador: 'pib'
+        nu_ano_indicador: '2012'
+        formato: 'monetario'
+        indicador: []
+    cards:
+      - id: "line_vab"
+        chart_type: "STACKED"
+        title: "Valor Adicionado Bruto - VAB (em milhões de reais)"
+        api_endpoint: "/indicadoresregionais?categorias=cd_dimensao,ds_indicador_radical,nm_indicador,nu_ano_indicador,ds_fonte,vl_indicador&filtros=eq-cd_regiao-{0},and,in-nm_indicador-'agr_vab'-'ind_vab'-'serv_vab'"
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_ano_indicador'
+          - text: 'Qtde'
+            value: 'vl_indicador'
+        chart_options:
+          id: "ds_indicador_radical"
+          x: "nu_ano_indicador"
+          y: "vl_indicador"
+          removeFromLabel: ["Valor Adicionado Bruto (VAB) - "]
+          format_function: "number_currency"
+        description: "bla bla bla"
+  - id: "ecosocial_desenvolvimento"
+    name: "Desenvolvimento"
+    indicadores:
+      - nm_indicador: 'analfab'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
+      - nm_indicador: 'MORT5'
+        nu_ano_indicador: '2010'
+        formato: 'inteiro'
+        indicador: []
