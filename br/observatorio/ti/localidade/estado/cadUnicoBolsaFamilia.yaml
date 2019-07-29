@@ -120,79 +120,79 @@ secoes:
         source:
           desc_field: "ds_fonte"            
 # ===============================================
-      - id: "mapa_bf_crianca_trabalhando"
-        title:
-          fixed: "Bolsa Família - Famílias identificadas com crianças trabalhando"
-        title_comment:
-          template: "{0}, {1}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=ds_indicador_radical,nu_competencia_max&filtros=eq-cd_indicador-'06_03_04_02'&limit=1"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_max"
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12'
-                api: 
-                  template: "/indicadoresmunicipais?categorias=ds_indicador_radical&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_03_04_02',and,eq-nu_competencia-nu_competencia_max"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: "real"
-                    default: "Sem Registros"
-                  - prop: "description"
-                    named_prop: "ds_indicador_radical"
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, para a perspectiva geográfica selecionada, informações sobre famílias identificadas com crianças trabalhando, em {0}, segundo o banco de dados do programa Bolsa Família. A escala de cores varia da menor quantidade (branco) para a maior quantidade de crianças ou adolescentes identificados (vermelho escuro). A inexistência de registros de crianças ou adolescentes trabalhando no cadastro do Bolsa Família não significa que não existam, nessas localidades, casos de trabalho infantil. Uma compreensão mais completa do fenômeno demanda a combinação de diferentes fontes de dados."
-              api: 
-                fixed: "/indicadoresmunicipais?categorias=nu_competencia&filtros=eq-cd_indicador-'06_03_04_02'&eq-nu_competencia-nu_competencia_max&limit=1"
-              args:
-                - named_prop: "nu_competencia"
-        chart_type: "MAP_TOPOJSON"
-        api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_03_04_02',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation_ind"
-                function: "get_proportional_indicator_uf"
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_ind'
-          colorScale:
-            name: 'Reds'
-        source:
-          desc_field: "ds_fonte"                            
+      # - id: "mapa_bf_crianca_trabalhando"
+      #   title:
+      #     fixed: "Bolsa Família - Famílias identificadas com crianças trabalhando"
+      #   title_comment:
+      #     template: "{0}, {1}"
+      #     api: 
+      #       fixed: "/indicadoresmunicipais?categorias=ds_indicador_radical,nu_competencia_max&filtros=eq-cd_indicador-'06_03_04_02'&limit=1"
+      #     args:
+      #       - base_object: "localidade"
+      #         named_prop: "nm_localidade"
+      #       - named_prop: "nu_competencia_max"
+      #   description:
+      #     - type: "minicards"
+      #       cards:
+      #         - relevance: 'high'
+      #           cls: 'xs12'
+      #           api: 
+      #             template: "/indicadoresmunicipais?categorias=ds_indicador_radical&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_03_04_02',and,eq-nu_competencia-nu_competencia_max"
+      #             args:
+      #               - named_prop: "idLocalidade"
+      #           args:
+      #             - prop: "value"
+      #               named_prop: 'agr_sum_vl_indicador'
+      #               format: 'inteiro'
+      #               collapse:
+      #                 format: "real"
+      #               default: "Sem Registros"
+      #             - prop: "description"
+      #               named_prop: "ds_indicador_radical"
+      #     - type: "text"
+      #       title: ""
+      #       content:
+      #         template: "Em destaque, para a perspectiva geográfica selecionada, informações sobre famílias identificadas com crianças trabalhando, em {0}, segundo o banco de dados do programa Bolsa Família. A escala de cores varia da menor quantidade (branco) para a maior quantidade de crianças ou adolescentes identificados (vermelho escuro). A inexistência de registros de crianças ou adolescentes trabalhando no cadastro do Bolsa Família não significa que não existam, nessas localidades, casos de trabalho infantil. Uma compreensão mais completa do fenômeno demanda a combinação de diferentes fontes de dados."
+      #         api: 
+      #           fixed: "/indicadoresmunicipais?categorias=nu_competencia&filtros=eq-cd_indicador-'06_03_04_02'&eq-nu_competencia-nu_competencia_max&limit=1"
+      #         args:
+      #           - named_prop: "nu_competencia"
+      #   chart_type: "MAP_TOPOJSON"
+      #   api:
+      #     template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_03_04_02',and,eq-nu_competencia-nu_competencia_max"
+      #     args:
+      #       - named_prop: "cd_uf"
+      #     options:
+      #       calcs:
+      #         - id: "deviation_ind"
+      #           function: "get_proportional_indicator_uf"
+      #       formatters:
+      #         - id: "vl_indicador"
+      #           format: 'inteiro'
+      #         - id: "rank_br"
+      #           format: 'inteiro'
+      #   headers:
+      #     - text: 'Município'
+      #       align: 'left'
+      #       value: 'nm_municipio'
+      #     - text: 'Ano'
+      #       align: 'left'
+      #       value: 'nu_competencia'
+      #     - text: 'Indicador'
+      #       align: 'left'
+      #       value: 'ds_indicador_radical'
+      #     - text: 'Valor'
+      #       value: 'fmt_vl_indicador'
+      #     - text: 'Rank UF'
+      #       value: 'rank_uf'
+      #     - text: 'Rank Brasil'
+      #       value: 'fmt_rank_br'
+      #   chart_options:
+      #     id_field: 'cd_mun_ibge'
+      #     topo_key: "codarea"
+      #     value_field: 'calc_deviation_ind'
+      #     colorScale:
+      #       name: 'Reds'
+      #   source:
+      #     desc_field: "ds_fonte"                            
                           
