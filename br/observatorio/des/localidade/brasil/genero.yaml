@@ -239,7 +239,7 @@ secoes:
         title: 
           fixed: "Disparidade de Remuneração dos Trabalhadores pela Perspectiva Interseccional (Sexo e Raça/Cor) no setor formal"
         title_comment:
-          template: "Brasil, em {1}"
+          template: "Brasil, em {0}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
@@ -410,326 +410,202 @@ secoes:
           desc_field: "ds_fonte"
 
 # ========================================================
-      - id: "mapa_remuneracao_dirigentes_sexo"
-        title: 
-          fixed: "Remuneração dos Empregados (CLT) em Cargos de Direção por Sexo"
-        title_comment:
-          template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_12_vl_homem"
-            year: "max"
-          args:
-            - named_prop: "nu_competencia"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_12_vl_homem"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'Remuneração média para homens'
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_12_vl_mulher"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'Remuneração média para mulheres'
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o valor médio da remuneração dos trabalhadores com vínculo de emprego (CLT) que ocupam cargos de direção, por sexo. No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor diferença) para o vermelho (maior diferença entre homens e mulheres)."
-              
-        chart_type: "MAP_TOPOJSON"
-        api:
-          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_fonte&valor=vl_indicador&pivot=cd_indicador&filtros=in-cd_indicador-'JD_RAIS_12_vl_homem'-'JD_RAIS_12_vl_mulher'&agregacao=sum"
-          options:
-            calcs:
-              - id: 'vl_indicador'
-                function: 'calc_subtraction_ds'
-                fn_args:
-                  - named_prop: "JD_RAIS_12_vl_homem"
-                  - named_prop: "JD_RAIS_12_vl_mulher"
-                recalc_min_max: true
-              # - id: "deviation_empform"
-              #   function: "get_bipolar_scale"
-              #   fn_args: 
-              #     - fixed: 'calc_vl_indicador'
-            formatters:
-              - id: "calc_vl_indicador"
-                format: 'monetario'
-                collapse:
-                  format: 'monetario'
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'nm_uf'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Diferença salarial'
-            value: 'fmt_calc_vl_indicador'
-        chart_options:
-          id_field: 'cd_uf'
-          topo_key: "codigo"
-          value_field: 'calc_vl_indicador'
-          colorScale:
-            name: 'Reds'
-            # order: "desc"
-            # inv_function:
-            #   name: 'inv_deviation'
-            #   args:
-            #     - first_row_prop: 'media_uf'
-          indicadores: ["JD_RAIS_12_vl_homem", "JD_RAIS_12_vl_mulher"]
-        source:
-          desc_field: "ds_fonte"
+      # - id: "bar_rendimentos_sexo_raca"
+      #   title: 
+      #     fixed: "Disparidade de Remuneração dos Trabalhadores pela Perspectiva Interseccional (Sexo e Raça/Cor) nos setores formal e informal"
+      #   title_comment:
+      #     template: "Brasil, em {0}"
+      #     api: 
+      #       fixed: "/indicadoresestaduais?categorias=nu_competencia&limit=1&filtros=eq-cd_indicador-'08_01_06_00'"
+      #     args:
+      #       - named_prop: 'nu_competencia'
+      #         format: "inteiro" 
+      #   info:
+      #     - type: "text"
+      #       title: "Sobre a métrica"
+      #       content:
+      #         fixed: "O cálculo é feito através do Censo 2010, desagregando-se os rendimentos das pessoas ocupadas com as variáveis de sexo e cor ou raça."
+      #     - type: "text"
+      #       title: "Observação Importante"
+      #       content:
+      #         fixed: "A OIT destaca que um grande número de estudos, ao examinar as causas da diferença salarial entre homens e mulheres, identificou dois grupos de fatores. O primeiro se refere às características dos indivíduos e das organizações onde trabalham. Neste grupo, destacam-se os seguintes fatores: nível de escolaridade e campo de estudo; experiência no mercado de trabalho e tempo de trabalho na organização ou no cargo exercido; número de horas trabalhadas e tamanho da organização e setor de atividade.<br/>
+      #                 No entanto, mesmo quando estes fatores são levados em consideração, estudos econométricos repetidamente vêm demonstrando que há uma diferença residual (estimada em torno de 5,0% a 15,0%) não explicada entre a média dos salários de mulheres e homens. Desse modo, se revela que uma proporção da desigualdade salarial observada entre homens e mulheres, objeto da Convenção da OIT sobre Igualdade de Remuneração de Homens e Mulheres Trabalhadores por Trabalho de Igual Valor, 1951 (nº 100), se deve à discriminação.<br/>
+      #                 Nesse contexto, a diferença residual, que reflete a discriminação salarial baseada no sexo, é resultante de um segundo grupo de fatores: estereótipos e preconceitos com relação ao trabalho das mulheres; métodos tradicionais de avaliação dos postos de trabalho elaborados com base nos requisitos de ocupações com predominância de homens; poder de negociação mais fraco das trabalhadoras, que apresentam menor participação sindical e estão sobre representadas em trabalhos precários e informais; e poucas vagas com maior flexibilidade de horário e com a mesma renda que as vagas tradicionais, o que é extremamente necessário para a mulher na maternidade."
+      #   description:
+      #     - type: "minicards"
+      #       cards:
+      #         - relevance: 'high'
+      #           cls: 'xs12 md6'
+      #           # preloaded:
+      #           #   prop: "centralindicadores"
+      #           #   function: "slice"
+      #           #   id: "08_02_10_00"
+      #           api: 
+      #             fixed: "/indicadoresestaduais?categorias=ds_agreg_primaria&limit=1&filtros=eq-cd_indicador-'08_02_10_00'"
+      #           args:
+      #             - prop: "description"
+      #               template: "{0}"
+      #               args:
+      #                 - id: "08_02_10_00"
+      #                   named_prop: 'ds_agreg_primaria'
+      #             - prop: "value"
+      #               fixed: '100%'
 
-# ========================================================
-      - id: "bar_remuneracao_dirigentes_sexo"
-        title: 
-          fixed: "Remuneração dos Empregados (CLT) em Cargos de Direção por Sexo"
-        title_comment:
-          template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_12_vl_homem"
-            year: "max"
-          args:
-            - named_prop: "nu_competencia"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_12_vl_homem"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'Remuneração média para homens'
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_12_vl_mulher"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'Remuneração média para mulheres'
+      #         - relevance: 'high'
+      #           cls: 'xs12 md6'
+      #           preloaded:
+      #             prop: "centralindicadores"
+      #             function: "slice"
+      #             id: ["08_02_10_00", 08_02_07_00]
+      #             year: "max"
+      #           api: 
+      #             fixed: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia&valor=vl_indicador&agregacao=SUM,COUNT&filtros=in-cd_indicador-'08_02_10_00'-'08_02_07_00'"
+      #             calcs:
+      #               - id: "vl_ind"
+      #                 format: 'real'
+      #                 function: "calc_proportion_ds"
+      #                 fn_args:
+      #                   - named_prop: "agr_sum_vl_indicador"
+      #                   - named_prop: "agr_count_vl_indicador"
+      #             combine:
+      #             - id: "equivalencia_perc"
+      #               desc: "Equivalência de salários"
+      #               function: 'calc_percentage'
+      #               fn_args:
+      #                 - id: "08_02_07_00"
+      #                   named_prop: "vl_ind"
+      #                 - id: "08_02_10_00"
+      #                   named_prop: "vl_ind"
+      #           args:
+      #             - id: "equivalencia_perc"
+      #               prop: "value"
+      #               named_prop: 'vl_ind'
+      #               format: 'porcentagem'
+      #               collapse:
+      #                 format: 'porcentagem'
+      #             - prop: "description"
+      #               fixed: 'Mulheres brancas'
+      #             # - prop: "comment"
+      #             #   fixed: "No setor formal"
+      #         - relevance: 'low'
+      #           cls: 'xs12 md6'
+      #           preloaded:
+      #             prop: "centralindicadores"
+      #             function: "slice"
+      #             id: ["08_02_10_00", 08_02_11_00]
+      #             year: "max"
+      #             combine:
+      #             - id: "equivalencia_perc"
+      #               desc: "Equivalência de salários"
+      #               function: 'calc_percentage'
+      #               fn_args:
+      #                 - id: "08_02_11_00"
+      #                   named_prop: "vl_indicador"
+      #                 - id: "08_02_10_00"
+      #                   named_prop: "vl_indicador"
+      #           args:
+      #             - id: "equivalencia_perc"
+      #               prop: "value"
+      #               named_prop: 'vl_indicador'
+      #               format: 'porcentagem'
+      #               collapse:
+      #                 format: 'porcentagem'
+      #             - prop: "description"
+      #               fixed: 'Homens negros'
+      #         - relevance: 'low'
+      #           cls: 'xs12 md6'
+      #           preloaded:
+      #             prop: "centralindicadores"
+      #             function: "slice"
+      #             id: ["08_02_10_00", 08_02_08_00]
+      #             year: "max"
+      #             combine:
+      #             - id: "equivalencia_perc"
+      #               desc: "Equivalência de salários"
+      #               function: 'calc_percentage'
+      #               fn_args:
+      #                 - id: "08_02_08_00"
+      #                   named_prop: "vl_indicador"
+      #                 - id: "08_02_10_00"
+      #                   named_prop: "vl_indicador"
+      #           args:
+      #             - id: "equivalencia_perc"
+      #               prop: "value"
+      #               named_prop: 'vl_indicador'
+      #               format: 'porcentagem'
+      #               collapse:
+      #                 format: 'porcentagem'
+      #             - prop: "description"
+      #               fixed: 'Mulheres negras'
 
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o valor médio da remuneração dos trabalhadores com vínculo de emprego (CLT) que ocupam cargos de direção, por sexo.  No gráfico ao lado, comparam-se os valores entre homens e mulheres."
+      #     - type: "text"
+      #       title: ""
+      #       content:
+      #         template: "Os números em destaque mostram, para a perspectiva geográfica selecionada, a disparidade relativa de rendimentos mensais da população ocupada, de 16 a 64 anos de idade, entre diferentes grupos de sexo e raça. Ainda que os dados sejam do começo da década, a análise é importante tanto por levar em consideração tanto o setor formal como o informal da economia brasileira quanto por constituir informação da série histórica do Censo Brasileiro, a ser atualizada em 2020. Nota-se, assim, percentual recebido pelos diferentes grupos (mulheres trabalhadoras brancas, homens trabalhadores negros e mulheres trabalhadoras negras) em relação ao rendimento médio mensal de homens brancos, utilizado como valor de referência (100%). No gráfico ao lado, a disparidade de rendimento médio mensal, entre diferentes grupos demográficos baseados nas categorias de análise de sexo e raça/cor (perspectiva interseccional) é apresentada em salários mínimos da época. Em comparação com a análise feita para o setor formal da economia, uma maior disparidade nesta visão indica problema de que ocorre com maior intensidade na informalidade. "
 
-        chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['JD_RAIS_12_vl_homem','JD_RAIS_12_vl_mulher']
-            options:
-              calcs:
-                - id: "bar_description"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed: 
-                        template: "{0} - {1}"
-                        args:
-                          - named_prop: "ds_agreg_primaria"
-                          - named_prop: "vl_indicador"
-                            format: 'monetario'
-                            collapse:
-                              format: 'monetario'
-                            uiTags: false
-              formatters:
-                - id: "vl_indicador"
-                  format: 'monetario'
-                  collapse:
-                    format: 'monetario'
-                  uiTags: false
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id: "cd_indicador"
-          x: "ds_agreg_primaria"
-          y: "vl_indicador"
-          orientation: "vertical"
-          text: "calc_bar_description"
-          show_x_axis: false
-          show_y_axis: false
-          hide_legend: true
-          colorScale:
-            name: "BuGn"
-            type: "singleHue"
-            levels: 4
-            order: 'desc'
-        source:
-          desc_field: "ds_fonte"
-
-# ========================================================
-      - id: "bar_remuneracao_trabalhadores_dirigentes_sexo"
-        title: 
-          fixed: "Remuneração dos Trabalhadores em Cargos de Direção por Sexo"
-        title_comment:
-          template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_24_vl_homem"
-            year: "max"
-          args:
-            - named_prop: "nu_competencia"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_24_vl_homem"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'Remuneração média para homens'
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_24_vl_mulher"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'Remuneração média para mulheres'
-
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o valor médio da remuneração dos trabalhadores, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários, que ocupam cargos de direção, conforme o sexo.  No gráfico ao lado, comparam-se os valores entre homens e mulheres."
-              
-        chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['JD_RAIS_24_vl_homem','JD_RAIS_24_vl_mulher']
-            options:
-              calcs:
-                - id: "bar_description"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed: 
-                        template: "{0} - {1}"
-                        args:
-                          - named_prop: "ds_agreg_primaria"
-                          - named_prop: "vl_indicador"
-                            format: 'monetario'
-                            collapse:
-                              format: 'monetario'
-                            uiTags: false
-              formatters:
-                - id: "vl_indicador"
-                  format: 'monetario'
-                  collapse:
-                    format: 'monetario'
-                  uiTags: false
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id: "cd_indicador"
-          x: "ds_agreg_primaria"
-          y: "vl_indicador"
-          orientation: "vertical"
-          text: "calc_bar_description"
-          show_x_axis: false
-          show_y_axis: false
-          hide_legend: true
-          colorScale:
-            name: "BuGn"
-            type: "singleHue"
-            levels: 4
-            order: 'desc'
-        source:
-          desc_field: "ds_fonte"
+      #   chart_type: "BAR"
+      #   preloaded:
+      #       prop: "centralindicadores"
+      #       function: "slice"
+      #       id: ['08_02_07_00','08_02_08_00','08_02_10_00','08_02_11_00']
+      #       options:
+      #         calcs:
+      #           - id: "tooltip_title"
+      #             function: "concat_values"
+      #             fn_args:
+      #               - fixed: 'Rendimento médio mensal -'
+      #               - named_prop: 'ds_agreg_primaria' 
+      #           - id: "nr_salarios"
+      #             format: 'real'
+      #             function: "calc_proportion_ds"
+      #             fn_args:
+      #               - named_prop: "vl_indicador"
+      #               - fixed: 510
+      #           - id: "bar_description"
+      #             function: "applyInterpolReplaceDatasetParam"
+      #             fn_args:
+      #               - fixed: 
+      #                   template: "{0} ({1} - {2} Sal. Mín.)"
+      #                   args:
+      #                     - named_prop: "ds_agreg_primaria"
+      #                     - named_prop: "vl_indicador"
+      #                       format: 'monetario'
+      #                       collapse:
+      #                         format: 'monetario'
+      #                       uiTags: false
+      #                     - named_prop: 'calc_nr_salarios'
+      #         formatters:
+      #           - id: "vl_indicador"
+      #             format: 'monetario'
+      #             collapse:
+      #               format: 'monetario'
+      #             uiTags: false
+      #   headers:
+      #     - text: 'Indicador'
+      #       align: 'left'
+      #       value: 'calc_tooltip_title'
+      #     - text: 'Ano'
+      #       align: 'left'
+      #       value: 'nu_competencia'
+      #     - text: 'Rendimento médio'
+      #       value: 'fmt_vl_indicador'
+      #   chart_options:
+      #     id: "cd_indicador"
+      #     x: "vl_indicador"
+      #     y: "cd_indicador"
+      #     text: "calc_bar_description"
+      #     order_field: "vl_indicador"
+      #     show_x_axis: false
+      #     show_y_axis: false
+      #     hide_legend: true
+      #     colorScale:
+      #       name: "YlGn"
+      #       type: "singleHue"
+      #       levels: 7
+      #       order: 'desc'
+      #     # removed_text_list: ["do trabalho principal da população de 16 a 64 anos de idade, com rendimento (Reais) ",", 2010"]
+      #   source:
+      #     desc_field: "ds_fonte"
 
 # ========================================================
       - id: "mapa_dirigentes_sexo"
@@ -863,6 +739,424 @@ secoes:
           indicadores: ["08_01_06_00"]
         source:
           desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "bar_remuneracao_dirigentes_sexo"
+        title: 
+          fixed: "Remuneração dos Empregados (CLT) em Cargos de Direção por Sexo"
+        title_comment:
+          template: "Brasil, em {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_12_vl_homem"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_12_vl_homem"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Remuneração média para homens'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_12_vl_mulher"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Remuneração média para mulheres'
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o valor médio da remuneração dos trabalhadores com vínculo de emprego (CLT) que ocupam cargos de direção, por sexo.  No gráfico ao lado, comparam-se os valores entre homens e mulheres."
+
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_12_vl_homem','JD_RAIS_12_vl_mulher']
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  collapse:
+                    format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "ds_agreg_primaria"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          colorScale:
+            name: "BuGn"
+            type: "singleHue"
+            levels: 4
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_remuneracao_dirigentes_sexo"
+        title: 
+          fixed: "Remuneração dos Empregados (CLT) em Cargos de Direção por Sexo"
+        title_comment:
+          template: "Brasil, em {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_12_vl_homem"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_12_vl_homem","JD_RAIS_12_vl_mulher"]
+                  year: "max"
+                  combine:
+                  - id: "disparidade_abs"
+                    desc: "Disparidade de Rendimentos de homens e mulheres"
+                    function: 'calc_subtraction'
+                    fn_args:
+                      - id: "JD_RAIS_12_vl_homem"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_12_vl_mulher"
+                        named_prop: "vl_indicador"
+                args:
+                  - prop: "value"
+                    id: "disparidade_abs"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Disparidade no Emprego (CLT)'
+                  - prop: "comment"
+                    template: "{0} que os homens em cargos de direção"
+                    args:
+                      - function: "minicard_value_check"
+                        fn_args:
+                          - named_prop: "vl_indicador"
+                          - fixed: '0'
+                          - fixed: "A mais"
+                          - fixed: "A menos"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_12_vl_mulher","JD_RAIS_12_vl_homem"]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários entre homens e mulheres"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_12_vl_mulher"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_12_vl_homem"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'EQUIVALÊNCIA % NO EMPREGO (CLT)'
+                  - prop: "comment"
+                    fixed: "Do rendimento médio dos homens em cargos de direção"
+              
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_24_vl_homem","JD_RAIS_24_vl_mulher"]
+                  year: "max"
+                  combine:
+                  - id: "disparidade_abs"
+                    desc: "Disparidade de Rendimentos de homens e mulheres"
+                    function: 'calc_subtraction'
+                    fn_args:
+                      - id: "JD_RAIS_24_vl_homem"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_24_vl_mulher"
+                        named_prop: "vl_indicador"
+                args:
+                  - prop: "value"
+                    id: "disparidade_abs"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Disparidade no Trabalho (CLT E OUTROS VÍNCULOS)'
+                  - prop: "comment"
+                    template: "{0} que os homens em cargos de direção"
+                    args:
+                      - function: "minicard_value_check"
+                        fn_args:
+                          - named_prop: "vl_indicador"
+                          - fixed: '0'
+                          - fixed: "A mais"
+                          - fixed: "A menos"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_24_vl_mulher","JD_RAIS_24_vl_homem"]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários entre homens e mulheres"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_24_vl_mulher"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_24_vl_homem"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'EQUIVALÊNCIA % NO TRABALHO (CLT E OUTROS VÍNCULOS)'
+                  - prop: "comment"
+                    fixed: "Do rendimento médio dos homens em cargos de direção"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a disparidade e a equivalência percentual entre os rendimentos de mulheres e homens em cargos de direção, considerada tanto a perspectiva apenas dos vínculos de emprego (CLT) quanto a de todos os vínculos, celetistas e de natureza administrativa, de acordo com a perspectiva geográfica selecionada. A disparidade foi calculada subtraindo-se o valor médio mensal pago às mulheres do valor médio mensal pago aos homens . No caso da equivalência percentual, dividiu-se o valor pago em média às mulheres pelo valor pago em média aos homens, obtendo-se o percentual do rendimento médio masculino mensal que equivale ao rendimento médio feminino mensal. Complementarmente, o gráfico ao lado apresenta uma perspectiva comparativa, entre diversas unidades geográficas, da diferença salarial entre homens e mulheres em cargos de direção, com vínculo de emprego celetista, administrativo ou estatutário. A escala de cores varia do branco (menor diferença) para o vermelho (maior diferença entre homens e mulheres)."
+              
+        chart_type: "MAP_TOPOJSON"
+        api:
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_fonte&valor=vl_indicador&pivot=cd_indicador&filtros=in-cd_indicador-'JD_RAIS_12_vl_homem'-'JD_RAIS_12_vl_mulher'&agregacao=sum"
+          options:
+            calcs:
+              - id: 'vl_indicador'
+                function: 'calc_subtraction_ds'
+                fn_args:
+                  - named_prop: "JD_RAIS_12_vl_homem"
+                  - named_prop: "JD_RAIS_12_vl_mulher"
+                recalc_min_max: true
+              # - id: "deviation_empform"
+              #   function: "get_bipolar_scale"
+              #   fn_args: 
+              #     - fixed: 'calc_vl_indicador'
+            formatters:
+              - id: "calc_vl_indicador"
+                format: 'monetario'
+                collapse:
+                  format: 'monetario'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Diferença salarial'
+            value: 'fmt_calc_vl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_vl_indicador'
+          colorScale:
+            name: 'Reds'
+            # order: "desc"
+            # inv_function:
+            #   name: 'inv_deviation'
+            #   args:
+            #     - first_row_prop: 'media_uf'
+          indicadores: ["JD_RAIS_12_vl_homem", "JD_RAIS_12_vl_mulher"]
+        source:
+          desc_field: "ds_fonte"
+
+
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_dirigentes_sexo"
+        title: 
+          fixed: "Remuneração dos Trabalhadores em Cargos de Direção por Sexo"
+        title_comment:
+          template: "Brasil, em {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_24_vl_homem"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_24_vl_homem"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Remuneração média para homens'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_24_vl_mulher"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Remuneração média para mulheres'
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o valor médio da remuneração dos trabalhadores, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários, que ocupam cargos de direção, conforme o sexo.  No gráfico ao lado, comparam-se os valores entre homens e mulheres."
+              
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_24_vl_homem','JD_RAIS_24_vl_mulher']
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  collapse:
+                    format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "ds_agreg_primaria"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          colorScale:
+            name: "BuGn"
+            type: "singleHue"
+            levels: 4
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
 
 # ========================================================
       # - id: "bar_rendimentos_sexo_raca"
