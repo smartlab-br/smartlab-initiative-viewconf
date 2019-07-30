@@ -98,9 +98,123 @@ secoes:
     cards:
 
 # ========================================================
+      - id: "bar_remuneracao_trabalhadores_raca"
+        title: 
+          fixed: "Remuneração Média de Trabalhadores por Raça/Cor"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_30_branca"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresestaduais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'JD_RAIS_30_branca'-'JD_RAIS_30_amarela'-'JD_RAIS_30_indigena'-'JD_RAIS_30_parda'-'JD_RAIS_30_preta'&ordenacao=-vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    named_prop: 'ds_agreg_primaria'
+                  - prop: "comment"
+                    fixed: 'Maior remuneração média'
+
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresestaduais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'JD_RAIS_30_branca'-'JD_RAIS_30_amarela'-'JD_RAIS_30_indigena'-'JD_RAIS_30_parda'-'JD_RAIS_30_preta'&ordenacao=vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    named_prop: 'ds_agreg_primaria'
+                  - prop: "comment"
+                    fixed: 'Menor remuneração média'
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o valor médio da remuneração dos trabalhadores, por raça/cor, de maior e menor renda, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os valores para os cinco coortes de raça/cor, conforme definidos pelo IBGE."
+              
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_30_branca','JD_RAIS_30_amarela','JD_RAIS_30_indigena','JD_RAIS_30_parda','JD_RAIS_30_preta']
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  collapse:
+                    format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          y: "ds_agreg_primaria"
+          x: "vl_indicador"
+          # orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          order_field: "vl_indicador"
+          colorScale:
+            name: "BuPu"
+            type: "singleHue"
+            levels: 6
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
       - id: "bar_remuneracao_clt_raca"
         title: 
-          fixed: "Remuneração de Empregados (CLT) por Raça"
+          fixed: "Remuneração de Empregados (CLT) por Raça/Cor"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -133,9 +247,7 @@ secoes:
                       format: 'monetario'
                     uiTags: false
                   - prop: "description"
-                    template: "RAÇA {0}"
-                    args:
-                      - named_prop: 'ds_agreg_primaria'
+                    named_prop: 'ds_agreg_primaria'
                   - prop: "comment"
                     fixed: 'Maior remuneração média'
 
@@ -154,16 +266,14 @@ secoes:
                     uiTags: false
                     default: "Sem Registros"
                   - prop: "description"
-                    template: "RAÇA {0}"
-                    args:
-                      - named_prop: 'ds_agreg_primaria'
+                    named_prop: 'ds_agreg_primaria'
                   - prop: "comment"
                     fixed: 'Menor remuneração média'
 
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o valor médio da remuneração dos empregados com vínculo de emprego (CLT), conforme a raça/cor, para o grupo cuja remuneração é mais alta e mais baixa. No gráfico ao lado, comparam-se os valores para diferentes grupos."
+              fixed: "Em destaque, o valor médio da remuneração dos trabalhadores, por raça, de maior e menor renda, somente para os vínculos com carteira assinada (CLT). No gráfico ao lado, comparam-se os valores para os cinco coortes de raça/cor, conforme definidos pelo IBGE."
 
         chart_type: "BAR"
         preloaded:
@@ -443,125 +553,11 @@ secoes:
       #   source:
       #     desc_field: "ds_fonte"
 
-# ========================================================
-      - id: "bar_remuneracao_trabalhadores_raca"
-        title: 
-          fixed: "Remuneração Média dos Trabalhadores por Raça"
-        title_comment:
-          template: "{0}, em {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_30_branca"
-            year: "max"
-          args:
-            - named_prop: "nm_uf"
-            - named_prop: "nu_competencia"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api:
-                  template: "/indicadoresestaduais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'JD_RAIS_30_branca'-'JD_RAIS_30_amarela'-'JD_RAIS_30_indigena'-'JD_RAIS_30_parda'-'JD_RAIS_30_preta'&ordenacao=-vl_indicador&limit=1"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    uiTags: false
-                  - prop: "description"
-                    named_prop: 'ds_agreg_primaria'
-                  - prop: "comment"
-                    fixed: 'Maior remuneração média'
-
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api:
-                  template: "/indicadoresestaduais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'JD_RAIS_30_branca'-'JD_RAIS_30_amarela'-'JD_RAIS_30_indigena'-'JD_RAIS_30_parda'-'JD_RAIS_30_preta'&ordenacao=vl_indicador&limit=1"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    uiTags: false
-                  - prop: "description"
-                    named_prop: 'ds_agreg_primaria'
-                  - prop: "comment"
-                    fixed: 'Menor remuneração média'
-
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o valor médio da remuneração dos trabalhadores, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários, consoante a perspectiva raça/cor. No gráfico ao lado, comparam-se os valores para diferentes grupos."
-              
-        chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['JD_RAIS_30_branca','JD_RAIS_30_amarela','JD_RAIS_30_indigena','JD_RAIS_30_parda','JD_RAIS_30_preta']
-            options:
-              calcs:
-                - id: "bar_description"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed: 
-                        template: "{0} - {1}"
-                        args:
-                          - named_prop: "ds_agreg_primaria"
-                          - named_prop: "vl_indicador"
-                            format: 'monetario'
-                            collapse:
-                              format: 'monetario'
-                            uiTags: false
-              formatters:
-                - id: "vl_indicador"
-                  format: 'monetario'
-                  collapse:
-                    format: 'monetario'
-                  uiTags: false
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id: "cd_indicador"
-          y: "ds_agreg_primaria"
-          x: "vl_indicador"
-          # orientation: "vertical"
-          text: "calc_bar_description"
-          show_x_axis: false
-          show_y_axis: false
-          hide_legend: true
-          order_field: "vl_indicador"
-          colorScale:
-            name: "BuPu"
-            type: "singleHue"
-            levels: 6
-            order: 'desc'
-        source:
-          desc_field: "ds_fonte"
           
 # ========================================================
       - id: "mapa_dirigentes_raca"
         title: 
-          fixed: "Segregação ocupacional em cargos de direção entre brancos e negros"
+          fixed: "Segregação ocupacional de Negros em cargos de direção"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -571,7 +567,6 @@ secoes:
           args:
             - named_prop: "nm_uf"
             - named_prop: 'nu_competencia'
-              format: "inteiro" 
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -625,35 +620,27 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, a distribuição da população ocupada de 16 a 64 anos em cargos de direção por raca. No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor segregação) para o vermelho (maior segregação)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['08_01_01_00']
-              args:
-                - id: "08_01_01_00"
-                  named_prop: "nm_municipio_uf"
+              fixed: "Em destaque, a distribuição percentual da população ocupada, de 16 a 64 anos de idade, em cargos de direção, para dois grupos distintos de raça/cor (de um lado. brancos e amarelos, e de outro lado pretos, pardos - negros - e indígenas).  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa a partir da participação percentual de negros em cargos de direção. A escala de cores varia do branco (menor participação) para o azul (maior participação)."
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,nu_competencia,latitude,longitude&valor=vl_indicador&pivot=cd_indicador&filtros=eq-cd_uf-{0},and,in-cd_indicador-'08_01_08_00'-'08_01_09_00'&agregacao=sum"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,nu_competencia,latitude,longitude,vl_indicador&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'08_01_09_00',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "idLocalidade"
           options:
-            calcs:
-              - id: 'vl_indicador'
-                function: 'calc_subtraction_ds'
-                fn_args:
-                  - named_prop: "08_01_08_00"
-                  - named_prop: "08_01_09_00"
-                recalc_min_max: true
+            # calcs:
+            #   - id: 'vl_indicador'
+            #     function: 'calc_subtraction_ds'
+            #     fn_args:
+            #       - named_prop: "08_01_08_00"
+            #       - named_prop: "08_01_09_00"
+            #     recalc_min_max: true
               # - id: "deviation_empform"
               #   function: "get_bipolar_scale"
               #   fn_args: 
               #     - fixed: 'calc_vl_indicador'
             formatters:
-              - id: "calc_vl_indicador"
-                format: 'real'
-                precision: 1
+              - id: "vl_indicador"
+                format: 'porcentagem'
         headers:
           - text: 'Indicador'
             align: 'left'
@@ -661,20 +648,14 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Diferença percentual'
-            value: 'fmt_calc_vl_indicador'
+          - text: 'Negros em cargos de direção'
+            value: 'fmt_vl_indicador'
         chart_options:
           id_field: 'cd_mun_ibge'
           topo_key: "codarea"
-          value_field: 'calc_vl_indicador'
+          value_field: 'vl_indicador'
           colorScale:
-            name: 'Reds'
-            # order: "desc"
-            # inv_function:
-            #   name: 'inv_deviation'
-            #   args:
-            #     - first_row_prop: 'media_uf'
-          indicadores: ["08_01_08_00"]
+            name: 'Blues'
 
 # ========================================================
       # - id: "bar_rendimentos_sexo_raca"
@@ -689,7 +670,6 @@ secoes:
       #     args:
       #       - named_prop: "nm_uf"
       #       - named_prop: 'nu_competencia'
-      #         format: "inteiro" 
       #   info:
       #     - type: "text"
       #       title: "Sobre a métrica"
@@ -883,7 +863,6 @@ secoes:
           args:
             - named_prop: "nm_uf"
             - named_prop: 'nu_competencia'
-              format: "inteiro" 
         info:
           - type: "text"
             title: "Sobre a métrica"
