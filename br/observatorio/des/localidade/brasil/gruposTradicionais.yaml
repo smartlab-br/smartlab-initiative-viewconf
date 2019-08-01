@@ -143,6 +143,101 @@ secoes:
         # source:
         #   desc_field: "ds_fonte"           
 
+# ===============================================
+      - id: "mapa_familias_beneficiarias_bolsa_familia"
+        title:
+          fixed: "Famílias de GPTEs Beneficiárias do Programa Bolsa Família"
+        title_comment:
+          template: "Brasil, em {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "GPTE_BOLSA_FAMILIA"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Podem fazer parte do Programa todas as famílias com renda per capita de até R$ 89,00 mensais e também as famílias com renda per capita entre R$ 89,01 e R$ 178,00 mensais, desde que tenham crianças ou adolescentes de 0 a 17 anos."
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "O Programa Bolsa Família atende às famílias que vivem em situação de pobreza e de extrema pobreza, conforme a renda familiar. Em destaque, o número de famílias beneficiárias do Bolsa Família e o respectivo percentual em relação ao total de famílias cadastradas. Foram considerados os registros de acordo com a origem étnica (indígenas, quilombolas, ciganos e famílias pertencentes a comunidades de terreiro), registros relacionados ao meio ambiente (extrativistas, pescadores artesanais, ribeirinhos), registros relacionados ao meio rural (assentados da reforma agrária, acampados, agricultores familiares e beneficiários do Programa Nacional de Crédito Fundiário) e situações conjunturais (atingidos por empreendimento de infraestrutura, famílias de preso do sistema carcerário, catadores de material reciclável, resgates do trabalho escravo e pessoas em situação de rua).<br/>Em destaque, o número de famílias cadastradas, de acordo com a perspectiva selecionada. Utilize os filtros abaixo para selecionar uma categoria e subcategoria de registro. No mapa, são identificadas as unidades geográficas com famílias cadastradas (atualizada conforme a seleção do filtro) e a cor varia conforme a intensidade, sendo que a branca evidência a inexistência."
+          - id: "select_categoria"
+            type: "select"
+            multiple: false
+            label: "Categoria"
+            api:
+              template: "/indicadoresestaduais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_BOLSA_FAMILIA',and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+          - id: "select_subcategoria"
+            type: "select"
+            multiple: false
+            label: "Subcategoria"
+            api:
+              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_BOLSA_FAMILIA',and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_secundaria-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresestaduais?categorias=cd_mun_ibge,nm_uf,ds_indicador,nu_competencia,ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'GPTE_BOLSA_FAMILIA'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Unidade Fedrativa'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Valor'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'agr_sum_vl_indicador'
+          colorScale:
+            name: 'Reds'
+        # source:
+        #   desc_field: "ds_fonte"           
+
 # ========================================================
       - id: "gpTrad_acoes_estaduais_headline"
         type: "headline"
