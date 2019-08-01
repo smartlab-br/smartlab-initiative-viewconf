@@ -27,7 +27,7 @@ principais:
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      fixed: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=in-cd_indicador-'JD_RAIS_36'-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
+      fixed: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=in-cd_indicador-'JD_RAIS_XX'-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
       options:
         combine:
         - id: "pct_pcd"
@@ -35,7 +35,7 @@ principais:
           function: 'calc_percentage_val1'
           named_prop: "agr_sum_vl_indicador"
           fn_args:
-            - id: "JD_RAIS_36"
+            - id: "JD_RAIS_XX"
               named_prop: "agr_sum_vl_indicador"
             - id: "JD_RAIS_02"
               named_prop: "agr_sum_vl_indicador"
@@ -50,9 +50,9 @@ principais:
       - prop: 'comment'
         template: "({0}, {1})"
         args:
-          - id: "JD_RAIS_36"
+          - id: "JD_RAIS_XX"
             named_prop: "ds_fonte"
-          - id: "JD_RAIS_36"
+          - id: "JD_RAIS_XX"
             named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12'
@@ -198,7 +198,7 @@ secoes:
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "JD_RAIS_36"
+            id: "JD_RAIS_XX"
             year: "max"
           args:
             - named_prop: "nu_competencia"
@@ -221,7 +221,7 @@ secoes:
                       function: 'calc_percentage_val1'
                       named_prop: "agr_sum_vl_indicador"
                       fn_args:
-                        - id: "JD_RAIS_36"
+                        - id: "JD_RAIS_XX"
                           named_prop: "agr_sum_vl_indicador"
                         - id: "JD_RAIS_02"
                           named_prop: "agr_sum_vl_indicador"
@@ -249,7 +249,7 @@ secoes:
               desc: "Vínculos Formais PCD sobre o total de empregos formais"
               function: 'calc_percentage_val1'
               fn_args:
-                - id: "JD_RAIS_36"
+                - id: "JD_RAIS_XX"
                   named_prop: "vl_indicador"
                 - id: "JD_RAIS_02"
                   named_prop: "vl_indicador"
@@ -282,115 +282,17 @@ secoes:
           value_field: 'vl_indicador'
 
 # ========================================================
-      - id: "bar_vinculos_formais"
+      - id: "mapa_vinculos_formais"
         title: 
-          fixed: "Vínculos Formais de Pessoas com Deficiência (PCD), Inclusive na Administração Pública - Total"
+          fixed: "Vínculos Formais de Pessoas com Deficiência (PCD), Inclusive na Administração Pública"
         title_comment:
-          template: "{0}, de {1} a {2}"
+          template: "Brasil, em {0}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "08_11_10_00"
+            id: "JD_RAIS_XX"
             year: "max"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "08_11_10_00"
-                  year: '2017'
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                      precision: 1
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Vínculos"
-                  - prop: "comment"
-                    template: "De {0} a {1}"
-                    preloaded:
-                      prop: "centralindicadores"
-                      function: "slice"
-                      id: "08_11_10_00"
-                      year: "2017"
-                    args:
-                      - named_prop: "nu_competencia_min"
-                      - named_prop: "nu_competencia_max"
-
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {0}. A escala de cores varia da menor quantidade (branco) para a maior quantidade (azul escuro)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "08_11_10_00"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
-
-        chart_type: "MAP_TOPOJSON"
-        api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'08_11_10_00',and,eq-nu_competencia-'2017'"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio_uf'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Taxa'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'vl_indicador'
-          colorScale:
-            name: 'Reds'
-            order: "desc"
-            # inv_function:
-            #   name: 'inv_deviation'
-            #   args:
-            #     - first_row_prop: 'media_uf'
-          indicadores: ["08_11_10_00"]
-
-# ========================================================
-      - id: "mapa_remuneracao"
-        title: 
-          fixed: "Remuneração dos Trabalhadores com Deficiência (PCD) no Mercado Formal"
-        title_comment:
-          template: "{0}, em {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_06"
-            year: "max"
-          args:
-            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
         info:
           - type: "text"
@@ -405,100 +307,52 @@ secoes:
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "JD_RAIS_06"
+                  id: "JD_RAIS_XX"
                   year: 'max'
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
-                    format: 'monetario'
+                    format: 'inteiro'
                     collapse:
-                      format: 'monetario'
+                      format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Remuneração Média PCD"
+                    fixed: "PCD com empregos CLT"
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_06"
-                  year: 'max'
+                api:
+                  fixed: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_uf'
-                    format: 'monetario'
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
                     collapse:
-                      format: 'monetario'
+                      format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Remuneração Média PCD na UF"
+                    fixed: "Total geral de postos de trabalho formal"
 
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_04"
-                  year: 'max'
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Remuneração Média Geral"
-                  - prop: "comment"
-                    named_prop: "nm_municipio_uf"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o valor da remuneração média (em R$) das PCD no mercado formal de trabalho, considerando-se o conjunto dos seguintes vínculos: celetistas (com carteira assinada), estatutários, temporários e avulsos. No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor)."
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "JD_RAIS_06"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre vínculos formais de pessoas com deficiência (PCD), inclusive administração pública - total. A escala de cores varia da menor quantidade (branco) para a maior quantidade (azul escuro)."
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'JD_RAIS_06',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_indicador-'JD_RAIS_XX',and,eq-nu_competencia-nu_competencia_max"
           options:
             calcs:
               - id: "deviation"
                 function: "get_proportional_indicator_uf"
+                fn_args:
+                  - fixed: 'vl_indicador'
+                  - fixed: 'media_br'
             formatters:
               - id: "vl_indicador"
-                format: 'monetario'
+                format: 'inteiro'
         headers:
-          - text: 'Município'
+          - text: 'Unidade Federativa'
             align: 'left'
-            value: 'nm_municipio_uf'
+            value: 'nm_uf'
           - text: 'Indicador'
             align: 'left'
             value: 'ds_indicador_radical'
@@ -508,8 +362,187 @@ secoes:
           - text: 'Valor'
             value: 'fmt_vl_indicador'
         chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_deviation'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_vinculos_formais_adm_publica"
+        title: 
+          fixed: "Vínculos Formais de Pessoas com Deficiência (PCD) na Administração Pública"
+        title_comment:
+          template: "Brasil, em {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_XX"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_XX"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "PCD com empregos CLT"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Total geral de postos de trabalho formal"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre vínculos formais de pessoas com deficiência (PCD) na administração pública. A escala de cores varia da menor quantidade (branco) para a maior quantidade (azul escuro)."
+        chart_type: "MAP_TOPOJSON"
+        api:
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_indicador-'JD_RAIS_XX',and,eq-nu_competencia-nu_competencia_max"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_proportional_indicator_uf"
+                fn_args:
+                  - fixed: 'vl_indicador'
+                  - fixed: 'media_br'
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Unidade Federativa'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_deviation'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_remuneracao"
+        title: 
+          fixed: "Remuneração dos Trabalhadores com Deficiência (PCD) no Mercado Formal"
+        title_comment:
+          template: "Brasil, em {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_06"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_06"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Remuneração Média PCD"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_04"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Remuneração Média Geral"
+                  - prop: "comment"
+                    fixed: "Brasil"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o valor da remuneração média (em R$) das PCD no mercado formal de trabalho, considerando-se o conjunto dos seguintes vínculos: celetistas (com carteira assinada), estatutários, temporários e avulsos. No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor)."
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_indicador-'JD_RAIS_06',and,eq-nu_competencia-nu_competencia_max"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_proportional_indicator_uf"
+                fn_args:
+                  - fixed: "vl_indicador"
+                  - fixed: "media_br"
+            formatters:
+              - id: "vl_indicador"
+                format: 'monetario'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
           value_field: 'calc_deviation'
         source:
           desc_field: "ds_fonte"
@@ -519,14 +552,13 @@ secoes:
         title: 
           fixed: "Remuneração Média das PCD no Mercado Formal, por tipo de deficiência"
         title_comment:
-          template: "{0}, em {1}"
+          template: "Brasil, em {0}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
             id: "JD_RAIS_06"
             year: "max"
           args:
-            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
         info:
           - type: "text"
@@ -558,23 +590,6 @@ secoes:
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "JD_RAIS_06"
-                  year: 'max'
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador_uf'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    precision: 0
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Remuneração Média PCD na UF"
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
                   id: "JD_RAIS_04"
                   year: 'max'
                 args:
@@ -587,40 +602,12 @@ secoes:
                   - prop: "description"
                     fixed: "Remuneração Média Geral"
                   - prop: "comment"
-                    named_prop: "nm_municipio_uf"
+                    fixed: "Brasil"
 
           - type: "text"
             title: ""
             content:
               fixed: "Em destaque, o valor da remuneração média (em R$) das PCD no mercado formal de trabalho. No gráfico ao lado, são apresentadas os valores das remunerações médias das PCD segundo os diversos tipos de deficiência."
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "JD_RAIS_06"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
         chart_type: "BAR"
         preloaded:
             prop: "centralindicadores"
