@@ -6,16 +6,37 @@ principais:
     preloaded:
       prop: "centralindicadores"
       function: "slice"
-      id: "08_11_15_00"
+      id: "FAMILIAS_GPTE_CADUNICO"
       year: "max"
     args:
       - prop: "value"
-        id: "08_11_15_00"
+        id: "FAMILIAS_GPTE_CADUNICO"
         named_prop: 'vl_indicador'
         format: 'porcentagem'
         default: "Sem Registros"
       - prop: "description"
-        named_prop: 'ds_indicador_radical'
+        fixed: 'Total de Famílias de GPTE no CADÚNICO'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "FAMILIAS_GPTE_BOLSA_FAMILIA"
+      year: "max"
+    args:
+      - prop: "value"
+        id: "FAMILIAS_GPTE_BOLSA_FAMILIA"
+        named_prop: 'vl_indicador'
+        format: 'porcentagem'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Total de Famílias de GPTE Beneficiárias do Bolsa Família'
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -24,15 +45,206 @@ principais:
 # ========================================================
 secoes:
   - id: "gpTrad_garantia"
-    name: "Proteção Social e Garantia de Direitos"
+    name: ""
     cards:
+
+# ===============================================
+      - id: "mapa_familias_registradas_cadunico"
+        title:
+          fixed: "Famílias de GPTEs Registradas no Cadastro Único"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "GPTE_CADUNICO"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Integram o Cadastro Único as famílias: com renda mensal de até meio salário mínimo por pessoa; com renda mensal total de até três salários mínimos ou com renda maior que três salários mínimos, desde que o cadastramento esteja vinculado à inclusão em programas sociais nas três esferas do governo."
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "O Cadastro Único para Programas Sociais do Governo Federal (CADUNICO) é um instrumento que identifica e caracteriza o perfil socioeconômico das famílias de baixa renda, servindo de referência para o acesso a políticas públicas. As famílias pertencentes a Grupos Populacionais Tradicionais e Específicos (GPTEs) devem receber atenção nas estratégias para Busca Ativa, pois normalmente vivem em locais distantes da sede municipal e com pouco atendimento de políticas públicas, sendo, portanto, importante a identificação territorial. Foram considerados os registros de acordo com a origem étnica (indígenas, quilombolas, ciganos e famílias pertencentes a comunidades de terreiro), registros relacionados ao meio ambiente (extrativistas, pescadores artesanais, ribeirinhos), registros relacionados ao meio rural (assentados da reforma agrária, acampados, agricultores familiares e beneficiários do Programa Nacional de Crédito Fundiário) e situações conjunturais (atingidos por empreendimento de infraestrutura, famílias de preso do sistema carcerário, catadores de material reciclável, resgates do trabalho escravo e pessoas em situação de rua).<br/>Em destaque, o número de famílias cadastradas, de acordo com a perspectiva selecionada. Utilize os filtros abaixo para selecionar uma categoria e subcategoria de registro. No mapa, são identificadas as unidades geográficas com famílias cadastradas (atualizada conforme a seleção do filtro) e a cor varia conforme a intensidade, sendo que a branca evidência a inexistência."
+          - id: "select_categoria"
+            type: "select"
+            multiple: false
+            label: "Categoria"
+            api:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_CADUNICO',and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+          - id: "select_subcategoria"
+            type: "select"
+            multiple: false
+            label: "Subcategoria"
+            api:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_CADUNICO',and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_secundaria-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador,nu_competencia,ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'GPTE_CADUNICO'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Valor'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'agr_sum_vl_indicador'
+          colorScale:
+            name: 'Reds'
+        # source:
+        #   desc_field: "ds_fonte"           
+
+# ===============================================
+      - id: "mapa_familias_beneficiarias_bolsa_familia"
+        title:
+          fixed: "Famílias de GPTEs Beneficiárias do Programa Bolsa Família"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "GPTE_BOLSA_FAMILIA"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Podem fazer parte do Programa todas as famílias com renda per capita de até R$ 89,00 mensais e também as famílias com renda per capita entre R$ 89,01 e R$ 178,00 mensais, desde que tenham crianças ou adolescentes de 0 a 17 anos."
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "O Programa Bolsa Família atende às famílias que vivem em situação de pobreza e de extrema pobreza, conforme a renda familiar. Em destaque, o número de famílias beneficiárias do Bolsa Família e o respectivo percentual em relação ao total de famílias cadastradas. Foram considerados os registros de acordo com a origem étnica (indígenas, quilombolas, ciganos e famílias pertencentes a comunidades de terreiro), registros relacionados ao meio ambiente (extrativistas, pescadores artesanais, ribeirinhos), registros relacionados ao meio rural (assentados da reforma agrária, acampados, agricultores familiares e beneficiários do Programa Nacional de Crédito Fundiário) e situações conjunturais (atingidos por empreendimento de infraestrutura, famílias de preso do sistema carcerário, catadores de material reciclável, resgates do trabalho escravo e pessoas em situação de rua).<br/>Em destaque, o número de famílias cadastradas, de acordo com a perspectiva selecionada. Utilize os filtros abaixo para selecionar uma categoria e subcategoria de registro. No mapa, são identificadas as unidades geográficas com famílias cadastradas (atualizada conforme a seleção do filtro) e a cor varia conforme a intensidade, sendo que a branca evidência a inexistência."
+          - id: "select_categoria"
+            type: "select"
+            multiple: false
+            label: "Categoria"
+            api:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_BOLSA_FAMILIA',and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+          - id: "select_subcategoria"
+            type: "select"
+            multiple: false
+            label: "Subcategoria"
+            api:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_BOLSA_FAMILIA',and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_secundaria-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador,nu_competencia,ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'GPTE_BOLSA_FAMILIA'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Valor'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'agr_sum_vl_indicador'
+          colorScale:
+            name: 'Reds'
+        # source:
+        #   desc_field: "ds_fonte"           
+
 # ========================================================
-      - id: "map_prog_dh_ciganos"
-        title: 
-          fixed: "Ações e Programas de Direitos Humanos para Ciganos"
-        card_template: "t5"
-        datasource: "estadicmunic"
-        cd_indicador: "91_08_05_02"
+      - id: "gpTrad_acoes_municipais_headline"
+        type: "headline"
+        title:
+          fixed: "Proteção Social e Garantia de Direitos"
 # ========================================================
       - id: "map_prog_gpTrad"
         title: 
@@ -40,3 +252,11 @@ secoes:
         card_template: "t5"
         datasource: "estadicmunic"
         cd_indicador: "91_08_05_01"
+# ========================================================
+      - id: "map_prog_dh_ciganos"
+        title: 
+          fixed: "Ações e Programas de Direitos Humanos para Ciganos"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_08_05_02"
+
