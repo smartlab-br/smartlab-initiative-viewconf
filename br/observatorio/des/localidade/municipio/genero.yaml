@@ -1120,16 +1120,21 @@ secoes:
         preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: ['CLT_vl_homem','CLT__vl_mulher','ESTAT_vl_homem','ESTAT__vl_mulher']
+            id: ['JD_RAIS_37_HOMEM','JD_RAIS_37_MULHER','JD_RAIS_38_HOMEM','JD_RAIS_38_MULHER']
             options:
               calcs:
+                - id: "desagreg"
+                  function: "get_text_from_parentheses_ds"
+                  fn_args: 
+                    - named_prop: 'ds_indicador_curto' 
                 - id: "bar_description"
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed: 
-                        template: "{0} - {1}"
+                        template: "{0} ({1}) - {2}"
                         args:
                           - named_prop: "ds_agreg_primaria"
+                          - named_prop: "calc_desagreg"
                           - named_prop: "vl_indicador"
                             format: 'monetario'
                             collapse:
@@ -1152,17 +1157,17 @@ secoes:
             value: 'fmt_vl_indicador'
         chart_options:
           id: "cd_indicador"
-          x: "ds_agreg_primaria"
-          y: "vl_indicador"
-          orientation: "vertical"
+          x: "vl_indicador"
+          y: "cd_indicador"
           text: "calc_bar_description"
+          order_field: "vl_indicador"
           show_x_axis: false
           show_y_axis: false
           hide_legend: true
           colorScale:
-            name: "BuGn"
+            name: "YlGn"
             type: "singleHue"
-            levels: 4
+            levels: 7
             order: 'desc'
         source:
           desc_field: "ds_fonte"
