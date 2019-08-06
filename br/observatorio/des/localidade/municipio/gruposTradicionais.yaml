@@ -88,7 +88,7 @@ secoes:
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_primaria-{0}"
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
                 api:
                   args:
                     - named_prop: "ds_agreg_primaria"
@@ -96,10 +96,16 @@ secoes:
             type: "select"
             multiple: false
             label: "Subcategoria"
+            child: true
             api:
               template: "/indicadoresmunicipais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge-{0}"
               args:
                 - named_prop: "idLocalidade"
+            api_reactive:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge-{0},and,eq-ds_agreg_primaria-'{1}'"
+              args:
+                - named_prop: "idLocalidade"
+                - named_prop: "ds_agreg_primaria"
             args:
               - prop: "id"
                 named_prop: "ds_agreg_secundaria"
@@ -109,7 +115,7 @@ secoes:
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_secundaria-{0}"
+                filter: ",and,eq-ds_agreg_secundaria-'{0}'"
                 api:
                   args:
                     - named_prop: "ds_agreg_secundaria"
