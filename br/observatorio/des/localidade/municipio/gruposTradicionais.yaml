@@ -54,11 +54,10 @@ secoes:
           fixed: "Famílias de GPTEs Registradas no Cadastro Único"
         title_comment:
           template: "{0}, em {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "GPTE_CADUNICO"
-            year: "max"
+          api:
+            template: "/indicadoresmunicipais?categorias=nu_competencia,nm_municipio_uf&agregacao=distinct&filtros=lk-cd_indicador-%27JD_CADUN_03%25%27,and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge-{0}&limit=1"
+            args:
+              - named_prop: "idLocalidade"
           args:
             - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
@@ -77,9 +76,9 @@ secoes:
             multiple: false
             label: "Categoria"
             api:
-              template: "/indicadoresmunicipais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_CADUNICO',and,eq-cd_uf-{0}"
+              template: "/indicadoresmunicipais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge-{0}"
               args:
-                - named_prop: "cd_uf"
+                - named_prop: "idLocalidade"
             args:
               - prop: "id"
                 named_prop: "ds_agreg_primaria"
@@ -98,9 +97,9 @@ secoes:
             multiple: false
             label: "Subcategoria"
             api:
-              template: "/indicadoresmunicipais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_CADUNICO',and,eq-cd_uf-{0}"
+              template: "/indicadoresmunicipais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge-{0}"
               args:
-                - named_prop: "cd_uf"
+                - named_prop: "idLocalidade"
             args:
               - prop: "id"
                 named_prop: "ds_agreg_secundaria"
@@ -116,7 +115,7 @@ secoes:
                     - named_prop: "ds_agreg_secundaria"
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador,nu_competencia,ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'GPTE_CADUNICO'"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador,nu_competencia,ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,lk-cd_indicador-'JD_CADUN_03%25'"
           args:
             - named_prop: "cd_uf"
           options:
