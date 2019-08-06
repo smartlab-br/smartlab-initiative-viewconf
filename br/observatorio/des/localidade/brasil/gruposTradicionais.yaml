@@ -54,11 +54,10 @@ secoes:
           fixed: "Famílias de GPTEs Registradas no Cadastro Único"
         title_comment:
           template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "GPTE_CADUNICO"
-            year: "max"
+          api:
+            template: "/indicadoresnacionais?categorias=nu_competencia&agregacao=distinct&filtros=lk-cd_indicador-%27JD_CADUN_03%25%27,and,eq-nu_competencia-nu_competencia_max&limit=1"
+            # args:
+            #   - named_prop: "idLocalidade"
           args:
             - named_prop: "nu_competencia"
         info:
@@ -74,9 +73,9 @@ secoes:
           - id: "select_categoria"
             type: "select"
             multiple: false
-            label: "Categoria"
+            label: "Grupo"
             api:
-              template: "/indicadoresestaduais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_CADUNICO',and,eq-cd_uf-{0}"
+              template: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max"
               args:
                 - named_prop: "idLocalidade"
             args:
@@ -88,18 +87,24 @@ secoes:
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_primaria-{0}"
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
                 api:
                   args:
                     - named_prop: "ds_agreg_primaria"
           - id: "select_subcategoria"
             type: "select"
             multiple: false
-            label: "Subcategoria"
+            label: "Subgrupo"
+            child: true
             api:
-              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_CADUNICO',and,eq-cd_uf-{0}"
+              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max"
+              # args:
+              #   - named_prop: "idLocalidade"
+            api_reactive:
+              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'{0}'"
               args:
-                - named_prop: "idLocalidade"
+                # - named_prop: "idLocalidade"
+                - named_prop: "ds_agreg_primaria"
             args:
               - prop: "id"
                 named_prop: "ds_agreg_secundaria"
@@ -109,15 +114,15 @@ secoes:
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_secundaria-{0}"
+                filter: ",and,eq-ds_agreg_secundaria-'{0}'"
                 api:
                   args:
                     - named_prop: "ds_agreg_secundaria"
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresestaduais?categorias=cd_mun_ibge,nm_uf,ds_indicador,nu_competencia,ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'GPTE_CADUNICO'"
-          args:
-            - named_prop: "idLocalidade"
+          template: "/indicadoresestaduais?categorias=cd_mun_ibge,nm_uf,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=lk-cd_indicador-'JD_CADUN_03%25'"
+          # args:
+          #   - named_prop: "idLocalidade"
           options:
             formatters:
               - id: "agr_sum_vl_indicador"
@@ -129,14 +134,14 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador'
+          # - text: 'Indicador'
+          #   align: 'left'
+          #   value: 'ds_indicador'
           - text: 'Valor'
             value: 'fmt_agr_sum_vl_indicador'
         chart_options:
           id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
+          topo_key: "codigo"
           value_field: 'agr_sum_vl_indicador'
           colorScale:
             name: 'Reds'
@@ -149,11 +154,8 @@ secoes:
           fixed: "Famílias de GPTEs Beneficiárias do Programa Bolsa Família"
         title_comment:
           template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "GPTE_BOLSA_FAMILIA"
-            year: "max"
+          api:
+            template: "/indicadoresnacionais?categorias=nu_competencia&agregacao=distinct&filtros=lk-cd_indicador-%27JD_CADUN_04%25%27,and,eq-nu_competencia-nu_competencia_max&limit=1"
           args:
             - named_prop: "nu_competencia"
         info:
@@ -169,9 +171,9 @@ secoes:
           - id: "select_categoria"
             type: "select"
             multiple: false
-            label: "Categoria"
+            label: "Grupo"
             api:
-              template: "/indicadoresestaduais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_BOLSA_FAMILIA',and,eq-cd_uf-{0}"
+              template: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_04%25',and,eq-nu_competencia-nu_competencia_max"
               args:
                 - named_prop: "idLocalidade"
             args:
@@ -183,18 +185,24 @@ secoes:
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_primaria-{0}"
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
                 api:
                   args:
                     - named_prop: "ds_agreg_primaria"
           - id: "select_subcategoria"
             type: "select"
             multiple: false
-            label: "Subcategoria"
+            label: "Subgrupo"
+            parent: "select_categoria"
             api:
-              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'GPTE_BOLSA_FAMILIA',and,eq-cd_uf-{0}"
+              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_04%25',and,eq-nu_competencia-nu_competencia_max"
+              # args:
+              #   - named_prop: "idLocalidade"
+            api_reactive:
+              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_04%25',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'{0}'"
               args:
-                - named_prop: "idLocalidade"
+                # - named_prop: "idLocalidade"
+                - named_prop: "ds_agreg_primaria"
             args:
               - prop: "id"
                 named_prop: "ds_agreg_secundaria"
@@ -204,13 +212,13 @@ secoes:
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_secundaria-{0}"
+                filter: ",and,eq-ds_agreg_secundaria-'{0}'"
                 api:
                   args:
                     - named_prop: "ds_agreg_secundaria"
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresestaduais?categorias=cd_mun_ibge,nm_uf,ds_indicador,nu_competencia,ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'GPTE_BOLSA_FAMILIA'"
+          template: "/indicadoresestaduais?categorias=cd_mun_ibge,nm_uf,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=lk-cd_indicador-'JD_CADUN_04%25'"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -224,14 +232,14 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador'
+          # - text: 'Indicador'
+          #   align: 'left'
+          #   value: 'ds_indicador'
           - text: 'Valor'
             value: 'fmt_agr_sum_vl_indicador'
         chart_options:
           id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
+          topo_key: "codigo"
           value_field: 'agr_sum_vl_indicador'
           colorScale:
             name: 'Reds'
