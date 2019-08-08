@@ -157,7 +157,8 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência. No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+              # fixed: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência. No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+              fixed: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência (PCD). No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
           - type: "ranking"
             preloaded:
               prop: "centralindicadores"
@@ -846,13 +847,101 @@ secoes:
           desc_field: "ds_fonte"
 
 # ========================================================
+      - id: "mapa_desocupação_população_deficiência_severa"
+        title: 
+          fixed: "Desocupação da população de 16 a 64 anos com deficiência severa"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "08_10_04_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: 'nu_competencia'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "No Censo 2010, para as pessoas que estavam trabalhando foi perguntada a ocupação que exercia neste trabalho."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_10_04_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Taxa de desocupação'
+                  - prop: "comment"
+                    fixed: 'No município'
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a taxa de desocupação da população de 16 a 64 anos, com deficiência severa. Ou seja, da população de PCDs considerada como o conjunto das pessoas que, para as deficiências visual, auditiva e motora, quando indagados se tinham dificuldade de enxergar, ouvir, e de caminhar ou subir escadas, respectivamente, declararam as opções de resposta “sim, grande dificuldade” ou “sim, não consegue de modo algum”. Também se considerou com deficiência severa o conjunto das pessoas com deficiência mental/intelectual. Este indicador pode informar, ainda que indiretamente, o potencial de contratação de PCDs que poderia fomentar o cumprimento da lei de cotas para inclusão das PCD no mercado de trabalho. No mapa, apresenta-se a perspectiva comparativa dos municípios, com destaque para a seleção. A escala de cores varia do branco (menor taxa) para o vermelho (maior taxa)."
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'08_10_04_00'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            # calcs:
+            #   - id: 'vl_indicador'
+            #     function: 'calc_subtraction_ds'
+            #     fn_args:
+            #       - named_prop: "08_01_06_00"
+            #       - named_prop: "08_01_07_00"
+            #     recalc_min_max: true
+            #   # - id: "deviation_empform"
+            #   #   function: "get_bipolar_scale"
+            #   #   fn_args: 
+            #   #     - fixed: 'calc_vl_indicador'
+            formatters:
+              - id: "vl_indicador"
+                format: 'porcentagem'
+                precision: 1
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Taxa'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'vl_indicador'
+          colorScale:
+            name: 'Reds'
+            # order: "desc"
+            # inv_function:
+            #   name: 'inv_deviation'
+            #   args:
+            #     - first_row_prop: 'media_br'
+          indicadores: ["08_10_04_00"]
+# ========================================================
   - id: "pcd_garantia"
     name: "Proteção Social e Garantia de Direitos"
     cards:
 # ========================================================
       - id: "map_beneficios_prestacao_continuada"
         title: 
-          fixed: "Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência"
+          fixed: "Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência (PCD)"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -892,14 +981,15 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {0}. A escala de cores varia da menor quantidade (branco) para a maior quantidade (vermelho escuro)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_08_02_02"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência. A escala de cores varia da menor quantidade (branco) para a maior quantidade (vermelho escuro)."
+              # template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {0}. A escala de cores varia da menor quantidade (branco) para a maior quantidade (vermelho escuro)."
+              # preloaded:
+              #   prop: "centralindicadores"
+              #   function: "slice"
+              #   id: "10_08_02_02"
+              #   year: "max"
+              # args:
+              #   - named_prop: "ds_indicador_radical"
 
         chart_type: "MAP_TOPOJSON"
         api:
