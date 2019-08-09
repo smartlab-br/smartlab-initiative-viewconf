@@ -13,7 +13,7 @@ prevalencia:
     fixed: "Visão Geral"
   api:
     # DISPARIDADE GÊNERO
-    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,nu_competencia,cd_mun_ibge,nm_municipio_uf,ds_indicador_radical,'disp_genero'-codigo,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=in-cd_indicador-'JD_RAIS_33_vl_homem'-'JD_RAIS_33_vl_mulher',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0"
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,nu_competencia,cd_mun_ibge,nm_municipio_uf,ds_indicador_radical,'disp_genero'-codigo,cd_indicador&valor=vl_indicador&agregacao=sum&filtros=in-cd_indicador-'JD_RAIS_33_vl_homem'-'JD_RAIS_33_vl_mulher',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0"
       options:
         place_id_field: "cd_mun_ibge"
         combine:
@@ -34,7 +34,7 @@ prevalencia:
             collapse:
               format: 'monetario'
     # DISPARIDADE RAÇA
-    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,nu_competencia,cd_mun_ibge,nm_municipio_uf,ds_indicador_radical,'disp_raca'-codigo,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=in-cd_indicador-'JD_RAIS_30_branca'-'JD_RAIS_30_preta',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0"
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,nu_competencia,cd_mun_ibge,nm_municipio_uf,ds_indicador_radical,'disp_raca'-codigo,cd_indicador&valor=vl_indicador&agregacao=sum&filtros=in-cd_indicador-'JD_RAIS_30_branca'-'JD_RAIS_30_preta',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0"
       options:
         place_id_field: "cd_mun_ibge"
         combine:
@@ -63,9 +63,17 @@ prevalencia:
             format: 'inteiro'
         
     # GPTE
-    # - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'gpte'-codigo,ds_indicador_curto-ds_indicador_radical&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max&partition=cd_mun_ibge"
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'gpte'-codigo,ds_indicador_curto-ds_indicador_radical,nu_competencia&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0&partition=cd_mun_ibge"
+      options:
+        formatters:
+          - id: "agr_sum_vl_indicador"
+            format: 'inteiro'
     # GPTE BOLSA FAMÍLIA
-    # - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'gpte'-codigo,ds_indicador_curto-ds_indicador_radical&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=lk-cd_indicador-'JD_CADUN_04%25',and,eq-nu_competencia-nu_competencia_max&partition=cd_mun_ibge"
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'gpte_bolsa'-codigo,ds_indicador_curto-ds_indicador_radical,nu_competencia&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=lk-cd_indicador-'JD_CADUN_04%25',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0&partition=cd_mun_ibge"
+      options:
+        formatters:
+          - id: "agr_sum_vl_indicador"
+            format: 'inteiro'
   headers:
     - text: 'Município'
       align: 'left'
@@ -77,12 +85,10 @@ prevalencia:
       value: 'ds_indicador_radical'
     - text: 'Quantidade'
       value: 'fmt_agr_sum_vl_indicador'
-      # value: 'agr_count_cd_municipio_ibge'
-      # format: "inteiro"
   chart_options:
-    colorArray: ["#00C853", "#795548", "#303F9F", "#00BCD4", "#9C27B0", "#FF9800","#F44336","#03A9F4","#000000"]
+    colorArray: ["#303F9F", "#00BCD4", "#9C27B0", "#00C853", "#795548", "#FF9800","#F44336","#03A9F4","#000000"]
     type: 'bubbles'
-    indicadores: ["disp_genero","disp_raca","bpc_pcd","gpte","gpte_bolsa","sinan","te_nat","te_res","mapear"]
+    indicadores: ["disp_genero","disp_raca","bpc_pcd","gpte","gpte_bolsa"]
     id_field: 'codigo'
     lat: 'latitude'
     long: 'longitude'
@@ -101,7 +107,7 @@ prevalencia:
         - id: "disp_genero"
           cls: "xs12 blue-title control-top-align"
           default: true
-          color: "green accent-4"
+          color: "indigo darken-2"
           minicards:
           - relevance: 'low'
             rowClass: 'pa-0'
@@ -128,7 +134,7 @@ prevalencia:
                   format: 'real'
                 default: "Sem Registros"
               - prop: "description"
-                fixed: "Disparidade de Rendimentos entre homens e mulheres<sup>2</sup>"
+                fixed: "Disparidade de Rendimentos entre homens e mulheres<sup>1</sup>"
               - prop: "comment"
                 template: "Fonte: RAIS, {0}"
                 args:
@@ -136,7 +142,7 @@ prevalencia:
         - id: "disp_raca"
           cls: "xs12 blue-title control-top-align"
           default: false
-          color: "brown"
+          color: "cyan"
           minicards:
           - relevance: 'low'
             rowClass: 'pa-0'
@@ -171,7 +177,7 @@ prevalencia:
         - id: "bpc_pcd"
           cls: "xs12 blue-title control-top-align"
           default: false
-          color: "indigo darken-2"
+          color: "purple"
           minicards:
           - relevance: 'low'
             rowClass: 'pa-0'
@@ -187,7 +193,7 @@ prevalencia:
                 format: 'inteiro'
                 default: "Sem Registros"
               - prop: "description"
-                fixed: "Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência<sup>1</sup>"
+                fixed: "Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência<sup>3</sup>"
               - prop: "comment"
                 template: "Fonte: IBGE - Censo Demográfico, {0}"
                 args:
@@ -195,7 +201,7 @@ prevalencia:
         - id: "gpte"
           cls: "xs12 blue-title control-top-align"
           default: false
-          color: "purple"
+          color: "green accent-4"
           minicards:
           - relevance: 'low'
             rowClass: 'pa-0'
@@ -207,7 +213,7 @@ prevalencia:
                 format: 'inteiro'
                 default: "Sem Registros"
               - prop: "description"
-                fixed: "Famílias de GPTEs Registradas no Cadastro Único<sup>2</sup>"
+                fixed: "Famílias de GPTEs Registradas no Cadastro Único<sup>4</sup>"
               - prop: "comment"
                 template: "Fonte: IBGE - Censo Demográfico, {0}"
                 args:
@@ -215,7 +221,7 @@ prevalencia:
         - id: "gpte_bolsa"
           cls: "xs12 blue-title control-top-align"
           default: false
-          color: "cyan"
+          color: "brown"
           minicards:
           - relevance: 'low'
             rowClass: 'pa-0'
@@ -227,7 +233,7 @@ prevalencia:
                 format: 'inteiro'
                 default: "Sem Registros"
               - prop: "description"
-                fixed: "Famílias de GPTEs Beneficiárias do Programa Bolsa Família<sup>2</sup>"
+                fixed: "Famílias de GPTEs Beneficiárias do Programa Bolsa Família<sup>4</sup>"
               - prop: "comment"
                 template: "Fonte: IBGE - Censo Demográfico, {0}"
                 args:
@@ -360,9 +366,10 @@ prevalencia:
       cls: "ma-0 pa-0"
       content:
         cls: "caption pa-0"
-        #                 5. Consideram-se as ocorrências do SINAN (Sistema Nacional de Agravos de Notificação), incluindo todos os trabalhadores entre 0 e 17 anos atendidos pelo SUS no período. O SINAN é alimentado sobretudo por notificações de casos de doenças e agravos da lista nacional de doenças de notificação compulsória (Portaria MS nº 4/2017), que inclui casos envolvendo crianças e adolescentes, inclusive no mercado informal.<br/><br/>
-        fixed: "1. De acordo com o número de beneficiários do Benefício de Pestação Continuada - BPC - para Pessoas com Deficiência.  O Benefício de Prestação Continuada (BPC) da Lei Orgânica da Assistência Social (LOAS) é a garantia de um salário mínimo mensal à pessoa com deficiência que comprove não possuir meios de prover a própria manutenção, nem de tê-la provida por sua família. Para ter direito, é necessário que a renda por pessoa do grupo familiar seja menor que 1/4 do salário-mínimo vigente. Por se tratar de um benefício assistencial, não é necessário ter contribuído para o INSS para ter direito.<br/><br/>
-                2. O Cadastro Único para Programas Sociais do Governo Federal identifica e caracteriza o perfil das famílias de baixa renda para garantir o acesso a políticas públicas. Famílias de Grupos Populacionais Tradicionais e Específicos (GPTEs) devem receber atenção em estratégias de busca ativa pois vivem em geral distantes de centros municipais e em geral enfrentam baixo atendimento de políticas públicas - razão da importância da identificação territorial. Da mesma forma, o Programa Bolsa Família atende às famílias que vivem em situação de pobreza e de extrema pobreza, conforme a renda familiar. Consideram-se, para o cálculo dos totais apresentados, a origem étnica (indígenas, quilombolas, ciganos e famílias pertencentes a comunidades de terreiro), a relação com o meio ambiente (extrativistas, pescadores artesanais, ribeirinhos), o meio rural (assentados da reforma agrária, acampados, agricultores familiares e beneficiários do Programa Nacional de Crédito Fundiário) e certas conjunturas (empreendimento de infraestrutura, famílias de presos, catadores de material reciclável, trabalho escravo e pessoas em situação de rua). O mapa apresenta o total de famílias cadastradas.<br/><br/>"
+        fixed: "1. O mapa apresenta a disparidade entre os rendimentos de mulheres e homens, considerados vínculos de emprego (CLT) e de natureza administrativa, em panorama para todo o Brasil. A disparidade foi calculada subtraindo-se o valor médio mensal pago às mulheres do valor médio mensal pago aos homens . As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018.<br/><br/>
+                2. De acordo com a diferença, por raça/cor, entre o grupo que em média recebe a maior e a menor remuneração, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários, conforme as cinco coortes de raça/cor definidas pelo IBGE. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018.<br/><br/>
+                3. De acordo com o número de beneficiários do Benefício de Pestação Continuada - BPC - para Pessoas com Deficiência.  O Benefício de Prestação Continuada (BPC) da Lei Orgânica da Assistência Social (LOAS) é a garantia de um salário mínimo mensal à pessoa com deficiência que comprove não possuir meios de prover a própria manutenção, nem de tê-la provida por sua família. Para ter direito, é necessário que a renda por pessoa do grupo familiar seja menor que 1/4 do salário-mínimo vigente. Por se tratar de um benefício assistencial, não é necessário ter contribuído para o INSS para ter direito.<br/><br/>
+                4. O Cadastro Único para Programas Sociais do Governo Federal identifica e caracteriza o perfil das famílias de baixa renda para garantir o acesso a políticas públicas. Famílias de Grupos Populacionais Tradicionais e Específicos (GPTEs) devem receber atenção em estratégias de busca ativa pois vivem em geral distantes de centros municipais e em geral enfrentam baixo atendimento de políticas públicas - razão da importância da identificação territorial. Da mesma forma, o Programa Bolsa Família atende às famílias que vivem em situação de pobreza e de extrema pobreza, conforme a renda familiar. Consideram-se, para o cálculo dos totais apresentados, a origem étnica (indígenas, quilombolas, ciganos e famílias pertencentes a comunidades de terreiro), a relação com o meio ambiente (extrativistas, pescadores artesanais, ribeirinhos), o meio rural (assentados da reforma agrária, acampados, agricultores familiares e beneficiários do Programa Nacional de Crédito Fundiário) e certas conjunturas (empreendimento de infraestrutura, famílias de presos, catadores de material reciclável, trabalho escravo e pessoas em situação de rua). O mapa apresenta o total de famílias cadastradas.<br/><br/>"
   mapa_filtros:
     - id: "select_ti"
       type: "switch-group"
