@@ -42,16 +42,16 @@ prevalencia:
         formatters:
           - id: "vl_indicador"
             format: 'inteiro'
-    # GPTE BOLSA FAMÍLIA
-    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'gpte_bolsa'-codigo,ds_indicador_curto-ds_indicador_radical,nu_competencia,vl_indicador&calcs=ln_norm_part&filtros=eq-cd_indicador-'JD_CADUN_07',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0"
+    # LGBT - Possui ações
+    - fixed: "/estadicmunic?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'lgbt_sim'-codigo,spai_ds-ds_indicador_radical,nu_ano_indicador-nu_competencia,vl_indicador-fmt_vl_indicador,0.005-api_calc_ln_norm_part&filtros=eq-cd_indicador_spai-'91_08_04_01',and,eq-nu_ano_indicador-nu_ano_indicador_max,and,eq-spai_vl_indicador-'1'"
+    # LGBT - Não Possui ações
+    # - fixed: "/estadicmunic?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'lgbt_nao'-codigo,spai_ds-ds_indicador_radical,nu_ano_indicador-nu_competencia,vl_indicador-fmt_vl_indicador,0.005-api_calc_ln_norm_part&filtros=eq-cd_indicador_spai-'91_08_04_01',and,eq-nu_ano_indicador-nu_ano_indicador_max,and,eq-spai_vl_indicador-'0'"
+    # VÍNCULO EMPREGO PCD
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'clt_pcd'-codigo,ds_indicador_curto-ds_indicador_radical,nu_competencia,vl_indicador&calcs=ln_norm_part&filtros=eq-cd_indicador-'JD_RAIS_39',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0"
       options:
         formatters:
           - id: "vl_indicador"
             format: 'inteiro'
-    # LGBT - Possui ações
-    - fixed: "/estadicmunic?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'lgbt_sim'-codigo,spai_ds-ds_indicador_radical,nu_ano_indicador-nu_competencia,vl_indicador-fmt_vl_indicador,0.005-api_calc_ln_norm_part&filtros=eq-cd_indicador_spai-'91_08_04_03',and,eq-nu_ano_indicador-nu_ano_indicador_max,and,eq-spai_vl_indicador-'1'"
-    # LGBT - Não Possui ações
-    - fixed: "/estadicmunic?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'lgbt_nao'-codigo,spai_ds-ds_indicador_radical,nu_ano_indicador-nu_competencia,vl_indicador-fmt_vl_indicador,0.005-api_calc_ln_norm_part&filtros=eq-cd_indicador_spai-'91_08_04_03',and,eq-nu_ano_indicador-nu_ano_indicador_max,and,eq-spai_vl_indicador-'0'"
   headers:
     - text: 'Município'
       align: 'left'
@@ -64,9 +64,9 @@ prevalencia:
     - text: 'Valor'
       value: 'fmt_vl_indicador'
   chart_options:
-    colorArray: ["#303F9F", "#00BCD4", "#F44336", "#00C853", "#795548", "#9C27B0","#000000", "#F44336","#03A9F4"]
+    colorArray: ["#303F9F", "#00BCD4", "#F44336", "#00C853", "#9C27B0","#000000", "#F44336","#795548"]
     type: 'bubbles'
-    indicadores: ["disp_genero","disp_raca","bpc_pcd","gpte","gpte_bolsa","lgbt_sim","lgbt_nao","te_res"]
+    indicadores: ["disp_genero","disp_raca","bpc_pcd","gpte","lgbt_sim","lgbt_nao","te_res","clt_pcd"]
     id_field: 'codigo'
     value_field: 'api_calc_ln_norm_part'
     lat: 'latitude'
@@ -124,7 +124,7 @@ prevalencia:
                   format: 'real'
                 default: "Sem Registros"
               - prop: "description"
-                fixed: "Disparidade de Rendimentos entre brancos e pretos<sup>2</sup>"
+                fixed: "Disparidade de Rendimentos entre brancos e negros<sup>2</sup>"
               - prop: "comment"
                 template: "Fonte: RAIS, {0}"
                 args:
@@ -137,38 +137,38 @@ prevalencia:
           - relevance: 'low'
             rowClass: 'pa-0'
             api:
-              fixed: "/estadicmunic?categorias=nu_ano_indicador_max&agregacao=COUNT&filtros=eq-cd_indicador_spai-'91_08_04_03',and,eq-nu_ano_indicador-nu_ano_indicador_max,and,eq-spai_vl_indicador-'1'"
+              fixed: "/estadicmunic?categorias=nu_ano_indicador_max&agregacao=COUNT&filtros=eq-cd_indicador_spai-'91_08_04_01',and,eq-nu_ano_indicador-nu_ano_indicador_max,and,eq-spai_vl_indicador-'1'"
             args:
               - prop: "value"
                 named_prop: 'agr_count'
                 format: 'inteiro'
                 default: "Sem Registros"
               - prop: "description"
-                fixed: "MUNICÍPIOS POSSUEM AÇÕES MUNICIPAIS E PROGRAMAS DE DIREITOS HUMANOS PARA LGBTT<sup>3</sup>"
+                fixed: "MUNICÍPIOS POSSUEM CONSELHOS DE DIREITOS DE LGBTT<sup>3</sup>"
               - prop: "comment"
                 template: "Fonte: IBGE, {0}"
                 args:
                   - named_prop: "nu_ano_indicador_max"
-        - id: "lgbt_nao"
-          cls: "xs12 blue-title control-top-align"
-          default: false
-          color: "black"
-          minicards:
-          - relevance: 'low'
-            rowClass: 'pa-0'
-            api:
-              fixed: "/estadicmunic?categorias=nu_ano_indicador_max&agregacao=COUNT&filtros=eq-cd_indicador_spai-'91_08_04_03',and,eq-nu_ano_indicador-nu_ano_indicador_max,and,eq-spai_vl_indicador-'0'"
-            args:
-              - prop: "value"
-                named_prop: 'agr_count'
-                format: 'inteiro'
-                default: "Sem Registros"
-              - prop: "description"
-                fixed: "MUNICÍPIOS NÃO POSSUEM AÇÕES MUNICIPAIS E PROGRAMAS DE DIREITOS HUMANOS PARA LGBTT<sup>3</sup>"
-              - prop: "comment"
-                template: "Fonte: IBGE, {0}"
-                args:
-                  - named_prop: "nu_ano_indicador_max"
+        # - id: "lgbt_nao"
+        #   cls: "xs12 blue-title control-top-align"
+        #   default: false
+        #   color: "black"
+        #   minicards:
+        #   - relevance: 'low'
+        #     rowClass: 'pa-0'
+        #     api:
+        #       fixed: "/estadicmunic?categorias=nu_ano_indicador_max&agregacao=COUNT&filtros=eq-cd_indicador_spai-'91_08_04_01',and,eq-nu_ano_indicador-nu_ano_indicador_max,and,eq-spai_vl_indicador-'0'"
+        #     args:
+        #       - prop: "value"
+        #         named_prop: 'agr_count'
+        #         format: 'inteiro'
+        #         default: "Sem Registros"
+        #       - prop: "description"
+        #         fixed: "MUNICÍPIOS NÃO POSSUEM CONSELHOS DE DIREITOS DE LGBTT<sup>3</sup>"
+        #       - prop: "comment"
+        #         template: "Fonte: IBGE, {0}"
+        #         args:
+        #           - named_prop: "nu_ano_indicador_max"
         - id: "bpc_pcd"
           cls: "xs12 blue-title control-top-align"
           default: false
@@ -189,6 +189,27 @@ prevalencia:
                 template: "Fonte: IBGE, {0}"
                 args:
                   - named_prop: "nu_competencia"
+        - id: "clt_pcd"
+          cls: "xs12 blue-title control-top-align"
+          default: false
+          color: "brown"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            api:
+              fixed: "/indicadoresnacionais?categorias=nu_competencia,vl_indicador,cd_indicador&filtros=eq-cd_indicador-'JD_RAIS_39',and,eq-nu_competencia-nu_competencia_max"
+              options:
+            args:
+              - prop: "value"
+                named_prop: 'vl_indicador'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                fixed: "Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)<sup>5</sup>"
+              - prop: "comment"
+                template: "Fonte: RAIS, {0}"
+                args:
+                  - named_prop: "nu_competencia"
         - id: "gpte"
           cls: "xs12 blue-title control-top-align"
           default: false
@@ -204,27 +225,7 @@ prevalencia:
                 format: 'inteiro'
                 default: "Sem Registros"
               - prop: "description"
-                fixed: "Famílias de GPTEs Registradas no Cadastro Único<sup>5</sup>"
-              - prop: "comment"
-                template: "Fonte: IBGE, {0}"
-                args:
-                  - named_prop: "nu_competencia"
-        - id: "gpte_bolsa"
-          cls: "xs12 blue-title control-top-align"
-          default: false
-          color: "brown"
-          minicards:
-          - relevance: 'low'
-            rowClass: 'pa-0'
-            api:
-              fixed: "/indicadoresmunicipais?categorias=nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'JD_CADUN_07',and,eq-nu_competencia-nu_competencia_max"
-            args:
-              - prop: "value"
-                named_prop: 'agr_sum_vl_indicador'
-                format: 'inteiro'
-                default: "Sem Registros"
-              - prop: "description"
-                fixed: "Famílias de GPTEs Beneficiárias do Programa Bolsa Família<sup>5</sup>"
+                fixed: "Famílias de GPTEs Registradas no Cadastro Único<sup>6</sup>"
               - prop: "comment"
                 template: "Fonte: IBGE, {0}"
                 args:
@@ -234,7 +235,9 @@ prevalencia:
       class: "pr-0 pl-2 pb-0 pt-0"
       content:
         cls: "pa-0"
-        fixed: "No mapa ao lado, observa-se o panorama geral de algumas perspectivas apresentadas neste Observatório, destacadas e detalhadas em cada uma das dimensões para todo o Brasil, unidades federativas e municípios."
+        fixed: "O Observatório da Diversidade e da Igualdade de Oportunidades no Trabalho é uma iniciativa do MPT e da OIT Brasil que compila uma série de indicadores de várias fontes oficiais e transforma os dados em informações com potencial de informar políticas públicas.<br/><br/>
+                A plataforma, que permite identificar desafios e oportunidades com foco em diferentes grupos (com base nas perspectivas de gênero, raça, pessoas com deficiência, LGBTI e grupos populacionais e tradicionais específicos como ribeirinhos, extrativistas, indígenas, quilombolas e ciganos, entre outros), mapeia diversos aspectos da rede de proteção social importante para a defesa de direitos. Todas essas informações podem ainda ser desagregadas por unidades federativas e para cada um dos 5.570 municípios brasileiros.<br/><br/>
+                No mapa ao lado, observa-se o panorama geral de algumas perspectivas apresentadas. As perspectivas são destacadas e detalhadas em cada uma das dimensões para todo o Brasil, unidades federativas e municípios."
   # description_bottom:
   #   - type: "text"
   #     class: "pa-0"
@@ -247,11 +250,12 @@ prevalencia:
       cls: "ma-0 pa-0"
       content:
         cls: "caption pa-0"
-        fixed: "1. O mapa apresenta a disparidade entre os rendimentos de mulheres e homens, considerados vínculos de emprego (CLT) e de natureza administrativa, em panorama para todo o Brasil. A disparidade foi calculada subtraindo-se o valor médio mensal pago às mulheres do valor médio mensal pago aos homens . As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018.<br/><br/>
-                2. De acordo com a diferença, por raça/cor, entre o grupo que em média recebe a maior e a menor remuneração, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários, conforme as cinco coortes de raça/cor definidas pelo IBGE. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018.<br/><br/>
-                3. O panorama das ações municipais de direitos humanos para LGBTT são apresentadas de acordo com a última pesquisa de informações municipais do IBGE. O roxo indica a presença e o preto a ausência. As informações são baseadas em dados da época da pesquisa do IBGE. Em algumas unidades geográficas podem ser identificadas modificações posteriores de cenário, a serem captadas globalmente em novo ciclo de pesquisas. Observe-se que, mesmo com diferenças pontuais no cenário representado, pode-se dizer que medidas mais recentes tendem a enfrentar mais desafios quanto à implementação de novas dimensões da rede de proteção social. Por outro lado, a mera existência dessas ações não implica, necessariamente, sua efetividade.<br/><br/>
+        fixed: "1. O mapa apresenta a disparidade entre os rendimentos de mulheres e homens, considerados vínculos de emprego (CLT) e de natureza administrativa, em panorama para todo o Brasil. A disparidade foi calculada subtraindo-se o valor médio mensal pago às mulheres do valor médio mensal pago aos homens . As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018. Nos casos em que a disparidade é negativa, nota-se em geral o peso da Administração Pública e de trabalho formal em funções como professoras e profissionais de saúde.<br/><br/>
+                2. De acordo com a diferença, por raça/cor, entre o grupo que em média recebe a maior e a menor remuneração, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários, conforme as cinco coortes de raça/cor definidas pelo IBGE. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018. Para essa representação, o grupo negros contempla pretos, pardos e indígenas, ao passo que o grupo brancos envolve amarelos e brancos, de acordo com a RAIS.<br/><br/>
+                3. O panorama dos municípios que possuem conselho de direitos LGBTT é apresentado de acordo com a última pesquisa de informações municipais do IBGE. As informações são baseadas em dados da época da pesquisa do IBGE. Em algumas unidades geográficas podem ser identificadas modificações posteriores de cenário, a serem captadas globalmente em novo ciclo de pesquisas. Observe-se que, mesmo com diferenças pontuais no cenário representado, pode-se dizer que medidas mais recentes tendem a enfrentar mais desafios quanto à implementação de novas dimensões da rede de proteção social. Por outro lado, a mera existência dessas ações não implica, necessariamente, sua efetividade.<br/><br/>
                 4. De acordo com o número de beneficiários do Benefício de Pestação Continuada - BPC - para Pessoas com Deficiência.  O Benefício de Prestação Continuada (BPC) da Lei Orgânica da Assistência Social (LOAS) é a garantia de um salário mínimo mensal à pessoa com deficiência que comprove não possuir meios de prover a própria manutenção, nem de tê-la provida por sua família. Para ter direito, é necessário que a renda por pessoa do grupo familiar seja menor que 1/4 do salário-mínimo vigente. Por se tratar de um benefício assistencial, não é necessário ter contribuído para o INSS para ter direito.<br/><br/>
-                5. O Cadastro Único para Programas Sociais do Governo Federal identifica e caracteriza o perfil das famílias de baixa renda para garantir o acesso a políticas públicas. Famílias de Grupos Populacionais Tradicionais e Específicos (GPTEs) devem receber atenção em estratégias de busca ativa pois vivem em geral distantes de centros municipais e em geral enfrentam baixo atendimento de políticas públicas - razão da importância da identificação territorial. Da mesma forma, o Programa Bolsa Família atende às famílias que vivem em situação de pobreza e de extrema pobreza, conforme a renda familiar. Consideram-se, para o cálculo dos totais apresentados, a origem étnica (indígenas, quilombolas, ciganos e famílias pertencentes a comunidades de terreiro), a relação com o meio ambiente (extrativistas, pescadores artesanais, ribeirinhos), o meio rural (assentados da reforma agrária, acampados, agricultores familiares e beneficiários do Programa Nacional de Crédito Fundiário) e certas conjunturas (empreendimento de infraestrutura, famílias de presos, catadores de material reciclável, trabalho escravo e pessoas em situação de rua). O mapa apresenta o total de famílias cadastradas.<br/><br/>
+                5. O panorama de vínculos empregatícios formais preenchidos por Pessoas com Deficiência (PCD) é baseado em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018. É interessante notar que em muitos municípios há presença de beneficiários do BPC e grandes lacunas em matéria de potencial inserção laboral.<br/><br/>
+                6. O Cadastro Único para Programas Sociais do Governo Federal identifica e caracteriza o perfil das famílias de baixa renda para garantir o acesso a políticas públicas. Famílias de Grupos Populacionais Tradicionais e Específicos (GPTEs) devem receber atenção em estratégias de busca ativa pois vivem em geral distantes de centros municipais e em geral enfrentam baixo atendimento de políticas públicas - razão da importância da identificação territorial. Consideram-se, para o cálculo dos totais apresentados, a origem étnica (indígenas, quilombolas, ciganos e famílias pertencentes a comunidades de terreiro), a relação com o meio ambiente (extrativistas, pescadores artesanais, ribeirinhos), o meio rural (assentados da reforma agrária, acampados, agricultores familiares e beneficiários do Programa Nacional de Crédito Fundiário) e certas conjunturas (empreendimento de infraestrutura, famílias de presos, catadores de material reciclável, trabalho escravo e pessoas em situação de rua). O mapa apresenta o total de famílias cadastradas.<br/><br/>
                 "
   mapa_filtros:
     - id: "select_ti"
@@ -287,7 +291,7 @@ prevalencia:
               options:
             args:
               - prop: "description"
-                fixed: "Disparidade de Rendimentos entre brancos e pretos"
+                fixed: "Disparidade de Rendimentos entre brancos e negros"
               - prop: "comment"
                 template: "Fonte: RAIS, {0}"
                 args:
@@ -300,30 +304,30 @@ prevalencia:
           - relevance: 'low'
             rowClass: 'pa-0'
             api:
-              fixed: "/estadicmunic?categorias=nu_ano_indicador_max&filtros=eq-cd_indicador_spai-'91_08_04_03'&limit=1"
+              fixed: "/estadicmunic?categorias=nu_ano_indicador_max&filtros=eq-cd_indicador_spai-'91_08_04_01'&limit=1"
             args:
               - prop: "description"
-                fixed: "MUNICÍPIOS QUE POSSUEM AÇÕES MUNICIPAIS E PROGRAMAS DE DIREITOS HUMANOS PARA LGBTT"
+                fixed: "MUNICÍPIOS QUE POSSUEM CONSELHO DE DIREITOS DE LGBTT"
               - prop: "comment"
                 template: "Fonte: IBGE, {0}"
                 args:
                   - named_prop: "nu_ano_indicador_max"
-        - id: "lgbt_nao"
-          cls: "xs12 blue-title control-top-align"
-          default: false
-          color: "black"
-          minicards:
-          - relevance: 'low'
-            rowClass: 'pa-0'
-            api:
-              fixed: "/estadicmunic?categorias=nu_ano_indicador_max&filtros=eq-cd_indicador_spai-'91_08_04_03'&limit=1"
-            args:
-              - prop: "description"
-                fixed: "MUNICÍPIOS QUE NÃO POSSUEM AÇÕES MUNICIPAIS E PROGRAMAS DE DIREITOS HUMANOS PARA LGBTT"
-              - prop: "comment"
-                template: "Fonte: IBGE, {0}"
-                args:
-                  - named_prop: "nu_ano_indicador_max"
+        # - id: "lgbt_nao"
+        #   cls: "xs12 blue-title control-top-align"
+        #   default: false
+        #   color: "black"
+        #   minicards:
+        #   - relevance: 'low'
+        #     rowClass: 'pa-0'
+        #     api:
+        #       fixed: "/estadicmunic?categorias=nu_ano_indicador_max&filtros=eq-cd_indicador_spai-'91_08_04_01'&limit=1"
+        #     args:
+        #       - prop: "description"
+        #         fixed: "MUNICÍPIOS QUE NÃO POSSUEM CONSELHO DE DIREITOS DE LGBTT"
+        #       - prop: "comment"
+        #         template: "Fonte: IBGE, {0}"
+        #         args:
+        #           - named_prop: "nu_ano_indicador_max"
         - id: "bpc_pcd"
           cls: "xs12 blue-title control-top-align"
           default: false
@@ -340,6 +344,23 @@ prevalencia:
                 template: "Fonte: IBGE, {0}"
                 args:
                   - named_prop: "nu_competencia"
+        - id: "clt_pcd"
+          cls: "xs12 blue-title control-top-align"
+          default: false
+          color: "brown"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            api:
+              fixed: "/indicadoresnacionais?categorias=nu_competencia,vl_indicador,cd_indicador&filtros=eq-cd_indicador-'JD_RAIS_39',and,eq-nu_competencia-nu_competencia_max"
+              options:
+            args:
+              - prop: "description"
+                fixed: "Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)<sup>6</sup>"
+              - prop: "comment"
+                template: "Fonte: RAIS, {0}"
+                args:
+                  - named_prop: "nu_competencia"
         - id: "gpte"
           cls: "xs12 blue-title control-top-align"
           default: false
@@ -352,22 +373,6 @@ prevalencia:
             args:
               - prop: "description"
                 fixed: "Famílias de GPTEs Registradas no Cadastro Único"
-              - prop: "comment"
-                template: "Fonte: IBGE, {0}"
-                args:
-                  - named_prop: "nu_competencia"
-        - id: "gpte_bolsa"
-          cls: "xs12 blue-title control-top-align"
-          default: false
-          color: "brown"
-          minicards:
-          - relevance: 'low'
-            rowClass: 'pa-0'
-            api:
-              fixed: "/indicadoresmunicipais?categorias=nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'JD_CADUN_07',and,eq-nu_competencia-nu_competencia_max"
-            args:
-              - prop: "description"
-                fixed: "Famílias de GPTEs Beneficiárias do Programa Bolsa Família"
               - prop: "comment"
                 template: "Fonte: IBGE, {0}"
                 args:
