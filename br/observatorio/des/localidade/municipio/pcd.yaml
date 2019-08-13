@@ -6,18 +6,88 @@ principais:
     preloaded:
       prop: "centralindicadores"
       function: "slice"
-      id: "JD_RAIS_36"
+      id: "JD_RAIS_39"
       year: "max"
     args:
       - prop: "value"
-        id: "JD_RAIS_36"
+        id: "JD_RAIS_39"
         named_prop: 'vl_indicador'
         format: 'inteiro'
         collapse:
           format: 'real'
         default: "Sem Registros"
       - prop: "description"
-        named_prop: 'ds_indicador_radical'
+        fixed: 'Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)'
+      - prop: 'comment'
+        fixed: "(RAIS, 2017)"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: ["JD_RAIS_41","JD_RAIS_02"]
+      year: 'max'
+      options:
+        combine:
+        - id: "pct_pcd"
+          desc: "Vínculos Formais PCD sobre o total de empregos formais"
+          function: 'calc_percentage_val1'
+          fn_args:
+            - id: "JD_RAIS_41"
+              named_prop: "vl_indicador"
+            - id: "JD_RAIS_02"
+              named_prop: "vl_indicador"
+    args:
+      - id: "pct_pcd"
+        prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'porcentagem'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Vínculos Formais de Pessoas com Deficiência sobre o total de empregos formais'
+      - prop: 'comment'
+        fixed: "(RAIS, 2017)"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "JD_RAIS_06"
+      year: 'max'
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'monetario'
+        collapse:
+          format: 'monetario'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: "Remuneração dos Trabalhadores com Deficiência (PCD) no Mercado Formal"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "10_08_02_02"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+          precision: 1
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: "Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -30,104 +100,15 @@ secoes:
     cards:
 
 # ========================================================
-      - id: "map_beneficios_prestacao_continuada"
-        title: 
-          fixed: "Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência"
-        title_comment:
-          template: "{0}, em {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_08_02_02"
-            year: "max"
-          args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_08_02_02"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                      precision: 1
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Benefícios BPC a PCDs"
-
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {0}. A escala de cores varia da menor quantidade (branco) para a maior quantidade (vermelho escuro)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_08_02_02"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
-
-        chart_type: "MAP_TOPOJSON"
-        api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf&calcs=ln_norm_pos_part&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_08_02_02',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation_bpc"
-                function: "get_proportional_indicator_uf"
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "media_uf"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio_uf'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Quantidade'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_bpc'
-          colorScale:
-            name: 'Reds'
-            # inv_function:
-            #   name: 'inv_deviation'
-            #   args:
-            #     - first_row_prop: 'media_uf'
-
-# ========================================================
       - id: "mapa_vinculos_pcd"
         title: 
-          fixed: "Vínculos de Emprego de Pessoas com Deficiência"
+          fixed: "Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "JD_RAIS_36"
+            id: "JD_RAIS_02"
             year: "max"
           args:
             - named_prop: "nm_municipio_uf"
@@ -145,17 +126,17 @@ secoes:
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "JD_RAIS_36"
+                  id: "JD_RAIS_39"
                   year: 'max'
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
-                      format: 'inteiro'
+                      format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "PCDs com empregos CLT"
+                    fixed: "PCD com empregos CLT"
               - relevance: 'high'
                 cls: 'xs12 md6'
                 preloaded:
@@ -168,7 +149,7 @@ secoes:
                     named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
-                      format: 'inteiro'
+                      format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Total geral de postos de trabalho formal"
@@ -176,14 +157,25 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de pessoas com deficiência com carteira assinada (CLT). No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor)."
+              # fixed: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência. No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+              fixed: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência (PCD). No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
           - type: "ranking"
             preloaded:
               prop: "centralindicadores"
               function: "slice"
-              id: "JD_RAIS_36"
+              id: "JD_RAIS_39"
               year: "max"
             args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -197,7 +189,340 @@ secoes:
 
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'JD_RAIS_36',and,eq-nu_competencia-nu_competencia_max"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'JD_RAIS_39',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "map_vinculos_formais"
+        title: 
+          fixed: "Vínculos Formais de Pessoas com Deficiência (PCD) sobre o total de empregos formais, inclusive Administração Pública"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_02"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_41","JD_RAIS_02"]
+                  year: 'max'
+                  options:
+                    combine:
+                    - id: "pct_pcd"
+                      desc: "Vínculos Formais PCD sobre o total de empregos formais"
+                      function: 'calc_percentage_val1'
+                      fn_args:
+                        - id: "JD_RAIS_41"
+                          named_prop: "vl_indicador"
+                        - id: "JD_RAIS_02"
+                          named_prop: "vl_indicador"
+                args:
+                  - id: "pct_pcd"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - id: "pct_pcd"
+                    prop: "description"
+                    named_prop: "ds_indicador"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre vínculos formais de pessoas com deficiência (PCD) sobre o total de empregos formais, inclusive administração pública(percentual). A escala de cores varia do menor percentual (branco) para o maior percentual (azul escuro).As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,cd_indicador,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf,ds_fonte&filtros=eq-cd_uf-{0},and,in-cd_indicador-'JD_RAIS_41'-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            place_id_field: "cd_mun_ibge"
+            combine:
+            - id: "pct_pcd"
+              desc: "Vínculos Formais PCD sobre o total de empregos formais"
+              function: 'calc_percentage_val1'
+              fn_args:
+                - id: "JD_RAIS_41"
+                  named_prop: "vl_indicador"
+                - id: "JD_RAIS_02"
+                  named_prop: "vl_indicador"
+            slice: 
+              id: ["pct_pcd"]
+            calcs:
+              - id: "deviation_map_value"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'porcentagem'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Porcentagem'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'vl_indicador'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_vinculos_formais"
+        title: 
+          fixed: "Vínculos Formais de Pessoas com Deficiência (PCD), Inclusive na Administração Pública"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_02"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_41"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "PCD com vínculos formais"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_02"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Total geral de postos de trabalho formal"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre vínculos formais de pessoas com deficiência (PCD), inclusive administração pública - total. A escala de cores varia da menor quantidade (branco) para a maior quantidade (azul escuro). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "JD_RAIS_41"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'JD_RAIS_41',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_vinculos_formais_adm_publica"
+        title: 
+          fixed: "Vínculos Formais de Pessoas com Deficiência (PCD) na Administração Pública"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_02"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_40"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "PCD na Administração Pública"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_02"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Total geral de postos de trabalho formal"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre vínculos formais de pessoas com deficiência (PCD) na administração pública. A escala de cores varia da menor quantidade (branco) para a maior quantidade (azul escuro). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "JD_RAIS_40"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'JD_RAIS_40',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "cd_uf"
           options:
@@ -297,11 +622,12 @@ secoes:
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Remuneração Média Geral"
-
+                  - prop: "comment"
+                    named_prop: "nm_municipio_uf"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o valor médio da remuneração dos trabalhadores com deficiência (PCD), incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor)."
+              fixed: "Em destaque, o valor da remuneração média (em R$) das PCD no mercado formal de trabalho, considerando-se o conjunto dos seguintes vínculos: celetistas (com carteira assinada), estatutários, temporários e avulsos. No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
           - type: "ranking"
             preloaded:
               prop: "centralindicadores"
@@ -364,7 +690,7 @@ secoes:
 # ========================================================
       - id: "bar_remuneracao_desagregada"
         title: 
-          fixed: "Remuneração dos Trabalhadores com Deficiência (PCD) no Mercado Formal por Tipo de Deficiência"
+          fixed: "Remuneração Média das PCD no Mercado Formal, por tipo de deficiência"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -433,11 +759,13 @@ secoes:
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Remuneração Média Geral"
+                  - prop: "comment"
+                    named_prop: "nm_municipio_uf"
 
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o valor médio da remuneração dos trabalhadores com deficiência (PCD), incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, são apresentadas as remunerações médias para trabalhadores com diferentes tipos de deficiência. "
+              fixed: "Em destaque, o valor da remuneração média (em R$) das PCD no mercado formal de trabalho. No gráfico ao lado, são apresentadas os valores das remunerações médias das PCD segundo os diversos tipos de deficiência. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
           - type: "ranking"
             preloaded:
               prop: "centralindicadores"
@@ -488,8 +816,6 @@ secoes:
               formatters:
                 - id: "vl_indicador"
                   format: 'monetario'
-                  collapse:
-                    format: 'monetario'
                   uiTags: false
         headers:
           - text: 'Indicador'
@@ -519,77 +845,69 @@ secoes:
           desc_field: "ds_fonte"
 
 # ========================================================
-      - id: "bar_vinculos_formais"
+      - id: "mapa_desocupação_população_deficiência_severa"
         title: 
-          fixed: "Vínculos Formais de Pessoas com Deficiência (PCD), Inclusive na Administração Pública - Total"
+          fixed: "Desocupação da população de 16 a 64 anos com deficiência severa"
         title_comment:
-          template: "{0}, de {1} a {2}"
+          template: "{0}, em {1}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "08_11_10_00"
-            year: "max"
+            id: "08_10_04_00"
           args:
             - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
+            - named_prop: 'nu_competencia'
+              format: "inteiro" 
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              fixed: "Sem observações adicionais. Vide descrição."
+              fixed: "No Censo 2010, para as pessoas que estavam trabalhando foi perguntada a ocupação que exercia neste trabalho."
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "08_11_10_00"
-                  year: '2017'
+                  id: "08_10_04_00"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                      precision: 1
+                    format: 'porcentagem'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Vínculos"
+                    fixed: 'Taxa de desocupação'
                   - prop: "comment"
-                    template: "De {0} a {1}"
-                    preloaded:
-                      prop: "centralindicadores"
-                      function: "slice"
-                      id: "08_11_10_00"
-                      year: "2017"
-                    args:
-                      - named_prop: "nu_competencia_min"
-                      - named_prop: "nu_competencia_max"
+                    fixed: 'No município'
 
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {0}. A escala de cores varia da menor quantidade (branco) para a maior quantidade (azul escuro)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "08_11_10_00"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
+              fixed: "Em destaque, a taxa de desocupação da população de 16 a 64 anos, com deficiência severa. Ou seja, da população de PCDs considerada como o conjunto das pessoas que, para as deficiências visual, auditiva e motora, quando indagados se tinham dificuldade de enxergar, ouvir, e de caminhar ou subir escadas, respectivamente, declararam as opções de resposta “sim, grande dificuldade” ou “sim, não consegue de modo algum”. Também se considerou com deficiência severa o conjunto das pessoas com deficiência mental/intelectual. Este indicador pode informar, ainda que indiretamente, o potencial de contratação de PCDs que poderia fomentar o cumprimento da lei de cotas para inclusão das PCD no mercado de trabalho. No mapa, apresenta-se a perspectiva comparativa dos municípios, com destaque para a seleção. A escala de cores varia do branco (menor taxa) para o vermelho (maior taxa)."
 
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'08_11_10_00',and,eq-nu_competencia-'2017'"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'08_10_04_00'"
           args:
             - named_prop: "cd_uf"
           options:
+            # calcs:
+            #   - id: 'vl_indicador'
+            #     function: 'calc_subtraction_ds'
+            #     fn_args:
+            #       - named_prop: "08_01_06_00"
+            #       - named_prop: "08_01_07_00"
+            #     recalc_min_max: true
+            #   # - id: "deviation_empform"
+            #   #   function: "get_bipolar_scale"
+            #   #   fn_args: 
+            #   #     - fixed: 'calc_vl_indicador'
             formatters:
               - id: "vl_indicador"
-                format: 'inteiro'
+                format: 'porcentagem'
+                precision: 1
         headers:
           - text: 'Município'
             align: 'left'
@@ -608,27 +926,29 @@ secoes:
           value_field: 'vl_indicador'
           colorScale:
             name: 'Reds'
-            order: "desc"
+            # order: "desc"
             # inv_function:
             #   name: 'inv_deviation'
             #   args:
-            #     - first_row_prop: 'media_uf'
-          indicadores: ["08_11_10_00"]
-
+            #     - first_row_prop: 'media_br'
+          indicadores: ["08_10_04_00"]
 # ========================================================
-      - id: "map_vinculos_formais"
+  - id: "pcd_garantia"
+    name: "Proteção Social e Garantia de Direitos"
+    cards:
+# ========================================================
+      - id: "map_beneficios_prestacao_continuada"
         title: 
-          fixed: "Vínculos Formais de Pessoas com Deficiência (PCD) sobre o total de empregos formais, inclusive Administração Pública"
+          fixed: "Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência (PCD)"
         title_comment:
-          template: "{0}, de {1} a {2}"
+          template: "{0}, em {1}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "08_11_15_00"
+            id: "10_08_02_02"
             year: "max"
           args:
             - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
           - type: "text"
@@ -640,49 +960,49 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
-                api:
-                  template: "/indicadoresmunicipais?categorias=nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'08_11_15_00'"
-                  args:
-                    - named_prop: "idLocalidade"
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_08_02_02"
+                  year: "max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
-                    format: 'porcentagem'
+                    format: 'inteiro'
                     collapse:
                       format: 'real'
                       precision: 1
                     default: "Sem Registros"
-                  - prop: "comment"
-                    template: "Em {0}"
-                    args:
-                      - named_prop: "nu_competencia"
+                  - prop: "description"
+                    fixed: "Benefícios BPC a PCD"
 
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {0}. A escala de cores varia da menor quantidade (branco) para a maior quantidade (azul escuro)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "08_11_15_00"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência. A escala de cores varia da menor quantidade (branco) para a maior quantidade (vermelho escuro)."
+              # template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {0}. A escala de cores varia da menor quantidade (branco) para a maior quantidade (vermelho escuro)."
+              # preloaded:
+              #   prop: "centralindicadores"
+              #   function: "slice"
+              #   id: "10_08_02_02"
+              #   year: "max"
+              # args:
+              #   - named_prop: "ds_indicador_radical"
 
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'08_11_15_00',and,eq-nu_competencia-nu_competencia_max"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf&calcs=ln_norm_pos_part&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_08_02_02',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "cd_uf"
           options:
             calcs:
-              - id: "deviation_map_value"
+              - id: "deviation_bpc"
                 function: "get_proportional_indicator_uf"
             formatters:
               - id: "vl_indicador"
-                format: 'porcentagem'
+                format: 'inteiro'
               - id: "media_uf"
-                format: 'porcentagem'
+                format: 'inteiro'
         headers:
           - text: 'Município'
             align: 'left'
@@ -693,24 +1013,19 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Porcentagem'
+          - text: 'Quantidade'
             value: 'fmt_vl_indicador'
         chart_options:
           id_field: 'cd_mun_ibge'
           topo_key: "codarea"
-          value_field: 'calc_deviation_map_value'
-          # colorScale:
-          #   name: 'Reds'
+          value_field: 'calc_deviation_bpc'
+          colorScale:
+            name: 'Reds'
             # inv_function:
             #   name: 'inv_deviation'
             #   args:
             #     - first_row_prop: 'media_uf'
-          indicadores: ["08_11_15_00"]
 
-# ========================================================
-  - id: "pcd_garantia"
-    name: "Proteção Social e Garantia de Direitos"
-    cards:
 # ========================================================
       - id: "map_conselho_pcd"
         title: 
