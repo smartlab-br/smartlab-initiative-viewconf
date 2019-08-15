@@ -88,6 +88,506 @@ secoes:
     name: ""
     cards:
 # ========================================================
+      - id: "bar_remuneracao_trabalhadores_sexo"
+        title: 
+          fixed: "Remuneração Média de Homens e Mulheres no Setor Formal"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_33_vl_homem"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_33_vl_homem", JD_RAIS_33_vl_mulher]
+                  year: "max"
+                  combine:
+                  - id: "disparidade_abs"
+                    desc: "Disparidade de Rendimentos de homens e mulheres"
+                    function: 'calc_subtraction'
+                    fn_args:
+                      - id: "JD_RAIS_33_vl_homem"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_33_vl_mulher"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "disparidade_abs"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                  # - prop: "value"
+                  #   named_prop: 'vl_indicador'
+                  #   format: 'monetario'
+                  #   collapse:
+                  #     format: 'monetario'
+                  #   default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Disparidade de Rendimentos'
+                  - prop: "comment"
+                    fixed: "No setor formal"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_33_vl_homem", JD_RAIS_33_vl_mulher]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários entre homens e mulheres"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_33_vl_mulher"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_33_vl_homem"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'EQUIVALÊNCIA EM % DO RENDIMENTO MÉDIO'
+                  - prop: "comment"
+                    fixed: "No setor formal"
+
+          - type: "text"
+            title: ""
+            content:
+              # fixed: "Em destaque, o valor médio da remuneração dos trabalhadores, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários, por sexo.  No gráfico ao lado, comparam-se os valores entre homens e mulheres."
+              fixed: "Em destaque, a disparidade e a equivalência percentual entre os rendimentos de mulheres e homens, considerados vínculos de emprego (CLT) e de natureza administrativa  de acordo com a perspectiva geográfica selecionada. A disparidade foi calculada subtraindo-se o valor médio mensal pago às mulheres do valor médio mensal pago aos homens . No caso da equivalência percentual, dividiu-se o valor pago em média às mulheres pelo valor pago em média aos homens, obtendo-se o percentual do rendimento médio masculino mensal que equivale ao rendimento médio feminino mensal. Complementarmente, o gráfico ao lado apresenta uma perspectiva comparada entre os valores de rendimento médio para homens e mulheres na economia formal. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_33_vl_homem','JD_RAIS_33_vl_mulher']
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "ds_agreg_primaria"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          colorScale:
+            name: "BuGn"
+            type: "singleHue"
+            levels: 4
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_sexo_raca"
+        title: 
+          fixed: "Diferenças de Remuneração pela Perspectiva Interseccional (Sexo e Raça/Cor) no setor formal"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_27_homem_branco"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_27_homem_branco"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    fixed: '100%'
+                    # format: 'monetario'
+                    # collapse:
+                    #   format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    fixed: 'Homens brancos'
+                  # - prop: "comment"
+                  #   fixed: 'Maior remuneração média'
+
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_27_homem_branco", JD_RAIS_27_mulher_branca]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_27_mulher_branca"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_27_homem_branco"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres brancas'
+                  # - prop: "comment"
+                  #   fixed: "No setor formal"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_27_homem_branco", JD_RAIS_27_homem_negro]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_27_homem_negro"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_27_homem_branco"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Homens negros'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_27_homem_branco", JD_RAIS_27_mulher_negra]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_27_mulher_negra"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_27_homem_branco"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres negras'
+
+          - type: "text"
+            title: ""
+            content:
+              # fixed: "Os números em destaque mostram a disparidade relativa de rendimentos mensais da população ocupada entre diferentes grupos de sexo e raça/cor para a perspectiva geográfica selecionada no setor formal da economia, destacando-se o percentual recebido pelos diferentes grupos (mulheres trabalhadoras brancas, homens trabalhadores negros e mulheres trabalhadoras negras) em relação ao rendimento médio mensal de homens brancos, utilizado como valor de referência (100%). No gráfico ao lado, de forma complementar, é feita uma análise interseccional. Desse modo, comparam-se os valores nominais dos rendimentos médios entre esses grupos. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+              fixed: "Os números em destaque mostram a diferença relativa de rendimentos mensais da população ocupada entre diferentes grupos de sexo e raça/cor, para a perspectiva geográfica selecionada no setor formal da economia, a partir de um enfoque interseccional. Em destaque o percentual da remuneração recebida pelos diferentes grupos (mulheres brancas, homens negros e mulheres negras) em relação ao rendimento médio mensal de homens brancos, utilizado como valor de referência (100%). No gráfico ao lado, de forma complementar comparam-se os valores nominais dos rendimentos médios entre esses grupos. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_27_homem_branco','JD_RAIS_27_homem_negro','JD_RAIS_27_mulher_branca','JD_RAIS_27_mulher_negra']
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          y: "ds_agreg_primaria"
+          x: "vl_indicador"
+          # orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          order_field: "vl_indicador"
+          colorScale:
+            name: "YlGn"
+            type: "singleHue"
+            levels: 7
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "bar_rendimentos_sexo_raca"
+        title: 
+          fixed: "Disparidade de Remuneração dos Trabalhadores pela Perspectiva Interseccional (Sexo e Raça/Cor) nos setores formal e informal"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "08_01_06_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: 'nu_competencia'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O cálculo é feito através do Censo 2010, desagregando-se os rendimentos das pessoas ocupadas com as variáveis de sexo e cor ou raça."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "A OIT destaca que um grande número de estudos, ao examinar as causas da diferença salarial entre homens e mulheres, identificou dois grupos de fatores. O primeiro se refere às características dos indivíduos e das organizações onde trabalham. Neste grupo, destacam-se os seguintes fatores: nível de escolaridade e campo de estudo; experiência no mercado de trabalho e tempo de trabalho na organização ou no cargo exercido; número de horas trabalhadas e tamanho da organização e setor de atividade.<br/>
+                      No entanto, mesmo quando estes fatores são levados em consideração, estudos econométricos repetidamente vêm demonstrando que há uma diferença residual (estimada em torno de 5,0% a 15,0%) não explicada entre a média dos salários de mulheres e homens. Desse modo, se revela que uma proporção da desigualdade salarial observada entre homens e mulheres, objeto da Convenção da OIT sobre Igualdade de Remuneração de Homens e Mulheres Trabalhadores por Trabalho de Igual Valor, 1951 (nº 100), se deve à discriminação.<br/>
+                      Nesse contexto, a diferença residual, que reflete a discriminação salarial baseada no sexo, é resultante de um segundo grupo de fatores: estereótipos e preconceitos com relação ao trabalho das mulheres; métodos tradicionais de avaliação dos postos de trabalho elaborados com base nos requisitos de ocupações com predominância de homens; poder de negociação mais fraco das trabalhadoras, que apresentam menor participação sindical e estão sobre representadas em trabalhos precários e informais; e poucas vagas com maior flexibilidade de horário e com a mesma renda que as vagas tradicionais, o que é extremamente necessário para a mulher na maternidade."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_02_10_00"
+                args:
+                  - prop: "description"
+                    template: "{0}"
+                    args:
+                      - id: "08_02_10_00"
+                        named_prop: 'ds_agreg_primaria'
+                  - prop: "value"
+                    fixed: '100%'
+
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["08_02_10_00", 08_02_07_00]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "08_02_07_00"
+                        named_prop: "vl_indicador"
+                      - id: "08_02_10_00"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres brancas'
+                  # - prop: "comment"
+                  #   fixed: "No setor formal"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["08_02_10_00", 08_02_11_00]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "08_02_11_00"
+                        named_prop: "vl_indicador"
+                      - id: "08_02_10_00"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Homens negros'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["08_02_10_00", 08_02_08_00]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "08_02_08_00"
+                        named_prop: "vl_indicador"
+                      - id: "08_02_10_00"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres negras'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Os números em destaque mostram, para a perspectiva geográfica selecionada, a disparidade relativa de rendimentos mensais da população ocupada, de 16 a 64 anos de idade, entre diferentes grupos de sexo e raça. Ainda que os dados sejam do começo da década, a análise é importante tanto por levar em consideração tanto o setor formal como o informal da economia brasileira quanto por constituir informação da série histórica do Censo Brasileiro, a ser atualizada em 2020. Nota-se, assim, percentual recebido pelos diferentes grupos (mulheres trabalhadoras brancas, homens trabalhadores negros e mulheres trabalhadoras negras) em relação ao rendimento médio mensal de homens brancos, utilizado como valor de referência (100%). No gráfico ao lado, a disparidade de rendimento médio mensal, entre diferentes grupos demográficos baseados nas categorias de análise de sexo e raça/cor (perspectiva interseccional) é apresentada em salários mínimos da época. Em comparação com a análise feita para o setor formal da economia, uma maior disparidade nesta visão indica problema de que ocorre com maior intensidade na informalidade. "
+
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['08_02_07_00','08_02_08_00','08_02_10_00','08_02_11_00']
+            options:
+              calcs:
+                - id: "tooltip_title"
+                  function: "concat_values"
+                  fn_args:
+                    - fixed: 'Rendimento médio mensal -'
+                    - named_prop: 'ds_agreg_primaria' 
+                - id: "nr_salarios"
+                  format: 'real'
+                  function: "calc_proportion_ds"
+                  fn_args:
+                    - named_prop: "vl_indicador"
+                    - fixed: 510
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} ({1} - {2} Sal. Mín.)"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+                          - named_prop: 'calc_nr_salarios'
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'calc_tooltip_title'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Rendimento médio'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "vl_indicador"
+          y: "cd_indicador"
+          text: "calc_bar_description"
+          order_field: "vl_indicador"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          colorScale:
+            name: "YlGn"
+            type: "singleHue"
+            levels: 7
+            order: 'desc'
+          # removed_text_list: ["do trabalho principal da população de 16 a 64 anos de idade, com rendimento (Reais) ",", 2010"]
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
       - id: "mapa_dirigentes_sexo"
         title: 
           fixed: "Segregação ocupacional em cargos de direção entre homens e mulheres"
