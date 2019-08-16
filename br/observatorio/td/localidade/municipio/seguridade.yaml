@@ -85,6 +85,162 @@ secoes:
   - id: "seguridade_unica"
     name: ""
     cards:
+
+# ========================================================
+      - id: "multi_bpc"
+        title: 
+          fixed: "Benefício de Prestação Continuada (BPC)"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_08_02_01"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "As informações são oriundas dos registros administrativos do Ministério do Desenvolvimento Social e da Secretaria da Previdência Social."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "O Benefício de Prestação Continuada também assume grande relevância na área da Seguridade Social. Consiste em um pagamento de um salário mínimo para idosos de 65 anos ou mais e deficientes que não tenham condições de se manter ou serem mantidos por suas famílias. Entendido como aqueles que não possuem capacidade para a vida independente e para a inserção/reinserção social no mercado de trabalho."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_08_02_01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Número de beneficiários"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["10_08_02_04","10_08_02_05","10_08_02_06"]
+                  year: "max"
+                args:
+                  - id: "10_08_02_04"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "REPASSE"
+                  - prop: "comment"
+                    template: "{0} Idosos, {1} PCD"
+                    args:
+                      - id: "10_08_02_06"
+                        named_prop: "vl_indicador"
+                        format: "monetario"
+                        collapse:
+                          format: 'monetario'
+                      - id: "10_08_02_05"
+                        named_prop: "vl_indicador"
+                        format: "monetario"
+                        collapse:
+                          format: 'monetario'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_08_02_03"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "IDOSOS"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_08_02_02"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "PCD"
+          - type: "text"
+            title: ""
+            content:
+              # template: "Em destaque, o número de beneficiários de Benefícios de Prestação Continuada (BPC) e a distribuição entre idosos e pessoas com deficiência. Em ambos os casos, os beneficiários viviam em famílias cuja renda per capita familiar era inferior a ¼ do salário mínimo. Note-se, ainda, o montante total de recursos transferidos aos beneficiários durante o ano. No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. {0} está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de beneficiários)."
+              template: "Em destaque, o número de beneficiários de Benefícios de Prestação Continuada (BPC) e a distribuição entre idosos e pessoas com deficiência (PCD) em {0}. Em ambos os casos, os beneficiários viviam em famílias cuja renda per capita familiar era inferior a ¼ do salário mínimo. Note-se, ainda, o montante total de recursos transferidos aos beneficiários durante o ano. No mapa, {1} está em destaque. A escala de cores varia da menor quantidade (branco) para a maior quantidade de beneficiários (vermelho escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['10_08_02_01']
+              args:
+                - named_prop: "nu_competencia"
+                - named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_08_02_01',and,eq-nu_competencia-'2018'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_bpc"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Valor na localidade'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_bpc'
+          colorScale:
+            name: 'Reds'
+        source:
+          desc_field: "ds_fonte"
+          
 # ========================================================
       - id: "multi_contribuintes"
         type: "multiple-charts"
@@ -538,157 +694,4 @@ secoes:
           value_field: 'vl_indicador'
         source:
           desc_field: "ds_fonte"
-# ========================================================
-      - id: "multi_bpc"
-        title: 
-          fixed: "Benefício de Prestação Continuada (BPC)"
-        title_comment:
-          template: "{0}, {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_08_02_01"
-            year: "max"
-          args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "As informações são oriundas dos registros administrativos do Ministério do Desenvolvimento Social e da Secretaria da Previdência Social."
-          - type: "text"
-            title: "Observação Importante"
-            content:
-              fixed: "O Benefício de Prestação Continuada também assume grande relevância na área da Seguridade Social. Consiste em um pagamento de um salário mínimo para idosos de 65 anos ou mais e deficientes que não tenham condições de se manter ou serem mantidos por suas famílias. Entendido como aqueles que não possuem capacidade para a vida independente e para a inserção/reinserção social no mercado de trabalho."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_08_02_01"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Número de beneficiários"
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: ["10_08_02_04","10_08_02_05","10_08_02_06"]
-                  year: "max"
-                args:
-                  - id: "10_08_02_04"
-                    prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "REPASSE"
-                  - prop: "comment"
-                    template: "{0} Idosos, {1} PCD"
-                    args:
-                      - id: "10_08_02_06"
-                        named_prop: "vl_indicador"
-                        format: "monetario"
-                        collapse:
-                          format: 'monetario'
-                      - id: "10_08_02_05"
-                        named_prop: "vl_indicador"
-                        format: "monetario"
-                        collapse:
-                          format: 'monetario'
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_08_02_03"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "IDOSOS"
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_08_02_02"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "PCD"
-          - type: "text"
-            title: ""
-            content:
-              # template: "Em destaque, o número de beneficiários de Benefícios de Prestação Continuada (BPC) e a distribuição entre idosos e pessoas com deficiência. Em ambos os casos, os beneficiários viviam em famílias cuja renda per capita familiar era inferior a ¼ do salário mínimo. Note-se, ainda, o montante total de recursos transferidos aos beneficiários durante o ano. No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. {0} está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de beneficiários)."
-              template: "Em destaque, o número de beneficiários de Benefícios de Prestação Continuada (BPC) e a distribuição entre idosos e pessoas com deficiência (PCD) em {0}. Em ambos os casos, os beneficiários viviam em famílias cuja renda per capita familiar era inferior a ¼ do salário mínimo. Note-se, ainda, o montante total de recursos transferidos aos beneficiários durante o ano. No mapa, {1} está em destaque. A escala de cores varia da menor quantidade (branco) para a maior quantidade de beneficiários (vermelho escuro)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['10_08_02_01']
-              args:
-                - named_prop: "nu_competencia"
-                - named_prop: "nm_municipio_uf"
-        chart_type: "MAP_TOPOJSON"
-        api: 
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_08_02_01',and,eq-nu_competencia-'2018'"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation_bpc"
-                function: "get_proportional_indicator_uf"
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Valor na localidade'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_bpc'
-          colorScale:
-            name: 'Reds'
-        source:
-          desc_field: "ds_fonte"
+
