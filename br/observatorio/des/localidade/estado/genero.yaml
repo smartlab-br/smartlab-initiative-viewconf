@@ -1142,6 +1142,7 @@ secoes:
             prop: "centralindicadores"
             function: "slice"
             id: "08_03_01_00"
+            year: "max"
           args:
             - named_prop: "nm_uf"
             - named_prop: 'nu_competencia'
@@ -1167,6 +1168,7 @@ secoes:
                   prop: "centralindicadores"
                   function: "slice"
                   id: "08_03_01_00"
+                  year: "max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -1189,6 +1191,7 @@ secoes:
                   prop: "centralindicadores"
                   function: "slice"
                   id: "08_04_02_00"
+                  year: "max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -1207,6 +1210,7 @@ secoes:
                   prop: "centralindicadores"
                   function: "slice"
                   id: "08_05_02_00"
+                  year: "max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -1225,6 +1229,7 @@ secoes:
                   prop: "centralindicadores"
                   function: "slice"
                   id: "08_06_03_00"
+                  year: "max"
                 args:
                   - prop: "value"
                     template: "{0} <span>SAL. MIN.</span>"
@@ -1253,6 +1258,7 @@ secoes:
               prop: "centralindicadores"
               function: "slice"
               id: "08_03_01_00"
+              year: "max"
             args:
               - prop: 'national_rank'
                 named_prop: "rank_br"
@@ -1301,20 +1307,46 @@ secoes:
             preloaded:
               prop: "centralindicadores"
               function: "slice"
-              id: ["08_03_02_00", "08_03_03_00", "08_03_06_00"]
+              id: ["08_03_02_00", "08_03_03_00", "08_03_06_00", "08_03_05_00"]
+              year: "max"
               combine:
-              - id: "mulheres_brancas"
-                desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Mulheres Brancas"
-                ds_agreg_primaria: "Mulheres Brancas"
-                format: 'inteiro'
-                function: 'calc_subtraction'
-                fn_args:
-                  - id: "08_03_03_00"
-                    named_prop: "vl_indicador"
-                  - id: "08_03_06_00"
-                    named_prop: "vl_indicador"
+                - id: "mulheres_brancas"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Mulheres Brancas"
+                  ds_agreg_primaria: "Mulheres Brancas"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_03_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
+                - id: "homens_negros"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Homens Negros"
+                  ds_agreg_primaria: "Homens Negros"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_05_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
+                - id: "homens_brancos"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Homens Brancos"
+                  ds_agreg_primaria: "Homens Brancos"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_02_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_05_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
               slice: 
-                id: ["08_03_02_00", "08_03_06_00", "mulheres_brancas"]
+                id: ["08_03_06_00", "mulheres_brancas", "homens_negros", "homens_brancos"]
               options:
                 formatters:
                 - id: "vl_indicador"
@@ -1334,7 +1366,6 @@ secoes:
                 type: "singleHue"
                 levels: 5
                 order: 'asc'
-              indicadores: ["08_03_02_00", "08_03_06_00", "mulheres_brancas"]
             source:
               desc_field: "ds_fonte"
 # ========================================================

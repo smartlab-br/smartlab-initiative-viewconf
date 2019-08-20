@@ -87,6 +87,93 @@ secoes:
   - id: "igualdade_unica"
     name: ""
     cards:
+
+# ========================================================
+      - id: "map_beneficios_prestacao_continuada"
+        title: 
+          fixed: "Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência (PCD)"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_08_02_02"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_08_02_02"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                      precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Benefícios BPC a PCD"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre Beneficiários do Benefício de Prestação Continuada - BPC - Pessoas com Deficiência. A escala de cores varia da menor quantidade (branco) para a maior quantidade (vermelho escuro)."
+              # template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre {0}. A escala de cores varia da menor quantidade (branco) para a maior quantidade (vermelho escuro)."
+              # preloaded:
+              #   prop: "centralindicadores"
+              #   function: "slice"
+              #   id: "10_08_02_02"
+              #   year: "max"
+              # args:
+              #   - named_prop: "ds_indicador_radical"
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf&calcs=ln_norm_pos_part&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_08_02_02',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_bpc"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "media_uf"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Quantidade'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_bpc'
+          colorScale:
+            name: 'Reds'
+
 # ========================================================
       - id: "bar_remuneracao_trabalhadores_sexo"
         title: 
@@ -396,6 +483,125 @@ secoes:
             type: "singleHue"
             levels: 7
             order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_vinculos_pcd"
+        title: 
+          fixed: "Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_02"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_39"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "PCD com empregos CLT"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_02"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Total geral de postos de trabalho formal"
+
+          - type: "text"
+            title: ""
+            content:
+              # fixed: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência. No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+              fixed: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência (PCD). No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de 2017 (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de 2018."
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "JD_RAIS_39"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'JD_RAIS_39',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
         source:
           desc_field: "ds_fonte"
 
@@ -917,7 +1123,7 @@ secoes:
         title: 
           fixed: "Trabalho doméstico"
         title_comment:
-          template: "{0}, {1}"
+          template: "{0}, em {1}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
@@ -925,7 +1131,7 @@ secoes:
             year: "max"
           args:
             - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia"
+            - named_prop: 'nu_competencia'
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -953,11 +1159,10 @@ secoes:
                   - prop: "value"
                     named_prop: 'vl_indicador'
                     format: 'inteiro'
-                    collapse:
+                    collapse: 
                       format: 'real'
-                      precision: 1
                   - prop: "description"
-                    fixed: 'Trabalhadores domésticos'
+                    fixed: 'Total no município'
                   - prop: "comment"
                     template: "Na UF: {0}"
                     args:
@@ -966,7 +1171,6 @@ secoes:
                         format: 'inteiro'
                         collapse: 
                           format: 'real'
-                          precision: 1
               - relevance: 'high'
                 cls: 'xs12 md6'
                 preloaded:
@@ -978,7 +1182,6 @@ secoes:
                   - prop: "value"
                     named_prop: 'vl_indicador'
                     format: 'porcentagem'
-                    precision: 1
                   - prop: "description"
                     fixed: 'Com carteira assinada'
                   - prop: "comment"
@@ -987,7 +1190,6 @@ secoes:
                       - id: "08_04_02_00"
                         named_prop: 'vl_indicador_uf'
                         format: 'porcentagem'
-                        precision: 1
               - relevance: 'low'
                 cls: 'xs12 md6'
                 preloaded:
@@ -999,7 +1201,6 @@ secoes:
                   - prop: "value"
                     named_prop: 'vl_indicador'
                     format: 'porcentagem'
-                    precision: 1
                   - prop: "description"
                     fixed: 'Contribuintes para a previdência'
                   - prop: "comment"
@@ -1008,7 +1209,6 @@ secoes:
                       - id: "08_05_02_00"
                         named_prop: 'vl_indicador_uf'
                         format: 'porcentagem'
-                        precision: 1
               - relevance: 'low'
                 cls: 'xs12 md6'
                 preloaded:
@@ -1023,26 +1223,22 @@ secoes:
                       - id: "08_06_03_00"
                         named_prop: 'vl_indicador'
                         format: 'real'
-                        precision: 1
                         collapse: 
                           format: 'real'
-                          precision: 1
                   - prop: "description"
                     fixed: 'Rendimento médio'
                   - prop: "comment"
-                    template: "Na UF: {0}"
+                    template: "Na UF: {0} <span>SAL. MIN.</span>"
                     args:
                       - id: "08_06_03_00"
                         named_prop: 'vl_indicador_uf'
-                        format: 'monetario'
-                        precision: 1
+                        format: 'real'
                         collapse: 
-                          format: 'monetario'
-                          precision: 1
+                          format: 'real'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o panorama do trabalho doméstico no município em relação ao número total de trabalhadores, o percentual destes que possui com carteira assinada e que contribuem para a previdência, assim como o rendimento médio recebidos por estes em salários mínimos. Nos gráficos, complementarmente pode-se observar a preponderância do trabalho doméstico feminino, e de trabalhadoras deomésticas negras, a partir de uma perspectiva interseccional."
+              fixed: "Em destaque, o panorama do trabalho doméstico no município em relação ao número total de trabalhadoras e trabalhadores, o percentual destes com carteira assinada, o percentual de contribuintes para a previdência e o rendimento médio do trabalho doméstico em salários mínimos. No gráfico ao lado, a comparação entre diferentes grupos, pela perspectiva interseccional, destacando a participação percentual de mulheres negras, mulheres brancas e homens no total de pessoas ocupadas com o trabalho doméstico."
           - type: "text"
             title: ""
             content:
@@ -1075,60 +1271,82 @@ secoes:
                 precision: 0
                 default: 0
         charts:
-# ========================================================
-          - id: "treemap_domestico_brancos_negros"
-            cls: "xs12 md6"
-            type: "TREEMAP"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: ["08_03_04_00", "08_03_05_00"]
-              year: "max"
-              options:
-                formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
-            headers:
-              - text: 'Indicador'
-                align: 'left'
-                value: 'ds_indicador_radical'
-              - text: 'Qtde'
-                value: 'fmt_vl_indicador'
-            options:
-              id: "cd_indicador"
-              text: "ds_agreg_primaria"
-              size: "vl_indicador"
-              # colorScale:
-              #   order: 'desc'
-              colorScale:
-                name: "BuGn"
-                type: "singleHue"
-                levels: 5
-                order: 'asc'
-            source:
-              desc_field: "ds_fonte"
+# # ========================================================
+#           - id: "treemap_domestico_brancos_negros"
+#             cls: "xs12 md6"
+#             type: "TREEMAP"
+#             preloaded:
+#               prop: "centralindicadores"
+#               function: "slice"
+#               id: ["08_03_04_00", "08_03_05_00"]
+#               options:
+#                 formatters:
+#                 - id: "vl_indicador"
+#                   format: 'inteiro'
+#             headers:
+#               - text: 'Indicador'
+#                 align: 'left'
+#                 value: 'ds_indicador_radical'
+#               - text: 'Qtde'
+#                 value: 'fmt_vl_indicador'
+#             options:
+#               id: "cd_indicador"
+#               text: "ds_agreg_primaria"
+#               size: "vl_indicador"
+#               colorScale:
+#                 name: "BuGn"
+#                 type: "singleHue"
+#                 levels: 5
+#                 order: 'asc'
+#             source:
+#               desc_field: "ds_fonte"
 # ========================================================
           - id: "treemap_domestico_mulheres_homens"
-            cls: "xs12 md6"
+            # cls: "xs12 md6"
             type: "TREEMAP"
             preloaded:
               prop: "centralindicadores"
               function: "slice"
-              id: ["08_03_02_00", "08_03_03_00", "08_03_06_00"]
+              id: ["08_03_02_00", "08_03_03_00", "08_03_06_00", "08_03_05_00"]
               year: "max"
               combine:
-              - id: "mulheres_brancas"
-                desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Mulheres Brancas"
-                ds_agreg_primaria: "Mulheres Brancas"
-                format: 'inteiro'
-                function: 'calc_subtraction'
-                fn_args:
-                  - id: "08_03_03_00"
-                    named_prop: "vl_indicador"
-                  - id: "08_03_06_00"
-                    named_prop: "vl_indicador"
+                - id: "mulheres_brancas"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Mulheres Brancas"
+                  ds_agreg_primaria: "Mulheres Brancas"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_03_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
+                - id: "homens_negros"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Homens Negros"
+                  ds_agreg_primaria: "Homens Negros"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_05_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
+                - id: "homens_brancos"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Homens Brancos"
+                  ds_agreg_primaria: "Homens Brancos"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_02_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_05_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
               slice: 
-                id: ["08_03_02_00", "08_03_06_00", "mulheres_brancas"]
+                id: ["08_03_06_00", "mulheres_brancas", "homens_negros", "homens_brancos"]
               options:
                 formatters:
                 - id: "vl_indicador"
@@ -1143,196 +1361,105 @@ secoes:
               id: "cd_indicador"
               text: "ds_agreg_primaria"
               size: "vl_indicador"
-              # colorScale:
-              #   order: "desc"
               colorScale:
                 name: "BuPu"
                 type: "singleHue"
-                levels: 7
+                levels: 5
                 order: 'asc'
             source:
               desc_field: "ds_fonte"
-          # - id: "treemap_domestico_mulheres_homens"
-          #   cls: "xs12 md4"
-          #   type: "TREEMAP"
-          #   preloaded:
-          #     prop: "centralindicadores"
-          #     function: "slice"
-          #     id: ["08_03_02_00", "08_03_03_00"]
-          #     combine:
-          #     - id: "pbf_perc"
-          #       desc: "Porcentagem da população em situação de pobreza ou extrema pobreza"
-          #       format: 'porcentagem'
-          #       function: 'calc_percentage'
-          #       fn_args:
-          #         - id: "01_14_10_00"
-          #           year: "2018"
-          #           named_prop: "vl_indicador"
-          #         - id: "01_15_01_00"
-          #           year: "2018"
-          #           named_prop: "vl_indicador"
-          #     options:
-          #       formatters:
-          #       - id: "vl_indicador"
-          #         format: 'inteiro'
-          #   headers:
-          #     - text: 'Indicador'
-          #       align: 'left'
-          #       value: 'ds_indicador_radical'
-          #     - text: 'Qtde'
-          #       value: 'fmt_vl_indicador'
-          #   options:
-          #     id: "cd_indicador"
-          #     text: "ds_agreg_primaria"
-          #     size: "vl_indicador"
-          #     colorScale:
-          #       order: "desc"
-          #   source:
-          #     desc_field: "ds_fonte"
 
+# ========================================================
+      - id: "mapa_desocupação_população_deficiência_severa"
+        title: 
+          fixed: "Desocupação da população de 16 a 64 anos com deficiência severa"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "08_10_04_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: 'nu_competencia'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "No Censo 2010, para as pessoas que estavam trabalhando foi perguntada a ocupação que exercia neste trabalho."
+          - type: "text"
+            title: "Observação:"
+            content:
+              fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_10_04_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Taxa de desocupação'
+                  - prop: "comment"
+                    fixed: 'No município'
 
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a taxa de desocupação da população de 16 a 64 anos, com deficiência severa. Ou seja, da população de PCDs considerada como o conjunto das pessoas que, para as deficiências visual, auditiva e motora, quando indagados se tinham dificuldade de enxergar, ouvir, e de caminhar ou subir escadas, respectivamente, declararam as opções de resposta “sim, grande dificuldade” ou “sim, não consegue de modo algum”. Também se considerou com deficiência severa o conjunto das pessoas com deficiência mental/intelectual. Este indicador pode informar, ainda que indiretamente, o potencial de contratação de PCDs que poderia fomentar o cumprimento da lei de cotas para inclusão das PCD no mercado de trabalho. No mapa, apresenta-se a perspectiva comparativa dos municípios, com destaque para a seleção. A escala de cores varia do branco (menor taxa) para o vermelho (maior taxa)."
 
-
-      # - id: "multi_pcd"
-      #   type: "multiple-charts"
-      #   title: 
-      #     fixed: "Pessoas com deficiência"
-      #   info:
-      #     - type: "text"
-      #       title: "Sobre a métrica"
-      #       content:
-      #         fixed: "Os dados do Censo permitem conhecer a realidade laboral das pessoas com deficiência à escala municipal e fornecem importantes insumos para subsidiar as políticas públicas de inclusão social e de promoção do Trabalho Decente desse segmento da população. Seguindo recomendações internacionais, o IBGE investigou os graus de severidade de cada deficiência, com o intuito de delimitar o público-alvo com deficiência severa, que foi considerado como o conjunto das pessoas que, para as deficiências visual, auditiva e motora, quando indagados se tinham dificuldade de enxergar, ouvir e de caminhar ou subir escadas respectivamente, declararam as opções de resposta “sim, grande dificuldade” ou “sim, não consegue de modo algum”. Também se considerou com deficiência severa o conjunto das pessoas com deficiência mental/intelectual. Os vínculos empregatícios são contados através da RAIS. A informação se o município possuía ou não conselho, programas ou ações e legislação municipal são coletadas através da pesquisa de informações municipais, uma pesquisa complementar do IBGE. Os conselhos municipais são canais efetivos de participação democrática da população no processo de formulação, implementação, monitoramento, avaliação e fiscalização das políticas públicas. Neste contexto, desempenham um papel fundamental para o cumprimento dos direitos dos mais diversos segmentos da população."
-      #     - type: "text"
-      #       title: "Observação Importante"
-      #       content:
-      #         fixed: "Segundo o Relatório Mundial sobre a Deficiência publicado pela Organização Mundial da Saúde (OMS) no ano de 2011, estima-se que um bilhão de pessoas vive com algum tipo de deficiência, o correspondente a 15,0% da população mundial. Deste contingente, cerca de 200 milhões apresentam sérias dificuldades em realizar atividades básicas para a sobrevivência. A Convenção das Nações Unidas sobre os Direitos das Pessoas com Deficiência, aprovada em 2006 e que entrou em vigor em maio de 2008, aponta no seu Artigo 27 diversas diretrizes para a promoção dos direitos das pessoas com deficiência na área do trabalho e emprego."
-      #   description:
-      #     - type: "text"
-      #       title: ""
-      #       content:
-      #         template: "Em {0}, a população de 16 a 64 anos de idade economicamente ativa com alguma deficiência no município era composta por {1} pessoas. A Taxa de Participação no mercado de trabalho era de {2} e o Nível de Ocupação da ordem de {3}. Considerando as pessoas com deficiência severa, a PEA era composta por {4} pessoas. A Taxa de Desocupação da população com deficiência severa era de {5}. O número de vínculos empregatícios de pessoas com deficiência no mercado formal de trabalho era de {6} em 31 de dezembro de {7}.<br/>
-      #                    Tratando-se da distribuição dos vínculos formais das pessoas com deficiência por sexo na RAIS, um contingente de {8} era ocupado por homens ({9} do total) e {10} por mulheres ({11})."
-      #         preloaded:
-      #           prop: "centralindicadores"
-      #           function: "slice"
-      #           id: ['08_07_01_00','08_07_02_00','08_08_02_00','08_10_01_00','08_10_04_00','08_11_01_00','08_11_02_00','08_11_04_00','08_11_03_00','08_11_05_00']
-      #           value_defs:
-      #             - id: "08_07_01_00"
-      #               props:
-      #                 - id: "nu_competencia"
-      #                 - id: "vl_indicador"
-      #                   formato: 'inteiro'
-      #             - id: "08_07_02_00"
-      #               props:
-      #                 - id: "vl_indicador"
-      #                   formato: 'porcentagem'
-      #                   casasDecimais: 1
-      #             - id: "08_08_02_00"
-      #               props:
-      #                 - id: "vl_indicador"
-      #                   formato: 'porcentagem'
-      #                   casasDecimais: 1
-      #             - id: "08_10_01_00"
-      #               props:
-      #                 - id: "vl_indicador"
-      #                   formato: 'inteiro'
-      #             - id: "08_10_04_00"
-      #               props:
-      #                 - id: "vl_indicador"
-      #                   formato: 'porcentagem'
-      #                   casasDecimais: 1
-      #             - id: "08_11_01_00"
-      #               props:
-      #                 - id: "vl_indicador"
-      #                   formato: 'inteiro'
-      #                 - id: "nu_competencia"
-      #             - id: "08_11_02_00"
-      #               props:
-      #                 - id: "vl_indicador"
-      #                   formato: 'inteiro'
-      #             - id: "08_11_04_00"
-      #               props:
-      #                 - id: "vl_indicador"
-      #                   formato: 'porcentagem'
-      #                   casasDecimais: 1
-      #             - id: "08_11_03_00"
-      #               props:
-      #                 - id: "vl_indicador"
-      #                   formato: 'inteiro'
-      #             - id: "08_11_05_00"
-      #               props:
-      #                 - id: "vl_indicador"
-      #                   formato: 'porcentagem'
-      #                   casasDecimais: 1
-      #     - type: "text"
-      #       title: "OBS/Pendências"
-      #       content:
-      #         fixed: "Solicitado dois gráficos: <br/>
-      #                 1 - GRÁFICO de barras com taxa de desocupação VALOR% das pessoas com deficiência e VALOR% das com deficiência severa.<br/>
-      #                 Não encontrada a taxa de desocupação de pessoas com deficiência. Colocado, temporariamente, o de barras com os indicadores de números absolutos para PCD.<br/>
-      #                 2 - MAPA de polígonos - próximo card bicolor se o estado possuía ou não algum dos três indicadores (conselho municipal, programas ou ações e legislação municipal) com uma cor se SIM e outra cor NÃO.<br/>
-      #                 Colocada 4 cores (0/1/2/3). Deseja realmente bicolor?"
-      #   charts:
-      #     - id: "bar_pcd"
-      #       cls: "xs12 md6"
-      #       title: "Pessoas com deficiência"        
-      #       type: "BAR"
-      #       preloaded:
-      #           prop: "centralindicadores"
-      #           function: "slice"
-      #           id: ['08_07_01_00','08_08_01_00','08_09_01_00','08_10_01_00','08_10_02_00','08_10_03_00']
-      #       formatters:
-      #         - id: "vl_indicador"
-      #           formato: 'inteiro'
-      #       headers:
-      #         - text: 'Indicador'
-      #           align: 'left'
-      #           value: 'ds_indicador_radical'
-      #         - text: 'Ano'
-      #           align: 'left'
-      #           value: 'nu_competencia'
-      #         - text: 'Qtde'
-      #           value: 'fmt_vl_indicador'
-      #       options:
-      #         id: "cd_indicador"
-      #         x: "vl_indicador"
-      #         y: "cd_indicador"
-      #         text: "ds_indicador_radical"
-      #         colorScale:
-      #           name: "Set1"
-      #         hide_legend: true 
-      #       source:
-      #         desc_field: "ds_fonte"
-      #     - id: "mapa_pcd"
-      #       cls: "xs12 md6"
-      #       title: "Pessoas com deficiência - Mapa de Conselhos/Programas/Legislação"
-      #       type: "MAP_TOPOJSON"
-      #       api:
-      #         template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,in-cd_indicador-'08_12_08_00'-'08_12_09_00'-'08_12_10_00'"
-      #         args:
-      #           - function: "getStateFromId"
-      #             fn_args:
-      #               - named_prop: "idLocalidade"
-      #       headers:
-      #         - text: 'Município'
-      #           align: 'left'
-      #           value: 'nm_municipio'
-      #         - text: 'Ano'
-      #           align: 'left'
-      #           value: 'nu_competencia'
-      #         - text: 'Indicador'
-      #           align: 'left'
-      #           value: 'calc_valor_sim_nao'
-      #       options:
-      #         calcs:
-      #           - id: "valor_sim_nao"
-      #             function: "get_flag_value"
-      #         id_field: 'cd_mun_ibge'
-      #         topo_key: "codarea"
-      #         value_field: 'vl_indicador'
-      #         colorScale:
-      #           name: 'RdYlBu'
-      #           order: 'asc'
-      #         indicadores: ["08_12_01_00"]
-      #       source:
-      #         desc_field: "ds_fonte"               
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'08_10_04_00'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            # calcs:
+            #   - id: 'vl_indicador'
+            #     function: 'calc_subtraction_ds'
+            #     fn_args:
+            #       - named_prop: "08_01_06_00"
+            #       - named_prop: "08_01_07_00"
+            #     recalc_min_max: true
+            #   # - id: "deviation_empform"
+            #   #   function: "get_bipolar_scale"
+            #   #   fn_args: 
+            #   #     - fixed: 'calc_vl_indicador'
+            formatters:
+              - id: "vl_indicador"
+                format: 'porcentagem'
+                precision: 1
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Taxa'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'vl_indicador'
+          colorScale:
+            name: 'Reds'
+            # order: "desc"
+            # inv_function:
+            #   name: 'inv_deviation'
+            #   args:
+            #     - first_row_prop: 'media_br'
+          indicadores: ["08_10_04_00"]
+        source:
+          desc_field: "ds_fonte"

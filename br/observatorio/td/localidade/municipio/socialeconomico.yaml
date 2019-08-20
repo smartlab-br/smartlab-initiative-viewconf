@@ -470,7 +470,7 @@ secoes:
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "01_03_07_00"
+            id: "01_16_07_00"
             year: "max"
           args:
             - named_prop: "nm_municipio_uf"
@@ -488,12 +488,25 @@ secoes:
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "01_03_07_00"
+                  id: ["01_16_05_00","01_16_06_00", "01_16_07_00"]
                   year: "max"
+                  combine:
+                  - id: "serv_perc"
+                    desc: "Porcentagem da AP dentro do VAB"
+                    format: 'porcentagem'
+                    function: 'calc_percentage_2values'
+                    fn_args:
+                      - id: "01_16_05_00"
+                        named_prop: "vl_indicador"
+                      - id: "01_16_06_00"
+                        named_prop: "vl_indicador"
+                      - id: "01_16_07_00"
+                        named_prop: "vl_indicador"
                 args:
                   - prop: "value"
+                    id: "serv_perc"
                     named_prop: 'vl_indicador'
-                    format: 'auto'
+                    format: 'porcentagem'
                   - prop: "description"
                     fixed: "SERVIÇOS, INCLUSIVE ADMINISTRAÇÃO PÚBLICA"
               - relevance: 'high'
@@ -518,7 +531,6 @@ secoes:
                     id: "adm_perc"
                     format: 'porcentagem'
                     named_prop: 'vl_indicador'
-                    precision: 1
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "APENAS ADMINISTRAÇÃO PÚBLICA"
@@ -527,13 +539,23 @@ secoes:
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "01_03_06_00"
+                  id: ["01_16_04_00", "01_16_07_00"]
                   year: "max"
+                  combine:
+                  - id: "ind_perc"
+                    desc: "Porcentagem da AP dentro do VAB"
+                    format: 'porcentagem'
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "01_16_04_00"
+                        named_prop: "vl_indicador"
+                      - id: "01_16_07_00"
+                        named_prop: "vl_indicador"
                 args:
                   - prop: "value"
+                    id: "ind_perc"
                     named_prop: 'vl_indicador'
                     format: 'porcentagem'
-                    precision: 1
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Indústria"
@@ -542,10 +564,21 @@ secoes:
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "01_03_05_00"
+                  id: ["01_16_03_00", "01_16_07_00"]
                   year: "max"
+                  combine:
+                  - id: "agro_perc"
+                    desc: "Porcentagem da AP dentro do VAB"
+                    format: 'porcentagem'
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "01_16_03_00"
+                        named_prop: "vl_indicador"
+                      - id: "01_16_07_00"
+                        named_prop: "vl_indicador"
                 args:
                   - prop: "value"
+                    id: "agro_perc"
                     named_prop: 'vl_indicador'
                     format: 'porcentagem'
                     precision: 1
@@ -560,7 +593,7 @@ secoes:
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
-                id: "01_03_07_00"
+                id: "01_16_07_00"
               args:
                 - named_prop: 'nm_municipio_uf'
         chart_type: "MAP_TOPOJSON"
