@@ -15,18 +15,29 @@ api_obj_collection:
       - name: 'desc_data'
         type: 'from_id'
         named_prop: 'cd_mun_ibge'
+  - name: "indicador_data"
+    endpoint: 
+      categorias: 'ds_indicador_radical,nu_competencia_max'
+      limit: '1'
+      filtros:
+        template: 'eq-cd_indicador_spai-{}'
+        args:
+          - prop: 'cd_indicador'
+    instances:
+      - name: 'indic_data'
+        type: 'first_occurence'
 title: 
   template: "{} - Distribuição Geográfica"
   args:
-    - base_object: "desc_data"
+    - base_object: "indic_data"
       named_prop: "ds_indicador_radical"
 title_comment:
   template: "{}, {}"
   args:
-    - base_object: "desc_data"
-      named_prop: nm_municipio_uf
-    - base_object: "desc_data"
-      named_prop: nu_competencia
+    - base_object: "term_localidade"
+      named_prop: "value"
+    - base_object: "indic_data"
+      named_prop: "nu_competencia_max"
 info:
   - type: "text"
     title: "Sobre a métrica"
