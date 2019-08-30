@@ -13,12 +13,14 @@ principais:
         named_prop: 'vl_indicador'
         format: 'inteiro'
       - prop: "description"
-        named_prop: "ds_indicador_radical"
+        fixed: "SINDICATOS DE CATEGORIAS PROFISSIONAIS ATIVOS COM SEDE NO MUNICÍPIO"
+        # named_prop: "ds_indicador_radical"
       - prop: 'comment'
-        template: "({0}, {1}) "
-        args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+        fixed: "(MT - CNES, 2016)"
+        # template: "({0}, {1}) "
+        # args:
+        #   - named_prop: "ds_fonte"
+        #   - named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -34,12 +36,14 @@ principais:
         collapse:
           format: 'real'
       - prop: "description"
-        named_prop: "ds_indicador_radical"
+        fixed: "SINDICATOS DE CATEGORIAS ECONÔMICAS ATIVOS COM SEDE NO MUNICÍPIO"
+        # named_prop: "ds_indicador_radical"
       - prop: 'comment'
-        template: "({0}, {1}) "
-        args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+        fixed: "(MT - CNES, 2016)"
+        # template: "({0}, {1}) "
+        # args:
+        #   - named_prop: "ds_fonte"
+        #   - named_prop: "nu_competencia"
 # ========================================================
 secoes:
   - id: "dialogo_unica"
@@ -51,19 +55,19 @@ secoes:
           fixed: "Sindicatos de categorias profissionais ativos com sede no município "
         title_comment:
           template: "{0}, {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "11_01_01_00"
-            year: "max"
+          api: 
+            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'11_01_01_00'&limit=1"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
               fixed: "O diálogo social visa fortalecer os valores democráticos nos processos de construção de políticas que afetam a sociedade como um todo ou atores sociais específicos. Nesses termos, ambientes de interlocução entre os atores interessados e muitas vezes detentores de visões de mundo distintas são institucionalizados com o intuito de dirimir e disciplinar os conflitos, potencializar a cooperação e produzir políticas convergentes com os interesses das partes envolvidas. Com isso, contribui-se para a ampliação da legitimidade social de políticas públicas e de gestão das empresas e, portanto, para o fortalecimento de uma cultura democrática no país. No mundo do trabalho, em particular, o diálogo social requer necessariamente uma efetiva liberdade de organização e associação sindical de trabalhadores e de empregadores, assim como a garantia de negociações coletivas periódicas."
+        msgNoData: 
+          desc: "Não há registros de entidades sindicais profissionais (de trabalhadores) na localidade, no ano indicado."
         description:
           - type: "minicards"
             cards:
@@ -91,6 +95,7 @@ secoes:
                 id: ['11_01_01_00']
               args:
                 - named_prop: "nm_municipio_uf"
+                  required: true
           - type: "ranking"
             preloaded:
               prop: "centralindicadores"
@@ -120,10 +125,8 @@ secoes:
                 default: 0
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{2},and,eq-cd_indicador-'11_01_01_00',and,eq-nu_competencia-nu_competencia_max"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'11_01_01_00',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "idLocalidade"
-            - named_prop: "idLocalidadeD6"
             - named_prop: "cd_uf"
           options:
             formatters:
@@ -162,19 +165,19 @@ secoes:
           fixed: "Sindicatos de categorias econômicas ativos com sede no município"
         title_comment:
           template: "{0}, {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "11_01_02_00"
-            year: "max"
+          api: 
+            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'11_01_02_00'&limit=1"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
               fixed: "O diálogo social visa fortalecer os valores democráticos nos processos de construção de políticas que afetam a sociedade como um todo ou atores sociais específicos. Nesses termos, ambientes de interlocução entre os atores interessados e muitas vezes detentores de visões de mundo distintas são institucionalizados com o intuito de dirimir e disciplinar os conflitos, potencializar a cooperação e produzir políticas convergentes com os interesses das partes envolvidas. Com isso, contribui-se para a ampliação da legitimidade social de políticas públicas e de gestão das empresas e, portanto, para o fortalecimento de uma cultura democrática no país. No mundo do trabalho, em particular, o diálogo social requer necessariamente uma efetiva liberdade de organização e associação sindical de trabalhadores e de empregadores, assim como a garantia de negociações coletivas periódicas."
+        msgNoData: 
+          desc: "Não há registros de entidades sindicais de categorias econômicas (de empregadores) na localidade, no ano indicado."
         description:
           - type: "minicards"
             cards:
@@ -202,6 +205,7 @@ secoes:
                 id: ['11_01_02_00']
               args:
                 - named_prop: "nm_municipio_uf"
+                  required: true
           - type: "ranking"
             preloaded:
               prop: "centralindicadores"
@@ -231,10 +235,8 @@ secoes:
                 default: 0
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{2},and,eq-cd_indicador-'11_01_02_00',and,eq-nu_competencia-nu_competencia_max"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'11_01_02_00',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "idLocalidade"
-            - named_prop: "idLocalidadeD6"
             - named_prop: "cd_uf"
           options:
             formatters:
