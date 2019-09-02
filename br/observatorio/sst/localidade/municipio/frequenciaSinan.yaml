@@ -16,11 +16,14 @@ principais:
           format: 'real'
       - prop: "description"
         named_prop: "ds_indicador_radical"
+        default: "NOTIFICAÇÕES RELACIONADAS AO TRABALHO NO SISTEMA DE INFORMAÇÃO DE AGRAVOS DE NOTIFICAÇÃO (SINAN) - TOTAL DE NOTIFICAÇÕES SINAN RELACIONADAS AO TRABALHO"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
+            default: "Ministério da Saúde/SVS - Sistema de Informação de Agravos de Notificação – Sinan"
           - named_prop: "nu_competencia"
+            default: ""
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -37,11 +40,14 @@ principais:
           format: 'real'
       - prop: "description"
         named_prop: "ds_indicador_radical"
+        default: "NOTIFICAÇÕES RELACIONADAS AO TRABALHO NO SISTEMA DE INFORMAÇÃO DE AGRAVOS DE NOTIFICAÇÃO (SINAN) - ACIDENTE DE TRABALHO GRAVE ENVOLVENDO CRIANÇAS E ADOLESCENTES (0 A 17 ANOS)"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
+            default: "Ministério da Saúde/SVS - Sistema de Informação de Agravos de Notificação – Sinan"
           - named_prop: "nu_competencia"
+            default: ""
 # ====================================================          
 secoes:
   - id: "frequencia_sinan"
@@ -59,8 +65,10 @@ secoes:
             id: "06_05_10_00"
             year: "max"
           args:
-            - named_prop: "nm_municipio_uf"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_max"
+              default: ""
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -180,13 +188,11 @@ secoes:
           fixed: "Notificações Relacionadas ao Trabalho (SINAN) conforme Agravos e Doenças"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_10_00"
-            year: "max"
+          api: 
+            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_00'&limit=1"
           args:
-            - named_prop: "nm_municipio_uf"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -260,13 +266,11 @@ secoes:
           fixed: "Notificações Relacionadas ao Trabalho (SINAN) - Série Histórica"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_10_00"
-            year: "max"
+          api: 
+            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_00'&limit=1"
           args:
-            - named_prop: "nm_municipio_uf"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
