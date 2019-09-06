@@ -827,3 +827,70 @@ secoes:
           args:
             - base_object: "localidade"
               named_prop: 'nm_localidade' 
+# ========================================================
+      - id: "mapa_cras_creas"
+        chart_type: "MAP_LEAFLET"
+        title: 
+          fixed: "Locais de CRAS e CREAS"
+        title_comment:
+          template: "{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+        info:
+          - type: "text"
+            title: "Sobre"
+            content:
+              fixed: ""
+        source:
+          desc: "Censo SUAS(Sistema Único de Assistência Social)"
+          link: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "CRAS e CREAS"
+            type: "switch-group"
+            cls: "pt-2 pb-4"
+            switches:
+              - id: "CRAS"
+                default: true
+                label: "CRAS"
+                color: "blue"
+              - id: "CREAS"
+                default: true
+                label: "CREAS"
+                color: "green"
+            event: 'selection'
+        api:
+          template: "/orgs/assistenciasocial?categorias=categoria-cd_indicador,latitude,longitude,nm_municipio,endereco,bairro,municipio,referencia,uf,cep,razaosocial,nome&filtros=eq-cd_municipio_ibge_dv-{0}"
+          args:
+            - named_prop: "idLocalidade"
+        headers:
+          - text: 'Nome'
+            align: 'left'
+            value: 'nome'
+          - text: 'Endereço'
+            align: 'left'
+            value: 'endereco'
+          - text: 'Bairro'
+            value: 'bairro'
+          - text: 'CEP'
+            value: 'cep'
+            format: 'cep'
+          - text: 'Município'
+            value: 'municipio'
+          - text: 'Referência'
+            value: 'referencia'
+        chart_options:
+          markerIcons: 
+            "CRAS": "blue" 
+            "CREAS": "green"
+          indicadores: ["CRAS","CREAS"]
+          label_field: "cd_indicador"
+          show_all: true
+          type: 'cluster'
+          lat: 'latitude'
+          long: 'longitude'
+          hide_place_marker: true
+          clickable: false
