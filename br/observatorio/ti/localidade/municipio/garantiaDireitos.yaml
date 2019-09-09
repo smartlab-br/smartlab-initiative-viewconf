@@ -831,9 +831,9 @@ secoes:
       - id: "mapa_cras_creas"
         chart_type: "MAP_LEAFLET"
         title: 
-          fixed: "Locais de CRAS e CREAS"
+          fixed: "Localização Aproximada de CRAS e CREAS"
         title_comment:
-          template: "{0}"
+          template: "{0}, 2017"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -843,14 +843,44 @@ secoes:
             content:
               fixed: ""
         source:
-          desc: "Censo SUAS(Sistema Único de Assistência Social)"
+          desc: "Censo SUAS, MDS"
           link: ""
         description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/orgs/assistenciasocial?categorias=categoria&agregacao=count&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-categoria-'CRAS'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'CENTROS DE REFERÊNCIA DE ASSISTÊNCIA SOCIAL'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/orgs/assistenciasocial?categorias=categoria&agregacao=count&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-categoria-'CREAS'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'CENTROS DE REFERÊNCIA ESPECIALIZADO DE ASSISTÊNCIA SOCIAL'
           - type: "text"
             title: ""
             content:
-              fixed: "CRAS e CREAS"
-            type: "switch-group"
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre a localização de Centros de Referência de Assistência Social e Centros de Referência Especializado de Assistência Social. A localização é aproximada. Ao clicar no ponto no mapa, apresenta-se o endereço informado no Censo SUAS 2017."
+          - type: "switch-group"
             cls: "pt-2 pb-4"
             switches:
               - id: "CRAS"
@@ -892,5 +922,6 @@ secoes:
           type: 'cluster'
           lat: 'latitude'
           long: 'longitude'
+          tooltip_function: 'tooltipLinkGoogleStreetView'
           hide_place_marker: true
           clickable: false
