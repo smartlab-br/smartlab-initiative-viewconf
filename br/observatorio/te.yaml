@@ -289,6 +289,30 @@ prevalencia:
           api:
             args:
               - named_prop: "cd_uf"
+    # - id: "select_municipio"
+    #   type: "select"
+    #   label: "Município"
+    #   title: "Município"
+    #   multiple: true
+    #   parent: "select_uf"
+    #   api:
+    #     fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf&agregacao=distinct&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'&ordenacao=nm_municipio_uf"
+    #   api_reactive:
+    #     template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf&agregacao=distinct&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res',and,eq-cd_uf-{0}&ordenacao=nm_municipio_uf"
+    #     args:
+    #       - named_prop: "cd_uf"
+    #   args:
+    #     - prop: "id"
+    #       named_prop: "cd_mun_ibge"
+    #     - prop: "label"
+    #       named_prop: "nm_municipio_uf"
+    #   selection:
+    #     event: "selection"
+    #     rules:
+    #       filter: ",and,in-cd_mun_ibge-{0}"
+    #       api:
+    #         args:
+    #           - named_prop: "cd_mun_ibge"
     - type: "slider"
       id: "slider_ano"
       range: true
@@ -308,3 +332,165 @@ prevalencia:
             args:
               - named_prop: "value_min"
               - named_prop: "value_max"
+    - id: "select_prt"
+      type: "select"
+      label: "Unidade do MPT"
+      title: "MPT"
+      multiple: true
+      api:
+        fixed: "/te/indicadoresmunicipais?categorias=cd_unidade,nm_unidade&agregacao=distinct&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'&ordenacao=cd_unidade"
+      args:
+        - prop: "id"
+          named_prop: "cd_unidade"
+        - prop: "label"
+          named_prop: "nm_unidade"
+      selection:
+        event: "selection"
+        rules:
+          filter: ",and,in-cd_unidade-{0}"
+          api:
+            args:
+              - named_prop: "cd_unidade"
+  mapa_description_right:
+    - id: "minicards_right"
+      class: "pr-0 pl-2 py-0"
+      type: "minicards"
+      rowCalss: "pa-1"
+      cards:
+        - relevance: "high"
+          cls: "xs12 text-xs-center "
+          color: "green accent-4 pa-3"
+          reactive: true
+          api: 
+            fixed: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_rgt'"
+          # preloaded:
+          #   prop: "trabalho_escravo_agr"
+          #   function: "slice"
+          #   id: "te_rgt"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              fixed: "Resgates"
+        - relevance: "high"
+          cls: "xs12 text-xs-center "
+          color: "red pa-3"
+          reactive: true
+          api: 
+            fixed: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_nat'"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              fixed: "Naturalidade apurada (SD)"
+        - relevance: "high"
+          cls: "xs12 text-xs-center "
+          color: "light-blue pa-3"
+          reactive: true
+          api: 
+            fixed: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_res'"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              fixed: "Residência apurada (SD)"
+    - id: "ranking_list_te"
+      type: "ranking_list"
+      rankings:
+        # - title: "UFs com maior prevalência de resgates "
+        #   reactive: true
+        #   cls: "xs12 sm6 lg12 xl6 px-3 pb-3"
+        #   api: 
+        #     fixed: "/te/indicadoresmunicipais?categorias=nm_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_rgt'"
+        #   args:
+        #     - prop: 'localidade'
+        #       named_prop: "nm_uf"
+        #     - prop: 'vl_indicador'
+        #       named_prop: "agr_sum_vl_indicador"
+        #       format: "inteiro"
+        #     - prop: 'rank'
+        #       named_prop: "agr_rank_dense_sum_vl_indicador"
+        - title: "Municípios com maior prevalência de resgates "
+          reactive: true
+          cls: "xs12 px-3 pb-3"
+          api: 
+            fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_rgt'"
+          args:
+            - prop: 'localidade'
+              named_prop: "nm_municipio_uf"
+            - prop: 'vl_indicador'
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+            - prop: 'rank'
+              named_prop: "agr_rank_dense_sum_vl_indicador"
+        # - title: "Principais UFs de naturalidade dos resgatados"
+        #   reactive: true
+        #   cls: "xs12 sm6 lg12 xl6 px-3 pb-3"
+        #   api: 
+        #     fixed: "/te/indicadoresmunicipais?categorias=nm_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_nat'"
+        #   args:
+        #     - prop: 'localidade'
+        #       named_prop: "nm_uf"
+        #     - prop: 'vl_indicador'
+        #       named_prop: "agr_sum_vl_indicador"
+        #       format: "inteiro"
+        #     - prop: 'rank'
+        #       named_prop: "agr_rank_dense_sum_vl_indicador"
+        - title: "Principais municípios de naturalidade dos resgatados"
+          reactive: true
+          cls: "xs12 px-3 pb-3"
+          api: 
+            fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-%27te_nat%27"
+          args:
+            - prop: 'localidade'
+              named_prop: "nm_municipio_uf"
+            - prop: 'vl_indicador'
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+            - prop: 'rank'
+              named_prop: "agr_rank_dense_sum_vl_indicador"
+        # - title: "Principais UFs onde os resgatados declaram residir"
+        #   reactive: true
+        #   cls: "xs12 sm6 lg12 xl6 px-3 pb-3"
+        #   api: 
+        #     fixed: "/te/indicadoresmunicipais?categorias=nm_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_res'"
+        #   args:
+        #     - prop: 'localidade'
+        #       named_prop: "nm_uf"
+        #     - prop: 'vl_indicador'
+        #       named_prop: "agr_sum_vl_indicador"
+        #       format: "inteiro"
+        #     - prop: 'rank'
+        #       named_prop: "agr_rank_dense_sum_vl_indicador"
+        - title: "Principais municípios onde os resgatados declaram residir"
+          reactive: true
+          cls: "xs12 px-3 pb-3"
+          api: 
+            fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-%27te_res%27"
+          args:
+            - prop: 'localidade'
+              named_prop: "nm_municipio_uf"
+            - prop: 'vl_indicador'
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+            - prop: 'rank'
+              named_prop: "agr_rank_dense_sum_vl_indicador"
+        # - title: "Municípios com maior número de inspeções realizadas"
+        #   cls: "xs12 sm6 xl3 pa-3"
+        #   reactive: true
+        #   api: 
+        #     fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-%27te_inspecoes%27&limit=5"
+        #   args:
+        #     - prop: 'localidade'
+        #       named_prop: "nm_municipio_uf"
+        #     - prop: 'vl_indicador'
+        #       named_prop: "agr_sum_vl_indicador"
+        #       format: "inteiro"
+        #     - prop: 'rank'
+        #       named_prop: "agr_rank_dense_sum_vl_indicador"
