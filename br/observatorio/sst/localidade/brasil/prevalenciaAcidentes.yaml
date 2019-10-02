@@ -50,9 +50,9 @@ secoes:
     name: "Notificações de Acidentes de Trabalho (CAT)"
     cards:
 # ===============================================
-      - id: "bar_priori_municipios"
+      - id: "bar_cats_priori_ufs"
         title: 
-          fixed: "Maiores Prevalências de Notificações de Acidentes de Trabalho"
+          fixed: "Maiores Prevalências nas UFs de Notificações de Acidentes de Trabalho"
         title_comment:
           template: "Brasil, {0}"
           preloaded:
@@ -90,7 +90,94 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, informações sobre Prevalência de Notificações de Acidentes de Trabalho em número de casos a cada 10 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se as 10 unidades geográficas com as maiores prevalências para o ano considerado."
+              fixed: "Em destaque, informações sobre Prevalência de Notificações de Acidentes de Trabalho em número de casos a cada 10 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se as 10 unidades federativas com as maiores prevalências para o ano considerado."
+        chart_type: "BAR"
+        api:
+          fixed: "/indicadoresestaduais?categorias=nm_uf,cd_uf,sg_uf,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'10_13_01_01'&ordenacao=rank_br&limit=10"
+          options:
+            calcs:
+              - id: "rankUF"
+                function: "calc_addition_ids_ds"
+                fn_args:
+                  - named_prop: "rank_br"
+                  - named_prop: "cd_uf"
+              - id: "bar_description"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed:
+                      template: "{0} ({1} casos em 10 mil)"
+                      args:
+                        - named_prop: "nm_uf"
+                        - named_prop: "vl_indicador"
+                          format: "inteiro"
+                          multiplier: 10000
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+                multiplier: 10000
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Nº de casos a cada 10 mil trabalhadores'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank Brasil'
+            value: 'rank_br'
+        footnote: "UFs - Prevalências de Notificações de Acidentes de Trabalho - Casos a cada 10.000 trabalhadores expostos ao risco"
+        chart_options:
+          id: "cd_uf"
+          x: "calc_rankUF"
+          y: "vl_indicador"
+          text: "calc_bar_description"
+          hide_legend: true
+          orientation: "vertical"
+          show_x_axis: false
+          show_y_axis: false
+          color: "#238B45"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "bar_priori_municipios"
+        title: 
+          fixed: "Maiores Prevalências nos Municípios de Notificações de Acidentes de Trabalho"
+        title_comment:
+          template: "Brasil, {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_13_01_01"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_13_01_01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    multiplier: 10000
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    # named_prop: "ds_indicador_radical"
+                    fixed: "CASOS A CADA 10.000 TRABALHADORES<br/>Prevalência de Acidentes de Trabalho"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, informações sobre Prevalência de Notificações de Acidentes de Trabalho em número de casos a cada 10 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se os 10 municípios com as maiores prevalências para o ano considerado."
         chart_type: "BAR"
         api:
           fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,sg_uf,cd_mun_ibge,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'10_13_01_01'&ordenacao=rank_br&limit=10"
@@ -123,7 +210,7 @@ secoes:
             value: 'fmt_vl_indicador'
           - text: 'Rank Brasil'
             value: 'rank_br'
-        footnote: "Prevalências de Notificações de Acidentes de Trabalho - Casos a cada 10.000 trabalhadores expostos ao risco"
+        footnote: "Municípios - Prevalências de Notificações de Acidentes de Trabalho - Casos a cada 10.000 trabalhadores expostos ao risco"
         chart_options:
           id: "cd_mun_ibge"
           x: "calc_rankMun"
@@ -154,6 +241,180 @@ secoes:
         cd_indicador: "10_13_01_01"
         coefficient: "vl_indicador-10000-10 mil,vl_indicador_br-10000-10 mil"
         term: "ocorrencia-casos"
+# ===============================================
+      - id: "bar_cats_mortes_priori_ufs"
+        title: 
+          fixed: "Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) Maiores Prevalências nas UFs"
+        title_comment:
+          template: "Brasil, {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_13_01_02"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_13_01_02"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    multiplier: 100000
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    # named_prop: "ds_indicador_radical"
+                    fixed: "CASOS A CADA 100.000 TRABALHADORES<br/>Mortalidade no Trabalho"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, informações sobre Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) em número de casos a cada 100 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se as 10 unidades federativas com as maiores prevalências para o ano considerado."
+        chart_type: "BAR"
+        api:
+          fixed: "/indicadoresestaduais?categorias=nm_uf,cd_uf,sg_uf,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'10_13_01_02'&ordenacao=rank_br&limit=10"
+          options:
+            calcs:
+              - id: "rankUF"
+                function: "calc_addition_ids_ds"
+                fn_args:
+                  - named_prop: "rank_br"
+                  - named_prop: "cd_uf"
+              - id: "bar_description"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed:
+                      template: "{0} ({1} casos em 100 mil)"
+                      args:
+                        - named_prop: "nm_uf"
+                        - named_prop: "vl_indicador"
+                          format: "inteiro"
+                          multiplier: 100000
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+                multiplier: 100000
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Nº de casos a cada 100 mil trabalhadores'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank Brasil'
+            value: 'rank_br'
+        footnote: "UFs - Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) - Casos a cada 100.000 trabalhadores expostos ao risco"
+        chart_options:
+          id: "cd_uf"
+          x: "calc_rankUF"
+          y: "vl_indicador"
+          text: "calc_bar_description"
+          hide_legend: true
+          orientation: "vertical"
+          show_x_axis: false
+          show_y_axis: false
+          color: "#238B45"
+        source:
+          desc_field: "ds_fonte"
+# # ====================================================          
+#       - id: "bar_cats_mortes_priori_municipios"
+#         title: 
+#           fixed: "Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) - Maiores Prevalências nos Municípios"
+#         title_comment:
+#           template: "Brasil, {0}"
+#           preloaded:
+#             prop: "centralindicadores"
+#             function: "slice"
+#             id: "10_13_01_02"
+#             year: "max"
+#           args:
+#             - named_prop: "nu_competencia"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: ""
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "10_13_01_02"
+#                   year: "max"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'inteiro'
+#                     multiplier: 100000
+#                     collapse:
+#                       format: 'real'
+#                   - prop: "description"
+#                     # named_prop: "ds_indicador_radical"
+#                     fixed: "CASOS A CADA 100.000 TRABALHADORES<br/>Mortalidade no trabalho"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, informações sobre Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) em número de casos a cada 100 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se os 10 municípios com as maiores prevalências para o ano considerado."
+#         chart_type: "BAR"
+#         api:
+#           fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,sg_uf,cd_mun_ibge,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'10_13_01_02'&ordenacao=rank_br&limit=10"
+#           options:
+#             calcs:
+#               - id: "rankMun"
+#                 function: "calc_addition_ids_ds"
+#                 fn_args:
+#                   - named_prop: "rank_br"
+#                   - named_prop: "cd_mun_ibge"
+#               - id: "bar_description"
+#                 function: "applyInterpolReplaceDatasetParam"
+#                 fn_args:
+#                   - fixed:
+#                       template: "{0} ({1} casos em 100 mil)"
+#                       args:
+#                         - named_prop: "nm_municipio_uf"
+#                         - named_prop: "vl_indicador"
+#                           format: "inteiro"
+#                           multiplier: 100000
+#             formatters:
+#               - id: "vl_indicador"
+#                 format: 'inteiro'
+#                 multiplier: 100000
+#         headers:
+#           - text: 'Município'
+#             align: 'left'
+#             value: 'nm_municipio_uf'
+#           - text: 'Nº de casos a cada 100 mil trabalhadores'
+#             value: 'fmt_vl_indicador'
+#           - text: 'Rank Brasil'
+#             value: 'rank_br'
+#         footnote: "Municípios - Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) - Casos a cada 100.000 trabalhadores expostos ao risco"
+#         chart_options:
+#           id: "cd_mun_ibge"
+#           x: "calc_rankMun"
+#           y: "vl_indicador"
+#           text: "calc_bar_description"
+#           hide_legend: true
+#           orientation: "vertical"
+#           show_x_axis: false
+#           show_y_axis: false
+#           color: "#238B45"
+#         source:
+#           desc_field: "ds_fonte"
 # ====================================================          
       - id: "bar_prev_com_morte"
         title: 
