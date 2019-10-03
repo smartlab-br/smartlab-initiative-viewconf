@@ -494,3 +494,51 @@ prevalencia:
         #       format: "inteiro"
         #     - prop: 'rank'
         #       named_prop: "agr_rank_dense_sum_vl_indicador"
+sparklines:
+  id: "sparklines_prev_brasil"
+  id_field: "cd_mun_ibge"
+  value_field: "agr_sum_vl_indicador"
+  series_field: "cd_indicador"
+  category_field: "nu_competencia"
+  chart_type: "LINE"
+  title: 
+    fixed: "Série Histórica por Município"
+  title_comment:
+    template: "{0} a {1}"
+    api: 
+      template: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+    args:
+      - named_prop: "nu_competencia_min"
+      - named_prop: "nu_competencia_max"
+  api:
+    fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'"
+  chart_options:
+    id: 'id'
+    x: 'cat_value'
+    y: "value"
+    x_options:
+      axis: false
+    y_options:
+      axis: false
+    hide_legend: true
+    colorArray: ["rgba(25, 125, 25, 0.7)", "rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
+    indicadores: ["te_rgt","te_nat","te_res"]
+  headers:
+    - text: 'Município'
+      align: 'left'
+      value: 'nm_municipio_uf'
+    - text: 'Nº resgatados do trabalho escravo'
+      value: 'totals_te_rgt'
+    - text: 'Nº naturais do trabalho escravo'
+      value: 'totals_te_nat'
+    - text: 'Nº residentes do trabalho escravo'
+      value: 'totals_te_res'
+    - text: "Evolução de resgates"
+      type: 'spark'
+      series: 'te_rgt'
+    - text: "Evolução de naturais"
+      type: 'spark'
+      series: 'te_nat'
+    - text: "Evolução de residentes"
+      type: 'spark'
+      series: 'te_res'
