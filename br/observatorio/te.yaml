@@ -500,6 +500,10 @@ sparklines:
   value_field: "agr_sum_vl_indicador"
   series_field: "cd_indicador"
   category_field: "nu_competencia"
+  category_field_min: "nu_competencia_min"
+  category_field_max: "nu_competencia_max"
+  sorter:
+    indicador: 'te_rgt'
   chart_type: "LINE"
   title: 
     fixed: "Série Histórica por Município"
@@ -511,11 +515,12 @@ sparklines:
       - named_prop: "nu_competencia_min"
       - named_prop: "nu_competencia_max"
   api:
-    fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'"
+    fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'"
   chart_options:
     id: 'id'
     x: 'cat_value'
     y: "value"
+    stroke: 2
     x_options:
       axis: false
     y_options:
@@ -527,18 +532,25 @@ sparklines:
     - text: 'Município'
       align: 'left'
       value: 'nm_municipio_uf'
-    - text: 'Nº resgatados do trabalho escravo'
+    - text: 'Resgatados do trabalho escravo'
       value: 'totals_te_rgt'
-    - text: 'Nº naturais do trabalho escravo'
-      value: 'totals_te_nat'
-    - text: 'Nº residentes do trabalho escravo'
-      value: 'totals_te_res'
-    - text: "Evolução de resgates"
       type: 'spark'
       series: 'te_rgt'
-    - text: "Evolução de naturais"
+      detail: 'deltaPerc_te_rgt'
+      bgColor: '#00C853'
+      color: 'white'
+    - text: 'Naturais do trabalho escravo'
+      value: 'totals_te_nat'
       type: 'spark'
       series: 'te_nat'
-    - text: "Evolução de residentes"
+      detail: 'deltaPerc_te_nat'
+      color: 'white'
+      bgColor: '#F44336'
+    - text: 'Residentes do trabalho escravo'
+      value: 'totals_te_res'
       type: 'spark'
       series: 'te_res'
+      detail: 'deltaPerc_te_res'
+      color: 'white'
+      bgColor: '#03A9F4'
+  
