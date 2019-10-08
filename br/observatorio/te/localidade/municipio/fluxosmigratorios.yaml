@@ -324,5 +324,197 @@ secoes:
           value_field: 'agr_count'
         source:
           fixed: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+# ====================================================  
+      - id: "card_fluxos_migratorios_egressos_por_uf_e_ano3"
+        title: 
+          fixed: "Fluxos por UF de origem e ano"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: 'O diagrama apresenta, para o ano selecionado, o fluxo 
+                      migratório de todos os resgatados nascidos em uma 
+                      Unidade da Federação escolhida. A origem indicada no 
+                      diagrama, à esquerda, corresponde ao município de 
+                      naturalidade declarada. O destino, do lado direito, 
+                      consiste no município de residência declarada, tanto 
+                      no próprio Estado de origem quanto em outros Estados. 
+                      Em alguns casos se nota a existência de municípios 
+                      "intermediários" - localidades de fluxo mais intenso 
+                      - que se configuram como municípios híbridos, ou seja, 
+                      como localidades que são ao mesmo tempo municípios de 
+                      naturalidade e de residência declarada de trabalhadores 
+                      resgatados.'
+        description:
+          - id: "select_uf"
+            type: "select"
+            label: "Unidade Federativa"
+            clearable: false
+            default: #53 # Distrito Federal como default
+              # fixed: 53
+              named_prop: "cd_uf"
+            target: 
+              range: "uf"
+              scope: "municipio"
+            api:
+              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
+            args:
+              - prop: "id"
+                named_prop: "cd_uf"
+              - prop: "label"
+                named_prop: "nm_uf"
+            selection:
+              event: "selection"
+              rules:
+               filter: ",and,eq-cd_uf_nat-{0}"
+               api:
+                 args:
+                   - named_prop: "cd_uf"
+                   
+          - type: "minicards"
+            cards:
+              - relevance: 'high' 
+                cls: 'xs12 xl6'
+                rowClass: "pt-0 px-3 pb-5"
+                api:
+                  template: "/te/indicadoresestaduais?categorias=nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_migra_nm',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                api_reactive:
+                  template: "/te/indicadoresestaduais?categorias=nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_migra_nm',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    multiplier: 100
+                    default: "-"
+                  - prop: "description"
+                    fixed: "Taxa de Resgatados não migrantes"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+                    default: ""
+              - relevance: 'high' 
+                cls: 'xs12 xl6'
+                rowClass: "pt-0 px-3 pb-5"
+                api:
+                  template: "/te/indicadoresestaduais?categorias=nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_migra_intrauf',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                api_reactive:
+                  template: "/te/indicadoresestaduais?categorias=nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_migra_intrauf',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    multiplier: 100
+                    default: "-"
+                  - prop: "description"
+                    template: "Taxa de migração intraestadual"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+                    default: ""
+              - relevance: 'high' 
+                cls: 'xs12 xl6'
+                rowClass: "pt-0 px-3 pb-5"
+                api:
+                  template: "/te/indicadoresestaduais?categorias=nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_migra_interuf',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                api_reactive:
+                  template: "/te/indicadoresestaduais?categorias=nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_migra_interuf',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    multiplier: 100
+                    default: "-"
+                  - prop: "description"
+                    template: "Taxa de migração interestadual"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+                    default: ""
+
+              # rules:
+              #   api:
+              #     template: "/te/migracoes?categorias=nm_municipio_uf_nat-source,nm_municipio_uf_res-target&agregacao=count&filtros=eq-cd_uf_nat-{0},and,eq-ano-2018,and,ne-cd_municipio_ibge_dv_nat-cd_municipio_ibge_dv_res&ordenacao=-agr_count"
+              #     args:
+              #       - named_prop: "cd_uf"
+          # - type: "slider"
+          #   id: "slider_periodo"
+          #   range: true
+          #   title: "Período"
+          #   api: 
+          #     fixed: "/te/migracoes?categorias=1&valor=ano&agregacao=min,max"
+          #   args:
+          #     - prop: "min"
+          #       named_prop: "agr_min_ano"
+          #     - prop: "max"
+          #       named_prop: "agr_max_ano"
+          #   selection:
+          #     event: "selection"
+          #     rules:
+          #       filter: ",and,ge-ano-{0},and,le-ano-{1}"
+          #       api:
+          #         args:
+          #           - named_prop: "value_min"
+          #           - named_prop: "value_max"
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_ano"
+            range: false
+            default: 2018
+            title: "Ano"
+            api: 
+              fixed: "/te/migracoes?categorias=1&valor=ano&agregacao=min,max"
+            args:
+              - prop: "min"
+                named_prop: "agr_min_ano"
+              - prop: "max"
+                named_prop: "agr_max_ano"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,eq-ano-{0}"
+                api:
+                  args:
+                    - named_prop: "value"
 
 
+        chart_type: "MAP_MIGRATION"
+        api: 
+          template: "/te/migracoes?categorias=nm_municipio_uf_nat-source_mun,nm_municipio_uf_res-target_mun,cd_municipio_ibge_nat-source_cd_mun,cd_municipio_ibge_res-target_cd_mun,latitude_nat-source_lat,latitude_res-target_lat,longitude_nat-source_long,longitude_res-target_long,'migra'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_nat-{0},and,ne-cd_municipio_ibge_dv_nat-cd_municipio_ibge_dv_res,and,eq-ano-2018"
+          args:
+            - named_prop: "cd_uf"
+        apiBase: 
+          fixed: "/te/migracoes?categorias=nm_municipio_uf_nat-source_mun,nm_municipio_uf_res-target_mun,cd_municipio_ibge_nat-source_cd_mun,cd_municipio_ibge_res-target_cd_mun,latitude_nat-source_lat,latitude_res-target_lat,longitude_nat-source_long,longitude_res-target_long,'migra'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=ne-cd_municipio_ibge_dv_nat-cd_municipio_ibge_dv_res"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'title'
+          # - text: 'Município'
+          #   align: 'left'
+          #   value: 'nm_municipio_uf'
+          # - text: 'Potencial de resgates por inspeção'
+          #   value: 'vl_indicador'
+          # - text: 'Fato'
+          #   value: 'fact'
+        chart_options:
+          id_field: 'cd_indicador'
+          value_field: 'agr_count'
+          source:
+            lat: 'source_lat'
+            long: 'source_long'
+            id: 'source_cd_mun'
+          target:
+            lat: 'target_lat'
+            long: 'target_long'
+            id: 'target_cd_mun'
+          indicadores: ['migra']
+        source:
+          fixed: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
