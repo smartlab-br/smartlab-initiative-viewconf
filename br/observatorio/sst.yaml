@@ -1158,3 +1158,132 @@ prevalencia:
               format: "inteiro"
             - prop: 'rank'
               named_prop: "agr_rank_dense_count"
+sparklines:
+  title:
+    - type: "text"
+      title: "Evolução da frequência"
+      class: "pa-0"
+      content:
+        cls: "pl-2"
+        fixed: ""
+  tables:
+    - id: "sparklines_cat"
+      title: "Notificações de Acidente de Trabalho"
+      cls: "xs12 md6 lg4"
+      id_field: "cd_municipio_ibge"
+      value_field: "agr_count_cd_municipio_ibge"
+      series_field: "codigo"
+      category_field: "ano_cat"
+      api:
+        fixed: "/sst/cats?categorias=cd_municipio_ibge,nm_municipio_uf,'cat'-codigo,ano_cat&agregacao=COUNT&valor=cd_municipio_ibge"
+      headers:
+        - text: 'Município'
+          align: 'center'
+          width: '33.33%'
+          value: 'nm_municipio_uf'
+          item_align: 'right'
+        - text: 'Total'
+          align: 'center'
+          width: '10%'
+          value: 'total_cat'
+          item_align: 'center'
+          format: 'inteiro'
+        - text: 'Smartline'
+          align: 'center'
+          width: '33.33%'
+          value: 'last_value_cat'
+          item_align: 'center'
+          type: 'spark'
+          series: 'cat'
+          bgColor: '#F44336'
+          stroke: 2
+          format: 'inteiro'
+        - text: 'Pico'
+          align: 'center'
+          width: '23.34%'
+          value: 'higher_value_str_cat'
+          item_align: 'center'
+          sort_field: 'higher_value_cat'
+          format: 'inteiro'
+    - id: "sparklines_prev_cat"
+      title: "Notificações de Acidente de Trabalho a cada 10mil Trabalhadores"
+      cls: "xs12 md6 lg4"
+      id_field: "cd_mun_ibge"
+      value_field: "agr_max_vl_indicador"
+      series_field: "cd_indicador"
+      category_field: "nu_competencia"
+      api:
+        fixed: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=max&filtros=nn-vl_indicador,and,eq-cd_indicador-'10_13_01_01'"
+      chart_options:
+        stroke: 2
+      headers:
+        - text: 'Município'
+          align: 'center'
+          width: '33.33%'
+          value: 'nm_municipio_uf'
+          item_align: 'right'
+        # - text: 'Total'
+        #   align: 'center'
+        #   width: '10%'
+        #   value: 'total_10_13_01_01'
+          item_align: 'center'
+        - text: 'Smartline'
+          align: 'center'
+          width: '43.33%'
+          value: 'last_value_10_13_01_01'
+          item_align: 'center'
+          type: 'spark'
+          series: '10_13_01_01'
+          bgColor: '#00C853'
+          stroke: 2
+          format: 'inteiro'
+          multiplier: 10000
+          
+        - text: 'Pico'
+          align: 'center'
+          width: '23.34%'
+          value: 'higher_value_str_10_13_01_01'
+          item_align: 'center'
+          sort_field: 'higher_value_10_13_01_01'
+          format: 'inteiro'
+          multiplier: 10000
+    - id: "sparklines_sinan"
+      title: 'Notificações SINAN'
+      cls: "xs12 md6 lg4"
+      id_field: "cd_mun_ibge"
+      value_field: "agr_sum_vl_indicador"
+      series_field: "cd_indicador"
+      category_field: "nu_competencia"
+      api:
+        fixed: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_10_00'"
+      chart_options:
+        stroke: 2
+      headers:
+        - text: 'Município'
+          align: 'center'
+          width: '33.33%'
+          value: 'nm_municipio_uf'
+          item_align: 'right'
+        - text: 'Total'
+          align: 'center'
+          width: '10%'
+          value: 'total_06_05_10_00'
+          item_align: 'center'
+          format: 'inteiro'
+        - text: 'Smartline'
+          align: 'center'
+          width: '33.33%'
+          value: 'last_value_06_05_10_00'
+          item_align: 'center'
+          type: 'spark'
+          series: '06_05_10_00'
+          bgColor: '#c800c8'
+          stroke: 2
+          format: 'inteiro'
+        - text: 'Pico'
+          align: 'center'
+          width: '23.34%'
+          value: 'higher_value_str_06_05_10_00'
+          item_align: 'center'
+          sort_field: 'higher_value_06_05_10_00'
+          format: 'inteiro'
