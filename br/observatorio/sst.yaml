@@ -1167,20 +1167,20 @@ sparklines:
         cls: "pl-2"
         fixed: ""
   tables:
-    - id: "sparklines_cat"
-      title: "Notificações de Acidente de Trabalho"
+    - id: "sparklines_cat_uf"
+      title: "Notificações de Acidente de Trabalho por UF"
       cls: "xs12 md6 lg4"
-      id_field: "cd_municipio_ibge"
-      value_field: "agr_count_cd_municipio_ibge"
+      id_field: "cd_uf"
+      value_field: "agr_count_cd_uf"
       series_field: "codigo"
       category_field: "ano_cat"
       api:
-        fixed: "/sst/cats?categorias=cd_municipio_ibge,nm_municipio_uf,'cat'-codigo,ano_cat&agregacao=COUNT&valor=cd_municipio_ibge"
+        fixed: "/sst/cats?categorias=cd_uf,nm_uf,'cat'-codigo,ano_cat&agregacao=COUNT&valor=cd_uf"
       headers:
-        - text: 'Município'
+        - text: 'UF'
           align: 'center'
           width: '33.33%'
-          value: 'nm_municipio_uf'
+          value: 'nm_uf'
           item_align: 'right'
         - text: 'Total'
           align: 'center'
@@ -1205,48 +1205,162 @@ sparklines:
           item_align: 'center'
           sort_field: 'higher_value_cat'
           format: 'inteiro'
-    - id: "sparklines_prev_cat"
-      title: "Notificações de Acidente de Trabalho (casos a cada 10mil trabalhadores)"
+    # - id: "sparklines_cat"
+    #   title: "Notificações de Acidente de Trabalho por Município"
+    #   cls: "xs12 md6 lg4"
+    #   id_field: "cd_municipio_ibge"
+    #   value_field: "agr_count_cd_municipio_ibge"
+    #   series_field: "codigo"
+    #   category_field: "ano_cat"
+    #   api:
+    #     fixed: "/sst/cats?categorias=cd_municipio_ibge,nm_municipio_uf,'cat'-codigo,ano_cat&agregacao=COUNT&valor=cd_municipio_ibge"
+    #   headers:
+    #     - text: 'Município'
+    #       align: 'center'
+    #       width: '33.33%'
+    #       value: 'nm_municipio_uf'
+    #       item_align: 'right'
+    #     - text: 'Total'
+    #       align: 'center'
+    #       width: '10%'
+    #       value: 'total_cat'
+    #       item_align: 'center'
+    #       format: 'inteiro'
+    #     - text: 'Smartline'
+    #       align: 'center'
+    #       width: '33.33%'
+    #       value: 'last_value_cat'
+    #       item_align: 'center'
+    #       type: 'spark'
+    #       series: 'cat'
+    #       bgColor: '#00C853'
+    #       stroke: 2
+    #       format: 'inteiro'
+    #     - text: 'Pico'
+    #       align: 'center'
+    #       width: '23.34%'
+    #       value: 'higher_value_str_cat'
+    #       item_align: 'center'
+    #       sort_field: 'higher_value_cat'
+    #       format: 'inteiro'
+    - id: "sparklines_cnae"
+      title: "Notificações de Acidente de Trabalho por Setor Econômico"
       cls: "xs12 md6 lg4"
-      id_field: "cd_mun_ibge"
-      value_field: "agr_max_vl_indicador"
-      series_field: "cd_indicador"
-      category_field: "nu_competencia"
+      id_field: "ds_cnae_classe_cat"
+      value_field: "agr_count_ds_cnae_classe_cat"
+      series_field: "codigo"
+      category_field: "ano_cat"
       api:
-        fixed: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=max&filtros=nn-vl_indicador,and,eq-cd_indicador-'10_13_01_01'"
-      chart_options:
-        stroke: 2
+        fixed: "/sst/cats?categorias=ds_cnae_classe_cat,'cat'-codigo,ano_cat&agregacao=COUNT&valor=ds_cnae_classe_cat"
       headers:
-        - text: 'Município'
+        - text: 'Setor Econômico'
           align: 'center'
           width: '33.33%'
-          value: 'nm_municipio_uf'
+          value: 'ds_cnae_classe_cat'
           item_align: 'right'
-        # - text: 'Total'
-        #   align: 'center'
-        #   width: '10%'
-        #   value: 'total_10_13_01_01'
+        - text: 'Total'
+          align: 'center'
+          width: '10%'
+          value: 'total_cat'
           item_align: 'center'
+          format: 'inteiro'
         - text: 'Smartline'
           align: 'center'
-          width: '43.33%'
-          value: 'last_value_10_13_01_01'
+          width: '33.33%'
+          value: 'last_value_cat'
           item_align: 'center'
           type: 'spark'
-          series: '10_13_01_01'
+          series: 'cat'
           bgColor: '#00C853'
           stroke: 2
           format: 'inteiro'
-          multiplier: 10000
-          
         - text: 'Pico'
           align: 'center'
           width: '23.34%'
-          value: 'higher_value_str_10_13_01_01'
+          value: 'higher_value_str_cat'
           item_align: 'center'
-          sort_field: 'higher_value_10_13_01_01'
+          sort_field: 'higher_value_cat'
           format: 'inteiro'
-          multiplier: 10000
+    - id: "sparklines_cbo"
+      title: "Notificações de Acidente de Trabalho por Ocupação"
+      cls: "xs12 md6 lg4"
+      id_field: "ds_cbo"
+      value_field: "agr_count_ds_cbo"
+      series_field: "codigo"
+      category_field: "ano_cat"
+      api:
+        fixed: "/sst/cats?categorias=ds_cbo,'cat'-codigo,ano_cat&agregacao=COUNT&valor=ds_cbo"
+      headers:
+        - text: 'Ocupação'
+          align: 'center'
+          width: '33.33%'
+          value: 'ds_cbo'
+          item_align: 'right'
+        - text: 'Total'
+          align: 'center'
+          width: '10%'
+          value: 'total_cat'
+          item_align: 'center'
+          format: 'inteiro'
+        - text: 'Smartline'
+          align: 'center'
+          width: '33.33%'
+          value: 'last_value_cat'
+          item_align: 'center'
+          type: 'spark'
+          series: 'cat'
+          bgColor: '#00C853'
+          stroke: 2
+          format: 'inteiro'
+        - text: 'Pico'
+          align: 'center'
+          width: '23.34%'
+          value: 'higher_value_str_cat'
+          item_align: 'center'
+          sort_field: 'higher_value_cat'
+          format: 'inteiro'
+    # - id: "sparklines_prev_cat"
+    #   title: "Notificações de Acidente de Trabalho (casos a cada 10mil trabalhadores)"
+    #   cls: "xs12 md6 lg4"
+    #   id_field: "cd_mun_ibge"
+    #   value_field: "agr_max_vl_indicador"
+    #   series_field: "cd_indicador"
+    #   category_field: "nu_competencia"
+    #   api:
+    #     fixed: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=max&filtros=nn-vl_indicador,and,eq-cd_indicador-'10_13_01_01'"
+    #   chart_options:
+    #     stroke: 2
+    #   headers:
+    #     - text: 'Município'
+    #       align: 'center'
+    #       width: '33.33%'
+    #       value: 'nm_municipio_uf'
+    #       item_align: 'right'
+    #     # - text: 'Total'
+    #     #   align: 'center'
+    #     #   width: '10%'
+    #     #   value: 'total_10_13_01_01'
+    #       item_align: 'center'
+    #     - text: 'Smartline'
+    #       align: 'center'
+    #       width: '43.33%'
+    #       value: 'last_value_10_13_01_01'
+    #       item_align: 'center'
+    #       type: 'spark'
+    #       series: '10_13_01_01'
+    #       bgColor: '#00C853'
+    #       stroke: 2
+    #       format: 'inteiro'
+    #       multiplier: 10000
+          
+    #     - text: 'Pico'
+    #       align: 'center'
+    #       width: '23.34%'
+    #       value: 'higher_value_str_10_13_01_01'
+    #       item_align: 'center'
+    #       sort_field: 'higher_value_10_13_01_01'
+    #       format: 'inteiro'
+    #       multiplier: 10000
     - id: "sparklines_sinan"
       title: 'Notificações SINAN'
       cls: "xs12 md6 lg4"
