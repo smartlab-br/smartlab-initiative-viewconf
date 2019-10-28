@@ -1175,7 +1175,7 @@ sparklines:
       series_field: "codigo"
       category_field: "ano_cat"
       api:
-        fixed: "/sst/cats?categorias=cd_uf,nm_uf,'cat'-codigo,ano_cat&agregacao=COUNT&valor=cd_uf"
+        fixed: "/sst/cats?categorias=cd_uf,nm_uf,'cat'-codigo,ano_cat&agregacao=COUNT&valor=cd_uf&filtros=nn-cd_uf"
       headers:
         - text: 'UF'
           align: 'center'
@@ -1205,44 +1205,122 @@ sparklines:
           item_align: 'center'
           sort_field: 'higher_value_cat'
           format: 'inteiro'
-    # - id: "sparklines_cat"
-    #   title: "Notificações de Acidente de Trabalho por Município"
-    #   cls: "xs12 md6 lg4"
-    #   id_field: "cd_municipio_ibge"
-    #   value_field: "agr_count_cd_municipio_ibge"
-    #   series_field: "codigo"
-    #   category_field: "ano_cat"
-    #   api:
-    #     fixed: "/sst/cats?categorias=cd_municipio_ibge,nm_municipio_uf,'cat'-codigo,ano_cat&agregacao=COUNT&valor=cd_municipio_ibge"
-    #   headers:
-    #     - text: 'Município'
-    #       align: 'center'
-    #       width: '33.33%'
-    #       value: 'nm_municipio_uf'
-    #       item_align: 'right'
-    #     - text: 'Total'
-    #       align: 'center'
-    #       width: '10%'
-    #       value: 'total_cat'
-    #       item_align: 'center'
-    #       format: 'inteiro'
-    #     - text: 'Smartline'
-    #       align: 'center'
-    #       width: '33.33%'
-    #       value: 'last_value_cat'
-    #       item_align: 'center'
-    #       type: 'spark'
-    #       series: 'cat'
-    #       bgColor: '#00C853'
-    #       stroke: 2
-    #       format: 'inteiro'
-    #     - text: 'Pico'
-    #       align: 'center'
-    #       width: '23.34%'
-    #       value: 'higher_value_str_cat'
-    #       item_align: 'center'
-    #       sort_field: 'higher_value_cat'
-    #       format: 'inteiro'
+    - id: "sparklines_beneficio_uf"
+      title: "Afastamentos Acidentários por UF"
+      cls: "xs12 md6 lg4"
+      id_field: "cd_uf"
+      value_field: "agr_count_cd_uf"
+      series_field: "codigo"
+      category_field: "ano_beneficio"
+      api:
+        fixed: "/sst/beneficios?categorias=cd_uf,nm_uf,'beneficio'-codigo,ano_beneficio&agregacao=COUNT&valor=cd_uf&filtros=eq-cd_especie_beneficio-91,and,nn-cd_uf"
+      headers:
+        - text: 'UF'
+          align: 'center'
+          width: '33.33%'
+          value: 'nm_uf'
+          item_align: 'right'
+        - text: 'Total'
+          align: 'center'
+          width: '10%'
+          value: 'total_beneficio'
+          item_align: 'center'
+          format: 'inteiro'
+        - text: 'Smartline'
+          align: 'center'
+          width: '33.33%'
+          value: 'last_value_beneficio'
+          item_align: 'center'
+          type: 'spark'
+          series: 'beneficio'
+          bgColor: '#03A9F4'
+          stroke: 2
+          format: 'inteiro'
+        - text: 'Pico'
+          align: 'center'
+          width: '23.34%'
+          value: 'higher_value_str_beneficio'
+          item_align: 'center'
+          sort_field: 'higher_value_beneficio'
+          format: 'inteiro'
+    - id: "sparklines_sinan"
+      title: 'Notificações SINAN'
+      cls: "xs12 md6 lg4"
+      id_field: "cd_uf"
+      value_field: "agr_sum_vl_indicador"
+      series_field: "cd_indicador"
+      category_field: "nu_competencia"
+      api:
+        fixed: "/indicadoresmunicipais?categorias=cd_uf,nm_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_10_00'"
+      chart_options:
+        stroke: 2
+      headers:
+        - text: 'UF'
+          align: 'center'
+          width: '33.33%'
+          value: 'nm_uf'
+          item_align: 'right'
+        - text: 'Total'
+          align: 'center'
+          width: '10%'
+          value: 'total_06_05_10_00'
+          item_align: 'center'
+          format: 'inteiro'
+        - text: 'Smartline'
+          align: 'center'
+          width: '33.33%'
+          value: 'last_value_06_05_10_00'
+          item_align: 'center'
+          type: 'spark'
+          series: '06_05_10_00'
+          bgColor: '#c800c8'
+          stroke: 2
+          format: 'inteiro'
+        - text: 'Pico'
+          align: 'center'
+          width: '23.34%'
+          value: 'higher_value_str_06_05_10_00'
+          item_align: 'center'
+          sort_field: 'higher_value_06_05_10_00'
+          format: 'inteiro'
+    - id: "sparklines_cat"
+      title: "Notificações de Acidente de Trabalho por Município"
+      cls: "xs12 md6 lg4"
+      id_field: "cd_municipio_ibge"
+      value_field: "agr_count_cd_municipio_ibge"
+      series_field: "codigo"
+      category_field: "ano_cat"
+      api:
+        fixed: "/sst/cats?categorias=cd_municipio_ibge,nm_municipio_uf,'cat'-codigo,ano_cat&agregacao=COUNT&valor=cd_municipio_ibge&filtros=nn-cd_municipio_ibge"
+      headers:
+        - text: 'Município'
+          align: 'center'
+          width: '33.33%'
+          value: 'nm_municipio_uf'
+          item_align: 'right'
+        - text: 'Total'
+          align: 'center'
+          width: '10%'
+          value: 'total_cat'
+          item_align: 'center'
+          format: 'inteiro'
+        - text: 'Smartline'
+          align: 'center'
+          width: '33.33%'
+          value: 'last_value_cat'
+          item_align: 'center'
+          type: 'spark'
+          series: 'cat'
+          bgColor: '#F44336'
+          stroke: 2
+          format: 'inteiro'
+        - text: 'Pico'
+          align: 'center'
+          width: '23.34%'
+          value: 'higher_value_str_cat'
+          item_align: 'center'
+          sort_field: 'higher_value_cat'
+          format: 'inteiro'
     - id: "sparklines_cnae"
       title: "Notificações de Acidente de Trabalho por Setor Econômico"
       cls: "xs12 md6 lg4"
@@ -1251,7 +1329,7 @@ sparklines:
       series_field: "codigo"
       category_field: "ano_cat"
       api:
-        fixed: "/sst/cats?categorias=ds_cnae_classe_cat,'cat'-codigo,ano_cat&agregacao=COUNT&valor=ds_cnae_classe_cat"
+        fixed: "/sst/cats?categorias=ds_cnae_classe_cat,'cat'-codigo,ano_cat&agregacao=COUNT&valor=ds_cnae_classe_cat&filtros=ne-ds_cnae_classe_cat-'Indefinido'"
       headers:
         - text: 'Setor Econômico'
           align: 'center'
@@ -1289,7 +1367,7 @@ sparklines:
       series_field: "codigo"
       category_field: "ano_cat"
       api:
-        fixed: "/sst/cats?categorias=ds_cbo,'cat'-codigo,ano_cat&agregacao=COUNT&valor=ds_cbo"
+        fixed: "/sst/cats?categorias=ds_cbo,'cat'-codigo,ano_cat&agregacao=COUNT&valor=ds_cbo&filtros=ne-ds_cbo-'null'"
       headers:
         - text: 'Ocupação'
           align: 'center'
@@ -1309,7 +1387,7 @@ sparklines:
           item_align: 'center'
           type: 'spark'
           series: 'cat'
-          bgColor: '#00C853'
+          bgColor: 'brown'
           stroke: 2
           format: 'inteiro'
         - text: 'Pico'
@@ -1319,6 +1397,7 @@ sparklines:
           item_align: 'center'
           sort_field: 'higher_value_cat'
           format: 'inteiro'
+
     # - id: "sparklines_prev_cat"
     #   title: "Notificações de Acidente de Trabalho (casos a cada 10mil trabalhadores)"
     #   cls: "xs12 md6 lg4"
@@ -1361,43 +1440,3 @@ sparklines:
     #       sort_field: 'higher_value_10_13_01_01'
     #       format: 'inteiro'
     #       multiplier: 10000
-    - id: "sparklines_sinan"
-      title: 'Notificações SINAN'
-      cls: "xs12 md6 lg4"
-      id_field: "cd_mun_ibge"
-      value_field: "agr_sum_vl_indicador"
-      series_field: "cd_indicador"
-      category_field: "nu_competencia"
-      api:
-        fixed: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_10_00'"
-      chart_options:
-        stroke: 2
-      headers:
-        - text: 'Município'
-          align: 'center'
-          width: '33.33%'
-          value: 'nm_municipio_uf'
-          item_align: 'right'
-        - text: 'Total'
-          align: 'center'
-          width: '10%'
-          value: 'total_06_05_10_00'
-          item_align: 'center'
-          format: 'inteiro'
-        - text: 'Smartline'
-          align: 'center'
-          width: '33.33%'
-          value: 'last_value_06_05_10_00'
-          item_align: 'center'
-          type: 'spark'
-          series: '06_05_10_00'
-          bgColor: '#c800c8'
-          stroke: 2
-          format: 'inteiro'
-        - text: 'Pico'
-          align: 'center'
-          width: '23.34%'
-          value: 'higher_value_str_06_05_10_00'
-          item_align: 'center'
-          sort_field: 'higher_value_06_05_10_00'
-          format: 'inteiro'
