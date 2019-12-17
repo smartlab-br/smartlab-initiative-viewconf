@@ -13,5 +13,5 @@ for subdir, dirs, files in os.walk(rootdir):
             f = open(rel_path)
             gen = linter.run(f, conf)
             for lint in list(gen):
-                rep.write(f'{rel_path}:{lint.line}:{lint.column}: [warning] {lint.desc} ({lint.rule})\n')
+                rep.write(f'{rel_path}:{lint.line}:{lint.column}: [{lint.level}] {lint.desc} ({lint.rule})\n')
 rep.close()
