@@ -1,0 +1,29 @@
+name: CI
+
+on: 
+  push:
+    refs/heads:
+      - master
+      - staging
+      - developement
+      - contrib
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Linting (yamllint)
+      run: |
+        pip install -Iv yamllint
+        yamllint --format=parsable . > lint/report.txt
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
