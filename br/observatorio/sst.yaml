@@ -511,9 +511,11 @@ prevalencia:
         label: "Notificações SINAN<br/>(MS - SUS)"
         api: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,'sinan'-codigo&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_05_10_00',and,ge-nu_competencia-'2012'"
       event: 'selection'            
+############# Filtros CAT ##############
     - id: "select_uf"
       class: "pr-0 pl-2 pb-0 pt-0"
       type: "select"
+      group: "cat"
       label: "Unidade Federativa"
       api:
         fixed: "/sst/indicadoresestaduais?categorias=cd_uf,nm_uf&agregacao=distinct&filtros=nn-cd_uf,and,nn-vl_indicador,and,in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'&ordenacao=nm_uf"
@@ -529,7 +531,6 @@ prevalencia:
           api:
             args:
               - named_prop: "cd_uf"
-############# Filtros CAT ##############
     - type: "slider"
       class: "pr-0 pl-2 pb-0 pt-0"
       group: "cat"
@@ -714,6 +715,25 @@ prevalencia:
             args:
               - named_prop: "cd_tipo_sexo_empregado_cat"
 ############# Filtros Benefícios ##############
+    - id: "select_uf"
+      class: "pr-0 pl-2 pb-0 pt-0"
+      type: "select"
+      group: "beneficio"
+      label: "Unidade Federativa"
+      api:
+        fixed: "/sst/indicadoresestaduais?categorias=cd_uf,nm_uf&agregacao=distinct&filtros=nn-cd_uf,and,nn-vl_indicador,and,in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'&ordenacao=nm_uf"
+      args:
+        - prop: "id"
+          named_prop: "cd_uf"
+        - prop: "label"
+          named_prop: "nm_uf"
+      selection:
+        event: "selection"
+        rules:
+          filter: ",and,eq-cd_uf-{0}"
+          api:
+            args:
+              - named_prop: "cd_uf"
     - type: "slider"
       class: "pr-0 pl-2 pb-0 pt-0"
       group: "beneficio"
@@ -817,6 +837,25 @@ prevalencia:
             args:
               - named_prop: "cd_tp_sexo_empregado_beneficio"
 ############# Filtros Mortes ##############
+    - id: "select_uf"
+      class: "pr-0 pl-2 pb-0 pt-0"
+      type: "select"
+      group: "mortes"
+      label: "Unidade Federativa"
+      api:
+        fixed: "/sst/indicadoresestaduais?categorias=cd_uf,nm_uf&agregacao=distinct&filtros=nn-cd_uf,and,nn-vl_indicador,and,in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'&ordenacao=nm_uf"
+      args:
+        - prop: "id"
+          named_prop: "cd_uf"
+        - prop: "label"
+          named_prop: "nm_uf"
+      selection:
+        event: "selection"
+        rules:
+          filter: ",and,eq-cd_uf-{0}"
+          api:
+            args:
+              - named_prop: "cd_uf"
     - type: "slider"
       class: "pr-0 pl-2 pb-0 pt-0"
       group: "mortes"
@@ -839,6 +878,27 @@ prevalencia:
             args:
               - named_prop: "value_min_ano_cat"
               - named_prop: "value_max_ano_cat"
+    - id: "select_cnae"
+      class: "pr-0 pl-2 pb-0 pt-0"
+      type: "select"
+      group: "mortes"
+      multiple: true
+      label: "Setor Econômico"
+      api:
+        fixed: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=distinct&ordenacao=ds_cnae_classe_cat&filtros=eq-cd_indica_obito-'S'"
+      args:
+        - prop: "id"
+          named_prop: "ds_cnae_classe_cat"
+        - prop: "label"
+          named_prop: "ds_cnae_classe_cat"
+          null_value: "(Não informado)"
+      selection:
+        event: "selection" 
+        rules:
+          filter: ",and,in-ds_cnae_classe_cat-{0}"
+          api:
+            args:
+              - named_prop: "ds_cnae_classe_cat"
     - id: "select_partecorpo"
       class: "pr-0 pl-2 pb-0 pt-0"
       type: "select"
@@ -981,6 +1041,25 @@ prevalencia:
               - named_prop: "cd_tipo_sexo_empregado_cat"
 
 ############# Filtros SINAN ##############
+    - id: "select_uf"
+      class: "pr-0 pl-2 pb-0 pt-0"
+      type: "select"
+      group: "sinan"
+      label: "Unidade Federativa"
+      api:
+        fixed: "/sst/indicadoresestaduais?categorias=cd_uf,nm_uf&agregacao=distinct&filtros=nn-cd_uf,and,nn-vl_indicador,and,in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'&ordenacao=nm_uf"
+      args:
+        - prop: "id"
+          named_prop: "cd_uf"
+        - prop: "label"
+          named_prop: "nm_uf"
+      selection:
+        event: "selection"
+        rules:
+          filter: ",and,eq-cd_uf-{0}"
+          api:
+            args:
+              - named_prop: "cd_uf"
     - id: "select_tipos_agravo"
       class: "pr-0 pl-2 pb-0 pt-0"
       type: "select"
