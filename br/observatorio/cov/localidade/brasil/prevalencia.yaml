@@ -2,170 +2,35 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "trabalho_escravo_agr"
-      function: "slice"
-      id: ['te_rgt']
+    api: 
+      fixed: "/thematic/casoscovid19?categorias=1&valor=date_info,last_available_confirmed&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
     args:
       - prop: "value"
-        named_prop: 'agr_sum_vl_indicador'
+        named_prop: 'agr_sum_last_available_confirmed'
         format: 'inteiro'
         default: 'Nenhum'
         zero: 'Nenhum'
       - prop: "description"
-        fixed: "Trabalhadores resgatados em situação de Trabalho Forçado"
+        fixed: "Casos Confirmados"
       - prop: 'comment'
-        template: "(De {0} a {1})"
-        api: 
-          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_rgt'"
-        args:
-          - named_prop: "nu_competencia_min"
-          - named_prop: "nu_competencia_max"
-    chart:
-      id: "line_te_rgt"
-      type: "LINE"
-      api: 
-        template: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_rgt'"
-        args:
-          - named_prop: "idLocalidade"
-        options:
-          formatters:
-            - id: "vl_indicador"
-              format: 'inteiro'
-      headers:
-        - text: 'Ano'
-          align: 'left'
-          value: 'nu_competencia'
-        - text: 'Nº resgatados do trabalho escravo'
-          value: 'fmt_vl_indicador'
-      options:
-        id: 'cd_indicador'
-        x: 'nu_competencia'
-        y: "vl_indicador"
-        x_options:
-          axis: false
-        y_options:
-          axis: false
-        hide_legend: true
-        color: "#00C853"
+        named_prop: 'agr_max_date_info'
+        format: 'dataDMY'
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "trabalho_escravo_agr"
-      function: "slice"
-      id: ['te_nat']
+    api: 
+      fixed: "/thematic/casoscovid19?categorias=1&valor=date_info,last_available_deaths&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
     args:
       - prop: "value"
-        named_prop: 'agr_sum_vl_indicador'
+        named_prop: 'agr_sum_last_available_deaths'
         format: 'inteiro'
         default: 'Nenhum'
         zero: 'Nenhum'
       - prop: "description"
-        fixed: "Trabalhadores resgatados em situação de Trabalho Forçado com naturalidade apurada"
+        fixed: "Óbitos Confirmados"
       - prop: 'comment'
-        template: "(De {0} a {1})"
-        args:
-          - named_prop: "nu_competencia_min"
-          - named_prop: "nu_competencia_max"
-    chart:
-      id: "line_te_nat"
-      type: "LINE"
-      api: 
-        template: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_nat'"
-        args:
-          - named_prop: "idLocalidade"
-        options:
-          formatters:
-            - id: "vl_indicador"
-              format: 'inteiro'
-      headers:
-        - text: 'Ano'
-          align: 'left'
-          value: 'nu_competencia'
-        - text: 'Nº resgatados do trabalho escravo - Naturalidade apurada'
-          value: 'fmt_vl_indicador'
-      options:
-        id: 'cd_indicador'
-        x: 'nu_competencia'
-        y: "vl_indicador"
-        x_options:
-          axis: false
-        y_options:
-          axis: false
-        hide_legend: true
-        color: "red"
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "trabalho_escravo_agr"
-      function: "slice"
-      id: ['te_res']
-    args:
-      - prop: "value"
-        named_prop: 'agr_sum_vl_indicador'
-        format: 'inteiro'
-        default: 'Nenhum'
-        zero: 'Nenhum'
-      - prop: "description"
-        fixed: "Trabalhadores resgatados em situação de Trabalho Forçado com residência apurada"
-      - prop: 'comment'
-        template: "(De {0} a {1})"
-        args:
-          - named_prop: "nu_competencia_min"
-          - named_prop: "nu_competencia_max"
-    chart:
-      id: "line_te_res"
-      type: "LINE"
-      api: 
-        template: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_res'"
-        args:
-          - named_prop: "idLocalidade"
-        options:
-          formatters:
-            - id: "vl_indicador"
-              format: 'inteiro'
-      headers:
-        - text: 'Ano'
-          align: 'left'
-          value: 'nu_competencia'
-        - text: 'Nº resgatados do trabalho escravo - Residência apurada'
-          value: 'fmt_vl_indicador'
-      options:
-        id: 'cd_indicador'
-        x: 'nu_competencia'
-        y: "vl_indicador"
-        x_options:
-          axis: false
-        y_options:
-          axis: false
-        hide_legend: true
-        color: "#03A9F4"
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "trabalho_escravo_agr"
-      function: "slice"
-      id: ['te_rgt']
-    args:
-      - prop: "value"
-        function: "calc_average_by_year"
-        fn_args:
-          - fixed: 0
-          - named_prop: "nu_competencia_min"
-          - named_prop: "agr_sum_vl_indicador"
-          - named_prop: "nu_competencia_max"
-        format: "real"
-        default: "Nenhum"
-      - prop: "description"
-        fixed: "Média de resgatados por ano"
-      - prop: 'comment'
-        template: "(De {0} a {1})"
-        args:
-          - named_prop: "nu_competencia_min"
-          - named_prop: "nu_competencia_max"
+        named_prop: 'agr_max_date_info'
+        format: 'dataDMY'
 # ========================================================
 secoes:
   - id: 'prevalencia_geografico'
