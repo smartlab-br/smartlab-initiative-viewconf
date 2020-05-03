@@ -61,7 +61,6 @@ ranking_cards:
         named_prop: "agr_rank_dense_sum_last_available_deaths"
 prevalencia:
   id: "mapa_prev_brasil"
-  chart_type: "MAP_BUBBLES"
   title: 
     fixed: "Distribuição Geográfica"
   title_comment:
@@ -79,44 +78,49 @@ prevalencia:
   #     content:
   #       fixed: ""
   # api:
-  #   - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,'casos'-codigo,last_available_confirmed-valor,latitude,longitude&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-  #   - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,'obitos'-codigo,last_available_deaths-valor,latitude,longitude&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+  # # &calcs=ln_norm_pos_part&partition=cd_municipio_ibge_dv
+  #   fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed-valor,latitude,longitude&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+  # chart_type: "MAP_TOPOJSON"
   # chart_options:
-  #   colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
-  #   indicadores: ["casos","obitos"]
-  #   lat: 'latitude'
-  #   long: 'longitude'
-  #   id_field: 'codigo' 
-  #   value_field: 'valor'
+  #   id_field: 'cd_municipio_ibge_dv'
+  #   topo_key: "codarea"
+  #   value_field: 'last_available_confirmed'
+  #   colorScale:
+  #     name: 'Reds'
   api:
-    fixed: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'"
+  # &calcs=ln_norm_pos_part&partition=cd_municipio_ibge_dv
+    - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed-valor,latitude,longitude&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+    - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_deaths-valor,latitude,longitude&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+  chart_type: "MAP_BUBBLES"
   chart_options:
-    colorArray: ["rgba(25, 125, 25, 0.7)", "rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
-    indicadores: ["te_rgt","te_nat","te_res"]
+    colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
+    indicadores: ["obitos","casos"]
     lat: 'latitude'
     long: 'longitude'
-    tooltip_function: 'obsTETooltip'
+    id_field: 'codigo' 
+    value_field: 'valor'
     clickable: true
     height_proportion: 1
     radius:
       base: 10000
-      multiplier: 400000
-    tooltip_function: 'obsTETooltip'
-    clickable: true
-    height_proportion: 1
-    radius:
-      base: 10000
-      multiplier: 400000
+      multiplier: 20
     tiles_url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
     tiles_attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
   source:
     desc: ""
     link: ""
-  # footer:
-  #   - type: "text"
-  #     class: "pa-0"
-  #     content:
-  #       fixed: "<a class='accent--text' href='https://smartlabbr.org/escravo-v1' target='_blank'>Acesse a versão anterior deste Observatório</a>"
+  headers:
+    - text: 'Município'
+      value: 'nm_municipio_uf'
+    - text: 'Casos confirmados'
+      value: 'last_available_confirmed'
+      format: 'inteiro'
+    - text: 'Óbitos confirmados'
+      value: 'last_available_deaths'
+      format: 'inteiro'
+    - text: 'Data coleta'
+      value: 'last_available_date'
+      format: 'dataDMY'
   description:
     - id: "selectlayer"
       type: "switch-group"
@@ -124,12 +128,12 @@ prevalencia:
         - id: "casos"
           cls: "xs12"
           default: true
-          color: "red"
+          color: "light-blue"
           label: "CASOS CONFIRMADOS"
         - id: "obitos"
           cls: "xs12"
           default: true
-          color: "light-blue"
+          color: "red"
           label: "ÓBITOS CONFIRMADOS"
       event: 'selection'
     - type: "text"
@@ -146,20 +150,9 @@ prevalencia:
       cards:
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "red pa-3"
+          color: "light-blue pa-3"
           api: 
             fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_confirmed,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-            # options:
-            #   calcs:
-            #     - id: "last_date"
-            #       function: "formatDate" 
-            #       fn_args:
-            #         - fixed: "agr_max_last_available_date"
-
-          # preloaded:
-          #   prop: "trabalho_escravo_agr"
-          #   function: "slice"
-          #   id: "te_rgt"
           args:
             - prop: "value"
               named_prop: "agr_sum_last_available_confirmed"
@@ -167,18 +160,15 @@ prevalencia:
               default: "Sem Registros"
             - prop: "description"
               fixed: "Casos confirmados"
-            # - prop: 'comment'
-            #   named_prop: "last_date"
-            #   default: "Sem Registros"
+            - prop: 'comment'
+              named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+              default: "Sem Registros"
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "light-blue pa-3"
+          color: "red pa-3"
           api: 
-            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_deaths&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-          # preloaded:
-          #   prop: "trabalho_escravo_agr"
-          #   function: "slice"
-          #   id: "te_nat"
+            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_deaths,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
           args:
             - prop: "value"
               named_prop: "agr_sum_last_available_deaths"
@@ -186,6 +176,46 @@ prevalencia:
               default: "Sem Registros"
             - prop: "description"
               fixed: "Óbitos confirmados"
+            - prop: 'comment'
+              named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+              default: "Sem Registros"
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "light-blue pa-3"
+          api: 
+            fixed: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
+          args:
+            - prop: "value"
+              named_prop: "agr_count_cd_municipio_ibge_dv"
+            - prop: "description"
+              fixed: "Municípios atingidos"
+            - prop: 'comment'
+              template: "{0}% de um total de 5.570 municípios"
+              args:
+                - function: 'calc_percentage'
+                  format: 'inteiro'
+                  fn_args:
+                    - named_prop: "agr_count_cd_municipio_ibge_dv"
+                    - fixed: 5570
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "red pa-3"
+          api: 
+            fixed: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+          args:
+            - prop: "value"
+              named_prop: "agr_count_cd_municipio_ibge_dv"
+            - prop: "description"
+              fixed: "Municípios com óbitos"
+            - prop: 'comment'
+              template: "{0}% de um total de 5.570 municípios"
+              args:
+                - function: 'calc_percentage'
+                  format: 'inteiro'
+                  fn_args:
+                    - named_prop: "agr_count_cd_municipio_ibge_dv"
+                    - fixed: 5570
     - type: "text"
       content:
         fixed: "Texto..."
@@ -196,12 +226,12 @@ prevalencia:
         - id: "casos"
           cls: "xs12"
           default: true
-          color: "red"
+          color: "light-blue"
           label: "CASOS CONFIRMADOS"
         - id: "obitos"
           cls: "xs12"
           default: true
-          color: "light-blue"
+          color: "red"
           label: "ÓBITOS CONFIRMADOS"
       event: 'selection'
     - id: "select_uf"
@@ -222,68 +252,6 @@ prevalencia:
           api:
             args:
               - named_prop: "cd_uf"
-    # - id: "select_municipio"
-    #   type: "select"
-    #   label: "Município"
-    #   title: "Município"
-    #   multiple: true
-    #   parent: "select_uf"
-    #   api:
-    #     fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf&agregacao=distinct&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'&ordenacao=nm_municipio_uf"
-    #   api_reactive:
-    #     template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf&agregacao=distinct&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res',and,eq-cd_uf-{0}&ordenacao=nm_municipio_uf"
-    #     args:
-    #       - named_prop: "cd_uf"
-    #   args:
-    #     - prop: "id"
-    #       named_prop: "cd_mun_ibge"
-    #     - prop: "label"
-    #       named_prop: "nm_municipio_uf"
-    #   selection:
-    #     event: "selection"
-    #     rules:
-    #       filter: ",and,in-cd_mun_ibge-{0}"
-    #       api:
-    #         args:
-    #           - named_prop: "cd_mun_ibge"
-    - type: "slider"
-      id: "slider_ano"
-      range: true
-      title: "Período"
-      api: 
-        fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
-      args:
-        - prop: "min"
-          named_prop: "nu_competencia_min"
-        - prop: "max"
-          named_prop: "nu_competencia_max"
-      selection:
-        event: "selection"
-        rules:
-          filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
-          api:
-            args:
-              - named_prop: "value_min"
-              - named_prop: "value_max"
-    - id: "select_prt"
-      type: "select"
-      label: "Unidade do MPT"
-      title: "MPT"
-      multiple: true
-      api:
-        fixed: "/te/indicadoresmunicipais?categorias=cd_unidade,nm_unidade&agregacao=distinct&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'&ordenacao=cd_unidade"
-      args:
-        - prop: "id"
-          named_prop: "cd_unidade"
-        - prop: "label"
-          named_prop: "nm_unidade"
-      selection:
-        event: "selection"
-        rules:
-          filter: ",and,in-cd_unidade-{0}"
-          api:
-            args:
-              - named_prop: "cd_unidade"
   mapa_description_right:
     - id: "minicards_right"
       class: "pr-0 pl-2 py-0"
@@ -291,142 +259,106 @@ prevalencia:
       rowCalss: "pa-1"
       cards:
         - relevance: "lead"
-          cls: "xs12 text-xs-center "
-          color: "green accent-4 pa-3"
-          reactive: true
-          api: 
-            fixed: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_rgt'"
-          # preloaded:
-          #   prop: "trabalho_escravo_agr"
-          #   function: "slice"
-          #   id: "te_rgt"
-          args:
-            - prop: "value"
-              named_prop: "agr_sum_vl_indicador"
-              format: "inteiro"
-              default: "Sem Registros"
-            - prop: "description"
-              fixed: "Resgates"
-        - relevance: "lead"
-          cls: "xs12 text-xs-center "
-          color: "red pa-3"
-          reactive: true
-          api: 
-            fixed: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_nat'"
-          args:
-            - prop: "value"
-              named_prop: "agr_sum_vl_indicador"
-              format: "inteiro"
-              default: "Sem Registros"
-            - prop: "description"
-              fixed: "Naturalidade apurada (SD)"
-        - relevance: "lead"
-          cls: "xs12 text-xs-center "
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
           color: "light-blue pa-3"
           reactive: true
           api: 
-            fixed: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_res'"
+            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_confirmed,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
           args:
             - prop: "value"
-              named_prop: "agr_sum_vl_indicador"
+              named_prop: "agr_sum_last_available_confirmed"
               format: "inteiro"
               default: "Sem Registros"
             - prop: "description"
-              fixed: "Residência apurada (SD)"
-    - id: "ranking_list_te"
+              fixed: "Casos confirmados"
+            - prop: 'comment'
+              named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+              default: "Sem Registros"
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "red pa-3"
+          reactive: true
+          api: 
+            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_deaths,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_last_available_deaths"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              fixed: "Óbitos confirmados"
+            - prop: 'comment'
+              named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+              default: "Sem Registros"
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "light-blue pa-3"
+          reactive: true
+          api: 
+            fixed: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
+          args:
+            - prop: "value"
+              named_prop: "agr_count_cd_municipio_ibge_dv"
+            - prop: "description"
+              fixed: "Municípios atingidos"
+            # - prop: 'comment'
+            #   template: "{0}% de um total de 5.570 municípios"
+            #   args:
+            #     - function: 'calc_percentage'
+            #       format: 'inteiro'
+            #       fn_args:
+            #         - named_prop: "agr_count_cd_municipio_ibge_dv"
+            #         - fixed: 5570
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "red pa-3"
+          reactive: true
+          api: 
+            fixed: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+          args:
+            - prop: "value"
+              named_prop: "agr_count_cd_municipio_ibge_dv"
+            - prop: "description"
+              fixed: "Municípios com óbitos"
+            # - prop: 'comment'
+            #   template: "{0}% de um total de 5.570 municípios"
+            #   args:
+            #     - function: 'calc_percentage'
+            #       format: 'inteiro'
+            #       fn_args:
+            #         - named_prop: "agr_count_cd_municipio_ibge_dv"
+            #         - fixed: 5570
+    - id: "ranking_list_covid"
       type: "ranking_list"
       rankings:
-        # - title: "UFs com maior prevalência de resgates "
-        #   reactive: true
-        #   cls: "xs12 sm6 lg12 xl6 px-3 pb-3"
-        #   api: 
-        #     fixed: "/te/indicadoresmunicipais?categorias=nm_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_rgt'"
-        #   args:
-        #     - prop: 'localidade'
-        #       named_prop: "nm_uf"
-        #     - prop: 'vl_indicador'
-        #       named_prop: "agr_sum_vl_indicador"
-        #       format: "inteiro"
-        #     - prop: 'rank'
-        #       named_prop: "agr_rank_dense_sum_vl_indicador"
-        - title: "Municípios com maior prevalência de resgates "
+        - title: "Municípios com maior número de casos confirmados"
+          cls: "xs12 sm6 xl3 pa-3"
           reactive: true
-          cls: "xs12 px-3 pb-3"
           api: 
-            fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_rgt'"
+            fixed: "/thematic/casoscovid19?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_confirmed&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&limit=5&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
           args:
             - prop: 'localidade'
               named_prop: "nm_municipio_uf"
             - prop: 'vl_indicador'
-              named_prop: "agr_sum_vl_indicador"
+              named_prop: "last_available_confirmed"
               format: "inteiro"
             - prop: 'rank'
-              named_prop: "agr_rank_dense_sum_vl_indicador"
-        # - title: "Principais UFs de naturalidade dos resgatados"
-        #   reactive: true
-        #   cls: "xs12 sm6 lg12 xl6 px-3 pb-3"
-        #   api: 
-        #     fixed: "/te/indicadoresmunicipais?categorias=nm_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_nat'"
-        #   args:
-        #     - prop: 'localidade'
-        #       named_prop: "nm_uf"
-        #     - prop: 'vl_indicador'
-        #       named_prop: "agr_sum_vl_indicador"
-        #       format: "inteiro"
-        #     - prop: 'rank'
-        #       named_prop: "agr_rank_dense_sum_vl_indicador"
-        - title: "Principais municípios de naturalidade dos resgatados"
+              named_prop: "agr_rank_dense_sum_last_available_confirmed"
+        - title: "Municípios com maior número de óbitos confirmados"
+          cls: "xs12 sm6 xl3 pa-3"
           reactive: true
-          cls: "xs12 px-3 pb-3"
           api: 
-            fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-%27te_nat%27"
+            fixed: "/thematic/casoscovid19?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_deaths&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&limit=5&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
           args:
             - prop: 'localidade'
               named_prop: "nm_municipio_uf"
             - prop: 'vl_indicador'
-              named_prop: "agr_sum_vl_indicador"
+              named_prop: "last_available_deaths"
               format: "inteiro"
             - prop: 'rank'
-              named_prop: "agr_rank_dense_sum_vl_indicador"
-        # - title: "Principais UFs onde os resgatados declaram residir"
-        #   reactive: true
-        #   cls: "xs12 sm6 lg12 xl6 px-3 pb-3"
-        #   api: 
-        #     fixed: "/te/indicadoresmunicipais?categorias=nm_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_res'"
-        #   args:
-        #     - prop: 'localidade'
-        #       named_prop: "nm_uf"
-        #     - prop: 'vl_indicador'
-        #       named_prop: "agr_sum_vl_indicador"
-        #       format: "inteiro"
-        #     - prop: 'rank'
-        #       named_prop: "agr_rank_dense_sum_vl_indicador"
-        - title: "Principais municípios onde os resgatados declaram residir"
-          reactive: true
-          cls: "xs12 px-3 pb-3"
-          api: 
-            fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-%27te_res%27"
-          args:
-            - prop: 'localidade'
-              named_prop: "nm_municipio_uf"
-            - prop: 'vl_indicador'
-              named_prop: "agr_sum_vl_indicador"
-              format: "inteiro"
-            - prop: 'rank'
-              named_prop: "agr_rank_dense_sum_vl_indicador"
-        # - title: "Municípios com maior número de inspeções realizadas"
-        #   cls: "xs12 sm6 xl3 pa-3"
-        #   reactive: true
-        #   api: 
-        #     fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-%27te_inspecoes%27&limit=5"
-        #   args:
-        #     - prop: 'localidade'
-        #       named_prop: "nm_municipio_uf"
-        #     - prop: 'vl_indicador'
-        #       named_prop: "agr_sum_vl_indicador"
-        #       format: "inteiro"
-        #     - prop: 'rank'
-        #       named_prop: "agr_rank_dense_sum_vl_indicador"
+              named_prop: "agr_rank_dense_sum_last_available_deaths"
 sparklines:
   title:
     - type: "text"
@@ -472,7 +404,7 @@ sparklines:
           item_align: 'center'
           type: 'spark'
           series: 'city'
-          bgColor: 'red'
+          bgColor: '#03A9F4'
           stroke: 2
         - text: 'Pico'
           align: 'center'
@@ -509,7 +441,7 @@ sparklines:
           item_align: 'center'
           type: 'spark'
           series: 'city'
-          bgColor: '#03A9F4'
+          bgColor: 'red'
           stroke: 2
         - text: 'Pico'
           align: 'center'
