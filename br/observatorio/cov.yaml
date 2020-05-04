@@ -66,11 +66,11 @@ prevalencia:
   title_comment:
     template: "{0} a {1}"
     api: 
-      template: "/thematic/casoscovid19?categorias=1&valor=date_info&agregacao=MIN,MAX&filtros=eq-place_type-'city'"
+      template: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MIN,MAX&filtros=eq-place_type-'city'"
     args:
-      - named_prop: "agr_min_date_info"
+      - named_prop: "agr_min_last_available_date"
         format: "dataDMY"
-      - named_prop: "agr_max_date_info"
+      - named_prop: "agr_max_last_available_date"
         format: "dataDMY"
   # info:
   #   - type: "text"
@@ -89,21 +89,22 @@ prevalencia:
   #     name: 'Reds'
   api:
   # &calcs=ln_norm_pos_part&partition=cd_municipio_ibge_dv
-    - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed-valor,latitude,longitude&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-    - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_deaths-valor,latitude,longitude&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+    - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-valor,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+    - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-valor,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+    - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'conf100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_death_rate,last_available_confirmed_per_100k_inhabitants-valor,latitude,longitude&valor=last_available_confirmed_per_100k_inhabitants&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+    - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate-valor,latitude,longitude&valor=last_available_death_rate&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
   chart_type: "MAP_BUBBLES"
   chart_options:
-    colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
-    indicadores: ["obitos","casos"]
+    colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)", "rgba(25, 125, 25, 0.7)", "#9C27B0"]
+    indicadores: ["obitos","casos","conf100M", "obitos100M"]
     lat: 'latitude'
     long: 'longitude'
     id_field: 'codigo' 
-    value_field: 'valor'
     clickable: true
     height_proportion: 1
     radius:
       base: 10000
-      multiplier: 20
+      multiplier: 800000
     tiles_url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
     tiles_attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
   source:
@@ -118,6 +119,14 @@ prevalencia:
     - text: 'Óbitos confirmados'
       value: 'last_available_deaths'
       format: 'inteiro'
+    - text: 'Casos confirmados/100.000 hab.'
+      value: 'last_available_confirmed_per_100k_inhabitants'
+      format: 'real'
+      precision: 2
+    - text: 'Óbitos confirmados/100.000 hab.'
+      value: 'last_available_death_rate'
+      format: 'real'
+      precision: 2
     - text: 'Data coleta'
       value: 'last_available_date'
       format: 'dataDMY'
@@ -135,6 +144,16 @@ prevalencia:
           default: true
           color: "red"
           label: "ÓBITOS CONFIRMADOS"
+        - id: "conf100M"
+          cls: "xs12"
+          default: false
+          color: "green accent-4"
+          label: "CASOS CONFIRMADOS/100.000 hab."
+        - id: "obitos100M"
+          cls: "xs12"
+          default: false
+          color: "purple"
+          label: "ÓBITOS CONFIRMADOS/100.000 hab."
       event: 'selection'
     - type: "text"
       cls: "ma-0 pa-0"
@@ -216,6 +235,50 @@ prevalencia:
                   fn_args:
                     - named_prop: "agr_count_cd_municipio_ibge_dv"
                     - fixed: 5570
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "light-blue pa-3"
+          api: 
+            fixed: "/thematic/casoscovid19?categorias=1&valor=estimated_population_2019&agregacao=SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_estimated_population_2019"
+              format: 'real'
+              collapse: 
+                format: 'real'
+                precision: 1
+            - prop: "description"
+              fixed: "População dos Municípios atingidos"
+            - prop: 'comment'
+              template: "{0}% da população brasileira"
+              args:
+                - function: 'calc_percentage'
+                  format: 'inteiro'
+                  fn_args:
+                    - named_prop: "agr_sum_estimated_population_2019"
+                    - fixed: 210147125
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "red pa-3"
+          api: 
+            fixed: "/thematic/casoscovid19?categorias=1&valor=estimated_population_2019&agregacao=SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_estimated_population_2019"
+              format: 'real'
+              collapse: 
+                format: 'real'
+                precision: 1
+            - prop: "description"
+              fixed: "População dos Municípios com óbitos"
+            - prop: 'comment'
+              template: "{0}% da população brasileira"
+              args:
+                - function: 'calc_percentage'
+                  format: 'inteiro'
+                  fn_args:
+                    - named_prop: "agr_sum_estimated_population_2019"
+                    - fixed: 210147125
     - type: "text"
       content:
         fixed: "Texto..."
@@ -233,6 +296,16 @@ prevalencia:
           default: true
           color: "red"
           label: "ÓBITOS CONFIRMADOS"
+        - id: "conf100M"
+          cls: "xs12"
+          default: false
+          color: "green accent-4"
+          label: "CASOS CONFIRMADOS/100.000 hab."
+        - id: "obitos100M"
+          cls: "xs12"
+          default: false
+          color: "purple"
+          label: "ÓBITOS CONFIRMADOS/100.000 hab."
       event: 'selection'
     - id: "select_uf"
       type: "select"
@@ -368,11 +441,11 @@ sparklines:
         cls: "pl-2"
         template: "{0} a {1}"
         api: 
-          template: "/thematic/casoscovid19?categorias=1&valor=date_info&agregacao=MIN,MAX&filtros=eq-place_type-'city'"
+          template: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MIN,MAX&filtros=eq-place_type-'city'"
         args:
-          - named_prop: "agr_min_date_info"
+          - named_prop: "agr_min_last_available_date"
             format: "dataDMY"
-          - named_prop: "agr_max_date_info"
+          - named_prop: "agr_max_last_available_date"
             format: "dataDMY"
   tables:
     - id: "sparklines_casos"
