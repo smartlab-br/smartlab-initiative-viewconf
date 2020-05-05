@@ -35,38 +35,52 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      fixed: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
+      fixed: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date,estimated_population_2019&agregacao=COUNT,MAX,SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
     args:
       - prop: "value"
         named_prop: "agr_count_cd_municipio_ibge_dv"
+        format: 'inteiro'
       - prop: "description"
         fixed: "Municípios atingidos"
       - prop: 'comment'
-        template: "{0}% de um total de 5.570 municípios"
+        template: "{0}% de um total de 5.570 municípios <br/>
+                   {1}% da população brasileira"
         args:
           - function: 'calc_percentage'
             format: 'inteiro'
             fn_args:
               - named_prop: "agr_count_cd_municipio_ibge_dv"
               - fixed: 5570
+          - function: 'calc_percentage'
+            format: 'inteiro'
+            fn_args:
+              - named_prop: "agr_sum_estimated_population_2019"
+              - fixed: 210147125
   - relevance: "lead"
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      fixed: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+      fixed: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date,estimated_population_2019&agregacao=COUNT,MAX,SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
     args:
       - prop: "value"
         named_prop: "agr_count_cd_municipio_ibge_dv"
+        format: 'inteiro'
       - prop: "description"
         fixed: "Municípios com óbitos"
       - prop: 'comment'
-        template: "{0}% de um total de 5.570 municípios"
+        template: "{0}% de um total de 5.570 municípios <br/>
+                   {1}% da população brasileira"
         args:
           - function: 'calc_percentage'
             format: 'inteiro'
             fn_args:
               - named_prop: "agr_count_cd_municipio_ibge_dv"
               - fixed: 5570
+          - function: 'calc_percentage'
+            format: 'inteiro'
+            fn_args:
+              - named_prop: "agr_sum_estimated_population_2019"
+              - fixed: 210147125
 # ========================================================
 secoes:
   - id: 'prevalencia_geografico'
@@ -270,7 +284,7 @@ secoes:
           long: 'longitude'
           value_field: 'vl_indicador'
         source:
-          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+          desc: ""
           link: ""
         description:
           - type: "text"
@@ -424,7 +438,7 @@ secoes:
               fixed: "Destacam-se, neste estudo, os municípios com o maior número de óbitos confirmados.<br/><br/>"
         chart_type: "BAR"
         api:
-          fixed: "/thematic/casoscovid19?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_deaths&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE&limit=10"
+          fixed: "/thematic/casoscovid19?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_deaths,last_available_confirmed&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE&limit=10"
           options:
             formatters:
               - id: "last_available_deaths"
