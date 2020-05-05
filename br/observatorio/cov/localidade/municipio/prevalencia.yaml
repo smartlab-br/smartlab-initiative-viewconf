@@ -1,0 +1,594 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/casoscovid19?categorias=city_ibge_code,last_available_date,last_available_confirmed&filtros=eq-city_ibge_code-{0},and,eq-place_type-'city',and,eq-is_last-TRUE"
+      args:
+        - named_prop: "idLocalidadeD6"
+    args:
+      - prop: "value"
+        named_prop: 'last_available_confirmed'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Casos Confirmados"
+      - prop: 'comment'
+        named_prop: 'last_available_date'
+        format: 'dataDMY'
+    # chart:
+    #   id: "line_te_rgt"
+    #   type: "LINE"
+    #   api: 
+    #     template: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge_dv-{0},and,eq-cd_indicador-'te_rgt'"
+    #     args:
+    #       - named_prop: "idLocalidade"
+    #     options:
+    #       formatters:
+    #         - id: "vl_indicador"
+    #           format: 'inteiro'
+    #   headers:
+    #     - text: 'Ano'
+    #       align: 'left'
+    #       value: 'nu_competencia'
+    #     - text: 'Nº resgatados do trabalho escravo'
+    #       value: 'fmt_vl_indicador'
+    #   options:
+    #     id: 'cd_indicador'
+    #     x: 'nu_competencia'
+    #     y: "vl_indicador"
+    #     x_options:
+    #       axis: false
+    #     y_options:
+    #       axis: false
+    #     hide_legend: true
+    #     color: "#00C853"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/casoscovid19?categorias=city_ibge_code,last_available_date,last_available_deaths&filtros=eq-city_ibge_code-{0},and,eq-place_type-'city',and,eq-is_last-TRUE"
+      args:
+        - named_prop: "idLocalidadeD6"
+    args:
+      - prop: "value"
+        named_prop: 'last_available_deaths'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Óbitos Confirmados"
+      - prop: 'comment'
+        named_prop: 'last_available_date'
+        format: 'dataDMY'
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed_per_100k_inhabitants&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+      args:
+        - named_prop: 'idLocalidade'
+    args:
+      - prop: "value"
+        named_prop: 'last_available_confirmed_per_100k_inhabitants'
+        format: 'real'
+        precision: 2
+        default: "Sem Registros"
+        zero: "Nenhum"
+      - prop: "description"
+        fixed: 'Casos confirmados'
+      - prop: "comment"
+        fixed: 'por 100.000 hab.'
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+      args:
+        - named_prop: 'idLocalidade'
+    args:
+      - prop: "value"
+        named_prop: 'last_available_death_rate'
+        format: 'real'
+        precision: 2
+        default: "Sem Registros"
+        zero: "Nenhum"
+      - prop: "description"
+        fixed: 'Óbitos confirmados'
+      - prop: "comment"
+        fixed: 'por 100.000 hab.'
+# ========================================================
+secoes:
+  - id: 'prevalencia_main_story'
+    name: "Contexto Geográfico"
+    cards:
+# ========================================================
+      - id: "mapa_casos"
+        title: 
+          fixed: "Casos confirmados"
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            template: "/thematic/casoscovid19?categorias=last_available_date&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: 'idLocalidade'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "last_available_date"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_deaths&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_deaths'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed_per_100k_inhabitants&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed_per_100k_inhabitants'
+                    format: 'real'
+                    precision: 2
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+                  - prop: "comment"
+                    fixed: 'por 100.000 hab.'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_death_rate'
+                    format: 'real'
+                    precision: 2
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+                  - prop: "comment"
+                    fixed: 'por 100.000 hab.'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de casos confirmados no município.<br/>"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,city,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: 'cd_uf'
+          options:
+            calcs:
+              - id: "deviation_obitos"
+                function: "get_log"
+                fn_args:
+                  - fixed: "last_available_deaths"
+            formatters:
+              - id: "last_available_deaths"
+                format: 'inteiro'
+              - id: "last_available_confirmed"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'city'
+          - text: 'Casos confirmados'
+            value: 'fmt_last_available_confirmed'
+          - text: 'Óbitos confirmados'
+            value: 'fmt_last_available_deaths'
+          - text: 'Casos confirmados/100.000 hab.'
+            value: 'last_available_confirmed_per_100k_inhabitants'
+            format: 'real'
+            precision: 2
+          - text: 'Óbitos confirmados/100.000 hab.'
+            value: 'last_available_death_rate'
+            format: 'real'
+            precision: 2
+          - text: 'Data coleta'
+            value: 'last_available_date'
+            format: 'dataDMY'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_obitos'
+          colorScale:
+            name: 'Reds'
+# ========================================================
+      - id: "mapa_prev_brasil"
+        chart_type: "MAP_BUBBLES"
+        title: 
+          fixed: "Distribuição Geográfica"
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            template: "/thematic/casoscovid19?categorias=last_available_date&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: 'idLocalidade'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "last_available_date"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre"
+        #     content:
+        #       fixed: ""
+        api:
+        # &calcs=ln_norm_pos_part&partition=cd_municipio_ibge_dv
+          - template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-valor,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: 'cd_uf'
+          - template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-valor,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: 'cd_uf'
+          - template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'conf100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_death_rate,last_available_confirmed_per_100k_inhabitants-valor,latitude,longitude&valor=last_available_confirmed_per_100k_inhabitants&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: 'cd_uf'
+          - template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate-valor,latitude,longitude&valor=last_available_death_rate&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: 'cd_uf'
+        chart_options:
+          colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)", "rgba(25, 125, 25, 0.7)", "#9C27B0"]
+          indicadores: ["obitos","casos","conf100M", "obitos100M"]
+          lat: 'latitude'
+          long: 'longitude'
+          id_field: 'codigo' 
+          clickable: true
+          radius:
+            base: 2500
+            multiplier: 800000
+          tiles_url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+          tiles_attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
+        headers:
+          - text: 'Município'
+            value: 'nm_municipio_uf'
+          - text: 'Casos confirmados'
+            value: 'last_available_confirmed'
+            format: 'inteiro'
+          - text: 'Óbitos confirmados'
+            value: 'last_available_deaths'
+            format: 'inteiro'
+          - text: 'Casos confirmados/100.000 hab.'
+            value: 'last_available_confirmed_per_100k_inhabitants'
+            format: 'real'
+            precision: 2
+          - text: 'Óbitos confirmados/100.000 hab.'
+            value: 'last_available_death_rate'
+            format: 'real'
+            precision: 2
+          - text: 'Data coleta'
+            value: 'last_available_date'
+            format: 'dataDMY'
+        source:
+          desc: "fonte"
+          link: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto..."
+          - id: "selectlayer"
+            type: "switch-group"
+            switches:
+              - id: "casos"
+                default: true
+                color: "light-blue"
+                label: "CASOS CONFIRMADOS"
+              - id: "obitos"
+                default: true
+                color: "red"
+                label: "ÓBITOS CONFIRMADOS"
+              - id: "conf100M"
+                default: false
+                color: "green accent-4"
+                label: "CASOS CONFIRMADOS/100.000 hab."
+              - id: "obitos100M"
+                default: false
+                color: "purple"
+                label: "ÓBITOS CONFIRMADOS/100.000 hab."
+            event: 'selection'
+# ========================================================
+      - id: "mapa_prev_brasil_calor"
+        chart_type: "MAP_HEAT"
+        title: 
+          fixed: "Mapa de Calor"
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            template: "/thematic/casoscovid19?categorias=last_available_date&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: 'idLocalidade'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "last_available_date"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre"
+        #     content:
+        #       fixed: ""
+        api:
+          - template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-cd_indicador,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-vl_indicador,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: 'cd_uf'
+          - template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos'-cd_indicador,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-vl_indicador,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: 'cd_uf'
+        chart_options:
+          colorArray: ["rgba(21, 101, 192, 0.7)", "rgba(179, 9, 0, 0.7)"]
+          indicadores: ["casos","obitos"]
+          lat: 'latitude'
+          long: 'longitude'
+          value_field: 'vl_indicador'
+        source:
+          desc: ""
+          link: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto..."
+          - id: "selectlayer"
+            type: "radio"
+            items:
+              - id: "casos"
+                cls: "xs12"
+                label: "Casos confirmados"
+                color: "light-blue"
+                value: "casos"
+                default: true
+              - id: "obitos"
+                cls: "xs12"
+                label: "Óbitos confirmados"
+                color: "red"
+                value: "obitos"
+            event: 'selection'
+# ========================================================
+      - id: "line_casos"
+        type: "multiple-charts"
+        title: 
+          fixed: "Casos confirmados - Série Histórica"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_last_available_date"
+              format: 'dataDMY'
+            - named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de casos confirmados.<br/>"
+        charts:
+          - id: "line_casos_diarios"
+            title: "Casos confirmados diários"
+            cls: "xs12 md6"
+            type: "LINE"
+            api: 
+              - template: "/thematic/casoscovid19?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date,new_confirmed&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0},and,eq-is_repeated-false&ordenacao=date_info"
+                args:
+                  - named_prop: "idLocalidade"
+                options:
+                  formatters:
+                    - id: "new_confirmed"
+                      format: 'inteiro'
+                    - id: "date_info"
+                      format: 'dataYMD'
+                    - id: "tooltip_date"
+                      format: 'dataDMY'
+            headers:
+              - text: 'Data'
+                align: 'left'
+                value: 'fmt_tooltip_date'
+              - text: 'Casos confirmados'
+                value: 'fmt_new_confirmed'
+            options:
+              id: "cd_indicador"
+              x: "fmt_date_info"
+              y: "new_confirmed"
+              hide_legend: false
+              legend_field: "cd_indicador"
+              colorArray: ["#377EB8"]  # blue
+          - id: "line_casos_acumulados"  
+            title: "Casos confirmados acumulados"
+            cls: "xs12 md6"
+            type: "LINE"
+            api: 
+              - template: "/thematic/casoscovid19?categorias='Casos confirmados'-cd_indicador,last_available_date,last_available_date-tooltip_date,last_available_confirmed&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0},and,eq-is_repeated-false&ordenacao=last_available_date"
+                args:
+                  - named_prop: "idLocalidade"
+                options:
+                  formatters:
+                    - id: "last_available_confirmed"
+                      format: 'inteiro'
+                    - id: "last_available_date"
+                      format: 'dataYMD'
+                    - id: "tooltip_date"
+                      format: 'dataDMY'
+            headers:
+              - text: 'Data'
+                align: 'left'
+                value: 'fmt_tooltip_date'
+              - text: 'Casos acumulados'
+                value: 'fmt_last_available_confirmed'
+            options:
+              id: "cd_indicador"
+              x: "fmt_last_available_date"
+              y: "last_available_confirmed"
+              hide_legend: false
+              legend_field: "cd_indicador"
+              colorArray: ["#377EB8"]  # blue
+# ========================================================
+      - id: "line_obitos"
+        type: "multiple-charts"
+        title: 
+          fixed: "Óbitos confirmados - Série Histórica"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_last_available_date"
+              format: 'dataDMY'
+            - named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_deaths&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_deaths'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de óbitos confirmados.<br/>"
+        charts:
+          - id: "line_obitos_diarios"  
+            title: "Óbitos confirmados diários"
+            cls: "xs12 md6"
+            type: "LINE"
+            api: 
+              - template: "/thematic/casoscovid19?categorias='Óbitos confirmados'-cd_indicador,date_info,date_info-tooltip_date,new_deaths&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0},and,eq-is_repeated-false&ordenacao=date_info"
+                args:
+                  - named_prop: "idLocalidade"
+                options:
+                  formatters:
+                    - id: "new_deaths"
+                      format: 'inteiro'
+                    - id: "date_info"
+                      format: 'dataYMD'
+                    - id: "tooltip_date"
+                      format: 'dataDMY'
+            headers:
+              - text: 'Data'
+                align: 'left'
+                value: 'fmt_tooltip_date'
+              - text: 'Óbitos confirmados'
+                value: 'fmt_new_deaths'
+            options:
+              id: "cd_indicador"
+              x: "fmt_date_info"
+              y: "new_deaths"
+              hide_legend: false
+              legend_field: "cd_indicador"
+              colorArray: ["#E41A1C"]  # red
+          - id: "line_obitos_acumulados"  
+            title: "Óbitos confirmados acumulados"
+            cls: "xs12 md6"
+            type: "LINE"
+            api: 
+              - template: "/thematic/casoscovid19?categorias='Casos confirmados'-cd_indicador,last_available_date,last_available_date-tooltip_date,last_available_deaths&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0},and,eq-is_repeated-false&ordenacao=last_available_date"
+                args:
+                  - named_prop: "idLocalidade"
+                options:
+                  formatters:
+                    - id: "last_available_deaths"
+                      format: 'inteiro'
+                    - id: "last_available_date"
+                      format: 'dataYMD'
+                    - id: "tooltip_date"
+                      format: 'dataDMY'
+            headers:
+              - text: 'Data'
+                align: 'left'
+                value: 'fmt_tooltip_date'
+              - text: 'Óbitos acumulados'
+                value: 'fmt_last_available_deaths'
+            options:
+              id: "cd_indicador"
+              x: "fmt_last_available_date"
+              y: "last_available_deaths"
+              hide_legend: false
+              legend_field: "cd_indicador"
+              colorArray: ["#E41A1C"]  # red
