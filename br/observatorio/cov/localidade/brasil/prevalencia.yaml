@@ -466,3 +466,125 @@ secoes:
         source:
           desc: ""
           link: ""
+# ========================================================
+      - id: "line_casos"
+        title: 
+          fixed: "Casos confirmados - Série Histórica"
+        title_comment:
+          template: "Brasil, {0} a {1}"
+          api: 
+            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
+          args:
+            - named_prop: "agr_min_last_available_date"
+              format: 'dataDMY'
+            - named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date,last_available_confirmed&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de casos confirmados.<br/>"
+        chart_type: "LINE"
+        api: 
+          - fixed: "/thematic/casoscovid19?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=new_confirmed&agregacao=SUM&filtros=eq-place_type-'state'&ordenacao=date_info"
+            options:
+              formatters:
+                - id: "agr_sum_new_confirmed"
+                  format: 'inteiro'
+                - id: "date_info"
+                  format: 'dataYMD'
+                - id: "tooltip_date"
+                  format: 'dataDMY'
+        headers:
+          - text: 'Data'
+            align: 'left'
+            value: 'fmt_tooltip_date'
+          - text: 'Casos confirmados'
+            value: 'fmt_agr_sum_new_confirmed'
+        chart_options:
+          id: "cd_indicador"
+          x: "fmt_date_info"
+          y: "agr_sum_new_confirmed"
+          hide_legend: false
+          legend_field: "cd_indicador"
+          colorArray: ["#377EB8"]  # blue
+# ========================================================
+      - id: "line_obitos"
+        title: 
+          fixed: "Óbitos confirmados - Série Histórica"
+        title_comment:
+          template: "Brasil, {0} a {1}"
+          api: 
+            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
+          args:
+            - named_prop: "agr_min_last_available_date"
+              format: 'dataDMY'
+            - named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date,last_available_deaths&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_last_available_deaths'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de óbitos confirmados.<br/>"
+        chart_type: "LINE"
+        api: 
+          - fixed: "/thematic/casoscovid19?categorias='Óbitos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=new_deaths&agregacao=SUM&filtros=eq-place_type-'state'&ordenacao=date_info"
+            options:
+              formatters:
+                - id: "agr_sum_new_deaths"
+                  format: 'inteiro'
+                - id: "date_info"
+                  format: 'dataYMD'
+                - id: "tooltip_date"
+                  format: 'dataDMY'
+        headers:
+          - text: 'Data'
+            align: 'left'
+            value: 'fmt_tooltip_date'
+          - text: 'Óbitos confirmados'
+            value: 'fmt_agr_sum_new_deaths'
+        chart_options:
+          id: "cd_indicador"
+          x: "fmt_date_info"
+          y: "agr_sum_new_deaths"
+          hide_legend: false
+          legend_field: "cd_indicador"
+          colorArray: ["#E41A1C"]  # red
