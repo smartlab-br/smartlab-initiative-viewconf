@@ -105,6 +105,72 @@ secoes:
     name: "Contexto Geográfico"
     cards:
 # ========================================================
+      - id: "mapa_alta_complex"
+        chart_type: "MAP_MIGRATION"
+        title: 
+          fixed: "Pólos de Atendimento de Alta Complexidade"
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            template: "/thematic/casoscovid19?categorias=last_available_date&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: 'idLocalidade'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "last_available_date"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre"
+        #     content:
+        #       fixed: ""
+        api: 
+          - template: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_arranjo_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_arranjo_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_arranjo_alta_complex-target_lat,longitude_origem-source_long,longitude_arranjo_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_origem-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_arranjo_alta_complex"
+            args:
+              - named_prop: "cd_uf"
+          - template: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_arranjo_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_arranjo_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_arranjo_alta_complex-target_lat,longitude_origem-source_long,longitude_arranjo_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_arranjo_alta_complex-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_arranjo_alta_complex"
+            args:
+              - named_prop: "cd_uf"
+        headers:
+          - text: 'Município origem'
+            align: 'left'
+            value: 'source_mun'
+          - text: 'Atendimento de Alta Complexidade'
+            align: 'left'
+            value: 'target_mun'
+        chart_options:
+          id_field: 'cd_indicador'
+          value_field: 'agr_count'
+          loc_size_field: 'agr_count'
+          show_markers: true
+          radius:
+            base: 10000
+            multiplier: 2000
+          path:
+            multiplier: 4
+            animation:
+              base_duration: 10000
+          source:
+            lat: 'source_lat'
+            long: 'source_long'
+            id: 'source_cd_mun'
+          target:
+            lat: 'target_lat'
+            long: 'target_long'
+            id: 'target_cd_mun'
+            name: 'target_mun'
+          indicadores: ['busca']
+          colorArray: ["rgba(179, 9, 0, 0.7)"]
+        source:
+          desc: "fonte"
+          link: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto..."
+# ========================================================
       - id: "mapa_casos"
         title: 
           fixed: "Casos confirmados"
