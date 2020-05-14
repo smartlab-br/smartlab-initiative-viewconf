@@ -108,25 +108,35 @@ secoes:
             title: ""
             content:
               fixed: "Texto..."
-          # - id: "select_uf"
-          #   type: "select"
-          #   label: "Unidade Federativa"
-          #   api:
-          #     fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf"
-          #   args:
-          #     - prop: "id"
-          #       named_prop: "cd_uf"
-          #     - prop: "label"
-          #       named_prop: "nm_uf"
-          #   selection:
-          #     event: "selection"
-          #     rules:
-          #      filter: ",and,eq-cd_uf_origem-{0}"
-          #      api:
-          #        args:
-          #          - named_prop: "cd_uf"
+          - id: "select_uf"
+            type: "select"
+            label: "Unidade Federativa"
+            clearable: false
+            default: 
+              fixed: 35 # São Paulo como default
+            target: 
+              range: "uf"
+              scope: "municipio"
+            api:
+              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
+            args:
+              - prop: "id"
+                named_prop: "cd_uf"
+              - prop: "label"
+                named_prop: "nm_uf"
+            selection:
+              event: "selection"
+              rules:
+                api: 
+                  - template: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_origem-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+                    args:
+                      - named_prop: "cd_uf"
+                  - template: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_alta_complex-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+                    args:
+                      - named_prop: "cd_uf"
         api: 
-          fixed: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+          - fixed: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_origem-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+          - fixed: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_alta_complex-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
         headers:
           - text: 'Município origem'
             align: 'left'
@@ -139,7 +149,6 @@ secoes:
           value_field: 'agr_count'
           loc_size_field: 'agr_count'
           show_markers: true
-          height_proportion: 1
           radius:
             base: 10000
             multiplier: 2000
@@ -169,7 +178,7 @@ secoes:
 # ========================================================
       - id: "mapa_casos"
         title: 
-          fixed: "Casos confirmados"
+          fixed: "Distribuição geográfica por UF"
         title_comment:
           template: "Brasil, {0}"
           api: 
@@ -213,15 +222,43 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o número de casos confirmados.<br/>"
+          - id: "covid_valor"
+            type: "radio"
+            items:
+              - id: "casos"
+                value: "last_available_confirmed"
+                default: true
+                color: "light-blue"
+                label: "CASOS CONFIRMADOS"
+              - id: "obitos"
+                value: "last_available_deaths"
+                color: "red"
+                label: "ÓBITOS CONFIRMADOS"
+              - id: "casos100M"
+                value: "last_available_confirmed_per_100k_inhabitants"
+                color: "green accent-4"
+                label: "CASOS CONFIRMADOS/100.000 hab."
+              - id: "obitos100M"
+                value: "last_available_death_rate"
+                color: "purple"
+                label: "ÓBITOS CONFIRMADOS/100.000 hab."
+            selection:
+              event: 'selection'
+              rules:
+                api:
+                  template: "/thematic/casoscovid19?categorias='{0}'-flag,{1}-valor,estimated_population_2019,cd_uf,nm_uf,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                  args:
+                    - named_prop: "covid_valor"
+                    - named_prop: "covid_valor"
         chart_type: "MAP_TOPOJSON"
         api: 
-          fixed: "/thematic/casoscovid19?categorias=cd_uf,nm_uf,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+          fixed: "/thematic/casoscovid19?categorias='last_available_confirmed'-flag,last_available_confirmed-valor,estimated_population_2019,cd_uf,nm_uf,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
           options:
             calcs:
-              - id: "deviation_obitos"
+              - id: "deviation_casos"
                 function: "get_log"
                 fn_args:
-                  - fixed: "last_available_deaths"
+                  - fixed: "valor"
             formatters:
               - id: "last_available_deaths"
                 format: 'inteiro'
@@ -231,6 +268,9 @@ secoes:
           - text: 'UF'
             align: 'left'
             value: 'nm_uf'
+          - text: 'População estimada (2019)'
+            value: 'estimated_population_2019'
+            format: 'inteiro'
           - text: 'Casos confirmados'
             value: 'fmt_last_available_confirmed'
           - text: 'Óbitos confirmados'
@@ -249,14 +289,22 @@ secoes:
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
-          value_field: 'calc_deviation_obitos'
-          colorScale:
-            name: 'Reds'
+          value_field: 'calc_deviation_casos'
+          colorScale: 
+            type: "singleHue"
+            color_field: "flag"
+            color_array: 
+              "last_available_confirmed": "Blues"
+              "last_available_deaths": "Reds"
+              "last_available_confirmed_per_100k_inhabitants": "Greens"
+              "last_available_death_rate": "Purples"
+          # colorScale:
+          #   name: 'Reds'
 # ========================================================
       - id: "mapa_prev_brasil"
         chart_type: "MAP_BUBBLES"
         title: 
-          fixed: "Distribuição Geográfica"
+          fixed: "Distribuição Geográfica por Município"
         title_comment:
           template: "Brasil, {0}"
           api: 
@@ -273,8 +321,8 @@ secoes:
         # &calcs=ln_norm_pos_part&partition=cd_municipio_ibge_dv
           - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-valor,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
           - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-valor,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-          - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'conf100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_death_rate,last_available_confirmed_per_100k_inhabitants-valor,latitude,longitude&valor=last_available_confirmed_per_100k_inhabitants&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-          - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate-valor,latitude,longitude&valor=last_available_death_rate&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+          # - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'conf100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_death_rate,last_available_confirmed_per_100k_inhabitants-valor,latitude,longitude&valor=last_available_confirmed_per_100k_inhabitants&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+          # - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate-valor,latitude,longitude&valor=last_available_death_rate&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
         chart_options:
           colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)", "rgba(25, 125, 25, 0.7)", "#9C27B0"]
           indicadores: ["obitos","casos","conf100M", "obitos100M"]
@@ -327,14 +375,14 @@ secoes:
                 default: true
                 color: "red"
                 label: "ÓBITOS CONFIRMADOS"
-              - id: "conf100M"
-                default: false
-                color: "green accent-4"
-                label: "CASOS CONFIRMADOS/100.000 hab."
-              - id: "obitos100M"
-                default: false
-                color: "purple"
-                label: "ÓBITOS CONFIRMADOS/100.000 hab."
+              # - id: "conf100M"
+              #   default: false
+              #   color: "green accent-4"
+              #   label: "CASOS CONFIRMADOS/100.000 hab."
+              # - id: "obitos100M"
+              #   default: false
+              #   color: "purple"
+              #   label: "ÓBITOS CONFIRMADOS/100.000 hab."
             event: 'selection'
 # ========================================================
       - id: "mapa_prev_brasil_calor"
