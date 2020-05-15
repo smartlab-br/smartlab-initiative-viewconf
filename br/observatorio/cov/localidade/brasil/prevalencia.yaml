@@ -108,25 +108,35 @@ secoes:
             title: ""
             content:
               fixed: "Texto..."
-          # - id: "select_uf"
-          #   type: "select"
-          #   label: "Unidade Federativa"
-          #   api:
-          #     fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf"
-          #   args:
-          #     - prop: "id"
-          #       named_prop: "cd_uf"
-          #     - prop: "label"
-          #       named_prop: "nm_uf"
-          #   selection:
-          #     event: "selection"
-          #     rules:
-          #      filter: ",and,eq-cd_uf_origem-{0}"
-          #      api:
-          #        args:
-          #          - named_prop: "cd_uf"
+          - id: "select_uf"
+            type: "select"
+            label: "Unidade Federativa"
+            clearable: false
+            default: 
+              fixed: 35 # São Paulo como default
+            target: 
+              range: "uf"
+              scope: "municipio"
+            api:
+              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
+            args:
+              - prop: "id"
+                named_prop: "cd_uf"
+              - prop: "label"
+                named_prop: "nm_uf"
+            selection:
+              event: "selection"
+              rules:
+                api: 
+                  - template: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_origem-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+                    args:
+                      - named_prop: "cd_uf"
+                  - template: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_alta_complex-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+                    args:
+                      - named_prop: "cd_uf"
         api: 
-          fixed: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+          - fixed: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_origem-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+          - fixed: "/thematic/arranjoregic?categorias=nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_alta_complex-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
         headers:
           - text: 'Município origem'
             align: 'left'
@@ -139,7 +149,6 @@ secoes:
           value_field: 'agr_count'
           loc_size_field: 'agr_count'
           show_markers: true
-          height_proportion: 1
           radius:
             base: 10000
             multiplier: 2000
@@ -169,7 +178,7 @@ secoes:
 # ========================================================
       - id: "mapa_casos"
         title: 
-          fixed: "Casos confirmados"
+          fixed: "Distribuição Geográfica por UF"
         title_comment:
           template: "Brasil, {0}"
           api: 
@@ -213,15 +222,42 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o número de casos confirmados.<br/>"
+          - id: "covid_valor"
+            type: "radio"
+            items:
+              - id: "casos"
+                value: "last_available_confirmed"
+                default: true
+                color: "light-blue"
+                label: "CASOS CONFIRMADOS"
+              - id: "obitos"
+                value: "last_available_deaths"
+                color: "red"
+                label: "ÓBITOS CONFIRMADOS"
+              - id: "casos100M"
+                value: "last_available_confirmed_per_100k_inhabitants"
+                color: "green accent-4"
+                label: "CASOS CONFIRMADOS/100.000 hab."
+              - id: "obitos100M"
+                value: "last_available_death_rate"
+                color: "purple"
+                label: "ÓBITOS CONFIRMADOS/100.000 hab."
+            selection:
+              event: 'selection'
+              rules:
+                api:
+                  template: "/thematic/casoscovid19?categorias={0}-valor,estimated_population_2019,cd_uf,nm_uf,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                  args:
+                    - named_prop: "covid_valor"
         chart_type: "MAP_TOPOJSON"
         api: 
-          fixed: "/thematic/casoscovid19?categorias=cd_uf,nm_uf,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+          fixed: "/thematic/casoscovid19?categorias=last_available_confirmed-valor,estimated_population_2019,cd_uf,nm_uf,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
           options:
             calcs:
-              - id: "deviation_obitos"
+              - id: "deviation_casos"
                 function: "get_log"
                 fn_args:
-                  - fixed: "last_available_deaths"
+                  - fixed: "valor"
             formatters:
               - id: "last_available_deaths"
                 format: 'inteiro'
@@ -231,6 +267,9 @@ secoes:
           - text: 'UF'
             align: 'left'
             value: 'nm_uf'
+          - text: 'População estimada (2019)'
+            value: 'estimated_population_2019'
+            format: 'inteiro'
           - text: 'Casos confirmados'
             value: 'fmt_last_available_confirmed'
           - text: 'Óbitos confirmados'
@@ -249,14 +288,22 @@ secoes:
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
-          value_field: 'calc_deviation_obitos'
-          colorScale:
-            name: 'Reds'
+          value_field: 'calc_deviation_casos'
+          colorScale: 
+            type: "singleHue"
+            scale_name_value: "covid_valor"
+            color_array: 
+              "last_available_confirmed": "Blues"
+              "last_available_deaths": "Reds"
+              "last_available_confirmed_per_100k_inhabitants": "Greens"
+              "last_available_death_rate": "Purples"
+          # colorScale:
+          #   name: 'Reds'
 # ========================================================
       - id: "mapa_prev_brasil"
         chart_type: "MAP_BUBBLES"
         title: 
-          fixed: "Distribuição Geográfica"
+          fixed: "Distribuição Geográfica por Município"
         title_comment:
           template: "Brasil, {0}"
           api: 
@@ -273,8 +320,8 @@ secoes:
         # &calcs=ln_norm_pos_part&partition=cd_municipio_ibge_dv
           - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-valor,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
           - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-valor,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-          - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'conf100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_death_rate,last_available_confirmed_per_100k_inhabitants-valor,latitude,longitude&valor=last_available_confirmed_per_100k_inhabitants&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-          - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate-valor,latitude,longitude&valor=last_available_death_rate&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+          # - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'conf100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_death_rate,last_available_confirmed_per_100k_inhabitants-valor,latitude,longitude&valor=last_available_confirmed_per_100k_inhabitants&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+          # - fixed: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate-valor,latitude,longitude&valor=last_available_death_rate&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
         chart_options:
           colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)", "rgba(25, 125, 25, 0.7)", "#9C27B0"]
           indicadores: ["obitos","casos","conf100M", "obitos100M"]
@@ -327,14 +374,14 @@ secoes:
                 default: true
                 color: "red"
                 label: "ÓBITOS CONFIRMADOS"
-              - id: "conf100M"
-                default: false
-                color: "green accent-4"
-                label: "CASOS CONFIRMADOS/100.000 hab."
-              - id: "obitos100M"
-                default: false
-                color: "purple"
-                label: "ÓBITOS CONFIRMADOS/100.000 hab."
+              # - id: "conf100M"
+              #   default: false
+              #   color: "green accent-4"
+              #   label: "CASOS CONFIRMADOS/100.000 hab."
+              # - id: "obitos100M"
+              #   default: false
+              #   color: "purple"
+              #   label: "ÓBITOS CONFIRMADOS/100.000 hab."
             event: 'selection'
 # ========================================================
       - id: "mapa_prev_brasil_calor"
@@ -445,7 +492,8 @@ secoes:
         title:
           fixed: "Áreas Prioritárias"
 # ===============================================
-      - id: "bar_priori_mun_casos"
+      - id: "bar_priori_mun"
+        type: "multiple-charts"
         title: 
           fixed: "Municípios - Maior número de casos"
         title_comment:
@@ -465,270 +513,70 @@ secoes:
             title: ""
             content:
               fixed: "Destacam-se, neste estudo, os municípios com o maior número de casos confirmados.<br/><br/>"
-        chart_type: "BAR"
-        api:
-          fixed: "/thematic/casoscovid19?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_confirmed,last_available_deaths&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE&limit=10"
-          options:
-            formatters:
-              - id: "last_available_confirmed"
-                format: 'inteiro'
-              - id: "last_available_deaths"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio_uf'
-          - text: 'Casos confirmados'
-            value: 'fmt_last_available_confirmed'
-          - text: 'Óbitos confirmados'
-            value: 'fmt_last_available_deaths'
-        chart_options:
-          id: "city_ibge_code"
-          x: "agr_rank_dense_sum_last_available_confirmed"
-          y: "last_available_confirmed"
-          text: "nm_municipio_uf"
-          hide_legend: true
-          orientation: "vertical"
-          show_x_axis: false
-          show_y_axis: false
-          color: "#238B45"
-        source:
-          desc: ""
-          link: ""
-# ===============================================
-      - id: "bar_priori_mun_obitos"
-        title: 
-          fixed: "Municípios - Maior número de óbitos"
-        title_comment:
-          template: "Brasil, {0}"
-          api: 
-            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-          args:
-            - named_prop: "agr_max_last_available_date"
-              format: 'dataDMY'
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       fixed: ""
-        description:
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Destacam-se, neste estudo, os municípios com o maior número de óbitos confirmados.<br/><br/>"
-        chart_type: "BAR"
-        api:
-          fixed: "/thematic/casoscovid19?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_deaths,last_available_confirmed&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE&limit=10"
-          options:
-            formatters:
-              - id: "last_available_deaths"
-                format: 'inteiro'
-              - id: "last_available_confirmed"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio_uf'
-          - text: 'Óbitos confirmados'
-            value: 'fmt_last_available_deaths'
-          - text: 'Casos confirmados'
-            value: 'fmt_last_available_confirmed'
-        chart_options:
-          id: "city_ibge_code"
-          x: "agr_rank_dense_sum_last_available_deaths"
-          y: "last_available_deaths"
-          text: "nm_municipio_uf"
-          hide_legend: true
-          orientation: "vertical"
-          show_x_axis: false
-          show_y_axis: false
-          color: "#DA3736"
-        source:
-          desc: ""
-          link: ""
-# ========================================================
-      - id: "line_casos"
-        type: "multiple-charts"
-        title: 
-          fixed: "Casos confirmados - Série Histórica"
-        title_comment:
-          template: "Brasil, {0} a {1}"
-          api: 
-            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
-          args:
-            - named_prop: "agr_min_last_available_date"
-              format: 'dataDMY'
-            - named_prop: "agr_max_last_available_date"
-              format: 'dataDMY'
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       fixed: ""
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api: 
-                  fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date,last_available_confirmed&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_last_available_confirmed'
-                    format: 'inteiro'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: 'Casos confirmados'
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o número de casos confirmados.<br/>"
         charts:
-          - id: "line_casos_diarios"  
-            title: "Casos confirmados diários"
+          - id: "bar_priori_mun_casos"
+            title: "Municípios com maior número de casos"
             cls: "xs12 md6"
-            type: "LINE"
-            api: 
-              - fixed: "/thematic/casoscovid19?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=new_confirmed&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_repeated-false&ordenacao=date_info"
-                options:
-                  formatters:
-                    - id: "agr_sum_new_confirmed"
-                      format: 'inteiro'
-                    - id: "date_info"
-                      format: 'dataYMD'
-                    - id: "tooltip_date"
-                      format: 'dataDMY'
+            type: "BAR"
+            api:
+              fixed: "/thematic/casoscovid19?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_confirmed,last_available_deaths&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE&limit=10"
+              options:
+                formatters:
+                  - id: "last_available_confirmed"
+                    format: 'inteiro'
+                  - id: "last_available_deaths"
+                    format: 'inteiro'
             headers:
-              - text: 'Data'
+              - text: 'Município'
                 align: 'left'
-                value: 'fmt_tooltip_date'
+                value: 'nm_municipio_uf'
               - text: 'Casos confirmados'
-                value: 'fmt_agr_sum_new_confirmed'
-            options:
-              id: "cd_indicador"
-              x: "fmt_date_info"
-              y: "agr_sum_new_confirmed"
-              hide_legend: false
-              legend_field: "cd_indicador"
-              colorArray: ["#377EB8"]  # blue
-          - id: "line_casos_acumulados"  
-            title: "Casos confirmados acumulados"
-            cls: "xs12 md6"
-            type: "LINE"
-            api: 
-              - fixed: "/thematic/casoscovid19?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=last_available_confirmed&agregacao=SUM&filtros=eq-place_type-'state'&ordenacao=date_info"
-                options:
-                  formatters:
-                    - id: "agr_sum_last_available_confirmed"
-                      format: 'inteiro'
-                    - id: "date_info"
-                      format: 'dataYMD'
-                    - id: "tooltip_date"
-                      format: 'dataDMY'
-            headers:
-              - text: 'Data'
-                align: 'left'
-                value: 'fmt_tooltip_date'
-              - text: 'Casos acumulados'
-                value: 'fmt_agr_sum_last_available_confirmed'
-            options:
-              id: "cd_indicador"
-              x: "fmt_date_info"
-              y: "agr_sum_last_available_confirmed"
-              hide_legend: false
-              legend_field: "cd_indicador"
-              colorArray: ["#377EB8"]  # blue
-# ========================================================
-      - id: "line_obitos"
-        type: "multiple-charts"
-        title: 
-          fixed: "Óbitos confirmados - Série Histórica"
-        title_comment:
-          template: "Brasil, {0} a {1}"
-          api: 
-            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
-          args:
-            - named_prop: "agr_min_last_available_date"
-              format: 'dataDMY'
-            - named_prop: "agr_max_last_available_date"
-              format: 'dataDMY'
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       fixed: ""
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api: 
-                  fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date,last_available_deaths&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_last_available_deaths'
-                    format: 'inteiro'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: 'Óbitos confirmados'
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o número de óbitos confirmados.<br/>"
-        charts:
-          - id: "line_obitos_diarios"
-            title: "Óbitos confirmados diários"
-            cls: "xs12 md6"
-            type: "LINE"
-            api: 
-              - fixed: "/thematic/casoscovid19?categorias='Óbitos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=new_deaths&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_repeated-false&ordenacao=date_info"
-                options:
-                  formatters:
-                    - id: "agr_sum_new_deaths"
-                      format: 'inteiro'
-                    - id: "date_info"
-                      format: 'dataYMD'
-                    - id: "tooltip_date"
-                      format: 'dataDMY'
-            headers:
-              - text: 'Data'
-                align: 'left'
-                value: 'fmt_tooltip_date'
+                value: 'fmt_last_available_confirmed'
               - text: 'Óbitos confirmados'
-                value: 'fmt_agr_sum_new_deaths'
+                value: 'fmt_last_available_deaths'
             options:
-              id: "cd_indicador"
-              x: "fmt_date_info"
-              y: "agr_sum_new_deaths"
-              hide_legend: false
-              legend_field: "cd_indicador"
-              colorArray: ["#E41A1C"]  # red
-          - id: "line_obitos_acumulados"  
-            title: "Óbitos confirmados acumulados"
+              id: "city_ibge_code"
+              x: "agr_rank_dense_sum_last_available_confirmed"
+              y: "last_available_confirmed"
+              text: "nm_municipio_uf"
+              hide_legend: true
+              orientation: "vertical"
+              show_x_axis: false
+              show_y_axis: false
+              color: "#238B45"
+            source:
+              desc: ""
+              link: ""
+          - id: "bar_priori_mun_óbitos"
+            title: "Municípios com maior número de óbitos"
             cls: "xs12 md6"
-            type: "LINE"
-            api: 
-              - fixed: "/thematic/casoscovid19?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=last_available_deaths&agregacao=SUM&filtros=eq-place_type-'state'&ordenacao=date_info"
-                options:
-                  formatters:
-                    - id: "agr_sum_last_available_deaths"
-                      format: 'inteiro'
-                    - id: "date_info"
-                      format: 'dataYMD'
-                    - id: "tooltip_date"
-                      format: 'dataDMY'
+            type: "BAR"
+            api:
+              fixed: "/thematic/casoscovid19?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_deaths,last_available_confirmed&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE&limit=10"
+              options:
+                formatters:
+                  - id: "last_available_deaths"
+                    format: 'inteiro'
+                  - id: "last_available_confirmed"
+                    format: 'inteiro'
             headers:
-              - text: 'Data'
+              - text: 'Município'
                 align: 'left'
-                value: 'fmt_tooltip_date'
-              - text: 'Óbitos acumulados'
-                value: 'fmt_agr_sum_last_available_deaths'
+                value: 'nm_municipio_uf'
+              - text: 'Óbitos confirmados'
+                value: 'fmt_last_available_deaths'
+              - text: 'Casos confirmados'
+                value: 'fmt_last_available_confirmed'
             options:
-              id: "cd_indicador"
-              x: "fmt_date_info"
-              y: "agr_sum_last_available_deaths"
-              hide_legend: false
-              legend_field: "cd_indicador"
-              colorArray: ["#E41A1C"]  # blue
+              id: "city_ibge_code"
+              x: "agr_rank_dense_sum_last_available_deaths"
+              y: "last_available_deaths"
+              text: "nm_municipio_uf"
+              hide_legend: true
+              orientation: "vertical"
+              show_x_axis: false
+              show_y_axis: false
+              color: "#DA3736"
+            source:
+              desc: ""
+              link: ""
