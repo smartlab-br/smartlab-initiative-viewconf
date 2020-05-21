@@ -312,6 +312,8 @@ secoes:
             args:
               - named_prop: "cd_uf"
             options:
+              recalc_min_max: true
+              minmax_field: "proporcao_leitos_uti_10k_arranjo"
               calcs:
                 - id: 'uti_level'
                   function: 'get_uti_level'
@@ -324,6 +326,11 @@ secoes:
                         template: "{0} do recomendado"
                         args:
                           - named_prop: "calc_uti_level"
+                - id: "deviation_crescimento"
+                  function: "get_bipolar_scale"
+                  fn_args: 
+                    - fixed: 'proporcao_leitos_uti_10k_arranjo'
+                    - fixed: 2
 
         headers:
           - text: 'Município origem'
@@ -343,16 +350,25 @@ secoes:
             format: 'real'
           - text: 'Situação no Pólo'
             value: 'calc_uti_status'
+          - text: 'dev'
+            value: 'calc_deviation_crescimento'
         chart_options:
           id_field: 'cd_mun_ibge'
           topo_key: "codarea"
-          value_field: 'calc_uti_level'
-          colorScale: 
-            type: "fixed"
-            color_array: 
-              "Abaixo": "rgba(179, 9, 0, 0.7)"
-              "Dentro": "#fbc11a"
-              "Acima": "green"
+          # value_field: 'calc_uti_level'
+          value_field: 'calc_deviation_crescimento'
+          colorScale:
+            name: "RdYlGn"
+            range:
+              min_value: -1
+              max_value: 1
+            # midpoint: 0
+          # colorScale: 
+          #   type: "fixed"
+          #   color_array: 
+          #     "Abaixo": "rgba(179, 9, 0, 0.7)"
+          #     "Dentro": "#fbc11a"
+          #     "Acima": "green"
         source:
           desc: "fonte"
           link: ""
