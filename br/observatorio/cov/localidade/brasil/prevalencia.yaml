@@ -87,235 +87,6 @@ secoes:
     name: 'Contexto Geográfico'
     cards:
 # ========================================================
-      - id: "mapa_alta_complex"
-        chart_type: "MAP_MIGRATION"
-        title: 
-          fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
-        title_comment:
-          template: "Brasil, {0}"
-          api: 
-            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-          args:
-            - named_prop: "agr_max_last_available_date"
-              format: 'dataDMY'
-        # info:
-        #   - type: "text"
-        #     title: "Sobre"
-        #     content:
-        #       fixed: ""
-        description:
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Texto..."
-          - id: "select_uf"
-            type: "select"
-            label: "Unidade Federativa"
-            clearable: false
-            default: 
-              fixed: 35 # São Paulo como default
-            target: 
-              range: "uf"
-              scope: "municipio"
-            api:
-              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
-            args:
-              - prop: "id"
-                named_prop: "cd_uf"
-              - prop: "label"
-                named_prop: "nm_uf"
-            selection:
-              event: "selection"
-              rules:
-                api: 
-                  - template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_origem-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
-                    args:
-                      - named_prop: "cd_uf"
-                  - template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_alta_complex-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
-                    args:
-                      - named_prop: "cd_uf"
-        api: 
-          - fixed: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_origem-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
-            options:
-              calcs:
-                - id: 'uti_level'
-                  function: 'get_uti_level'
-                  fn_args:
-                    - named_prop: 'proporcao_leitos_uti_10k_arranjo'
-          - fixed: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long,'busca'-cd_indicador&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf_alta_complex-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
-            options:
-              calcs:
-                - id: 'uti_level'
-                  function: 'get_uti_level'
-                  fn_args:
-                    - named_prop: 'proporcao_leitos_uti_10k_arranjo'
-        headers:
-          - text: 'Município origem'
-            align: 'left'
-            value: 'source_mun'
-          - text: 'Destino para Atendimento de Alta Complexidade'
-            align: 'left'
-            value: 'target_mun'
-        chart_options:
-          id_field: 'calc_uti_level'
-          value_field: 'agr_count'
-          loc_size_field: 'agr_count'
-          show_markers: true
-          radius:
-            base: 10000
-            multiplier: 2000
-          path:
-            multiplier: 4
-            animation:
-              base_duration: 10000
-          source:
-            lat: 'source_lat'
-            long: 'source_long'
-            id: 'source_cd_mun'
-          target:
-            lat: 'target_lat'
-            long: 'target_long'
-            id: 'target_cd_mun'
-            tooltip_function: 'obsCovidRegicTooltip'
-            # tooltip_items:
-            #   - text: 'Pólo Alta Complexidade'
-            #     value: 'target_mun'
-            #   # - text: 'População Estimada'
-            #   #   value: 'fmt_estimaded_population'
-          indicadores: ['Abaixo','Dentro','Acima']
-          legendArray: ['Abaixo do recomendado','Dentro do Recomendado','Acima do Recomendado']
-          colorArray: ["rgba(179, 9, 0, 0.7)","#fbc11a","green"]
-        source:
-          desc: "fonte"
-          link: ""
-# ========================================================
-      - id: "topo_alta_complex_uti"
-        chart_type: "MAP_TOPOJSON"
-        title: 
-          fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
-        title_comment:
-          template: "Brasil, {0}"
-          api: 
-            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-          args:
-            - named_prop: "agr_max_last_available_date"
-              format: 'dataDMY'
-        # info:
-        #   - type: "text"
-        #     title: "Sobre"
-        #     content:
-        #       fixed: ""
-        description:
-          # - type: "minicards"
-          #   cards:
-          #     - relevance: 'low'
-          #       cls: 'xs12 md6'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=qt_leitos_uti_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           named_prop: 'qt_leitos_uti_arranjo'
-          #           format: 'inteiro'
-          #           default: "Sem Registros"
-          #           zero: "Nenhum"
-          #         - prop: "description"
-          #           fixed: 'Número de Leitos de UTI'
-          #     - relevance: 'low'
-          #       cls: 'xs12 md6'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           named_prop: 'proporcao_leitos_uti_10k_arranjo'
-          #           format: 'real'
-          #           default: "Sem Registros"
-          #           zero: "Nenhum"
-          #         - prop: "description"
-          #           fixed: 'Número de Leitos de UTI'
-          #         - prop: "comment"
-          #           fixed: 'por 10.000 hab.'
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Texto..."
-          - id: "select_uf"
-            type: "select"
-            label: "Unidade Federativa"
-            clearable: false
-            default: 
-              fixed: 35 # São Paulo como default
-            target: 
-              range: "uf"
-              scope: "municipio"
-            api:
-              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
-            args:
-              - prop: "id"
-                named_prop: "cd_uf"
-              - prop: "label"
-                named_prop: "nm_uf"
-            selection:
-              event: "selection"
-              rules:
-                api: 
-                  template: "/thematic/arranjoregic?categorias=populacao_estimada_mun_origem,qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_dv_origem-cd_mun_ibge,cd_municipio_ibge_dv_alta_complex-target_cd_mun&agregacao=distinct&filtros=eq-cd_uf_origem-{0}"
-                  args:
-                    - named_prop: "cd_uf"
-        api: 
-          fixed: "/thematic/arranjoregic?categorias=populacao_estimada_mun_origem,qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_dv_origem-cd_mun_ibge,cd_municipio_ibge_dv_alta_complex-target_cd_mun&agregacao=distinct&filtros=eq-cd_uf_origem-35"
-          options:
-            calcs:
-              - id: 'uti_level'
-                function: 'get_uti_level'
-                fn_args:
-                  - named_prop: 'proporcao_leitos_uti_10k_arranjo'
-              - id: "uti_status"
-                function: "applyInterpolReplaceDatasetParam"
-                fn_args:
-                  - fixed: 
-                      template: "{0} do recomendado"
-                      args:
-                        - named_prop: "calc_uti_level"
-        headers:
-          - text: 'Município origem'
-            align: 'left'
-            value: 'source_mun'
-          - text: 'População estimada (2019)'
-            value: 'populacao_estimada_mun_origem'
-            format: 'inteiro'
-          - text: 'Pólo Destino para Atendimento de Alta Complexidade'
-            align: 'left'
-            value: 'target_mun'
-          - text: 'Qtd Leitos UTI no Pólo'
-            value: 'qt_leitos_uti_arranjo'
-            format: 'inteiro'
-          - text: 'Leitos UTI/10.000 hab. no Pólo'
-            value: 'proporcao_leitos_uti_10k_arranjo'
-            format: 'real'
-          - text: 'Situação no Pólo'
-            value: 'calc_uti_status'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_uti_level'
-          topology:
-            scope: 'municipio'
-            range: 'uf'
-            id: 35 # default - São Paulo
-          colorScale: 
-            type: "fixed"
-            color_array: 
-              "Abaixo": "rgba(179, 9, 0, 0.7)"
-              "Dentro": "#fbc11a"
-              "Acima": "green"
-        source:
-          desc: "fonte"
-          link: ""
-# ========================================================
       - id: "mapa_casos"
         title: 
           fixed: "Distribuição Geográfica por UF"
@@ -626,6 +397,463 @@ secoes:
 #                 color: "light-blue"
 #                 value: "te_res"
 #             event: 'selection'
+# ========================================================
+      - id: "mapa_alta_complex"
+        chart_type: "MAP_MIGRATION"
+        title: 
+          fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
+        title_comment:
+          fixed: "Brasil, março 2020"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre"
+        #     content:
+        #       fixed: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto..."
+          - id: "select_uf"
+            type: "select"
+            label: "Unidade Federativa"
+            clearable: false
+            default: 
+              fixed: 35 # São Paulo como default
+            target: 
+              range: "uf"
+              scope: "municipio"
+            api:
+              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
+            args:
+              - prop: "id"
+                named_prop: "cd_uf"
+              - prop: "label"
+                named_prop: "nm_uf"
+            selection:
+              event: "selection"
+              rules:
+                api: 
+                  - template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=eq-cd_uf_origem-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+                    args:
+                      - named_prop: "cd_uf"
+                  - template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=ne-cd_uf_origem-{0},and,eq-cd_uf_alta_complex-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+                    args:
+                      - named_prop: "cd_uf"
+        api: 
+          - fixed: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=eq-cd_uf_origem-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+            options:
+              calcs:
+                - id: 'uti_level'
+                  function: 'get_uti_level'
+                  fn_args:
+                    - named_prop: 'proporcao_leitos_uti_10k_arranjo'
+          - fixed: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=ne-cd_uf_origem-35,and,eq-cd_uf_alta_complex-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+            options:
+              calcs:
+                - id: 'uti_level'
+                  function: 'get_uti_level'
+                  fn_args:
+                    - named_prop: 'proporcao_leitos_uti_10k_arranjo'
+        headers:
+          - text: 'Município origem'
+            align: 'left'
+            value: 'source_mun'
+          - text: 'Destino para Atendimento de Alta Complexidade'
+            align: 'left'
+            value: 'target_mun'
+        chart_options:
+          id_field: 'calc_uti_level'
+          value_field: 'agr_count'
+          loc_size_field: 'agr_count'
+          show_markers: true
+          radius:
+            base: 10000
+            multiplier: 2000
+          path:
+            multiplier: 4
+            animation:
+              base_duration: 10000
+          source:
+            lat: 'source_lat'
+            long: 'source_long'
+            id: 'source_cd_mun'
+          target:
+            lat: 'target_lat'
+            long: 'target_long'
+            id: 'target_cd_mun'
+            tooltip_function: 'obsCovidRegicTooltip'
+            # tooltip_items:
+            #   - text: 'Pólo Alta Complexidade'
+            #     value: 'target_mun'
+            #   # - text: 'População Estimada'
+            #   #   value: 'fmt_estimaded_population'
+          indicadores: ['Abaixo do recomendado','Dentro do recomendado','Acima do recomendado']
+          legendArray: ['Abaixo do recomendado','Dentro do recomendado','Acima do recomendado']
+          colorArray: ["rgba(179, 9, 0, 0.7)","#fbc11a","green"]
+        source:
+          desc: "fonte"
+          link: ""
+# ========================================================
+      - id: "topo_alta_complex_uti_regic"
+        chart_type: "MAP_POLYGON"
+        title: 
+          fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
+        title_comment:
+          fixed: "Brasil, março 2020"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre"
+        #     content:
+        #       fixed: ""
+        description:
+          # - type: "minicards"
+          #   cards:
+          #     - relevance: 'low'
+          #       cls: 'xs12 md6'
+          #       api: 
+          #         template: "/thematic/arranjoregic?categorias=qt_leitos_uti_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+          #         args:
+          #           - named_prop: "idLocalidadeD6"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'qt_leitos_uti_arranjo'
+          #           format: 'inteiro'
+          #           default: "Sem Registros"
+          #           zero: "Nenhum"
+          #         - prop: "description"
+          #           fixed: 'Número de Leitos de UTI'
+          #     - relevance: 'low'
+          #       cls: 'xs12 md6'
+          #       api: 
+          #         template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+          #         args:
+          #           - named_prop: "idLocalidadeD6"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'proporcao_leitos_uti_10k_arranjo'
+          #           format: 'real'
+          #           default: "Sem Registros"
+          #           zero: "Nenhum"
+          #         - prop: "description"
+          #           fixed: 'Número de Leitos de UTI'
+          #         - prop: "comment"
+          #           fixed: 'por 10.000 hab.'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto..."
+          - id: "select_uf"
+            type: "select"
+            label: "Unidade Federativa"
+            clearable: false
+            default: 
+              fixed: 35 # São Paulo como default
+            target: 
+              range: "uf"
+              scope: "regic"
+            api:
+              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
+            args:
+              - prop: "id"
+                named_prop: "cd_uf"
+              - prop: "label"
+                named_prop: "nm_uf"
+            selection:
+              event: "selection"
+              rules:
+                api: 
+                  template: "/thematic/arranjoregic?categorias=qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge,latitude_alta_complex-lat,longitude_alta_complex-long&agregacao=DISTINCT&filtros=eq-cd_uf_origem-{0},and,nn-cd_municipio_ibge_dv_alta_complex"
+                  args:
+                    - named_prop: "cd_uf"
+        api: 
+          fixed: "/thematic/arranjoregic?categorias=qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge,latitude_alta_complex-lat,longitude_alta_complex-long&agregacao=DISTINCT&filtros=eq-cd_uf_origem-35,and,nn-cd_municipio_ibge_dv_alta_complex"
+          options:
+            recalc_min_max: true
+            minmax_field: "proporcao_leitos_uti_10k_arranjo"
+            calcs:
+              - id: 'uti_level'
+                function: 'get_uti_level'
+                fn_args:
+                  - named_prop: 'proporcao_leitos_uti_10k_arranjo'
+              - id: "deviation"
+                function: "get_bipolar_scale"
+                fn_args: 
+                  - fixed: 'proporcao_leitos_uti_10k_arranjo'
+                  - fixed: 2
+        headers:
+          - text: 'Município origem'
+            align: 'left'
+            value: 'source_mun'
+          - text: 'População estimada (2019)'
+            value: 'populacao_estimada_mun_origem'
+            format: 'inteiro'
+          - text: 'Pólo Destino para Atendimento de Alta Complexidade'
+            align: 'left'
+            value: 'target_mun'
+          - text: 'Qtd Leitos UTI no Pólo'
+            value: 'qt_leitos_uti_arranjo'
+            format: 'inteiro'
+          - text: 'Leitos UTI/10.000 hab. no Pólo'
+            value: 'proporcao_leitos_uti_10k_arranjo'
+            format: 'real'
+          - text: 'Situação no Pólo'
+            value: 'calc_uti_level'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          lat: 'lat'
+          long: 'long'
+          topo_key: "CodReg"
+          tooltip_function: 'obsCovidRegicTooltip'
+          topology:
+            scope: "regic"
+            range: "uf"
+            id: 35 # default - São Paulo
+          value_field: 'calc_deviation'
+          colorScale:
+            name: "RdYlGn"
+            range:
+              min_value: -1
+              max_value: 1
+        source:
+          desc: "fonte"
+          link: ""
+# # ========================================================
+#       - id: "topo_alta_complex_uti"
+#         chart_type: "MAP_TOPOJSON"
+#         title: 
+#           fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
+#         title_comment:
+#           fixed: "Brasil, março 2020"
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre"
+#         #     content:
+#         #       fixed: ""
+#         description:
+#           # - type: "minicards"
+#           #   cards:
+#           #     - relevance: 'low'
+#           #       cls: 'xs12 md6'
+#           #       api: 
+#           #         template: "/thematic/arranjoregic?categorias=qt_leitos_uti_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+#           #         args:
+#           #           - named_prop: "idLocalidadeD6"
+#           #       args:
+#           #         - prop: "value"
+#           #           named_prop: 'qt_leitos_uti_arranjo'
+#           #           format: 'inteiro'
+#           #           default: "Sem Registros"
+#           #           zero: "Nenhum"
+#           #         - prop: "description"
+#           #           fixed: 'Número de Leitos de UTI'
+#           #     - relevance: 'low'
+#           #       cls: 'xs12 md6'
+#           #       api: 
+#           #         template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+#           #         args:
+#           #           - named_prop: "idLocalidadeD6"
+#           #       args:
+#           #         - prop: "value"
+#           #           named_prop: 'proporcao_leitos_uti_10k_arranjo'
+#           #           format: 'real'
+#           #           default: "Sem Registros"
+#           #           zero: "Nenhum"
+#           #         - prop: "description"
+#           #           fixed: 'Número de Leitos de UTI'
+#           #         - prop: "comment"
+#           #           fixed: 'por 10.000 hab.'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Texto..."
+#           - id: "select_uf"
+#             type: "select"
+#             label: "Unidade Federativa"
+#             clearable: false
+#             default: 
+#               fixed: 35 # São Paulo como default
+#             target: 
+#               range: "uf"
+#               scope: "municipio"
+#             api:
+#               fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
+#             args:
+#               - prop: "id"
+#                 named_prop: "cd_uf"
+#               - prop: "label"
+#                 named_prop: "nm_uf"
+#             selection:
+#               event: "selection"
+#               rules:
+#                 api: 
+#                   template: "/thematic/arranjoregic?categorias=populacao_estimada_mun_origem,qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_dv_origem-cd_mun_ibge,cd_municipio_ibge_dv_alta_complex-target_cd_mun&agregacao=distinct&filtros=eq-cd_uf_origem-{0}"
+#                   args:
+#                     - named_prop: "cd_uf"
+#         api: 
+#           fixed: "/thematic/arranjoregic?categorias=populacao_estimada_mun_origem,qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_dv_origem-cd_mun_ibge,cd_municipio_ibge_dv_alta_complex-target_cd_mun&agregacao=distinct&filtros=eq-cd_uf_origem-35"
+#           options:
+#             calcs:
+#               - id: 'uti_level'
+#                 function: 'get_uti_level'
+#                 fn_args:
+#                   - named_prop: 'proporcao_leitos_uti_10k_arranjo'
+#         headers:
+#           - text: 'Município origem'
+#             align: 'left'
+#             value: 'source_mun'
+#           - text: 'População estimada (2019)'
+#             value: 'populacao_estimada_mun_origem'
+#             format: 'inteiro'
+#           - text: 'Pólo Destino para Atendimento de Alta Complexidade'
+#             align: 'left'
+#             value: 'target_mun'
+#           - text: 'Qtd Leitos UTI no Pólo'
+#             value: 'qt_leitos_uti_arranjo'
+#             format: 'inteiro'
+#           - text: 'Leitos UTI/10.000 hab. no Pólo'
+#             value: 'proporcao_leitos_uti_10k_arranjo'
+#             format: 'real'
+#           - text: 'Situação no Pólo'
+#             value: 'calc_uti_level'
+#         chart_options:
+#           id_field: 'cd_mun_ibge'
+#           topo_key: "codarea"
+#           value_field: 'calc_uti_level'
+#           topology:
+#             scope: 'municipio'
+#             range: 'uf'
+#             id: 35 # default - São Paulo
+#           colorScale: 
+#             type: "fixed"
+#             color_array: 
+#               "Abaixo do recomendado": "rgba(179, 9, 0, 0.7)"
+#               "Dentro do recomendado": "#fbc11a"
+#               "Acima do recomendado": "green"
+#         source:
+#           desc: "fonte"
+#           link: ""
+# ========================================================
+      - id: "topo_alta_complex_uti2"
+        chart_type: "MAP_TOPOJSON"
+        title: 
+          fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
+        title_comment:
+          fixed: "Brasil, março 2020"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre"
+        #     content:
+        #       fixed: ""
+        description:
+          # - type: "minicards"
+          #   cards:
+          #     - relevance: 'low'
+          #       cls: 'xs12 md6'
+          #       api: 
+          #         template: "/thematic/arranjoregic?categorias=qt_leitos_uti_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+          #         args:
+          #           - named_prop: "idLocalidadeD6"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'qt_leitos_uti_arranjo'
+          #           format: 'inteiro'
+          #           default: "Sem Registros"
+          #           zero: "Nenhum"
+          #         - prop: "description"
+          #           fixed: 'Número de Leitos de UTI'
+          #     - relevance: 'low'
+          #       cls: 'xs12 md6'
+          #       api: 
+          #         template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+          #         args:
+          #           - named_prop: "idLocalidadeD6"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'proporcao_leitos_uti_10k_arranjo'
+          #           format: 'real'
+          #           default: "Sem Registros"
+          #           zero: "Nenhum"
+          #         - prop: "description"
+          #           fixed: 'Número de Leitos de UTI'
+          #         - prop: "comment"
+          #           fixed: 'por 10.000 hab.'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto..."
+          - id: "select_uf"
+            type: "select"
+            label: "Unidade Federativa"
+            clearable: false
+            default: 
+              fixed: 35 # São Paulo como default
+            target: 
+              range: "uf"
+              scope: "municipio"
+            api:
+              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
+            args:
+              - prop: "id"
+                named_prop: "cd_uf"
+              - prop: "label"
+                named_prop: "nm_uf"
+            selection:
+              event: "selection"
+              rules:
+                api: 
+                  template: "/thematic/arranjoregic?categorias=populacao_estimada_mun_origem,qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_dv_origem-cd_mun_ibge,cd_municipio_ibge_dv_alta_complex-target_cd_mun&agregacao=distinct&filtros=eq-cd_uf_origem-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+        api: 
+          fixed: "/thematic/arranjoregic?categorias=populacao_estimada_mun_origem,qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_dv_origem-cd_mun_ibge,cd_municipio_ibge_dv_alta_complex-target_cd_mun&agregacao=distinct&filtros=eq-cd_uf_origem-35"
+          options:
+            recalc_min_max: true
+            minmax_field: "proporcao_leitos_uti_10k_arranjo"
+            calcs:
+              - id: 'uti_level'
+                function: 'get_uti_level'
+                fn_args:
+                  - named_prop: 'proporcao_leitos_uti_10k_arranjo'
+              - id: "deviation_crescimento"
+                function: "get_bipolar_scale"
+                fn_args: 
+                  - fixed: 'proporcao_leitos_uti_10k_arranjo'
+                  - fixed: 2
+        headers:
+          - text: 'Município origem'
+            align: 'left'
+            value: 'source_mun'
+          - text: 'População estimada (2019)'
+            value: 'populacao_estimada_mun_origem'
+            format: 'inteiro'
+          - text: 'Pólo Destino para Atendimento de Alta Complexidade'
+            align: 'left'
+            value: 'target_mun'
+          - text: 'Qtd Leitos UTI no Pólo'
+            value: 'qt_leitos_uti_arranjo'
+            format: 'inteiro'
+          - text: 'Leitos UTI/10.000 hab. no Pólo'
+            value: 'proporcao_leitos_uti_10k_arranjo'
+            format: 'real'
+          - text: 'Situação no Pólo'
+            value: 'calc_uti_level'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_crescimento'
+          topology:
+            scope: 'municipio'
+            range: 'uf'
+            id: 35 # default - São Paulo
+          colorScale:
+            name: "RdYlGn"
+            range:
+              min_value: -1
+              max_value: 1
+        source:
+          desc: "fonte"
+          link: ""
 # ===============================================
       - id: "prevalencia_priori_headline"
         type: "headline"
