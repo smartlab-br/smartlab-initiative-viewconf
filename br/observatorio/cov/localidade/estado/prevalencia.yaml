@@ -209,32 +209,36 @@ secoes:
                 fn_args:
                   - fixed: "valor"
             formatters:
+              - id: "estimated_population_2019"
+                format: 'inteiro'
               - id: "last_available_deaths"
                 format: 'inteiro'
               - id: "last_available_confirmed"
                 format: 'inteiro'
+              - id: "last_available_confirmed_per_100k_inhabitants"
+                format: 'real'
+                precision: 2
+              - id: "last_available_death_rate"
+                format: 'real'
+                precision: 2
+              - id: "last_available_date"
+                format: 'dataDMY'
         headers:
           - text: 'Município'
             align: 'left'
             value: 'city'
           - text: 'População estimada (2019)'
-            value: 'estimated_population_2019'
-            format: 'inteiro'
+            value: 'fmt_estimated_population_2019'
           - text: 'Casos confirmados'
             value: 'fmt_last_available_confirmed'
           - text: 'Óbitos confirmados'
             value: 'fmt_last_available_deaths'
           - text: 'Casos confirmados/100.000 hab.'
-            value: 'last_available_confirmed_per_100k_inhabitants'
-            format: 'real'
-            precision: 2
+            value: 'fmt_last_available_confirmed_per_100k_inhabitants'
           - text: 'Óbitos confirmados/100.000 hab.'
-            value: 'last_available_death_rate'
-            format: 'real'
-            precision: 2
+            value: 'fmt_last_available_death_rate'
           - text: 'Data coleta'
-            value: 'last_available_date'
-            format: 'dataDMY'
+            value: 'fmt_last_available_date'
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
@@ -247,6 +251,179 @@ secoes:
               "last_available_deaths": "Reds"
               "last_available_confirmed_per_100k_inhabitants": "Greens"
               "last_available_death_rate": "Purples"
+          # colorScale:
+          #   name: 'Reds'
+# ========================================================
+      - id: "mapa_casos_regic"
+        title: 
+          fixed: "Distribuição Geográfica por Região de Saúde"
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            template: "/thematic/arranjoregic?categorias=dt_coleta_covid_arranjo&filtros=eq-cd_uf_origem-{0},and,nn-cd_municipio_ibge_dv_alta_complex&limit=1"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "dt_coleta_covid_arranjo"
+              format: "dataDMY"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description:
+          # - type: "minicards"
+          #   cards:
+          #     - relevance: 'high'
+          #       cls: 'xs12'
+          #       api: 
+          #         template: "/thematic/arranjoregic?categorias=nm_municipio_uf_alta_complex&filtros=eq-cd_municipio_ibge_origem-{0}"
+          #         args:
+          #           - named_prop: "idLocalidade"
+          #       args:
+          #         - prop: "value"
+          #           template: "Arranjo Populacional<br/>{0}"
+          #           args:
+          #             - named_prop: 'nm_municipio_uf_alta_complex'
+          #               default: "Sem Registros"
+          #         - prop: "description"
+          #           fixed: 'Destino para atendimento de alta complexidade'
+          #     - relevance: 'high'
+          #       cls: 'xs12 md6'
+          #       api: 
+          #         template: "/thematic/arranjoregic?categorias=qt_casos_covid_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+          #         args:
+          #           - named_prop: "idLocalidadeD6"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'qt_casos_covid_arranjo'
+          #           format: 'inteiro'
+          #           default: "Sem Registros"
+          #           zero: "Nenhum"
+          #         - prop: "description"
+          #           fixed: 'Casos confirmados'
+          #     - relevance: 'high'
+          #       cls: 'xs12 md6'
+          #       api: 
+          #         template: "/thematic/arranjoregic?categorias=qt_mortes_covid_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+          #         args:
+          #           - named_prop: "idLocalidadeD6"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'qt_mortes_covid_arranjo'
+          #           format: 'inteiro'
+          #           default: "Sem Registros"
+          #           zero: "Nenhum"
+          #         - prop: "description"
+          #           fixed: "Óbitos confirmados"
+          #     - relevance: 'low'
+          #       cls: 'xs12 md6'
+          #       api: 
+          #         template: "/thematic/arranjoregic?categorias=qt_municipios_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+          #         args:
+          #           - named_prop: "idLocalidadeD6"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'qt_municipios_arranjo'
+          #           format: 'inteiro'
+          #           default: "Sem Registros"
+          #           zero: "Nenhum"
+          #         - prop: "description"
+          #           fixed: 'Municípios atendidos'
+          #     - relevance: 'low'
+          #       cls: 'xs12 md6'
+          #       api: 
+          #         template: "/thematic/arranjoregic?categorias=populacao_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+          #         args:
+          #           - named_prop: "idLocalidadeD6"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'populacao_arranjo'
+          #           format: 'inteiro'
+          #           collapse:
+          #             format: 'real'
+          #           default: "Sem Registros"
+          #           zero: "Nenhum"
+          #         - prop: "description"
+          #           fixed: 'População atendida'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto...<br/>"
+          - id: "covid_valor"
+            type: "radio"
+            items:
+              - id: "casos"
+                value: "qt_casos_covid_arranjo"
+                default: true
+                color: "light-blue"
+                label: "CASOS CONFIRMADOS"
+              - id: "obitos"
+                value: "qt_mortes_covid_arranjo"
+                color: "red"
+                label: "ÓBITOS CONFIRMADOS"
+            selection:
+              event: 'selection'
+              rules:
+                api:
+                  template: "/thematic/arranjoregic?categorias=latitude_alta_complex-lat,longitude_alta_complex-long,{0}-valor,populacao_arranjo,qt_municipios_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge&agregacao=DISTINCT&filtros=eq-cd_uf_origem-{1},and,nn-cd_municipio_ibge_dv_alta_complex"
+                  args:
+                    - named_prop: "covid_valor"
+                    - named_prop: 'cd_uf'
+        chart_type: "MAP_POLYGON"
+        api: 
+          template: "/thematic/arranjoregic?categorias=latitude_alta_complex-lat,longitude_alta_complex-long,qt_casos_covid_arranjo-valor,populacao_arranjo,qt_municipios_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge&agregacao=DISTINCT&filtros=eq-cd_uf_origem-{0},and,nn-cd_municipio_ibge_dv_alta_complex"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_valor"
+                function: "get_log"
+                fn_args:
+                  - fixed: "valor"
+            formatters:
+              - id: "populacao_arranjo"
+                format: "inteiro"
+              - id: "populacao_arranjo"
+                format: "inteiro"
+              - id: "qt_casos_covid_arranjo"
+                format: "inteiro"
+              - id: "qt_mortes_covid_arranjo"
+                format: "inteiro"
+              - id: "dt_coleta_covid_arranjo"
+                format: "dataDMY"
+        headers:
+          - text: 'Arranjo Populacional'
+            align: 'left'
+            value: 'target_mun'
+          - text: 'Municípios atendidos'
+            value: 'qt_municipios_arranjo'
+          - text: 'População atendida'
+            value: 'fmt_populacao_arranjo'
+          - text: 'Casos confirmados'
+            value: 'fmt_qt_casos_covid_arranjo'
+          - text: 'Óbitos confirmados'
+            value: 'fmt_qt_mortes_covid_arranjo'
+          - text: 'Data coleta'
+            value: 'fmt_dt_coleta_covid_arranjo'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "CodReg"
+          value_field: 'calc_deviation_valor'
+          tooltip_function: 'obsCovidRegicTooltip'
+          lat: "lat"
+          long: "long"
+          topology:
+            scope: "regic"
+            range: "uf"
+          colorScale: 
+            type: "singleHue"
+            scale_name_value: "covid_valor"
+            color_array: 
+              "qt_casos_covid_arranjo": "Blues"
+              "qt_mortes_covid_arranjo": "Reds"
           # colorScale:
           #   name: 'Reds'
 # # ========================================================
@@ -407,10 +584,14 @@ secoes:
         title: 
           fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
         title_comment:
-          template: "{0}, março 2020"
+          template: "{0}, em {1}/{2}"
+          api: 
+            fixed: "/thematic/arranjoregic?categorias=cnes_ano_refencia,cnes_mes_referencia&limit=1"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
+            - named_prop: "cnes_mes_referencia"
+            - named_prop: "cnes_ano_refencia"
         # info:
         #   - type: "text"
         #     title: "Sobre"
@@ -485,10 +666,14 @@ secoes:
         title: 
           fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
         title_comment:
-          template: "{0}, março 2020"
+          template: "{0}, em {1}/{2}"
+          api: 
+            fixed: "/thematic/arranjoregic?categorias=cnes_ano_refencia,cnes_mes_referencia&limit=1"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
+            - named_prop: "cnes_mes_referencia"
+            - named_prop: "cnes_ano_refencia"
         # info:
         #   - type: "text"
         #     title: "Sobre"
@@ -505,7 +690,7 @@ secoes:
           #           - named_prop: "idLocalidadeD6"
           #       args:
           #         - prop: "value"
-          #           template: "Arranjo Populacional de <br/>{0}"
+          #           template: "Arranjo Populacional<br/>{0}"
           #           args:
           #             - named_prop: 'nm_municipio_uf_alta_complex'
           #               default: "Sem Registros"
@@ -696,10 +881,14 @@ secoes:
         title: 
           fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
         title_comment:
-          template: "{0}, março 2020"
+          template: "{0}, em {1}/{2}"
+          api: 
+            fixed: "/thematic/arranjoregic?categorias=cnes_ano_refencia,cnes_mes_referencia&limit=1"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
+            - named_prop: "cnes_mes_referencia"
+            - named_prop: "cnes_ano_refencia"
         # info:
         #   - type: "text"
         #     title: "Sobre"
@@ -716,7 +905,7 @@ secoes:
           #           - named_prop: "idLocalidadeD6"
           #       args:
           #         - prop: "value"
-          #           template: "Arranjo Populacional de <br/>{0}"
+          #           template: "Arranjo Populacional<br/>{0}"
           #           args:
           #             - named_prop: 'nm_municipio_uf_alta_complex'
           #               default: "Sem Registros"
