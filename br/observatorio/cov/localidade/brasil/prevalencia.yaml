@@ -170,32 +170,36 @@ secoes:
                 fn_args:
                   - fixed: "valor"
             formatters:
+              - id: "estimated_population_2019"
+                format: 'inteiro'
               - id: "last_available_deaths"
                 format: 'inteiro'
               - id: "last_available_confirmed"
                 format: 'inteiro'
+              - id: "last_available_confirmed_per_100k_inhabitants"
+                format: 'real'
+                precision: 2
+              - id: "last_available_death_rate"
+                format: 'real'
+                precision: 2
+              - id: "last_available_date"
+                format: 'dataDMY'
         headers:
           - text: 'UF'
             align: 'left'
             value: 'nm_uf'
           - text: 'População estimada (2019)'
-            value: 'estimated_population_2019'
-            format: 'inteiro'
+            value: 'fmt_estimated_population_2019'
           - text: 'Casos confirmados'
             value: 'fmt_last_available_confirmed'
           - text: 'Óbitos confirmados'
             value: 'fmt_last_available_deaths'
           - text: 'Casos confirmados/100.000 hab.'
-            value: 'last_available_confirmed_per_100k_inhabitants'
-            format: 'real'
-            precision: 2
+            value: 'fmt_last_available_confirmed_per_100k_inhabitants'
           - text: 'Óbitos confirmados/100.000 hab.'
-            value: 'last_available_death_rate'
-            format: 'real'
-            precision: 2
+            value: 'fmt_last_available_death_rate'
           - text: 'Data coleta'
-            value: 'last_available_date'
-            format: 'dataDMY'
+            value: 'fmt_last_available_date'
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
@@ -208,6 +212,98 @@ secoes:
               "last_available_deaths": "Reds"
               "last_available_confirmed_per_100k_inhabitants": "Greens"
               "last_available_death_rate": "Purples"
+          # colorScale:
+          #   name: 'Reds'
+# ========================================================
+      - id: "mapa_casos_regic"
+        title: 
+          fixed: "Distribuição Geográfica por Região de Saúde"
+        title_comment:
+          template: "Brasil, {0}"
+          api: 
+            template: "/thematic/arranjoregic?categorias=dt_coleta_covid_arranjo&filtros=nn-cd_municipio_ibge_dv_alta_complex&limit=1"
+          args:
+            - named_prop: "dt_coleta_covid_arranjo"
+              format: "dataDMY"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Texto...<br/>"
+          - id: "covid_valor"
+            type: "radio"
+            items:
+              - id: "casos"
+                value: "qt_casos_covid_arranjo"
+                default: true
+                color: "light-blue"
+                label: "CASOS CONFIRMADOS"
+              - id: "obitos"
+                value: "qt_mortes_covid_arranjo"
+                color: "red"
+                label: "ÓBITOS CONFIRMADOS"
+            selection:
+              event: 'selection'
+              rules:
+                api:
+                  template: "/thematic/arranjoregic?categorias=latitude_alta_complex-lat,longitude_alta_complex-long,{0}-valor,populacao_arranjo,qt_municipios_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge&agregacao=DISTINCT"
+                  args:
+                    - named_prop: "covid_valor"
+        chart_type: "MAP_POLYGON"
+        api: 
+          template: "/thematic/arranjoregic?categorias=latitude_alta_complex-lat,longitude_alta_complex-long,qt_casos_covid_arranjo-valor,populacao_arranjo,qt_municipios_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge&agregacao=DISTINCT"
+          options:
+            calcs:
+              - id: "deviation_valor"
+                function: "get_log"
+                fn_args:
+                  - fixed: "valor"
+            formatters:
+              - id: "populacao_arranjo"
+                format: "inteiro"
+              - id: "populacao_arranjo"
+                format: "inteiro"
+              - id: "qt_casos_covid_arranjo"
+                format: "inteiro"
+              - id: "qt_mortes_covid_arranjo"
+                format: "inteiro"
+              - id: "dt_coleta_covid_arranjo"
+                format: "dataDMY"
+        headers:
+          - text: 'Arranjo Populacional'
+            align: 'left'
+            value: 'target_mun'
+          - text: 'Municípios atendidos'
+            value: 'qt_municipios_arranjo'
+          - text: 'População atendida'
+            value: 'fmt_populacao_arranjo'
+          - text: 'Casos confirmados'
+            value: 'fmt_qt_casos_covid_arranjo'
+          - text: 'Óbitos confirmados'
+            value: 'fmt_qt_mortes_covid_arranjo'
+          - text: 'Data coleta'
+            value: 'fmt_dt_coleta_covid_arranjo'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "CodReg"
+          value_field: 'calc_deviation_valor'
+          tooltip_function: 'obsCovidRegicTooltip'
+          lat: "lat"
+          long: "long"
+          topology:
+            scope: "regic"
+            range: "br"
+          colorScale: 
+            type: "singleHue"
+            scale_name_value: "covid_valor"
+            color_array: 
+              "qt_casos_covid_arranjo": "Blues"
+              "qt_mortes_covid_arranjo": "Reds"
           # colorScale:
           #   name: 'Reds'
 # ========================================================
@@ -403,7 +499,14 @@ secoes:
         title: 
           fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
         title_comment:
-          fixed: "Brasil, março 2020"
+          template: "Brasil, em {0}/{1}"
+          api: 
+            fixed: "/thematic/arranjoregic?categorias=cnes_ano_refencia,cnes_mes_referencia&limit=1"
+          args:
+            - named_prop: "cnes_mes_referencia"
+            - named_prop: "cnes_ano_refencia"
+
+
         # info:
         #   - type: "text"
         #     title: "Sobre"
@@ -500,7 +603,12 @@ secoes:
         title: 
           fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
         title_comment:
-          fixed: "Brasil, março 2020"
+          template: "Brasil, em {0}/{1}"
+          api: 
+            fixed: "/thematic/arranjoregic?categorias=cnes_ano_refencia,cnes_mes_referencia&limit=1"
+          args:
+            - named_prop: "cnes_mes_referencia"
+            - named_prop: "cnes_ano_refencia"
         # info:
         #   - type: "text"
         #     title: "Sobre"
@@ -739,7 +847,12 @@ secoes:
         title: 
           fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
         title_comment:
-          fixed: "Brasil, março 2020"
+          template: "Brasil, em {0}/{1}"
+          api: 
+            fixed: "/thematic/arranjoregic?categorias=cnes_ano_refencia,cnes_mes_referencia&limit=1"
+          args:
+            - named_prop: "cnes_mes_referencia"
+            - named_prop: "cnes_ano_refencia"
         # info:
         #   - type: "text"
         #     title: "Sobre"
