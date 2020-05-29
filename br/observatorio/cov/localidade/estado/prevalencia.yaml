@@ -39,7 +39,7 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      template: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE"
+      template: "/thematic/casoscovid19?categorias=qtd_municipios_uf,populacao_uf&valor=cd_municipio_ibge_dv,estimated_population_2019&agregacao=COUNT,SUM&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_confirmed-0"
       args:
         - named_prop: "idLocalidade"
     args:
@@ -47,19 +47,26 @@ principais:
         named_prop: "agr_count_cd_municipio_ibge_dv"
       - prop: "description"
         fixed: "Municípios atingidos"
-      # - prop: 'comment'
-      #   template: "{0}% de um total de 5.570 municípios"
-      #   args:
-      #     - function: 'calc_percentage'
-      #       format: 'inteiro'
-      #       fn_args:
-      #         - named_prop: "agr_count_cd_municipio_ibge_dv"
-      #         - fixed: 5570
+      - prop: 'comment'
+        template: "{0}% de um total de {1} municípios <br/>
+                   {2}% da população da UF"
+        args:
+          - function: 'calc_percentage'
+            format: 'inteiro'
+            fn_args:
+              - named_prop: "agr_count_cd_municipio_ibge_dv"
+              - named_prop: "qtd_municipios_uf"
+          - named_prop: "qtd_municipios_uf"
+          - function: 'calc_percentage'
+            format: 'real'
+            fn_args:
+              - named_prop: "agr_sum_estimated_population_2019"
+              - named_prop: "populacao_uf"
   - relevance: "lead"
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      template: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+      template: "/thematic/casoscovid19?categorias=qtd_municipios_uf,populacao_uf&valor=cd_municipio_ibge_dv,estimated_population_2019&agregacao=COUNT,SUM&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
       args:
         - named_prop: "idLocalidade"
     args:
@@ -67,14 +74,21 @@ principais:
         named_prop: "agr_count_cd_municipio_ibge_dv"
       - prop: "description"
         fixed: "Municípios com óbitos"
-      # - prop: 'comment'
-      #   template: "{0}% de um total de 5.570 municípios"
-      #   args:
-      #     - function: 'calc_percentage'
-      #       format: 'inteiro'
-      #       fn_args:
-      #         - named_prop: "agr_count_cd_municipio_ibge_dv"
-      #         - fixed: 5570
+      - prop: 'comment'
+        template: "{0}% de um total de {1} municípios <br/>
+                   {2}% da população da UF"
+        args:
+          - function: 'calc_percentage'
+            format: 'real'
+            fn_args:
+              - named_prop: "agr_count_cd_municipio_ibge_dv"
+              - named_prop: "qtd_municipios_uf"
+          - named_prop: "qtd_municipios_uf"
+          - function: 'calc_percentage'
+            format: 'real'
+            fn_args:
+              - named_prop: "agr_sum_estimated_population_2019"
+              - named_prop: "populacao_uf"
 # ========================================================
 secoes:
   - id: 'prevalencia_prioridade'
@@ -193,13 +207,13 @@ secoes:
               event: 'selection'
               rules:
                 api:
-                  template: "/thematic/casoscovid19?categorias={0}-valor,estimated_population_2019,cd_municipio_ibge_dv,city,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_uf-{1}"
+                  template: "/thematic/casoscovid19?categorias={0}-valor,estimated_population_2019,cd_municipio_ibge_dv,city,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_uf-{1},and,ne-{0}-0"
                   args:
                     - named_prop: "covid_valor"
                     - named_prop: 'cd_uf'
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/thematic/casoscovid19?categorias=last_available_confirmed-valor,estimated_population_2019,cd_municipio_ibge_dv,city,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_uf-{0}"
+          template: "/thematic/casoscovid19?categorias=last_available_confirmed-valor,estimated_population_2019,cd_municipio_ibge_dv,city,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_uf-{0},and,ne-last_available_confirmed-0"
           args:
             - named_prop: 'idLocalidade'
           options:
@@ -256,7 +270,7 @@ secoes:
 # ========================================================
       - id: "mapa_casos_regic"
         title: 
-          fixed: "Distribuição Geográfica por Região de Saúde"
+          fixed: "Distribuição Geográfica por Pólo de Atendimento de Alta Complexidade"
         title_comment:
           template: "{0}, {1}"
           api: 
@@ -274,84 +288,74 @@ secoes:
         #     content:
         #       fixed: ""
         description:
-          # - type: "minicards"
-          #   cards:
-          #     - relevance: 'high'
-          #       cls: 'xs12'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=nm_municipio_uf_alta_complex&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidade"
-          #       args:
-          #         - prop: "value"
-          #           template: "Arranjo Populacional<br/>{0}"
-          #           args:
-          #             - named_prop: 'nm_municipio_uf_alta_complex'
-          #               default: "Sem Registros"
-          #         - prop: "description"
-          #           fixed: 'Destino para atendimento de alta complexidade'
-          #     - relevance: 'high'
-          #       cls: 'xs12 md6'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=qt_casos_covid_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           named_prop: 'qt_casos_covid_arranjo'
-          #           format: 'inteiro'
-          #           default: "Sem Registros"
-          #           zero: "Nenhum"
-          #         - prop: "description"
-          #           fixed: 'Casos confirmados'
-          #     - relevance: 'high'
-          #       cls: 'xs12 md6'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=qt_mortes_covid_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           named_prop: 'qt_mortes_covid_arranjo'
-          #           format: 'inteiro'
-          #           default: "Sem Registros"
-          #           zero: "Nenhum"
-          #         - prop: "description"
-          #           fixed: "Óbitos confirmados"
-          #     - relevance: 'low'
-          #       cls: 'xs12 md6'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=qt_municipios_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           named_prop: 'qt_municipios_arranjo'
-          #           format: 'inteiro'
-          #           default: "Sem Registros"
-          #           zero: "Nenhum"
-          #         - prop: "description"
-          #           fixed: 'Municípios atendidos'
-          #     - relevance: 'low'
-          #       cls: 'xs12 md6'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=populacao_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           named_prop: 'populacao_arranjo'
-          #           format: 'inteiro'
-          #           collapse:
-          #             format: 'real'
-          #           default: "Sem Registros"
-          #           zero: "Nenhum"
-          #         - prop: "description"
-          #           fixed: 'População atendida'
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed&filtros=eq-place_type-'state',and,eq-is_last-TRUE,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_deaths&filtros=eq-place_type-'state',and,eq-is_last-TRUE,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_deaths'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed_per_100k_inhabitants&filtros=eq-place_type-'state',and,eq-is_last-TRUE,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed_per_100k_inhabitants'
+                    format: 'real'
+                    precision: 2
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+                  - prop: "comment"
+                    fixed: 'por 100.000 hab.'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_rate&filtros=eq-place_type-'state',and,eq-is_last-TRUE,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_death_rate'
+                    format: 'real'
+                    precision: 2
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+                  - prop: "comment"
+                    fixed: 'por 100.000 hab.'
           - type: "text"
             title: ""
             content:
-              fixed: "Texto...<br/>"
+              fixed: "Em destaque, o número de casos confirmados.<br/>"
           - id: "covid_valor"
             type: "radio"
             items:
@@ -542,27 +546,75 @@ secoes:
         #     title: "Sobre"
         #     content:
         #       fixed: ""
-        api:
-          - template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-cd_indicador,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-vl_indicador,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
-            args:
-              - named_prop: 'idLocalidade'
-          - template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos'-cd_indicador,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-vl_indicador,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
-            args:
-              - named_prop: 'idLocalidade'
-        chart_options:
-          colorArray: ["rgba(21, 101, 192, 0.7)", "rgba(179, 9, 0, 0.7)"]
-          indicadores: ["casos","obitos"]
-          lat: 'latitude'
-          long: 'longitude'
-          value_field: 'vl_indicador'
-        source:
-          desc: ""
-          link: ""
         description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed&filtros=eq-place_type-'state',and,eq-is_last-TRUE,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_deaths&filtros=eq-place_type-'state',and,eq-is_last-TRUE,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_deaths'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed_per_100k_inhabitants&filtros=eq-place_type-'state',and,eq-is_last-TRUE,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed_per_100k_inhabitants'
+                    format: 'real'
+                    precision: 2
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+                  - prop: "comment"
+                    fixed: 'por 100.000 hab.'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_rate&filtros=eq-place_type-'state',and,eq-is_last-TRUE,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_death_rate'
+                    format: 'real'
+                    precision: 2
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+                  - prop: "comment"
+                    fixed: 'por 100.000 hab.'
           - type: "text"
             title: ""
             content:
-              fixed: "Texto..."
+              fixed: "Em destaque, o número de casos confirmados.<br/>"
           - id: "selectlayer"
             type: "radio"
             items:
@@ -578,6 +630,175 @@ secoes:
                 color: "red"
                 value: "obitos"
             event: 'selection'
+        api:
+          - template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-cd_indicador,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-vl_indicador,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: 'idLocalidade'
+            options:
+              formatters:
+                - id: "estimated_population_2019"
+                  format: 'inteiro'
+                - id: "last_available_deaths"
+                  format: 'inteiro'
+                - id: "last_available_confirmed"
+                  format: 'inteiro'
+                - id: "last_available_confirmed_per_100k_inhabitants"
+                  format: 'real'
+                  precision: 2
+                - id: "last_available_death_rate"
+                  format: 'real'
+                  precision: 2
+                - id: "last_available_date"
+                  format: 'dataDMY'
+          - template: "/thematic/casoscovid19?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos'-cd_indicador,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-vl_indicador,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: 'idLocalidade'
+            options:
+              formatters:
+                - id: "estimated_population_2019"
+                  format: 'inteiro'
+                - id: "last_available_deaths"
+                  format: 'inteiro'
+                - id: "last_available_confirmed"
+                  format: 'inteiro'
+                - id: "last_available_confirmed_per_100k_inhabitants"
+                  format: 'real'
+                  precision: 2
+                - id: "last_available_death_rate"
+                  format: 'real'
+                  precision: 2
+                - id: "last_available_date"
+                  format: 'dataDMY'
+        headers:
+          - text: 'Município'
+            value: 'nm_municipio_uf'
+          - text: 'População estimada (2019)'
+            value: 'fmt_estimated_population_2019'
+          - text: 'Casos confirmados'
+            value: 'fmt_last_available_confirmed'
+          - text: 'Óbitos confirmados'
+            value: 'fmt_last_available_deaths'
+          - text: 'Casos confirmados/100.000 hab.'
+            value: 'fmt_last_available_confirmed_per_100k_inhabitants'
+          - text: 'Óbitos confirmados/100.000 hab.'
+            value: 'fmt_last_available_death_rate'
+          - text: 'Data coleta'
+            value: 'fmt_last_available_date'
+        chart_options:
+          colorArray: ["rgba(21, 101, 192, 0.7)", "rgba(179, 9, 0, 0.7)"]
+          indicadores: ["casos","obitos"]
+          lat: 'latitude'
+          long: 'longitude'
+          value_field: 'vl_indicador'
+        source:
+          desc: ""
+          link: ""
+# ========================================================
+      - id: "topo_alta_complex_uti_regic"
+        chart_type: "MAP_POLYGON"
+        title: 
+          fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
+        title_comment:
+          template: "{0}, em {1}/{2}"
+          api: 
+            fixed: "/thematic/arranjoregic?categorias=cnes_ano_referencia,cnes_mes_referencia&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "cnes_mes_referencia"
+            - named_prop: "cnes_ano_referencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre"
+        #     content:
+        #       fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                api: 
+                  template: "/thematic/arranjoregic?categorias=populacao_uf_origem,qt_municipios_uf_origem&valor=populacao_estimada_mun_origem,cd_municipio_ibge_dv_origem&agregacao=SUM,COUNT&filtros=lt-proporcao_leitos_uti_10k_arranjo-1,and,eq-cd_uf_origem-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count_cd_municipio_ibge_dv_origem'
+                    format: 'inteiro'
+                  - prop: "description"
+                    fixed: 'Municípios de arranjos populacionais com Leitos de UTI abaixo do recomendado'
+                  - prop: 'comment'
+                    template: "{0} de um total de {1} municípios <br/>
+                              {2}% da população da UF"
+                    args:
+                      - function: 'calc_percentage'
+                        fn_args:
+                          - named_prop: "agr_count_cd_municipio_ibge_dv_origem"
+                          - named_prop: 'qt_municipios_uf_origem'
+                        format: 'porcentagem'
+                      - named_prop: 'qt_municipios_uf_origem'
+                      - function: 'calc_percentage'
+                        format: 'real'
+                        fn_args:
+                          - named_prop: 'agr_sum_populacao_estimada_mun_origem'
+                          - named_prop: 'populacao_uf_origem'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "A recomendação da Organização Mundial da Saúde (OMS) é de 1 a 3 leitos de UTI para cada 10 mil habitantes."
+        api: 
+          - template: "/thematic/arranjoregic?categorias=populacao_arranjo,qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge,latitude_alta_complex-lat,longitude_alta_complex-long&agregacao=DISTINCT&filtros=eq-cd_uf_origem-{0},and,nn-cd_municipio_ibge_dv_alta_complex"
+            args:
+              - named_prop: "cd_uf"
+            options:
+              recalc_min_max: true
+              minmax_field: "proporcao_leitos_uti_10k_arranjo"
+              calcs:
+                - id: 'uti_level'
+                  function: 'get_uti_level'
+                  fn_args:
+                    - named_prop: 'proporcao_leitos_uti_10k_arranjo'
+                - id: "deviation"
+                  function: "get_bipolar_scale"
+                  fn_args: 
+                    - fixed: 'proporcao_leitos_uti_10k_arranjo'
+                    - fixed: 2
+            formatters:
+              - id: "populacao_arranjo"
+                format: "inteiro"
+        headers:
+          - text: 'Pólo Destino para Atendimento de Alta Complexidade'
+            align: 'left'
+            value: 'target_mun'
+          - text: 'População atendida'
+            value: 'fmt_populacao_arranjo'
+          - text: 'Qtd Leitos UTI no Pólo'
+            value: 'qt_leitos_uti_arranjo'
+            format: 'inteiro'
+          - text: 'Leitos UTI/10.000 hab. no Pólo'
+            value: 'proporcao_leitos_uti_10k_arranjo'
+            format: 'real'
+          - text: 'Situação no Pólo'
+            value: 'calc_uti_level'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          lat: 'lat'
+          long: 'long'
+          topo_key: "CodReg"
+          tooltip_function: 'obsCovidRegicTooltip'
+          topology:
+            scope: "regic"
+            range: "uf"
+          # value_field: 'calc_uti_level'
+          value_field: 'calc_deviation'
+          colorScale:
+            name: "RdYlGn"
+            range:
+              min_value: -1
+              max_value: 1
+        source:
+          desc: "fonte"
+          link: ""
 # ========================================================
       - id: "mapa_alta_complex"
         chart_type: "MAP_MIGRATION"
@@ -597,6 +818,40 @@ secoes:
         #     title: "Sobre"
         #     content:
         #       fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                api: 
+                  template: "/thematic/arranjoregic?categorias=populacao_uf_origem,qt_municipios_uf_origem&valor=populacao_estimada_mun_origem,cd_municipio_ibge_dv_origem&agregacao=SUM,COUNT&filtros=lt-proporcao_leitos_uti_10k_arranjo-1,and,eq-cd_uf_origem-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count_cd_municipio_ibge_dv_origem'
+                    format: 'inteiro'
+                  - prop: "description"
+                    fixed: 'Municípios de arranjos populacionais com Leitos de UTI abaixo do recomendado'
+                  - prop: 'comment'
+                    template: "{0} de um total de {1} municípios <br/>
+                              {2}% da população da UF"
+                    args:
+                      - function: 'calc_percentage'
+                        fn_args:
+                          - named_prop: "agr_count_cd_municipio_ibge_dv_origem"
+                          - named_prop: 'qt_municipios_uf_origem'
+                        format: 'porcentagem'
+                      - named_prop: 'qt_municipios_uf_origem'
+                      - function: 'calc_percentage'
+                        format: 'real'
+                        fn_args:
+                          - named_prop: 'agr_sum_populacao_estimada_mun_origem'
+                          - named_prop: 'populacao_uf_origem'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "A recomendação da Organização Mundial da Saúde (OMS) é de 1 a 3 leitos de UTI para cada 10 mil habitantes."
         api: 
           - template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=eq-cd_uf_origem-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
             args:
@@ -607,6 +862,9 @@ secoes:
                   function: 'get_uti_level'
                   fn_args:
                     - named_prop: 'proporcao_leitos_uti_10k_arranjo'
+              formatters:
+                - id: 'proporcao_leitos_uti_10k_arranjo'
+                  format: 'real'
           - template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=ne-cd_uf_origem-{0},and,eq-cd_uf_alta_complex-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
             args:
               - named_prop: "cd_uf"
@@ -616,6 +874,9 @@ secoes:
                   function: 'get_uti_level'
                   fn_args:
                     - named_prop: 'proporcao_leitos_uti_10k_arranjo'
+              formatters:
+                - id: 'proporcao_leitos_uti_10k_arranjo'
+                  format: 'real'
         headers:
           - text: 'Município origem'
             align: 'left'
@@ -623,6 +884,12 @@ secoes:
           - text: 'Destino para Atendimento de Alta Complexidade'
             align: 'left'
             value: 'target_mun'
+          - text: 'Leitos UTI/10.000 hab. no Pólo'
+            align: 'left'
+            value: 'fmt_proporcao_leitos_uti_10k_arranjo'
+          - text: 'Situação no Pólo'
+            align: 'left'
+            value: 'calc_uti_level'
         chart_options:
           id_field: 'calc_uti_level'
           value_field: 'agr_count'
@@ -652,133 +919,6 @@ secoes:
           indicadores: ['Abaixo do recomendado','Dentro do recomendado','Acima do recomendado']
           legendArray: ['Abaixo do recomendado','Dentro do recomendado','Acima do recomendado']
           colorArray: ["rgba(179, 9, 0, 0.7)","#fbc11a","green"]
-        source:
-          desc: "fonte"
-          link: ""
-        description:
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Texto..."
-# ========================================================
-      - id: "topo_alta_complex_uti_regic"
-        chart_type: "MAP_POLYGON"
-        title: 
-          fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
-        title_comment:
-          template: "{0}, em {1}/{2}"
-          api: 
-            fixed: "/thematic/arranjoregic?categorias=cnes_ano_referencia,cnes_mes_referencia&limit=1"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - named_prop: "cnes_mes_referencia"
-            - named_prop: "cnes_ano_referencia"
-        # info:
-        #   - type: "text"
-        #     title: "Sobre"
-        #     content:
-        #       fixed: ""
-        description:
-          # - type: "minicards"
-          #   cards:
-          #     - relevance: 'high'
-          #       cls: 'xs12'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=nm_municipio_uf_alta_complex&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           template: "Arranjo Populacional<br/>{0}"
-          #           args:
-          #             - named_prop: 'nm_municipio_uf_alta_complex'
-          #               default: "Sem Registros"
-          #         - prop: "description"
-          #           fixed: 'Destino para atendimento de alta complexidade'
-          #     - relevance: 'low'
-          #       cls: 'xs12 md6'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=qt_leitos_uti_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           named_prop: 'qt_leitos_uti_arranjo'
-          #           format: 'inteiro'
-          #           default: "Sem Registros"
-          #           zero: "Nenhum"
-          #         - prop: "description"
-          #           fixed: 'Número de Leitos de UTI'
-          #     - relevance: 'low'
-          #       cls: 'xs12 md6'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           named_prop: 'proporcao_leitos_uti_10k_arranjo'
-          #           format: 'real'
-          #           default: "Sem Registros"
-          #           zero: "Nenhum"
-          #         - prop: "description"
-          #           fixed: 'Número de Leitos de UTI'
-          #         - prop: "comment"
-          #           fixed: 'por 10.000 hab.'
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Texto..."
-        api: 
-          - template: "/thematic/arranjoregic?categorias=qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge,latitude_alta_complex-lat,longitude_alta_complex-long&agregacao=DISTINCT&filtros=eq-cd_uf_origem-{0},and,nn-cd_municipio_ibge_dv_alta_complex"
-            args:
-              - named_prop: "cd_uf"
-            options:
-              recalc_min_max: true
-              minmax_field: "proporcao_leitos_uti_10k_arranjo"
-              calcs:
-                - id: 'uti_level'
-                  function: 'get_uti_level'
-                  fn_args:
-                    - named_prop: 'proporcao_leitos_uti_10k_arranjo'
-                - id: "deviation"
-                  function: "get_bipolar_scale"
-                  fn_args: 
-                    - fixed: 'proporcao_leitos_uti_10k_arranjo'
-                    - fixed: 2
-
-        headers:
-          - text: 'Origem'
-            align: 'left'
-            value: 'source_mun'
-          - text: 'Pólo Destino para Atendimento de Alta Complexidade'
-            align: 'left'
-            value: 'target_mun'
-          - text: 'Qtd Leitos UTI no Pólo'
-            value: 'qt_leitos_uti_arranjo'
-            format: 'inteiro'
-          - text: 'Leitos UTI/10.000 hab. no Pólo'
-            value: 'proporcao_leitos_uti_10k_arranjo'
-            format: 'real'
-          - text: 'Situação no Pólo'
-            value: 'calc_uti_level'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          lat: 'lat'
-          long: 'long'
-          topo_key: "CodReg"
-          tooltip_function: 'obsCovidRegicTooltip'
-          topology:
-            scope: "regic"
-            range: "uf"
-          # value_field: 'calc_uti_level'
-          value_field: 'calc_deviation'
-          colorScale:
-            name: "RdYlGn"
-            range:
-              min_value: -1
-              max_value: 1
         source:
           desc: "fonte"
           link: ""
@@ -895,58 +1035,41 @@ secoes:
         #     content:
         #       fixed: ""
         description:
-          # - type: "minicards"
-          #   cards:
-          #     - relevance: 'high'
-          #       cls: 'xs12'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=nm_municipio_uf_alta_complex&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           template: "Arranjo Populacional<br/>{0}"
-          #           args:
-          #             - named_prop: 'nm_municipio_uf_alta_complex'
-          #               default: "Sem Registros"
-          #         - prop: "description"
-          #           fixed: 'Destino para atendimento de alta complexidade'
-          #     - relevance: 'low'
-          #       cls: 'xs12 md6'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=qt_leitos_uti_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           named_prop: 'qt_leitos_uti_arranjo'
-          #           format: 'inteiro'
-          #           default: "Sem Registros"
-          #           zero: "Nenhum"
-          #         - prop: "description"
-          #           fixed: 'Número de Leitos de UTI'
-          #     - relevance: 'low'
-          #       cls: 'xs12 md6'
-          #       api: 
-          #         template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
-          #         args:
-          #           - named_prop: "idLocalidadeD6"
-          #       args:
-          #         - prop: "value"
-          #           named_prop: 'proporcao_leitos_uti_10k_arranjo'
-          #           format: 'real'
-          #           default: "Sem Registros"
-          #           zero: "Nenhum"
-          #         - prop: "description"
-          #           fixed: 'Número de Leitos de UTI'
-          #         - prop: "comment"
-          #           fixed: 'por 10.000 hab.'
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                api: 
+                  template: "/thematic/arranjoregic?categorias=populacao_uf_origem,qt_municipios_uf_origem&valor=populacao_estimada_mun_origem,cd_municipio_ibge_dv_origem&agregacao=SUM,COUNT&filtros=lt-proporcao_leitos_uti_10k_arranjo-1,and,eq-cd_uf_origem-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count_cd_municipio_ibge_dv_origem'
+                    format: 'inteiro'
+                  - prop: "description"
+                    fixed: 'Municípios de arranjos populacionais com Leitos de UTI abaixo do recomendado'
+                  - prop: 'comment'
+                    template: "{0} de um total de {1} municípios <br/>
+                              {2}% da população da UF"
+                    args:
+                      - function: 'calc_percentage'
+                        fn_args:
+                          - named_prop: "agr_count_cd_municipio_ibge_dv_origem"
+                          - named_prop: 'qt_municipios_uf_origem'
+                        format: 'porcentagem'
+                      - named_prop: 'qt_municipios_uf_origem'
+                      - function: 'calc_percentage'
+                        format: 'real'
+                        fn_args:
+                          - named_prop: 'agr_sum_populacao_estimada_mun_origem'
+                          - named_prop: 'populacao_uf_origem'
           - type: "text"
             title: ""
             content:
-              fixed: "Texto..."
+              fixed: "A recomendação da Organização Mundial da Saúde (OMS) é de 1 a 3 leitos de UTI para cada 10 mil habitantes."
         api: 
-          - template: "/thematic/arranjoregic?categorias=populacao_estimada_mun_origem,qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_dv_origem-cd_mun_ibge,cd_municipio_ibge_dv_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=eq-cd_uf_origem-{0}"
+          - template: "/thematic/arranjoregic?categorias=populacao_arranjo,qt_municipios_arranjo,populacao_estimada_mun_origem,qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_dv_origem-cd_mun_ibge,cd_municipio_ibge_dv_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=eq-cd_uf_origem-{0}"
             args:
               - named_prop: "cd_uf"
             options:
@@ -962,7 +1085,9 @@ secoes:
                   fn_args: 
                     - fixed: 'proporcao_leitos_uti_10k_arranjo'
                     - fixed: 2
-
+              formatters:
+                - id: "populacao_arranjo"
+                  format: "inteiro"
         headers:
           - text: 'Município origem'
             align: 'left'
@@ -973,6 +1098,10 @@ secoes:
           - text: 'Pólo Destino para Atendimento de Alta Complexidade'
             align: 'left'
             value: 'target_mun'
+          - text: 'Municípios atendidos'
+            value: 'qt_municipios_arranjo'
+          - text: 'População atendida'
+            value: 'fmt_populacao_arranjo'
           - text: 'Qtd Leitos UTI no Pólo'
             value: 'qt_leitos_uti_arranjo'
             format: 'inteiro'
