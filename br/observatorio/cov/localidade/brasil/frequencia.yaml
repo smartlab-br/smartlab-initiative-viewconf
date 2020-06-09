@@ -31,6 +31,23 @@ principais:
       - prop: 'comment'
         named_prop: 'agr_max_last_available_date'
         format: 'dataDMY'
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date,last_available_deaths,last_available_confirmed&agregacao=MAX,SUM,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+    args:
+      - prop: "value"
+        function: 'calc_percentage'
+        format: 'porcentagem'
+        fn_args:
+          - named_prop: "agr_sum_last_available_deaths"
+          - named_prop: "agr_sum_last_available_confirmed"
+      - prop: "description"
+        fixed: "Letalidade"
+      - prop: 'comment'
+        named_prop: 'agr_max_last_available_date'
+        format: 'dataDMY'
   - relevance: "lead"
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -86,6 +103,116 @@ secoes:
   - id: 'prevalencia_serie'
     name: 'Série Histórica'
     cards:
+# ========================================================
+      - id: "bar_serie_semana_epidemiologica"
+        type: "multiple-charts"
+        title:
+          fixed: "Casos e Óbitos por Semana Epidemiológica - Série Histórica"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "Brasil, {0} a {1}"
+          api: 
+            fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
+          args:
+            - named_prop: "agr_min_last_available_date"
+              format: 'dataDMY'
+            - named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date,last_available_confirmed&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/casoscovid19?categorias=1&valor=last_available_date,last_available_deaths&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_last_available_deaths'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de casos e óbitos. No gráfico ao lado, destaca-se a série histórica dos casos e óbitos covid, por semana epidemiológica."
+        charts:
+          - id: "bar_casos"
+            title: "Casos por semana epidemiológica"
+            cls: "xs12 md6"
+            type: "BAR"
+            api:
+              fixed: "/thematic/casoscovid19?categorias='Casos confirmados'-cd_indicador,epidemiological_week&valor=new_confirmed&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_repeated-false&ordenacao=epidemiological_week"
+              options:
+                formatters:
+                  - id: "agr_sum_new_confirmed"
+                    format: 'inteiro'
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'cd_indicador'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'epidemiological_week'
+              - text: 'Número de casos'
+                value: 'fmt_agr_sum_new_confirmed'
+            options:
+              id: "cd_indicador"
+              x: "epidemiological_week"
+              y: "agr_sum_new_confirmed"
+              text: "fmt_agr_sum_new_confirmed"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: false
+              colorArray: ["#377EB8"]  # blue
+          - id: "bar_obitos"
+            title: "Óbitos por semana epidemiológica"
+            cls: "xs12 md6"
+            type: "BAR"
+            api:
+              fixed: "/thematic/casoscovid19?categorias='Óbitos confirmados'-cd_indicador,epidemiological_week&valor=new_deaths&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_repeated-false&ordenacao=epidemiological_week"
+              options:
+                formatters:
+                  - id: "agr_sum_new_deaths"
+                    format: 'inteiro'
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'cd_indicador'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'epidemiological_week'
+              - text: 'Número de óbitos'
+                value: 'fmt_agr_sum_new_deaths'
+            options:
+              id: "cd_indicador"
+              x: "epidemiological_week"
+              y: "agr_sum_new_deaths"
+              text: "fmt_agr_sum_new_deaths"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: false
+              
+        source:
+          desc: "fonte"
+          link: ""
 # ========================================================
       - id: "line_casos"
         type: "multiple-charts"

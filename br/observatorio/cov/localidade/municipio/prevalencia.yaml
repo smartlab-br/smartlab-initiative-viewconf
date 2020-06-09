@@ -67,9 +67,28 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
+      template: "/thematic/casoscovid19?categorias=city_ibge_code,last_available_date,last_available_confirmed,last_available_deaths&filtros=eq-city_ibge_code-{0},and,eq-place_type-'city',and,eq-is_last-TRUE"
+      args:
+        - named_prop: "idLocalidadeD6"
+    args:
+      - prop: "value"
+        function: 'calc_percentage'
+        format: 'porcentagem'
+        fn_args:
+          - named_prop: "last_available_deaths"
+          - named_prop: "last_available_confirmed"
+      - prop: "description"
+        fixed: "Letalidade"
+      - prop: 'comment'
+        named_prop: 'date_info'
+        format: 'dataDMY'
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
       template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed_per_100k_inhabitants&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
       args:
-        - named_prop: 'idLocalidade'
+        - named_prop: 'idLocalidadeD6'
     args:
       - prop: "value"
         named_prop: 'last_available_confirmed_per_100k_inhabitants'
