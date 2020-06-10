@@ -214,12 +214,16 @@ secoes:
                 value: "last_available_deaths"
                 color: "red"
                 label: "ÓBITOS CONFIRMADOS"
+              - id: "letalidade"
+                value: "last_available_death_rate"
+                color: "orange"
+                label: "LETALIDADE"
               - id: "casos100M"
                 value: "last_available_confirmed_per_100k_inhabitants"
                 color: "green accent-4"
                 label: "CASOS CONFIRMADOS/100.000 hab."
               - id: "obitos100M"
-                value: "last_available_death_rate"
+                value: "last_available_per_100k_inhabitants"
                 color: "purple"
                 label: "ÓBITOS CONFIRMADOS/100.000 hab."
             selection:
@@ -248,10 +252,13 @@ secoes:
                 format: 'inteiro'
               - id: "last_available_confirmed"
                 format: 'inteiro'
+              - id: "last_available_death_rate"
+                format: 'porcentagem'
+                multiplier: 100
               - id: "last_available_confirmed_per_100k_inhabitants"
                 format: 'real'
                 precision: 2
-              - id: "last_available_death_rate"
+              - id: "last_available_death_per_100k_inhabitants"
                 format: 'real'
                 precision: 2
               - id: "last_available_date"
@@ -266,10 +273,12 @@ secoes:
             value: 'fmt_last_available_confirmed'
           - text: 'Óbitos confirmados'
             value: 'fmt_last_available_deaths'
+          - text: 'Letalidade'
+            value: 'fmt_last_available_death_rate'
           - text: 'Casos confirmados/100.000 hab.'
             value: 'fmt_last_available_confirmed_per_100k_inhabitants'
           - text: 'Óbitos confirmados/100.000 hab.'
-            value: 'fmt_last_available_death_rate'
+            value: 'fmt_last_available_per_100k_inhabitants'
           - text: 'Data coleta'
             value: 'fmt_last_available_date'
         chart_options:
@@ -282,10 +291,12 @@ secoes:
             color_array: 
               "last_available_confirmed": "Blues"
               "last_available_deaths": "Reds"
+              "last_available_death_rate": "Oranges"
               "last_available_confirmed_per_100k_inhabitants": "Greens"
-              "last_available_death_rate": "Purples"
-          # colorScale:
-          #   name: 'Reds'
+              "last_available_death_per_100k_inhabitants": "Purples"
+        source:
+          desc: "Brasil.io"
+          link: "https://brasil.io/covid19/"
 # ========================================================
       - id: "mapa_casos_regic"
         title: 
@@ -387,6 +398,10 @@ secoes:
                 value: "qt_mortes_covid_arranjo"
                 color: "red"
                 label: "ÓBITOS CONFIRMADOS"
+              - id: "letalidade"
+                value: "proporcao_mortes_covid_arranjo"
+                color: "orange"
+                label: "LETALIDADE"
             selection:
               event: 'selection'
               rules:
@@ -415,6 +430,9 @@ secoes:
                 format: "inteiro"
               - id: "qt_mortes_covid_arranjo"
                 format: "inteiro"
+              - id: "proporcao_mortes_covid_arranjo"
+                format: "porcentagem"
+                multiplier: 100
               - id: "dt_coleta_covid_arranjo"
                 format: "dataDMY"
         headers:
@@ -429,6 +447,8 @@ secoes:
             value: 'fmt_qt_casos_covid_arranjo'
           - text: 'Óbitos confirmados'
             value: 'fmt_qt_mortes_covid_arranjo'
+          - text: 'Letalidade'
+            value: 'fmt_proporcao_mortes_covid_arranjo'
           - text: 'Data coleta'
             value: 'fmt_dt_coleta_covid_arranjo'
         chart_options:
@@ -438,6 +458,7 @@ secoes:
           tooltip_function: 'obsCovidRegicTooltip'
           lat: "lat"
           long: "long"
+          show_legend: true
           topology:
             scope: "regic"
             range: "uf"
@@ -447,8 +468,10 @@ secoes:
             color_array: 
               "qt_casos_covid_arranjo": "Blues"
               "qt_mortes_covid_arranjo": "Reds"
-          # colorScale:
-          #   name: 'Reds'
+              "proporcao_mortes_covid_arranjo": "Oranges"
+        source:
+          desc: "IBGE - Regiões de Influência das Cidades - REGIC, Brasil.io e CNES - Cadastro Nacional de Estabelecimentos de Saúde"
+          # link: "https://brasil.io/covid19/"
 # # ========================================================
 #       - id: "mapa_prev_brasil"
 #         chart_type: "MAP_BUBBLES"
@@ -710,8 +733,8 @@ secoes:
           long: 'longitude'
           value_field: 'vl_indicador'
         source:
-          desc: ""
-          link: ""
+          desc: "Brasil.io"
+          link: "https://brasil.io/covid19/"
 # ========================================================
       - id: "topo_alta_complex_uti_regic"
         chart_type: "MAP_POLYGON"
@@ -805,6 +828,7 @@ secoes:
           long: 'long'
           topo_key: "CodReg"
           tooltip_function: 'obsCovidRegicTooltip'
+          show_legend: true
           topology:
             scope: "regic"
             range: "uf"
@@ -813,11 +837,11 @@ secoes:
           colorScale:
             name: "RdYlGn"
             range:
-              min_value: -1
-              max_value: 1
+              min_value: -0.5
+              max_value: 0.5
         source:
-          desc: "fonte"
-          link: ""
+          desc: "IBGE - Regiões de Influência das Cidades - REGIC, Brasil.io e CNES - Cadastro Nacional de Estabelecimentos de Saúde"
+          # link: "https://brasil.io/covid19/"
 # ========================================================
       - id: "mapa_alta_complex"
         chart_type: "MAP_MIGRATION"
@@ -939,8 +963,8 @@ secoes:
           legendArray: ['Abaixo do recomendado','Dentro do recomendado','Acima do recomendado']
           colorArray: ["rgba(179, 9, 0, 0.7)","#fbc11a","green"]
         source:
-          desc: "fonte"
-          link: ""
+          desc: "IBGE - Regiões de Influência das Cidades - REGIC, Brasil.io e CNES - Cadastro Nacional de Estabelecimentos de Saúde"
+          # link: "https://brasil.io/covid19/"
 # # ========================================================
 #       - id: "topo_alta_complex_uti"
 #         chart_type: "MAP_TOPOJSON"
@@ -1137,8 +1161,8 @@ secoes:
           colorScale:
             name: "RdYlGn"
             range:
-              min_value: -1
-              max_value: 1
+              min_value: -0.5
+              max_value: 0.5
           # colorScale: 
           #   type: "fixed"
           #   color_array: 
@@ -1146,5 +1170,5 @@ secoes:
           #     "Dentro": "#fbc11a"
           #     "Acima": "green"
         source:
-          desc: "fonte"
-          link: ""
+          desc: "IBGE - Regiões de Influência das Cidades - REGIC, Brasil.io e CNES - Cadastro Nacional de Estabelecimentos de Saúde"
+          # link: "https://brasil.io/covid19/"
