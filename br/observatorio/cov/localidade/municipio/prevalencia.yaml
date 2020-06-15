@@ -104,12 +104,12 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+      template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_per_100k_inhabitants&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
       args:
         - named_prop: 'idLocalidade'
     args:
       - prop: "value"
-        named_prop: 'last_available_death_rate'
+        named_prop: 'last_available_death_per_100k_inhabitants'
         format: 'real'
         precision: 2
         default: "Sem Registros"
@@ -194,12 +194,12 @@ secoes:
               - relevance: 'low'
                 cls: 'xs12 md6'
                 api: 
-                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_per_100k_inhabitants&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
                   args:
                     - named_prop: 'idLocalidade'
                 args:
                   - prop: "value"
-                    named_prop: 'last_available_death_rate'
+                    named_prop: 'last_available_death_per_100k_inhabitants'
                     format: 'real'
                     precision: 2
                     default: "Sem Registros"
@@ -208,6 +208,21 @@ secoes:
                     fixed: 'Óbitos confirmados'
                   - prop: "comment"
                     fixed: 'por 100.000 hab.'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_death_rate'
+                    format: 'porcentagem'
+                    multiplier: 100
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Letalidade'
           - type: "text"
             title: ""
             content:
@@ -402,6 +417,21 @@ secoes:
                     zero: "Nenhum"
                   - prop: "description"
                     fixed: 'População atendida'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/arranjoregic?categorias=proporcao_mortes_covid_arranjo&filtros=eq-cd_municipio_ibge_origem-{0}"
+                  args:
+                    - named_prop: "idLocalidadeD6"
+                args:
+                  - prop: "value"
+                    named_prop: 'proporcao_mortes_covid_arranjo'
+                    format: 'porcentagem'
+                    multiplier: 100
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Letalidade'
           - type: "text"
             title: ""
             content:
@@ -609,6 +639,85 @@ secoes:
         #     content:
         #       fixed: ""
         description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_deaths&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_deaths'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_confirmed_per_100k_inhabitants&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed_per_100k_inhabitants'
+                    format: 'real'
+                    precision: 2
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+                  - prop: "comment"
+                    fixed: 'por 100.000 hab.'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_per_100k_inhabitants&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_death_per_100k_inhabitants'
+                    format: 'real'
+                    precision: 2
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+                  - prop: "comment"
+                    fixed: 'por 100.000 hab.'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/casoscovid19?categorias=last_available_date,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_death_rate'
+                    format: 'porcentagem'
+                    multiplier: 100
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Letalidade'
           - type: "text"
             title: ""
             content:
