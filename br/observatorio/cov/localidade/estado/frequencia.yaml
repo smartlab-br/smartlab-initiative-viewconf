@@ -58,7 +58,7 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      template: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_confirmed-0"
+      template: "/thematic/casoscovid19?categorias=qtd_municipios_uf,populacao_uf&valor=cd_municipio_ibge_dv,estimated_population_2019&agregacao=COUNT,SUM&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_confirmed-0"
       args:
         - named_prop: "idLocalidade"
     args:
@@ -66,19 +66,26 @@ principais:
         named_prop: "agr_count_cd_municipio_ibge_dv"
       - prop: "description"
         fixed: "Municípios atingidos"
-      # - prop: 'comment'
-      #   template: "{0}% de um total de 5.570 municípios"
-      #   args:
-      #     - function: 'calc_percentage'
-      #       format: 'inteiro'
-      #       fn_args:
-      #         - named_prop: "agr_count_cd_municipio_ibge_dv"
-      #         - fixed: 5570
+      - prop: 'comment'
+        template: "{0}% de um total de {1} municípios <br/>
+                   {2}% da população da UF"
+        args:
+          - function: 'calc_percentage'
+            format: 'inteiro'
+            fn_args:
+              - named_prop: "agr_count_cd_municipio_ibge_dv"
+              - named_prop: "qtd_municipios_uf"
+          - named_prop: "qtd_municipios_uf"
+          - function: 'calc_percentage'
+            format: 'real'
+            fn_args:
+              - named_prop: "agr_sum_estimated_population_2019"
+              - named_prop: "populacao_uf"
   - relevance: "lead"
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      template: "/thematic/casoscovid19?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+      template: "/thematic/casoscovid19?categorias=qtd_municipios_uf,populacao_uf&valor=cd_municipio_ibge_dv,estimated_population_2019&agregacao=COUNT,SUM&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
       args:
         - named_prop: "idLocalidade"
     args:
@@ -86,14 +93,21 @@ principais:
         named_prop: "agr_count_cd_municipio_ibge_dv"
       - prop: "description"
         fixed: "Municípios com óbitos"
-      # - prop: 'comment'
-      #   template: "{0}% de um total de 5.570 municípios"
-      #   args:
-      #     - function: 'calc_percentage'
-      #       format: 'inteiro'
-      #       fn_args:
-      #         - named_prop: "agr_count_cd_municipio_ibge_dv"
-      #         - fixed: 5570
+      - prop: 'comment'
+        template: "{0}% de um total de {1} municípios <br/>
+                   {2}% da população da UF"
+        args:
+          - function: 'calc_percentage'
+            format: 'real'
+            fn_args:
+              - named_prop: "agr_count_cd_municipio_ibge_dv"
+              - named_prop: "qtd_municipios_uf"
+          - named_prop: "qtd_municipios_uf"
+          - function: 'calc_percentage'
+            format: 'real'
+            fn_args:
+              - named_prop: "agr_sum_estimated_population_2019"
+              - named_prop: "populacao_uf"
 # ========================================================
 secoes:
   - id: 'frequencia_serie'
