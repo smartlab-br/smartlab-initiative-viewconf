@@ -1,0 +1,948 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/srag?categorias=cd_uf&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Casos - SRAG por COVID-19<br/>Notificados na Unidade Federativa"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - fixed: "SIVEP-Gripe/SVS/MS"
+          - fixed: "2020"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Casos - SRAG por COVID-19<br/>Residentes da Unidade Federativa"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - fixed: "SIVEP-Gripe/SVS/MS"
+          - fixed: "2020"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,eq-evolucao-'Óbito',and,gt-ano_notificacao-2019"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Óbitos - SRAG por COVID-19<br/>Residentes da Unidade Federativa"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - fixed: "SIVEP-Gripe/SVS/MS"
+          - fixed: "2020"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'SRAG não especificado',and,gt-ano_notificacao-2019"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Casos suspeitos - SRAG não especificado<br/>Residentes da Unidade Federativa"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - fixed: "SIVEP-Gripe/SVS/MS"
+          - fixed: "2020"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'SRAG não especificado',and,eq-evolucao-'Óbito',and,gt-ano_notificacao-2019"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Óbitos suspeitos - SRAG não especificado<br/>Residentes da Unidade Federativa"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - fixed: "SIVEP-Gripe/SVS/MS"
+          - fixed: "2020"
+# ========================================================
+secoes:
+  - id: 'srag_serie'
+    name: "Série Histórica"
+    cards:
+# ========================================================
+      - id: "bar_serie_srag_semana_epidemiologica"
+        type: "multiple-charts"
+        title:
+          fixed: "Comparação por ano - Casos de SRAG por Semana Epidemiológica de início do sintoma"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_prim_sintomas&agregacao=MAX,MIN&filtros=gt-ano_prim_sintomas-2018"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_prim_sintomas"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_prim_sintomas"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos de SRAG em 2019'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-ano_notificacao-2020"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos de SRAG em 2020<br/>até o momento'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) para os anos de 2019 e 2020.
+              O gráfico apresenta a série histórica de todos os casos registrados de SRAG, para residentes na Unidade Federativa, por semana epidemiológica do início dos sintomas. 
+              Os valores referentes as últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+        charts:
+          - id: "bar_casos"
+            title: "Casos de SRAG por semana epidemiológica"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              template: "/thematic/srag?categorias=ano_prim_sintomas,semana_prim_sintomas&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,gt-ano_prim_sintomas-2018"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+            headers:
+              - text: 'Ano'
+                align: 'left'
+                value: 'ano_prim_sintomas'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'semana_prim_sintomas'
+              - text: 'Número de casos'
+                value: 'fmt_agr_count'
+            options:
+              id: "ano_prim_sintomas"
+              x: "semana_prim_sintomas"
+              y: "agr_count"
+              text: "fmt_agr_count"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: true
+              legend_field: "ano_prim_sintomas"
+              colorArray: ["#377EB8", "red"]
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# ========================================================
+      - id: "bar_serie_srag_obitos_semana_epidemiologica"
+        type: "multiple-charts"
+        title:
+          fixed: "Comparação por ano - Óbitos por SRAG por Semana Epidemiológica da notificação"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos por SRAG em 2019'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-ano_notificacao-2020,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos por SRAG em 2020<br/>até o momento'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) para os anos de 2019 e 2020.
+              O gráfico apresenta a série histórica de todos os óbitos registrados de SRAG, para residentes na Unidade Federativa, por semana epidemiológica da notificação. 
+              Os valores referentes as últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+        charts:
+          - id: "bar_obitos"
+            title: "Óbitos por SRAG por semana epidemiológica"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              template: "/thematic/srag?categorias=ano_notificacao,semana_notificacao&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,gt-ano_notificacao-2018,and,eq-evolucao-'Óbito'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+            headers:
+              - text: 'Ano'
+                align: 'left'
+                value: 'ano_notificacao'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'semana_notificacao'
+              - text: 'Número de óbitos'
+                value: 'fmt_agr_count'
+            options:
+              id: "ano_notificacao"
+              x: "semana_notificacao"
+              y: "agr_count"
+              text: "fmt_agr_count"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: true
+              legend_field: "ano_notificacao"
+              colorArray: ["#377EB8", "red"]
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# ========================================================
+      - id: "bar_serie_srag_classificacao"
+        type: "multiple-charts"
+        title:
+          fixed: "Casos de SRAG por etiologia e por Semana Epidemiológica de início do sintoma"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_prim_sintomas&agregacao=MAX,MIN&filtros=gt-ano_prim_sintomas-2019"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_prim_sintomas"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_prim_sintomas"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes da Unidade Federativa"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'SRAG não especificado',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos suspeitos - SRAG não especificado<br/>Residentes da Unidade Federativa"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'Aguardando resultado',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "SRAG aguardando resultado<br/>Residentes da Unidade Federativa"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o de causas não especificadas.
+              O gráfico apresenta a série histórica de todos os casos registrados de SRAG, para residentes na Unidade Federativa, por semana epidemiológica do início dos sintomas. 
+              Os valores referentes as últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+        charts:
+          - id: "bar_srag_classificacao"
+            title: "Casos de SRAG por etiologia"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              template: "/thematic/srag?categorias=srag_classificacao,semana_prim_sintomas&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,gt-ano_prim_sintomas-2019"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+            headers:
+              - text: 'Etiologia'
+                align: 'left'
+                value: 'srag_classificacao'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'semana_prim_sintomas'
+              - text: 'Número de casos'
+                value: 'fmt_agr_count'
+            options:
+              id: "srag_classificacao"
+              x: "semana_prim_sintomas"
+              y: "agr_count"
+              text: "fmt_agr_count"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: true
+              stacked: true
+              legend_field: "srag_classificacao"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# ========================================================
+      - id: "bar_serie_srag_classificacao_obitos"
+        type: "multiple-charts"
+        title:
+          fixed: "Óbitos de SRAG por etiologia e por Semana Epidemiológica de notificação"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2019"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19<br/>Residentes da Unidade Federativa"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'SRAG não especificado',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos suspeitos - SRAG não especificado<br/>Residentes da Unidade Federativa"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'Aguardando resultado',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos SRAG aguardando resultado<br/>Residentes da Unidade Federativa"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o de causas não especificadas.
+              O gráfico apresenta a série histórica de todos os casos registrados de SRAG, para residentes na Unidade Federativa, por semana epidemiológica do início dos sintomas. 
+              Os valores referentes as últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+        charts:
+          - id: "bar_srag_classificacao_obitos"
+            title: "Óbitos de SRAG por etiologia"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              template: "/thematic/srag?categorias=srag_classificacao,semana_notificacao&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+            headers:
+              - text: 'Etiologia'
+                align: 'left'
+                value: 'srag_classificacao'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'semana_notificacao'
+              - text: 'Número de óbitos'
+                value: 'fmt_agr_count'
+            options:
+              id: "srag_classificacao"
+              x: "semana_notificacao"
+              y: "agr_count"
+              text: "fmt_agr_count"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: true
+              stacked: true
+              legend_field: "srag_classificacao"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# ===============================================
+      - id: "perfil_headline"
+        type: "headline"
+        title:
+          fixed: "Perfil dos casos"
+  # =====================================================
+      - id: "cat_piramide_idade_sexo"
+        title: 
+          fixed: "Casos SRAG por COVID-19 por faixa etária e sexo"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_prim_sintomas&agregacao=MAX,MIN&filtros=gt-ano_prim_sintomas-2019"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_prim_sintomas"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_prim_sintomas"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes da Unidade Federativa"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "O gráfico apresenta a pirâmide com as faixas etárias e o sexo, dos casos SRAG por COVID-19."
+        chart_type: "BAR"
+        api: 
+          template: "/thematic/srag?categorias=idade_bin_ordem,idade_bin,sexo&agregacao=count&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: 'agr_count'
+                function: 'oppose'
+                fn_args:
+                  - fixed: 'sexo'
+                  - fixed: 'Feminino'
+                  - fixed: 'agr_count'
+        headers:
+          - text: 'Sexo'
+            align: 'left'
+            value: 'sexo'
+          - text: 'Faixa etária'
+            align: 'left'
+            value: 'idade_bin'
+          - text: 'Qtde'
+            value: 'agr_count'
+        chart_options:
+          id: "sexo"
+          x: "calc_agr_count"
+          y: "idade_bin_ordem"
+          text: "idade_bin"
+          orientation: "horizontal"
+          hide_legend: false
+          legend_field: "sexo"
+          stacked: true
+          show_x_axis: false
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "cat_piramide_idade_sexo_obitos"
+        title: 
+          fixed: "Óbitos SRAG por COVID-19 por faixa etária e sexo"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2019"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19<br/>Residentes da Unidade Federativa"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "O gráfico apresenta a pirâmide com as faixas etárias e o sexo, dos óbitos SRAG por COVID-19."
+        chart_type: "BAR"
+        api: 
+          template: "/thematic/srag?categorias=idade_bin_ordem,idade_bin,sexo&agregacao=count&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: 'agr_count'
+                function: 'oppose'
+                fn_args:
+                  - fixed: 'sexo'
+                  - fixed: 'Feminino'
+                  - fixed: 'agr_count'
+        headers:
+          - text: 'Sexo'
+            align: 'left'
+            value: 'sexo'
+          - text: 'Faixa etária'
+            align: 'left'
+            value: 'idade_bin'
+          - text: 'Qtde'
+            value: 'agr_count'
+        chart_options:
+          id: "sexo"
+          x: "calc_agr_count"
+          y: "idade_bin_ordem"
+          text: "idade_bin"
+          orientation: "horizontal"
+          hide_legend: false
+          legend_field: "sexo"
+          stacked: true
+          show_x_axis: false
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_raca"
+        title: 
+          fixed: "Casos SRAG por COVID-19 por raça"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_prim_sintomas&agregacao=MAX,MIN&filtros=gt-ano_prim_sintomas-2019"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_prim_sintomas"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_prim_sintomas"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes da Unidade Federativa"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos SRAG por COVID-19 por raça."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=raca&agregacao=count&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Raça'
+            align: 'left'
+            value: 'raca'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "raca"
+          text: "raca"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_escolaridade"
+        title: 
+          fixed: "Casos SRAG por COVID-19 por escolaridade"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_prim_sintomas&agregacao=MAX,MIN&filtros=gt-ano_prim_sintomas-2019"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_prim_sintomas"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_prim_sintomas"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes da Unidade Federativa"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos SRAG por COVID-19 por escolaridade."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=escolaridade&agregacao=count&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Escolaridade'
+            align: 'left'
+            value: 'escolaridade'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "escolaridade"
+          text: "escolaridade"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_respirador"
+        title: 
+          fixed: "Casos SRAG por COVID-19 por utilização de suporte ventilatório"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_prim_sintomas&agregacao=MAX,MIN&filtros=gt-ano_prim_sintomas-2019"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_prim_sintomas"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_prim_sintomas"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes da Unidade Federativa"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos SRAG por COVID-19 por utilização de suporte respiratório."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=respirador&agregacao=count&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Suporte Respiratório'
+            align: 'left'
+            value: 'respirador'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "respirador"
+          text: "respirador"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_uti"
+        title: 
+          fixed: "Casos SRAG por COVID-19 por internação na UTI"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_prim_sintomas&agregacao=MAX,MIN&filtros=gt-ano_prim_sintomas-2019"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_prim_sintomas"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_prim_sintomas"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes da Unidade Federativa"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos SRAG por COVID-19 por internação na UTI."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=internado_uti&agregacao=count&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'UTI'
+            align: 'left'
+            value: 'internado_uti'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "internado_uti"
+          text: "internado_uti"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
