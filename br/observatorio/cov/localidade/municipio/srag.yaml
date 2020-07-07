@@ -144,7 +144,9 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Casos de SRAG em 2019'
+                    fixed: 'Casos de SRAG'
+                  - prop: "comment"
+                    fixed: "2019"
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
@@ -158,13 +160,15 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Casos de SRAG em 2020<br/>até o momento'
+                    fixed: 'Casos de SRAG até o momento'
+                  - prop: "comment"
+                    fixed: "2020"
           - type: "text"
             title: ""
             content:
               fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) para os anos de 2019 e 2020.
               O gráfico apresenta a série histórica de todos os casos registrados de SRAG, para residentes no município, por semana epidemiológica do início dos sintomas. 
-              Os valores referentes as últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+              <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
         charts:
           - id: "bar_casos"
             title: "Casos de SRAG por semana epidemiológica"
@@ -239,7 +243,9 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Óbitos por SRAG em 2019'
+                    fixed: 'Óbitos por SRAG'
+                  - prop: "comment"
+                    fixed: "2019"
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
@@ -253,13 +259,15 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Óbitos por SRAG em 2020<br/>até o momento'
+                    fixed: 'Óbitos por SRAG até o momento'
+                  - prop: "comment"
+                    fixed: "2020"
           - type: "text"
             title: ""
             content:
               fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) para os anos de 2019 e 2020.
               O gráfico apresenta a série histórica de todos os óbitos registrados de SRAG, para residentes no município, por semana epidemiológica da notificação. 
-              Os valores referentes as últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+              <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
         charts:
           - id: "bar_obitos"
             title: "Óbitos por SRAG por semana epidemiológica"
@@ -368,7 +376,7 @@ secoes:
             content:
               fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o de causas não especificadas.
               O gráfico apresenta a série histórica de todos os casos registrados de SRAG, para residentes no município, por semana epidemiológica do início dos sintomas. 
-              Os valores referentes as últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+              <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
         charts:
           - id: "bar_srag_classificacao"
             title: "Casos de SRAG por etiologia"
@@ -477,7 +485,7 @@ secoes:
             content:
               fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o de causas não especificadas.
               O gráfico apresenta a série histórica de todos os casos registrados de SRAG, para residentes no município, por semana epidemiológica do início dos sintomas. 
-              Os valores referentes as últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+              <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
         charts:
           - id: "bar_srag_classificacao_obitos"
             title: "Óbitos de SRAG por etiologia"
@@ -917,10 +925,25 @@ secoes:
                     zero: 'Nenhum'
                   - prop: "description"
                     fixed: "Casos - SRAG por COVID-19<br/>Residentes do município"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=1&valor=internado_uti_dias&agregacao=AVG&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,nn-internado_uti_dias"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    template: "{0} <span>dias</span>"
+                    args:
+                      - named_prop: "agr_avg_internado_uti_dias"
+                        format: 'real'
+                        default: 'Sem registros'
+                  - prop: "description"
+                    fixed: "Tempo médio de<br/>internação na UTI"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos SRAG por COVID-19 por internação na UTI."
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o tempo médio de internação na UTI, no município selecionado.  O gráfico apresenta os casos SRAG por COVID-19 por internação na UTI."
         chart_type: "TREEMAP"
         api: 
           template: "/thematic/srag?categorias=internado_uti&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
@@ -946,7 +969,73 @@ secoes:
         source:
           desc: "SIVEP-Gripe/SVS/MS"
           link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
-
-
-
-
+# =====================================================
+      - id: "treemap_srag_comorbidade"
+        title: 
+          fixed: "Óbitos SRAG por COVID-19 por comorbidade"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_prim_sintomas&agregacao=MAX,MIN&filtros=gt-ano_prim_sintomas-2019"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_prim_sintomas"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_prim_sintomas"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19<br/>Residentes do município"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos SRAG por COVID-19 por comorbidade. Apenas uma comorbidade por paciente está sendo considerada, a partir da seguinte ordem: 'Puérpera ou Parturiente', 'Doença Cardiovascular Crônica', 'Doença Hematológica Crônica', 'Síndrome de Down', 
+                      'Doença Hepática Crônica', 'Asma', 'Diabetes mellitus', 'Doença Neurológica Crônica', 'Pneumatopatia Crônica', 
+                      'Imunodeficiência ou Imunodepressão', 'Doença Renal Crônica', 'Obesidade' e Outra informada."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=comorbidade&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Comorbidade'
+            align: 'left'
+            value: 'comorbidade'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "comorbidade"
+          text: "comorbidade"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
