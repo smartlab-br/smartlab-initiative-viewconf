@@ -538,11 +538,9 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api: 
-                  template: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
-                  args:
-                    - named_prop: "idLocalidade"
+                  fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -551,13 +549,76 @@ secoes:
                     zero: 'Nenhum'
                   - prop: "description"
                     fixed: "Casos - SRAG por COVID-19"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  - fixed: "/thematic/srag?categorias='total_casos_srag'-cd_indicador&&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  - fixed: "/thematic/srag?categorias='total_casos_srag_homens'-cd_indicador&&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-sexo-'Masculino'"
+                api_options:
+                  combine:
+                  - id: "perc_homens"
+                    desc: "% Homens com SRAG por COVID"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "total_casos_srag_homens"
+                        named_prop: "agr_count"
+                      - id: "total_casos_srag"
+                        named_prop: "agr_count"
+                args:
+                  - prop: "value"
+                    id: "perc_homens"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Homens"
+                  - prop: "comment"
+                    template: "{0} casos"
+                    args:
+                      - id: "total_casos_srag_homens"
+                        named_prop: "agr_count"
+                        default: 0
+                        format: "inteiro"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  - fixed: "/thematic/srag?categorias='total_casos_srag'-cd_indicador&&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  - fixed: "/thematic/srag?categorias='total_casos_srag_mulheres'-cd_indicador&&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-sexo-'Feminino'"
+                api_options:
+                  combine:
+                  - id: "perc_mulheres"
+                    desc: "% Mulheres com SRAG por COVID"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "total_casos_srag_mulheres"
+                        named_prop: "agr_count"
+                      - id: "total_casos_srag"
+                        named_prop: "agr_count"
+                args:
+                  - prop: "value"
+                    id: "perc_mulheres"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Mulheres"
+                  - prop: "comment"
+                    template: "{0} casos"
+                    args:
+                      - id: "total_casos_srag_mulheres"
+                        named_prop: "agr_count"
+                        default: 0
+                        format: "inteiro"
           - type: "text"
             title: ""
             content:
-              fixed: "O gráfico apresenta a pirâmide com as faixas etárias e o sexo, dos casos SRAG por COVID-19."
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19, total e por sexo. 
+              O gráfico apresenta a pirâmide com as faixas etárias e o sexo, dos casos SRAG por COVID-19."
         chart_type: "BAR"
         api: 
-          template: "/thematic/srag?categorias=idade_bin_ordem,idade_bin,sexo&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019&ordenacao=sexo"
+          template: "/thematic/srag?categorias=idade_bin_ordem,idade_bin,sexo&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,ne-sexo-'Ignorado'&ordenacao=sexo"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -612,11 +673,9 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api: 
-                  template: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
-                  args:
-                    - named_prop: "idLocalidade"
+                  fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -625,13 +684,76 @@ secoes:
                     zero: 'Nenhum'
                   - prop: "description"
                     fixed: "Óbitos - SRAG por COVID-19"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  - fixed: "/thematic/srag?categorias='total_obito_srag'-cd_indicador&&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  - fixed: "/thematic/srag?categorias='total_obito_srag_homens'-cd_indicador&&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-sexo-'Masculino',and,eq-evolucao-'Óbito'"
+                api_options:
+                  combine:
+                  - id: "perc_homens"
+                    desc: "% Homens com SRAG por COVID"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "total_obito_srag_homens"
+                        named_prop: "agr_count"
+                      - id: "total_obito_srag"
+                        named_prop: "agr_count"
+                args:
+                  - prop: "value"
+                    id: "perc_homens"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Homens"
+                  - prop: "comment"
+                    template: "{0} óbitos"
+                    args:
+                      - id: "total_obito_srag_homens"
+                        named_prop: "agr_count"
+                        default: 0
+                        format: "inteiro"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  - fixed: "/thematic/srag?categorias='total_obito_srag'-cd_indicador&&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  - fixed: "/thematic/srag?categorias='total_obito_srag_mulheres'-cd_indicador&&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-sexo-'Feminino',and,eq-evolucao-'Óbito'"
+                api_options:
+                  combine:
+                  - id: "perc_mulheres"
+                    desc: "% Mulheres com SRAG por COVID"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "total_obito_srag_mulheres"
+                        named_prop: "agr_count"
+                      - id: "total_obito_srag"
+                        named_prop: "agr_count"
+                args:
+                  - prop: "value"
+                    id: "perc_mulheres"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Mulheres"
+                  - prop: "comment"
+                    template: "{0} óbitos"
+                    args:
+                      - id: "total_obito_srag_mulheres"
+                        named_prop: "agr_count"
+                        default: 0
+                        format: "inteiro"
           - type: "text"
             title: ""
             content:
-              fixed: "O gráfico apresenta a pirâmide com as faixas etárias e o sexo, dos óbitos SRAG por COVID-19."
+              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19, total e por sexo. 
+              O gráfico apresenta a pirâmide com as faixas etárias e o sexo, dos óbitos SRAG por COVID-19."
         chart_type: "BAR"
         api: 
-          template: "/thematic/srag?categorias=idade_bin_ordem,idade_bin,sexo&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'&ordenacao=sexo"
+          template: "/thematic/srag?categorias=idade_bin_ordem,idade_bin,sexo&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ne-sexo-'Ignorado'&ordenacao=sexo"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -1035,12 +1157,8 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  - template: "/thematic/srag?categorias='total_obito_srag'-cd_indicador&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
-                    args:
-                      - named_prop: "idLocalidade"
-                  - template: "/thematic/srag?categorias='total_obito_srag_jovens'-cd_indicador&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,le-idade-39"
-                    args:
-                      - named_prop: "idLocalidade"
+                  - fixed: "/thematic/srag?categorias='total_obito_srag'-cd_indicador&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  - fixed: "/thematic/srag?categorias='total_obito_srag_jovens'-cd_indicador&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,le-idade-39"
                 api_options:
                   combine:
                   - id: "perc_jovens"
@@ -1159,12 +1277,8 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  - template: "/thematic/srag?categorias='total_obito_srag'-cd_indicador&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
-                    args:
-                      - named_prop: "idLocalidade"
-                  - template: "/thematic/srag?categorias='total_obito_srag_idosos'-cd_indicador&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ge-idade-60"
-                    args:
-                      - named_prop: "idLocalidade"
+                  - fixed: "/thematic/srag?categorias='total_obito_srag'-cd_indicador&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  - fixed: "/thematic/srag?categorias='total_obito_srag_idosos'-cd_indicador&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ge-idade-60"
                 api_options:
                   combine:
                   - id: "perc_idosos"
