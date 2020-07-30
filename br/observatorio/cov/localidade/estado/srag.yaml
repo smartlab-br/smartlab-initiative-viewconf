@@ -1014,7 +1014,8 @@ secoes:
           desc: "SIVEP-Gripe/SVS/MS"
           link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
 # =====================================================
-      - id: "treemap_srag_uti"
+      - id: "multi_srag_uti"
+        type: "multiple-charts"
         title: 
           fixed: "Casos SRAG por COVID-19 por internação na UTI"
         title_comment:
@@ -1070,28 +1071,67 @@ secoes:
             content:
               fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o tempo médio de internação na UTI.  
               O gráfico apresenta os casos SRAG por COVID-19 por internação na UTI dos residentes na Unidade Federativa indicada."
-        chart_type: "TREEMAP"
-        api: 
-          template: "/thematic/srag?categorias=internado_uti&agregacao=count&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
-          args:
-            - named_prop: "idLocalidade"
-          options:
-            formatters:
-              - id: "agr_count"
-                format: 'inteiro'
-        headers:
-          - text: 'UTI'
-            align: 'left'
-            value: 'internado_uti'
-          - text: 'Qtde'
-            value: 'fmt_agr_count'
-        chart_options:
-          id: "internado_uti"
-          text: "internado_uti"
-          size: "agr_count"
-          colorScale:
-            name: "Blues"
-            type: "singleHue"
+        charts:
+          - id: "treemap_srag_uti"
+            title: "Casos SRAG por COVID-19 por internação na UTI"
+            cls: "xs12"
+            type: "TREEMAP"
+            api: 
+              template: "/thematic/srag?categorias=internado_uti&agregacao=count&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+            headers:
+              - text: 'UTI'
+                align: 'left'
+                value: 'internado_uti'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "internado_uti"
+              text: "internado_uti"
+              size: "agr_count"
+              colorScale:
+                name: "Blues"
+                type: "singleHue"
+          # - id: "bar_tempo_uti"
+          #   title: "Tempo Médio de Internação na UTI por Evolução dos Casos"
+          #   cls: "xs12 md6"
+          #   type: "BAR"
+          #   api:
+          #     template: "/thematic/srag?categorias=evolucao&valor=internado_uti_dias&agregacao=avg&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019&ordenacao=evolucao"
+          #     args:
+          #       - named_prop: "idLocalidade"
+          #     options:
+          #       formatters:
+          #         - id: "agr_avg_internado_uti_dias"
+          #           format: 'real'
+          #       calcs:
+          #         - id: "bar_description"
+          #           function: "applyInterpolReplaceDatasetParam"
+          #           fn_args:
+          #             - fixed: 
+          #                 template: "{0} dias"
+          #                 args:
+          #                   - named_prop: "agr_avg_internado_uti_dias"
+          #                     format: 'real'
+          #   headers:
+          #     - text: 'Evolução'
+          #       align: 'left'
+          #       value: 'evolucao'
+          #     - text: 'Tempo médio de internação na UTI (dias):'
+          #       value: 'fmt_agr_avg_internado_uti_dias'
+          #   options:
+          #     id: "evolucao"
+          #     x: "evolucao"
+          #     y: "agr_avg_internado_uti_dias"
+          #     text: "calc_bar_description"
+          #     orientation: "vertical"
+          #     show_x_axis: true
+          #     show_y_axis: false
         source:
           desc: "SIVEP-Gripe/SVS/MS"
           link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
