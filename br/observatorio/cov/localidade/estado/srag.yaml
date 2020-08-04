@@ -1206,6 +1206,101 @@ secoes:
           desc: "SIVEP-Gripe/SVS/MS"
           link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
 # =====================================================
+      - id: "treemap_srag_evolucao"
+        title: 
+          fixed: "Evolução dos casos de SRAG por COVID-19"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19<br/>Residentes na UF"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ne-comorbidade-'Sem comorbidade'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Paceintes com comorbidade"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_uf_res&agregacao=COUNT&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,eq-comorbidade-'Sem comorbidade'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Pacientes sem comorbidade"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
+                      O gráfico apresenta a evolução dos casos SRAG por COVID-19 dos residentes na Unidade Federativa indicada."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=evolucao&agregacao=count&filtros=eq-cd_uf_res-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Evolução'
+            align: 'left'
+            value: 'evolucao'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "evolucao"
+          text: "evolucao"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
       - id: "treemap_srag_jovens"
         title: 
           fixed: "Evolução dos casos em jovens com SRAG por COVID-19"
@@ -1269,12 +1364,12 @@ secoes:
                     default: '0%'
                   - prop: "description"
                     fixed: "Óbitos de Jovens<br/>até 39 anos"
-                  # - prop: "comment"
-                  #   template: "{0} óbitos"
-                  #   args:
-                  #     - id: "total_obito_srag_jovens"
-                  #       named_prop: "agr_count"
-                  #       format: "inteiro"
+                  - prop: "comment"
+                    template: "{0} óbitos"
+                    args:
+                      - id: "total_obito_srag_jovens"
+                        named_prop: "agr_count"
+                        format: "inteiro"
               - relevance: 'low'
                 cls: 'xs12 md6'
                 api: 
@@ -1397,6 +1492,12 @@ secoes:
                     default: '0%'
                   - prop: "description"
                     fixed: "Óbitos de Idosos<br/>a partir de 60 anos"
+                  - prop: "comment"
+                    template: "{0} óbitos"
+                    args:
+                      - id: "total_obito_srag_idosos"
+                        named_prop: "agr_count"
+                        format: "inteiro"
               - relevance: 'low'
                 cls: 'xs12 md6'
                 api: 
