@@ -817,39 +817,82 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md7'
+                cls: 'xs12 md6'
                 api: 
-                  template: "/thematic/arranjoregic?categorias=populacao_uf_origem,qt_municipios_uf_origem&valor=populacao_estimada_mun_origem,cd_municipio_ibge_dv_origem&agregacao=SUM,COUNT&filtros=lt-proporcao_leitos_uti_10k_arranjo-1,and,eq-cd_uf_origem-{0}"
+                  template: "/thematic/estabelecimentocnes?categorias=1&valor=qt_leitos_uti&agregacao=SUM&filtros=eq-cd_uf-{0},and,in-tp_unidade-'05'-'07'-'42'-'62'"
                   args:
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_count_cd_municipio_ibge_dv_origem'
+                    named_prop: 'agr_sum_qt_leitos_uti'
                     format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Municípios de arranjos populacionais com Leitos de UTI abaixo do recomendado'
-                  - prop: 'comment'
-                    template: "{0} de um total de {1} municípios <br/>
-                              {2}% da população da UF"
+                    fixed: 'Número de Leitos de UTI'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  - template: "/thematic/estabelecimentocnes?categorias='leitos'-cd_indicador&valor=qt_leitos_uti&agregacao=SUM&filtros=eq-cd_uf-{0},and,in-tp_unidade-'05'-'07'-'42'-'62'"
                     args:
-                      - function: 'calc_percentage'
-                        fn_args:
-                          - named_prop: "agr_count_cd_municipio_ibge_dv_origem"
-                          - named_prop: 'qt_municipios_uf_origem'
-                        format: 'porcentagem'
-                      - named_prop: 'qt_municipios_uf_origem'
-                      - function: 'calc_percentage'
-                        format: 'real'
-                        fn_args:
-                          - named_prop: 'agr_sum_populacao_estimada_mun_origem'
-                          - named_prop: 'populacao_uf_origem'
+                      - named_prop: "idLocalidade"
+                  - template: "/thematic/casoscovid19?categorias='populacao'-cd_indicador,populacao_uf&filtros=eq-cd_uf-{0}&limit=1"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "proporcao_leitos_uti"
+                    desc: "proporcao_leitos_uti"
+                    function: 'calc_proportion'
+                    fn_args:
+                      - id: 'leitos'
+                        named_prop: 'agr_sum_qt_leitos_uti'
+                      - id: 'populacao'
+                        named_prop: 'populacao_uf'
+                args:
+                  - prop: "value"
+                    id: "proporcao_leitos_uti"
+                    named_prop: 'vl_indicador'
+                    format: "real"
+                    multiplier: 10000
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Número de Leitos de UTI'
+                  - prop: "comment"
+                    fixed: 'por 10.000 hab.'
+              # - relevance: 'high'
+              #   cls: 'xs12 md7'
+              #   api: 
+              #     template: "/thematic/arranjoregic?categorias=populacao_uf_origem,qt_municipios_uf_origem&valor=populacao_estimada_mun_origem,cd_municipio_ibge_dv_origem&agregacao=SUM,COUNT&filtros=lt-proporcao_leitos_uti_10k_arranjo-1,and,eq-cd_uf_origem-{0}"
+              #     args:
+              #       - named_prop: "idLocalidade"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'agr_count_cd_municipio_ibge_dv_origem'
+              #       format: 'inteiro'
+              #     - prop: "description"
+              #       fixed: 'Municípios de arranjos populacionais com Leitos de UTI abaixo do recomendado'
+              #     - prop: 'comment'
+              #       template: "{0} de um total de {1} municípios <br/>
+              #                 {2}% da população da UF"
+              #       args:
+              #         - function: 'calc_percentage'
+              #           fn_args:
+              #             - named_prop: "agr_count_cd_municipio_ibge_dv_origem"
+              #             - named_prop: 'qt_municipios_uf_origem'
+              #           format: 'porcentagem'
+              #         - named_prop: 'qt_municipios_uf_origem'
+              #         - function: 'calc_percentage'
+              #           format: 'real'
+              #           fn_args:
+              #             - named_prop: 'agr_sum_populacao_estimada_mun_origem'
+              #             - named_prop: 'populacao_uf_origem'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de municípios da unidade federativa selecionada cujo 
-              arranjo populacional do pólo destino para atendimento de saúde de alta complexidade não possui o número de 
-              leitos de UTI recomendado pela Organização Mundial da Saúde (OMS).
-              A recomendação da OMS é de 1 a 3 leitos de UTI para cada 10 mil habitantes.
+              fixed: "Em destaque, o número de leitos de UTI (total e por 10 mil habitantes) na Unidade Federativa indicada.
+              A recomendação da Organização Mundial da Saúde (OMS) é de 1 a 3 leitos de UTI para cada 10 mil habitantes.
               No mapa, apresenta-se a perspectiva comparativa entre os arranjos populacionais dos pólos 
               de atendimento de saúde de alta complexidade, com escala 
               de cores que varia entre o vermelho (menor quantidade), o amarelo (média quantidade) 
@@ -986,40 +1029,82 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md7'
+                cls: 'xs12 md6'
                 api: 
-                  template: "/thematic/arranjoregic?categorias=populacao_uf_origem,qt_municipios_uf_origem&valor=populacao_estimada_mun_origem,cd_municipio_ibge_dv_origem&agregacao=SUM,COUNT&filtros=lt-proporcao_leitos_uti_10k_arranjo-1,and,eq-cd_uf_origem-{0}"
+                  template: "/thematic/estabelecimentocnes?categorias=1&valor=qt_leitos_uti&agregacao=SUM&filtros=eq-cd_uf-{0},and,in-tp_unidade-'05'-'07'-'42'-'62'"
                   args:
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_count_cd_municipio_ibge_dv_origem'
+                    named_prop: 'agr_sum_qt_leitos_uti'
                     format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Municípios de arranjos populacionais com Leitos de UTI abaixo do recomendado'
-                  - prop: 'comment'
-                    template: "{0} de um total de {1} municípios <br/>
-                              {2}% da população da UF"
+                    fixed: 'Número de Leitos de UTI'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  - template: "/thematic/estabelecimentocnes?categorias='leitos'-cd_indicador&valor=qt_leitos_uti&agregacao=SUM&filtros=eq-cd_uf-{0},and,in-tp_unidade-'05'-'07'-'42'-'62'"
                     args:
-                      - function: 'calc_percentage'
-                        fn_args:
-                          - named_prop: "agr_count_cd_municipio_ibge_dv_origem"
-                          - named_prop: 'qt_municipios_uf_origem'
-                        format: 'porcentagem'
-                      - named_prop: 'qt_municipios_uf_origem'
-                      - function: 'calc_percentage'
-                        format: 'real'
-                        fn_args:
-                          - named_prop: 'agr_sum_populacao_estimada_mun_origem'
-                          - named_prop: 'populacao_uf_origem'
+                      - named_prop: "idLocalidade"
+                  - template: "/thematic/casoscovid19?categorias='populacao'-cd_indicador,populacao_uf&filtros=eq-cd_uf-{0}&limit=1"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "proporcao_leitos_uti"
+                    desc: "proporcao_leitos_uti"
+                    function: 'calc_proportion'
+                    fn_args:
+                      - id: 'leitos'
+                        named_prop: 'agr_sum_qt_leitos_uti'
+                      - id: 'populacao'
+                        named_prop: 'populacao_uf'
+                args:
+                  - prop: "value"
+                    id: "proporcao_leitos_uti"
+                    named_prop: 'vl_indicador'
+                    format: "real"
+                    multiplier: 10000
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Número de Leitos de UTI'
+                  - prop: "comment"
+                    fixed: 'por 10.000 hab.'
+              # - relevance: 'high'
+              #   cls: 'xs12 md7'
+              #   api: 
+              #     template: "/thematic/arranjoregic?categorias=populacao_uf_origem,qt_municipios_uf_origem&valor=populacao_estimada_mun_origem,cd_municipio_ibge_dv_origem&agregacao=SUM,COUNT&filtros=lt-proporcao_leitos_uti_10k_arranjo-1,and,eq-cd_uf_origem-{0}"
+              #     args:
+              #       - named_prop: "idLocalidade"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'agr_count_cd_municipio_ibge_dv_origem'
+              #       format: 'inteiro'
+              #     - prop: "description"
+              #       fixed: 'Municípios de arranjos populacionais com Leitos de UTI abaixo do recomendado'
+              #     - prop: 'comment'
+              #       template: "{0} de um total de {1} municípios <br/>
+              #                 {2}% da população da UF"
+              #       args:
+              #         - function: 'calc_percentage'
+              #           fn_args:
+              #             - named_prop: "agr_count_cd_municipio_ibge_dv_origem"
+              #             - named_prop: 'qt_municipios_uf_origem'
+              #           format: 'porcentagem'
+              #         - named_prop: 'qt_municipios_uf_origem'
+              #         - function: 'calc_percentage'
+              #           format: 'real'
+              #           fn_args:
+              #             - named_prop: 'agr_sum_populacao_estimada_mun_origem'
+              #             - named_prop: 'populacao_uf_origem'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de municípios da unidade federativa selecionada cujo 
-              arranjo populacional do pólo destino para atendimento de 
-              saúde de alta complexidade não possui o número de leitos de UTI recomendado pela 
-              Organização Mundial da Saúde (OMS).
-              A recomendação da OMS é de 1 a 3 leitos de UTI para cada 10 mil habitantes.
+              fixed: "Em destaque, o número de leitos de UTI (total e por 10 mil habitantes) na Unidade Federativa indicada.
+              A recomendação da Organização Mundial da Saúde (OMS) é de 1 a 3 leitos de UTI para cada 10 mil habitantes.
               O mapa apresenta as ligações de cada município com a primeira opção de destino para serviços de saúde de
               alta complexidade. A cor das ligações é baseada na quantidade de leitos de UTI por 10.000 habitantes no arranjo populacional do pólo destino, 
               e pode ser: vermelha (fora do recomendado), amarela (dentro do recomendado) ou verde (acima do recomendado).<br/>"
@@ -1260,39 +1345,82 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md7'
+                cls: 'xs12 md6'
                 api: 
-                  template: "/thematic/arranjoregic?categorias=populacao_uf_origem,qt_municipios_uf_origem&valor=populacao_estimada_mun_origem,cd_municipio_ibge_dv_origem&agregacao=SUM,COUNT&filtros=lt-proporcao_leitos_uti_10k_arranjo-1,and,eq-cd_uf_origem-{0}"
+                  template: "/thematic/estabelecimentocnes?categorias=1&valor=qt_leitos_uti&agregacao=SUM&filtros=eq-cd_uf-{0},and,in-tp_unidade-'05'-'07'-'42'-'62'"
                   args:
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_count_cd_municipio_ibge_dv_origem'
+                    named_prop: 'agr_sum_qt_leitos_uti'
                     format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Municípios de arranjos populacionais com Leitos de UTI abaixo do recomendado'
-                  - prop: 'comment'
-                    template: "{0} de um total de {1} municípios <br/>
-                              {2}% da população da UF"
+                    fixed: 'Número de Leitos de UTI'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  - template: "/thematic/estabelecimentocnes?categorias='leitos'-cd_indicador&valor=qt_leitos_uti&agregacao=SUM&filtros=eq-cd_uf-{0},and,in-tp_unidade-'05'-'07'-'42'-'62'"
                     args:
-                      - function: 'calc_percentage'
-                        fn_args:
-                          - named_prop: "agr_count_cd_municipio_ibge_dv_origem"
-                          - named_prop: 'qt_municipios_uf_origem'
-                        format: 'porcentagem'
-                      - named_prop: 'qt_municipios_uf_origem'
-                      - function: 'calc_percentage'
-                        format: 'real'
-                        fn_args:
-                          - named_prop: 'agr_sum_populacao_estimada_mun_origem'
-                          - named_prop: 'populacao_uf_origem'
+                      - named_prop: "idLocalidade"
+                  - template: "/thematic/casoscovid19?categorias='populacao'-cd_indicador,populacao_uf&filtros=eq-cd_uf-{0}&limit=1"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "proporcao_leitos_uti"
+                    desc: "proporcao_leitos_uti"
+                    function: 'calc_proportion'
+                    fn_args:
+                      - id: 'leitos'
+                        named_prop: 'agr_sum_qt_leitos_uti'
+                      - id: 'populacao'
+                        named_prop: 'populacao_uf'
+                args:
+                  - prop: "value"
+                    id: "proporcao_leitos_uti"
+                    named_prop: 'vl_indicador'
+                    format: "real"
+                    multiplier: 10000
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Número de Leitos de UTI'
+                  - prop: "comment"
+                    fixed: 'por 10.000 hab.'
+              # - relevance: 'high'
+              #   cls: 'xs12 md7'
+              #   api: 
+              #     template: "/thematic/arranjoregic?categorias=populacao_uf_origem,qt_municipios_uf_origem&valor=populacao_estimada_mun_origem,cd_municipio_ibge_dv_origem&agregacao=SUM,COUNT&filtros=lt-proporcao_leitos_uti_10k_arranjo-1,and,eq-cd_uf_origem-{0}"
+              #     args:
+              #       - named_prop: "idLocalidade"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'agr_count_cd_municipio_ibge_dv_origem'
+              #       format: 'inteiro'
+              #     - prop: "description"
+              #       fixed: 'Municípios de arranjos populacionais com Leitos de UTI abaixo do recomendado'
+              #     - prop: 'comment'
+              #       template: "{0} de um total de {1} municípios <br/>
+              #                 {2}% da população da UF"
+              #       args:
+              #         - function: 'calc_percentage'
+              #           fn_args:
+              #             - named_prop: "agr_count_cd_municipio_ibge_dv_origem"
+              #             - named_prop: 'qt_municipios_uf_origem'
+              #           format: 'porcentagem'
+              #         - named_prop: 'qt_municipios_uf_origem'
+              #         - function: 'calc_percentage'
+              #           format: 'real'
+              #           fn_args:
+              #             - named_prop: 'agr_sum_populacao_estimada_mun_origem'
+              #             - named_prop: 'populacao_uf_origem'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de municípios da unidade federativa selecionada cujo 
-              arranjo populacional do pólo destino para atendimento de saúde de alta complexidade não possui o número de leitos 
-              de UTI recomendado pela Organização Mundial da Saúde (OMS).
-              A recomendação da OMS é de 1 a 3 leitos de UTI para cada 10 mil habitantes.
+              fixed: "Em destaque, o número de leitos de UTI (total e por 10 mil habitantes) na Unidade Federativa indicada.
+              A recomendação da Organização Mundial da Saúde (OMS) é de 1 a 3 leitos de UTI para cada 10 mil habitantes.
               No mapa, apresenta-se a perspectiva comparativa entre os municípios da unidade federativa.
               A escala de cores varia entre o vermelho (menor quantidade), o amarelo (média quantidade) 
               e o verde (maior quantidade), para a quantidade de leitos de UTI por 10.000 habitantes 
@@ -1325,20 +1453,20 @@ secoes:
           - text: 'População estimada (2019)'
             value: 'populacao_estimada_mun_origem'
             format: 'inteiro'
-          - text: 'Pólo Destino para Atendimento de Alta Complexidade'
+          - text: 'Arranjo Populacional Destino para Atendimento de Alta Complexidade'
             align: 'left'
             value: 'target_mun'
           - text: 'Municípios atendidos'
             value: 'qt_municipios_arranjo'
           - text: 'População atendida'
             value: 'fmt_populacao_arranjo'
-          - text: 'Qtd Leitos UTI no Pólo'
+          - text: 'Qtd Leitos UTI no Arranjo'
             value: 'qt_leitos_uti_arranjo'
             format: 'inteiro'
-          - text: 'Leitos UTI/10.000 hab. no Pólo'
+          - text: 'Leitos UTI/10.000 hab. no Arranjo'
             value: 'proporcao_leitos_uti_10k_arranjo'
             format: 'real'
-          - text: 'Situação no Pólo'
+          - text: 'Situação no Arranjo'
             value: 'calc_uti_level'
         chart_options:
           id_field: 'cd_mun_ibge'
