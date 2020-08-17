@@ -340,7 +340,7 @@ secoes:
                     - named_prop: "covid_valor"
         chart_type: "MAP_POLYGON"
         api: 
-          template: "/thematic/arranjoregic?categorias=latitude_alta_complex-lat,longitude_alta_complex-long,qt_casos_covid_arranjo-valor,populacao_arranjo,qt_municipios_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge&agregacao=DISTINCT"
+          template: "/thematic/arranjoregic?categorias=latitude_alta_complex-lat,longitude_alta_complex-long,qt_casos_covid_arranjo-valor,populacao_arranjo,qt_municipios_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,proporcao_mortes_covid_arranjo,populacao_aglomerados_subnormais_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge&agregacao=DISTINCT"
           options:
             calcs:
               - id: "deviation_valor"
@@ -349,6 +349,8 @@ secoes:
                   - fixed: "valor"
             formatters:
               - id: "populacao_arranjo"
+                format: "inteiro"
+              - id: "populacao_aglomerados_subnormais_arranjo"
                 format: "inteiro"
               - id: "qt_casos_covid_arranjo"
                 format: "inteiro"
@@ -367,14 +369,16 @@ secoes:
             value: 'qt_municipios_arranjo'
           - text: 'População atendida'
             value: 'fmt_populacao_arranjo'
-          - text: 'Casos confirmados'
-            value: 'fmt_qt_casos_covid_arranjo'
-          - text: 'Óbitos confirmados'
-            value: 'fmt_qt_mortes_covid_arranjo'
-          - text: 'Letalidade'
-            value: 'fmt_proporcao_mortes_covid_arranjo'
-          - text: 'Data coleta'
+          - text: 'População aglomerados subnormais (2010)'
+            value: 'fmt_populacao_aglomerados_subnormais_arranjo'
+          - text: 'COVID-19 - Data coleta'
             value: 'fmt_dt_coleta_covid_arranjo'
+          - text: 'COVID-19 - Casos confirmados'
+            value: 'fmt_qt_casos_covid_arranjo'
+          - text: 'COVID-19 - Óbitos confirmados'
+            value: 'fmt_qt_mortes_covid_arranjo'
+          - text: 'COVID-19 - Letalidade'
+            value: 'fmt_proporcao_mortes_covid_arranjo'
         chart_options:
           height_proportion: 1
           id_field: 'cd_mun_ibge'
@@ -628,6 +632,8 @@ secoes:
               formatters:
                 - id: "estimated_population_2019"
                   format: 'inteiro'
+                - id: "vl_indicador"
+                  format: 'inteiro'
                 - id: "last_available_deaths"
                   format: 'inteiro'
                 - id: "last_available_confirmed"
@@ -644,6 +650,8 @@ secoes:
             options:
               formatters:
                 - id: "estimated_population_2019"
+                  format: 'inteiro'
+                - id: "vl_indicador"
                   format: 'inteiro'
                 - id: "last_available_deaths"
                   format: 'inteiro'
@@ -667,16 +675,16 @@ secoes:
         headers:
           - text: 'Município'
             value: 'nm_municipio_uf'
+          - text: 'Indicador'
+            value: 'cd_indicador'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
           - text: 'População estimada (2019)'
             value: 'fmt_estimated_population_2019'
           - text: 'Casos confirmados'
             value: 'fmt_last_available_confirmed'
           - text: 'Óbitos confirmados'
             value: 'fmt_last_available_deaths'
-          - text: 'Casos confirmados/100.000 hab.'
-            value: 'fmt_last_available_confirmed_per_100k_inhabitants'
-          - text: 'Óbitos confirmados/100.000 hab.'
-            value: 'fmt_last_available_death_rate'
           - text: 'Data coleta'
             value: 'fmt_last_available_date'
         source:
@@ -847,7 +855,7 @@ secoes:
           #           - named_prop: "cd_uf"
         api: 
           # fixed: "/thematic/arranjoregic?categorias=qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge,latitude_alta_complex-lat,longitude_alta_complex-long&agregacao=DISTINCT&filtros=eq-cd_uf_origem-35,and,nn-cd_municipio_ibge_dv_alta_complex"
-          fixed: "/thematic/arranjoregic?categorias=populacao_arranjo,qt_municipios_arranjo,qt_leitos_uti_arranjo,proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge,latitude_alta_complex-lat,longitude_alta_complex-long&agregacao=DISTINCT&filtros=nn-cd_municipio_ibge_alta_complex"
+          fixed: "/thematic/arranjoregic?categorias=populacao_arranjo,populacao_aglomerados_subnormais_arranjo,qt_municipios_arranjo,qt_leitos_uti_arranjo,qt_leitos_outros_arranjo,qt_respiradores_arranjo,qt_respiradores_uso_arranjo,qt_estabelecimentos_arranjo,proporcao_leitos_uti_10k_arranjo,proporcao_respiradores_uso_10k_arranjo,proporcao_respiradores_uso_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,proporcao_mortes_covid_arranjo,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_alta_complex-target_cd_mun,cd_municipio_ibge_dv_alta_complex-cd_mun_ibge,latitude_alta_complex-lat,longitude_alta_complex-long&agregacao=DISTINCT&filtros=nn-cd_municipio_ibge_alta_complex"
           options:
             recalc_min_max: true
             minmax_field: "proporcao_leitos_uti_10k_arranjo"
@@ -861,32 +869,81 @@ secoes:
                 fn_args: 
                   - fixed: 'proporcao_leitos_uti_10k_arranjo'
                   - fixed: 2
+              - id: "perc_respiradores_uso"
+                function: "calc_proportion_ds"
+                fn_args: 
+                  - named_prop: 'qt_respiradores_uso_arranjo'
+                  - named_prop: 'qt_respiradores_arranjo'
             formatters:
               - id: "populacao_arranjo"
                 format: "inteiro"
+              - id: "populacao_aglomerados_subnormais_arranjo"
+                format: "inteiro"
+              - id: "qt_leitos_uti_arranjo"
+                format: "inteiro"
+              - id: "qt_leitos_outros_arranjo"
+                format: "inteiro"
+              - id: "qt_respiradores_arranjo"
+                format: "inteiro"
+              - id: "qt_respiradores_uso_arranjo"
+                format: "inteiro"
+              - id: "calc_perc_respiradores_uso"
+                format: "porcentagem"
+                multiplier: "100"
+              - id: "proporcao_leitos_uti_10k_arranjo"
+                format: "real"
+              - id: "proporcao_respiradores_uso_10k_arranjo"
+                format: "real"
+              - id: "qt_casos_covid_arranjo"
+                format: "inteiro"
+              - id: "qt_mortes_covid_arranjo"
+                format: "inteiro"
+              - id: "proporcao_mortes_covid_arranjo"
+                format: "porcentagem"
+                multiplier: 100
+              - id: "dt_coleta_covid_arranjo"
+                format: "dataDMY"
         headers:
-          - text: 'Pólo Destino para Atendimento de Alta Complexidade'
+          - text: 'Arrajo Populacional para Atendimento de Alta Complexidade'
             align: 'left'
             value: 'target_mun'
           - text: 'Municípios atendidos'
             value: 'qt_municipios_arranjo'
           - text: 'População atendida'
             value: 'fmt_populacao_arranjo'
-          - text: 'Qtd Leitos UTI no Pólo'
-            value: 'qt_leitos_uti_arranjo'
-            format: 'inteiro'
-          - text: 'Leitos UTI/10.000 hab. no Pólo'
-            value: 'proporcao_leitos_uti_10k_arranjo'
-            format: 'real'
-          - text: 'Situação no Pólo'
-            value: 'calc_uti_level'
+          - text: 'População aglomerados subnormais (2010)'
+            value: 'fmt_populacao_aglomerados_subnormais_arranjo'
+          - text: 'Qt Hospitais'
+            value: 'qt_estabelecimentos_arranjo'
+          - text: 'Qt Leitos UTI'
+            value: 'fmt_qt_leitos_uti_arranjo'
+          - text: 'Qt Leitos Outros'
+            value: 'fmt_qt_leitos_outros_arranjo'
+          - text: 'Leitos UTI/10.000 hab.'
+            value: 'fmt_proporcao_leitos_uti_10k_arranjo'
+          - text: 'Qtd Respiradores'
+            value: 'fmt_qt_respiradores_arranjo'
+          - text: 'Qtd Respiradores em condições de uso'
+            value: 'fmt_qt_respiradores_uso_arranjo'
+          - text: 'Respiradores em condições de uso (%):'
+            value: 'fmt_calc_perc_respiradores_uso'
+          - text: 'Respiradores em condições de uso/10.000 hab.'
+            value: 'fmt_proporcao_respiradores_uso_10k_arranjo'
+          - text: 'COVID-19 - Data coleta'
+            value: 'fmt_dt_coleta_covid_arranjo'
+          - text: 'COVID-19 - Casos confirmados'
+            value: 'fmt_qt_casos_covid_arranjo'
+          - text: 'COVID-19 - Óbitos confirmados'
+            value: 'fmt_qt_mortes_covid_arranjo'
+          - text: 'COVID-19 - Letalidade'
+            value: 'fmt_proporcao_mortes_covid_arranjo'
         chart_options:
           height_proportion: 1
           id_field: 'cd_mun_ibge'
           lat: 'lat'
           long: 'long'
           topo_key: "CodReg"
-          tooltip_function: 'obsCovidRegicTooltip'
+          tooltip_function: 'obsCovidRegicUTITooltip'
           topology:
             scope: "regic"
             range: "br"
@@ -903,7 +960,7 @@ secoes:
       - id: "mapa_alta_complex"
         chart_type: "MAP_MIGRATION"
         title: 
-          fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
+          fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade, conforme primeira opção de destino para atendimento"
         title_comment:
           template: "Brasil, em {0}"
           api: 
@@ -976,46 +1033,96 @@ secoes:
               event: "selection"
               rules:
                 api: 
-                  - template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=eq-cd_uf_origem-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+                  - template: "/thematic/arranjoregic?categorias=populacao_arranjo,populacao_aglomerados_subnormais_arranjo,qt_municipios_arranjo,qt_leitos_uti_arranjo,qt_leitos_outros_arranjo,qt_respiradores_arranjo,qt_respiradores_uso_arranjo,qt_estabelecimentos_arranjo,proporcao_leitos_uti_10k_arranjo,proporcao_respiradores_uso_10k_arranjo,proporcao_respiradores_uso_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,proporcao_mortes_covid_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=eq-cd_uf_origem-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
                     args:
                       - named_prop: "cd_uf"
-                  - template: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=ne-cd_uf_origem-{0},and,eq-cd_uf_alta_complex-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+                  - template: "/thematic/arranjoregic?categorias=populacao_arranjo,populacao_aglomerados_subnormais_arranjo,qt_municipios_arranjo,qt_leitos_uti_arranjo,qt_leitos_outros_arranjo,qt_respiradores_arranjo,qt_respiradores_uso_arranjo,qt_estabelecimentos_arranjo,proporcao_leitos_uti_10k_arranjo,proporcao_respiradores_uso_10k_arranjo,proporcao_respiradores_uso_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,proporcao_mortes_covid_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=ne-cd_uf_origem-{0},and,eq-cd_uf_alta_complex-{0},and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
                     args:
                       - named_prop: "cd_uf"
         api: 
-          - fixed: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=eq-cd_uf_origem-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
-            options:
-              calcs:
-                - id: 'uti_level'
-                  function: 'get_uti_level'
-                  fn_args:
-                    - named_prop: 'proporcao_leitos_uti_10k_arranjo'
-              formatters:
-                - id: 'proporcao_leitos_uti_10k_arranjo'
-                  format: 'real'
-          - fixed: "/thematic/arranjoregic?categorias=proporcao_leitos_uti_10k_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=ne-cd_uf_origem-35,and,eq-cd_uf_alta_complex-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
-            options:
-              calcs:
-                - id: 'uti_level'
-                  function: 'get_uti_level'
-                  fn_args:
-                    - named_prop: 'proporcao_leitos_uti_10k_arranjo'
-              formatters:
-                - id: 'proporcao_leitos_uti_10k_arranjo'
-                  format: 'real'
+          - fixed: "/thematic/arranjoregic?categorias=populacao_arranjo,populacao_aglomerados_subnormais_arranjo,qt_municipios_arranjo,qt_leitos_uti_arranjo,qt_leitos_outros_arranjo,qt_respiradores_arranjo,qt_respiradores_uso_arranjo,qt_estabelecimentos_arranjo,proporcao_leitos_uti_10k_arranjo,proporcao_respiradores_uso_10k_arranjo,proporcao_respiradores_uso_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,proporcao_mortes_covid_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=eq-cd_uf_origem-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+          - fixed: "/thematic/arranjoregic?categorias=populacao_arranjo,populacao_aglomerados_subnormais_arranjo,qt_municipios_arranjo,qt_leitos_uti_arranjo,qt_leitos_outros_arranjo,qt_respiradores_arranjo,qt_respiradores_uso_arranjo,qt_estabelecimentos_arranjo,proporcao_leitos_uti_10k_arranjo,proporcao_respiradores_uso_10k_arranjo,proporcao_respiradores_uso_arranjo,dt_coleta_covid_arranjo,qt_casos_covid_arranjo,qt_mortes_covid_arranjo,proporcao_mortes_covid_arranjo,nm_municipio_uf_origem-source_mun,nm_municipio_uf_alta_complex-target_mun,cd_municipio_ibge_origem-source_cd_mun,cd_municipio_ibge_alta_complex-target_cd_mun,latitude_origem-source_lat,latitude_alta_complex-target_lat,longitude_origem-source_long,longitude_alta_complex-target_long&filtros=ne-cd_uf_origem-35,and,eq-cd_uf_alta_complex-35,and,ne-cd_municipio_ibge_origem-cd_municipio_ibge_alta_complex"
+        api_options:
+          calcs:
+            - id: 'uti_level'
+              function: 'get_uti_level'
+              fn_args:
+                - named_prop: 'proporcao_leitos_uti_10k_arranjo'
+            - id: "perc_respiradores_uso"
+              function: "calc_proportion_ds"
+              fn_args: 
+                - named_prop: 'qt_respiradores_uso_arranjo'
+                - named_prop: 'qt_respiradores_arranjo'
+          formatters:
+            - id: "populacao_arranjo"
+              format: "inteiro"
+            - id: "populacao_aglomerados_subnormais_arranjo"
+              format: "inteiro"
+            - id: "qt_leitos_uti_arranjo"
+              format: "inteiro"
+            - id: "qt_leitos_outros_arranjo"
+              format: "inteiro"
+            - id: "qt_respiradores_arranjo"
+              format: "inteiro"
+            - id: "qt_respiradores_uso_arranjo"
+              format: "inteiro"
+            - id: "calc_perc_respiradores_uso"
+              format: "porcentagem"
+              multiplier: "100"
+            - id: "proporcao_leitos_uti_10k_arranjo"
+              format: "real"
+            - id: "proporcao_respiradores_uso_10k_arranjo"
+              format: "real"
+            - id: "qt_casos_covid_arranjo"
+              format: "inteiro"
+            - id: "qt_mortes_covid_arranjo"
+              format: "inteiro"
+            - id: "proporcao_mortes_covid_arranjo"
+              format: "porcentagem"
+              multiplier: 100
+            - id: "dt_coleta_covid_arranjo"
+              format: "dataDMY"
         headers:
           - text: 'Município origem'
             align: 'left'
             value: 'source_mun'
-          - text: 'Destino para Atendimento de Alta Complexidade'
+          - text: 'Arranjo Populacional Destino para Atendimento de Alta Complexidade'
             align: 'left'
             value: 'target_mun'
-          - text: 'Leitos UTI/10.000 hab. no Pólo'
+          - text: 'Qt Leitos UTI'
+            value: 'fmt_qt_leitos_uti_arranjo'
+          - text: 'Qt Leitos Outros'
+            value: 'fmt_qt_leitos_outros_arranjo'
+          - text: 'Leitos UTI/10.000 hab. no Arranjo'
             align: 'left'
             value: 'fmt_proporcao_leitos_uti_10k_arranjo'
-          - text: 'Situação no Pólo'
+          - text: 'Situação UTI no Arranjo'
             align: 'left'
             value: 'calc_uti_level'
+          - text: 'Municípios atendidos'
+            value: 'qt_municipios_arranjo'
+          - text: 'População atendida'
+            value: 'fmt_populacao_arranjo'
+          - text: 'População aglomerados subnormais (2010)'
+            value: 'fmt_populacao_aglomerados_subnormais_arranjo'
+          - text: 'Qt Hospitais'
+            value: 'qt_estabelecimentos_arranjo'
+          - text: 'Qtd Respiradores'
+            value: 'fmt_qt_respiradores_arranjo'
+          - text: 'Qtd Respiradores em condições de uso'
+            value: 'fmt_qt_respiradores_uso_arranjo'
+          - text: 'Respiradores em condições de uso (%):'
+            value: 'fmt_calc_perc_respiradores_uso'
+          - text: 'Respiradores em condições de uso/10.000 hab.'
+            value: 'fmt_proporcao_respiradores_uso_10k_arranjo'
+          - text: 'COVID-19 - Data coleta'
+            value: 'fmt_dt_coleta_covid_arranjo'
+          - text: 'COVID-19 - Casos confirmados'
+            value: 'fmt_qt_casos_covid_arranjo'
+          - text: 'COVID-19 - Óbitos confirmados'
+            value: 'fmt_qt_mortes_covid_arranjo'
+          - text: 'COVID-19 - Letalidade'
+            value: 'fmt_proporcao_mortes_covid_arranjo'
         chart_options:
           height_proportion: 1
           id_field: 'calc_uti_level'
@@ -1037,7 +1144,7 @@ secoes:
             lat: 'target_lat'
             long: 'target_long'
             id: 'target_cd_mun'
-            tooltip_function: 'obsCovidRegicTooltip'
+            tooltip_function: 'obsCovidRegicUTITooltip'
             # tooltip_items:
             #   - text: 'Pólo Alta Complexidade'
             #     value: 'target_mun'
@@ -1168,7 +1275,7 @@ secoes:
       - id: "topo_alta_complex_uti2"
         chart_type: "MAP_TOPOJSON"
         title: 
-          fixed: "Leitos de UTI / 10.000 hab. - Situação nos Pólos de Atendimento de Alta Complexidade"
+          fixed: "Leitos de UTI / 10.000 hab. - Situação Situação do Município conforme Pólo de Atendimento de Alta Complexidade"
         title_comment:
           template: "Brasil, em {0}"
           api: 
