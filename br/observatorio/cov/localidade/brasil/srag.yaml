@@ -177,13 +177,17 @@ secoes:
             cls: "xs12"
             type: "BAR"
             api:
-              template: "/thematic/srag?categorias=ano_prim_sintomas,semana_prim_sintomas&agregacao=COUNT&filtros=gt-ano_prim_sintomas-2018&ordenacao=ano_prim_sintomas"
+              template: "/thematic/srag?categorias=ano_prim_sintomas,semana_prim_sintomas,semana_prim_sintomas_inicio,semana_prim_sintomas_fim&agregacao=COUNT&filtros=gt-ano_prim_sintomas-2018&ordenacao=ano_prim_sintomas"
               args:
                 - named_prop: "idLocalidade"
               options:
                 formatters:
                   - id: "agr_count"
                     format: 'inteiro'
+                  - id: "semana_prim_sintomas_inicio"
+                    format: 'dataDMY'
+                  - id: "semana_prim_sintomas_fim"
+                    format: 'dataDMY'
             headers:
               - text: 'Ano'
                 align: 'left'
@@ -191,6 +195,12 @@ secoes:
               - text: 'Semana Epidemiológica'
                 align: 'left'
                 value: 'semana_prim_sintomas'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_semana_prim_sintomas_inicio'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_semana_prim_sintomas_fim'
               - text: 'Número de casos'
                 value: 'fmt_agr_count'
             options:
@@ -264,7 +274,7 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) para os anos de 2019 e 2020.
-              O gráfico apresenta a série histórica de todos os óbitos registrados de SRAG, por semana epidemiológica da notificação. 
+              O gráfico apresenta a série histórica de todos os óbitos registrados relacionados à SRAG, por semana epidemiológica da notificação. 
               <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
         charts:
           - id: "bar_obitos"
@@ -272,13 +282,17 @@ secoes:
             cls: "xs12"
             type: "BAR"
             api:
-              template: "/thematic/srag?categorias=ano_notificacao,semana_notificacao&agregacao=COUNT&filtros=gt-ano_notificacao-2018,and,eq-evolucao-'Óbito'&ordenacao=ano_notificacao"
+              template: "/thematic/srag?categorias=ano_notificacao,semana_notificacao,semana_notificacao_inicio,semana_notificacao_fim&agregacao=COUNT&filtros=gt-ano_notificacao-2018,and,eq-evolucao-'Óbito'&ordenacao=ano_notificacao"
               args:
                 - named_prop: "idLocalidade"
               options:
                 formatters:
                   - id: "agr_count"
                     format: 'inteiro'
+                  - id: "semana_notificacao_inicio"
+                    format: 'dataDMY'
+                  - id: "semana_notificacao_fim"
+                    format: 'dataDMY'
             headers:
               - text: 'Ano'
                 align: 'left'
@@ -286,6 +300,12 @@ secoes:
               - text: 'Semana Epidemiológica'
                 align: 'left'
                 value: 'semana_notificacao'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_semana_notificacao_inicio'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_semana_notificacao_fim'
               - text: 'Número de óbitos'
                 value: 'fmt_agr_count'
             options:
@@ -368,8 +388,8 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o de causas não especificadas.
-              O gráfico apresenta a série histórica de todos os casos registrados de SRAG, por semana epidemiológica do início dos sintomas. 
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19, causas não especificadas e em investigação.
+              O gráfico apresenta a série histórica de todos os casos registrados de SRAG, por semana epidemiológica do início dos sintomas, conforme etiologia. 
               <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
         charts:
           - id: "bar_srag_classificacao"
@@ -377,13 +397,17 @@ secoes:
             cls: "xs12"
             type: "BAR"
             api:
-              template: "/thematic/srag?categorias=srag_classificacao,semana_prim_sintomas&agregacao=COUNT&filtros=gt-ano_prim_sintomas-2019&ordenacao=srag_classificacao"
+              template: "/thematic/srag?categorias=srag_classificacao,semana_prim_sintomas,semana_prim_sintomas_inicio,semana_prim_sintomas_fim&agregacao=COUNT&filtros=gt-ano_prim_sintomas-2019&ordenacao=srag_classificacao"
               args:
                 - named_prop: "idLocalidade"
               options:
                 formatters:
                   - id: "agr_count"
                     format: 'inteiro'
+                  - id: "semana_prim_sintomas_inicio"
+                    format: 'dataDMY'
+                  - id: "semana_prim_sintomas_fim"
+                    format: 'dataDMY'
             headers:
               - text: 'Etiologia'
                 align: 'left'
@@ -391,6 +415,12 @@ secoes:
               - text: 'Semana Epidemiológica'
                 align: 'left'
                 value: 'semana_prim_sintomas'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_semana_prim_sintomas_inicio'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_semana_prim_sintomas_fim'
               - text: 'Número de casos'
                 value: 'fmt_agr_count'
             options:
@@ -410,7 +440,7 @@ secoes:
       - id: "bar_serie_srag_classificacao_obitos"
         type: "multiple-charts"
         title:
-          fixed: "Óbitos de SRAG por etiologia e por Semana Epidemiológica da notificação"
+          fixed: "Óbitos por SRAG por etiologia e por Semana Epidemiológica da notificação"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -473,8 +503,8 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o de causas não especificadas.
-              O gráfico apresenta a série histórica de todos os casos registrados de SRAG, por semana epidemiológica da notificação. 
+              fixed: "Em destaque, o total de registros de óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19, causas não especificadas e em investigação.
+              O gráfico apresenta a série histórica de todos os óbitos registrados relacionados à SRAG, por semana epidemiológica da notificação, conforme etiologia. 
               <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
         charts:
           - id: "bar_srag_classificacao_obitos"
@@ -482,13 +512,17 @@ secoes:
             cls: "xs12"
             type: "BAR"
             api:
-              template: "/thematic/srag?categorias=srag_classificacao,semana_notificacao&agregacao=COUNT&filtros=gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'&ordenacao=srag_classificacao"
+              template: "/thematic/srag?categorias=srag_classificacao,semana_notificacao,semana_notificacao_inicio,semana_notificacao_fim&agregacao=COUNT&filtros=gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'&ordenacao=srag_classificacao"
               args:
                 - named_prop: "idLocalidade"
               options:
                 formatters:
                   - id: "agr_count"
                     format: 'inteiro'
+                  - id: "semana_notificacao_inicio"
+                    format: 'dataDMY'
+                  - id: "semana_notificacao_fim"
+                    format: 'dataDMY'
             headers:
               - text: 'Etiologia'
                 align: 'left'
@@ -496,6 +530,12 @@ secoes:
               - text: 'Semana Epidemiológica'
                 align: 'left'
                 value: 'semana_notificacao'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_semana_notificacao_inicio'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_semana_notificacao_fim'
               - text: 'Número de óbitos'
                 value: 'fmt_agr_count'
             options:
@@ -519,7 +559,7 @@ secoes:
   # =====================================================
       - id: "cat_piramide_idade_sexo"
         title: 
-          fixed: "Casos SRAG por COVID-19 por faixa etária e sexo"
+          fixed: "Casos de SRAG por COVID-19 por faixa etária e sexo"
         title_comment:
           template: "Brasil, {0} a {1}"
           api: 
@@ -614,8 +654,8 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19, total e por sexo. 
-              O gráfico apresenta a pirâmide com as faixas etárias e o sexo, dos casos SRAG por COVID-19."
+              fixed: "Em destaque, o número de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 (total e por sexo). 
+              O gráfico apresenta a pirâmide com a faixa etária e o sexo dos casos de SRAG por COVID-19."
         chart_type: "BAR"
         api: 
           template: "/thematic/srag?categorias=idade_bin_ordem,idade_bin,sexo&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,ne-sexo-'Ignorado'&ordenacao=sexo"
@@ -654,7 +694,7 @@ secoes:
 # =====================================================
       - id: "cat_piramide_idade_sexo_obitos"
         title: 
-          fixed: "Óbitos SRAG por COVID-19 por faixa etária e sexo"
+          fixed: "Óbitos por SRAG por COVID-19 por faixa etária e sexo"
         title_comment:
           template: "Brasil, {0} a {1}"
           api: 
@@ -749,8 +789,8 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19, total e por sexo. 
-              O gráfico apresenta a pirâmide com as faixas etárias e o sexo, dos óbitos SRAG por COVID-19."
+              fixed: "Em destaque, o número de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 (total e por sexo). 
+              O gráfico apresenta a pirâmide com a faixa etária e o sexo dos óbitos por SRAG por COVID-19."
         chart_type: "BAR"
         api: 
           template: "/thematic/srag?categorias=idade_bin_ordem,idade_bin,sexo&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ne-sexo-'Ignorado'&ordenacao=sexo"
@@ -789,7 +829,7 @@ secoes:
 # =====================================================
       - id: "treemap_srag_raca"
         title: 
-          fixed: "Casos SRAG por COVID-19 por raça"
+          fixed: "Casos de SRAG por COVID-19 por raça"
         title_comment:
           template: "{0}, {1} a {2}"
           api: 
@@ -824,7 +864,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos SRAG por COVID-19 por raça."
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos de SRAG por COVID-19 por raça."
         chart_type: "TREEMAP"
         api: 
           template: "/thematic/srag?categorias=raca&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
@@ -853,7 +893,7 @@ secoes:
 # =====================================================
       - id: "treemap_srag_escolaridade"
         title: 
-          fixed: "Casos SRAG por COVID-19 por escolaridade"
+          fixed: "Casos de SRAG por COVID-19 por escolaridade"
         title_comment:
           template: "Brasil, {0} a {1}"
           api: 
@@ -888,7 +928,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos SRAG por COVID-19 por escolaridade."
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos de SRAG por COVID-19 por escolaridade."
         chart_type: "TREEMAP"
         api: 
           template: "/thematic/srag?categorias=escolaridade&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
@@ -917,7 +957,7 @@ secoes:
 # =====================================================
       - id: "treemap_srag_respirador"
         title: 
-          fixed: "Casos SRAG por COVID-19 por utilização de suporte ventilatório"
+          fixed: "Casos de SRAG por COVID-19 por utilização de suporte ventilatório"
         title_comment:
           template: "Brasil, {0} a {1}"
           api: 
@@ -952,7 +992,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos SRAG por COVID-19 por utilização de suporte respiratório."
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos de SRAG por COVID-19 por utilização de suporte respiratório."
         chart_type: "TREEMAP"
         api: 
           template: "/thematic/srag?categorias=respirador&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
@@ -982,7 +1022,7 @@ secoes:
       - id: "multi_srag_uti"
         type: "multiple-charts"
         title: 
-          fixed: "Casos SRAG por COVID-19 por internação na UTI"
+          fixed: "Casos de SRAG por COVID-19 por internação na UTI"
         title_comment:
           template: "Brasil, {0} a {1}"
           api: 
@@ -1030,10 +1070,10 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o tempo médio de internação na UTI.  O gráfico apresenta os casos SRAG por COVID-19 por internação na UTI."
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o tempo médio de internação na UTI.  O gráfico apresenta os casos de SRAG por COVID-19 por internação na UTI."
         charts:
           - id: "treemap_srag_uti"
-            title: "Casos SRAG por COVID-19 por internação na UTI"
+            title: "Casos de SRAG por COVID-19 por internação na UTI"
             cls: "xs12"
             type: "TREEMAP"
             api: 
@@ -1094,7 +1134,7 @@ secoes:
 # =====================================================
       - id: "treemap_srag_comorbidade"
         title: 
-          fixed: "Óbitos SRAG por COVID-19 por comorbidade"
+          fixed: "Óbitos por SRAG por COVID-19 por comorbidade"
         title_comment:
           template: "Brasil, {0} a {1}"
           api: 
@@ -1113,7 +1153,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api: 
                   fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
                 args:
@@ -1124,10 +1164,35 @@ secoes:
                     zero: 'Nenhum'
                   - prop: "description"
                     fixed: "Óbitos - SRAG por COVID-19"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ne-comorbidade-'Sem comorbidade'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Pacientes com comorbidade"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,eq-comorbidade-'Sem comorbidade'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Paceintes sem comorbidade"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  O gráfico apresenta os casos SRAG por COVID-19 por comorbidade. 
+              fixed: "Em destaque, o total de registros de óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
+                      O gráfico apresenta os óbitos por SRAG por COVID-19 por comorbidade. 
                       Apenas uma comorbidade por paciente está sendo considerada, 
                       a partir da seguinte ordem: 'Puérpera ou Parturiente', 'Doença Cardiovascular Crônica', 'Doença Hematológica Crônica', 'Síndrome de Down', 
                       'Doença Hepática Crônica', 'Asma', 'Diabetes mellitus', 'Doença Neurológica Crônica', 'Pneumatopatia Crônica', 
@@ -1229,8 +1294,8 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
-                      O gráfico apresenta a evolução dos casos SRAG por COVID-19."
+              fixed: "Em destaque, o total de registros de casos e óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
+                      O gráfico apresenta a evolução dos casos de SRAG por COVID-19."
         chart_type: "TREEMAP"
         api: 
           template: "/thematic/srag?categorias=evolucao&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
@@ -1259,7 +1324,7 @@ secoes:
 # =====================================================
       - id: "treemap_srag_jovens"
         title: 
-          fixed: "Evolução dos casos em jovens com SRAG por COVID-19"
+          fixed: "Evolução dos casos de SRAG por COVID-19 em jovens"
         title_comment:
           template: "{0}, {1} a {2}"
           api: 
@@ -1347,8 +1412,8 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
-                      O gráfico apresenta a evolução dos casos SRAG por COVID-19 dos jovens até 39 anos."
+              fixed: "Em destaque, o total de registros de óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e a porcentagem de óbitos de jovens.  
+                      O gráfico apresenta a evolução dos casos de SRAG por COVID-19 em jovens (até 39 anos)."
         chart_type: "TREEMAP"
         api: 
           template: "/thematic/srag?categorias=evolucao&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,le-idade-39"
@@ -1377,7 +1442,7 @@ secoes:
 # =====================================================
       - id: "treemap_srag_idosos"
         title: 
-          fixed: "Evolução dos casos em idosos com SRAG por COVID-19"
+          fixed: "Evolução dos casos de SRAG por COVID-19 em idosos"
         title_comment:
           template: "{0}, {1} a {2}"
           api: 
@@ -1471,8 +1536,8 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
-                      O gráfico apresenta a evolução dos casos SRAG por COVID-19 dos idosos a partir de 60 anos."
+              fixed: "Em destaque, o total de registros de óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e a porcentagem de óbitos de idosos.  
+                      O gráfico apresenta a evolução dos casos de SRAG por COVID-19 em idosos (a partir de 60 anos)."
         chart_type: "TREEMAP"
         api: 
           template: "/thematic/srag?categorias=evolucao&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,ge-idade-60"
@@ -1553,7 +1618,7 @@ secoes:
 #             title: ""
 #             content:
 #               fixed: "Em destaque, o total de registros de casos e óbitos de indígenas da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
-#                       O gráfico apresenta a evolução dos casos SRAG por COVID-19 dos indígenas."
+#                       O gráfico apresenta a evolução dos casos de SRAG por COVID-19 dos indígenas."
 #         chart_type: "TREEMAP"
 #         api: 
 #           template: "/thematic/srag?categorias=evolucao&agregacao=count&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-raca-'Indígena'"
