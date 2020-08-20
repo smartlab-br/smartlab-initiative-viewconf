@@ -260,6 +260,92 @@ secoes:
         source:
           desc: "MPT Digital"
 # ========================================================
+      - id: "line_denuncias"
+        title:
+          fixed: "Denúncias ligadas à COVID-19"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          fixed: "Brasil"
+        description:
+          - id: "select_prt"
+            type: "select"
+            multiple: true
+            label: "MPT"
+            api:
+              fixed: "/thematic/coviddenunciampt?categorias=nm_unidade,nm_prt&agregacao=DISTINCT&ordenacao=nm_prt"
+              options:
+                calcs:
+                  - id: "prt"
+                    function: "replace_text"
+                    fn_args:
+                      - fixed: "nm_unidade"
+                      - fixed: "PROC. REGIONAL TRABALHO"
+                      - fixed: "PRT"
+            args:
+              - prop: "id"
+                named_prop: "nm_prt"
+              - prop: "label"
+                named_prop: "calc_prt"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-nm_prt-{0}"
+                api:
+                  args:
+                    - named_prop: "nm_prt"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                reactive: true
+                api: 
+                  fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Nenhum"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Denúncias COVID-19'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de denúncias ao Ministério Público do Trabalho (MPT) relacionadas à COVID-19. 
+                      O gráfico apresenta a série histórica com o total de denúncias por dia. 
+                      É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) no filtro acima."
+        chart_type: "LINE"
+        api:
+          fixed: "/thematic/coviddenunciampt?categorias='denuncia'-cd_indicador,data_denuncia,data_denuncia-data_denuncia2&agregacao=COUNT&ordenacao=data_denuncia&filtros=eq-1-1"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+              - id: "data_denuncia"
+                format: "dataYMD"
+              - id: "data_denuncia2"
+                format: "dataDMY"
+        headers:
+          - text: 'Data Denúncia'
+            align: 'left'
+            value: 'fmt_data_denuncia2'
+          - text: 'Número de denúncias'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "cd_indicador"
+          x: "fmt_data_denuncia"
+          y: "agr_count"
+          x_options:
+            labelMaxNumber: 15
+          hide_legend: true
+          colorArray: ["#377EB8"]  # blue
+        source:
+          desc: "MPT Digital"          
+# ========================================================
       - id: "bar_classe"
         title:
           fixed: "Procedimentos com Atuação no Combate à COVID-19 por Classe"
@@ -403,6 +489,24 @@ secoes:
                 api:
                   args:
                     - named_prop: "nm_prt"
+          - id: "select_classe"
+            type: "select"
+            multiple: true
+            label: "Classe"
+            api:
+              fixed: "/thematic/covidclassempt?categorias=classe&agregacao=DISTINCT&ordenacao=classe"
+            args:
+              - prop: "id"
+                named_prop: "classe"
+              - prop: "label"
+                named_prop: "classe"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-classe-{0}"
+                api:
+                  args:
+                    - named_prop: "classe"
           - type: "minicards"
             cards:
               - relevance: 'high'
@@ -422,59 +526,33 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o número total de procedimentos do Ministério Público do Trabalho (MPT) com atuação no combate à COVID-19. 
-                      O gráfico apresenta o número de procedimentos por classe. 
-                      É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) no filtro acima."
-        chart_type: "TREEMAP"
+                      O gráfico apresenta o número de procedimentos por regional e classe. 
+                      É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) e classes nos filtros acima."
+        chart_type: "BAR"
         api:
-          fixed: "/thematic/covidclassempt?categorias=nm_unidade,nm_prt,cd_prt,classe&agregacao=COUNT&filtros=eq-1-1"
+          fixed: "/thematic/covidclassempt?categorias=nm_unidade,nm_prt,cd_prt,classe&agregacao=COUNT&ordenacao=nm_prt,-agr_count&filtros=eq-1-1"
           options:
             formatters:
               - id: "agr_count"
                 format: 'inteiro'
-            calcs:
-              - id: "ds_prt"
-                function: "replace_text"
-                fn_args:
-                  - fixed: "nm_unidade"
-                  - fixed: "PROC. REGIONAL TRABALHO"
-                  - fixed: "PRT"
-              - id: "prt"
-                function: "replace_text"
-                fn_args:
-                  - fixed: "cd_prt"
-                  - fixed: "PRT"
-                  - fixed: ""
-              - id: "num_prt"
-                function: "get_number"
-                fn_args:
-                  - named_prop: "calc_prt"
-              - id: "treemap_description"
-                function: "applyInterpolReplaceDatasetParam"
-                fn_args:
-                  - fixed: 
-                      template: "{0}: {1}"
-                      args:
-                        - named_prop: "nm_prt"
-                        - named_prop: "classe"
-                        - named_prop: "agr_count"
-                          format: 'inteiro'
         headers:
-          - text: 'PRT'
-            align: 'left'
-            value: 'calc_ds_prt'
           - text: 'Classe'
             align: 'left'
             value: 'classe'
+          - text: 'PRT'
+            align: 'left'
+            value: 'nm_unidade'
           - text: 'Número de procedimentos'
             value: 'fmt_agr_count'
         chart_options:
-          parent: "calc_num_prt"
-          id: "agr_count"
-          text: "calc_treemap_description"
-          size: "agr_count"
-          legend: true
-          colorScale:
-            type: "categorical"
+          id: "classe"
+          x: "nm_prt"
+          y: "agr_count"
+          text: "fmt_agr_count"
+          orientation: "vertical"
+          show_x_axis: true
+          show_y_axis: true
+          stacked: true
         source:
           desc: "MPT Digital"
 # =====================================================
@@ -779,6 +857,24 @@ secoes:
                 api:
                   args:
                     - named_prop: "nm_prt"
+          - id: "select_tipo"
+            type: "select"
+            multiple: true
+            label: "Tipo"
+            api:
+              fixed: "/thematic/coviddocumentompt?categorias=tipodocumento&agregacao=DISTINCT&ordenacao=tipodocumento"
+            args:
+              - prop: "id"
+                named_prop: "tipodocumento"
+              - prop: "label"
+                named_prop: "tipodocumento"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-tipodocumento-{0}"
+                api:
+                  args:
+                    - named_prop: "tipodocumento"
           - type: "minicards"
             cards:
               - relevance: 'high'
@@ -811,144 +907,32 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o número total de documentos do Ministério Público do Trabalho (MPT) com atuação no combate à COVID-19. 
-                      O gráfico apresenta o número de documentos por tipo. 
-                      É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) no filtro acima."
-        chart_type: "TREEMAP"
+                      O gráfico apresenta o número de documentos por regional e tipo. 
+                      É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) e tipos nos filtros acima."
+        chart_type: "BAR"
         api:
-          fixed: "/thematic/coviddocumentompt?categorias=nm_unidade,nm_prt,cd_prt,tipodocumento&agregacao=COUNT&filtros=eq-1-1"
+          fixed: "/thematic/coviddocumentompt?categorias=nm_unidade,nm_prt,cd_prt,tipodocumento&agregacao=COUNT&ordenacao=nm_prt,-agr_count&filtros=eq-1-1"
           options:
             formatters:
               - id: "agr_count"
                 format: 'inteiro'
-            calcs:
-              - id: "ds_prt"
-                function: "replace_text"
-                fn_args:
-                  - fixed: "nm_unidade"
-                  - fixed: "PROC. REGIONAL TRABALHO"
-                  - fixed: "PRT"
-              - id: "prt"
-                function: "replace_text"
-                fn_args:
-                  - fixed: "cd_prt"
-                  - fixed: "PRT"
-                  - fixed: ""
-              - id: "num_prt"
-                function: "get_number"
-                fn_args:
-                  - named_prop: "calc_prt"
-              - id: "treemap_description"
-                function: "applyInterpolReplaceDatasetParam"
-                fn_args:
-                  - fixed: 
-                      template: "{0}: {1}"
-                      args:
-                        - named_prop: "nm_prt"
-                        - named_prop: "tipodocumento"
-                        - named_prop: "agr_count"
-                          format: 'inteiro'
         headers:
-          - text: 'PRT'
-            align: 'left'
-            value: 'calc_ds_prt'
           - text: 'Tipo Documento'
             align: 'left'
             value: 'tipodocumento'
+          - text: 'PRT'
+            align: 'left'
+            value: 'nm_unidade'
           - text: 'Número de documentos'
             value: 'fmt_agr_count'
         chart_options:
-          parent: "calc_num_prt"
-          id: "agr_count"
-          text: "calc_treemap_description"
-          size: "agr_count"
-          hide_legend: false
-          colorScale:
-            type: "categorical"
+          id: "tipodocumento"
+          x: "nm_prt"
+          y: "agr_count"
+          text: "fmt_agr_count"
+          orientation: "vertical"
+          show_x_axis: true
+          show_y_axis: true
+          stacked: true
         source:
           desc: "MPT Digital"
-# ========================================================
-      - id: "line_denuncias"
-        title:
-          fixed: "Denúncias ligadas à COVID-19"
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       fixed: ""
-        title_comment:
-          fixed: "Brasil"
-        description:
-          - id: "select_prt"
-            type: "select"
-            multiple: true
-            label: "MPT"
-            api:
-              fixed: "/thematic/coviddenunciampt?categorias=nm_unidade,nm_prt&agregacao=DISTINCT&ordenacao=nm_prt"
-              options:
-                calcs:
-                  - id: "prt"
-                    function: "replace_text"
-                    fn_args:
-                      - fixed: "nm_unidade"
-                      - fixed: "PROC. REGIONAL TRABALHO"
-                      - fixed: "PRT"
-            args:
-              - prop: "id"
-                named_prop: "nm_prt"
-              - prop: "label"
-                named_prop: "calc_prt"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-nm_prt-{0}"
-                api:
-                  args:
-                    - named_prop: "nm_prt"
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                reactive: true
-                api: 
-                  fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_count'
-                    format: 'inteiro'
-                    default: "Nenhum"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: 'Denúncias COVID-19'
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o número total de denúncias ao Ministério Público do Trabalho (MPT) relacionadas à COVID-19. 
-                      O gráfico apresenta a série histórica com o total de denúncias por dia. 
-                      É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) no filtro acima."
-        chart_type: "LINE"
-        api:
-          fixed: "/thematic/coviddenunciampt?categorias='denuncia'-cd_indicador,data_denuncia,data_denuncia-data_denuncia2&agregacao=COUNT&ordenacao=data_denuncia&filtros=eq-1-1"
-          options:
-            formatters:
-              - id: "agr_count"
-                format: 'inteiro'
-              - id: "data_denuncia"
-                format: "dataYMD"
-              - id: "data_denuncia2"
-                format: "dataDMY"
-        headers:
-          - text: 'Data Denúncia'
-            align: 'left'
-            value: 'fmt_data_denuncia2'
-          - text: 'Número de denúncias'
-            value: 'fmt_agr_count'
-        chart_options:
-          id: "cd_indicador"
-          x: "fmt_data_denuncia"
-          y: "agr_count"
-          x_options:
-            labelMaxNumber: 15
-          hide_legend: true
-          colorArray: ["#377EB8"]  # blue
-        source:
-          desc: "MPT Digital"          
