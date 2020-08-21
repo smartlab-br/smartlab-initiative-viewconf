@@ -3,16 +3,27 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      fixed: "/thematic/coviddestinacaompt?categorias=1&valor=valor&agregacao=SUM"
+      fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM"
     args:
       - prop: "value"
-        named_prop: 'agr_sum_valor'
+        named_prop: 'agr_sum_destinacaovalor'
         format: 'monetario'
         precision: 2
         default: 'Nenhum'
         zero: 'Nenhum'
       - prop: "description"
         fixed: "Total Destinado pelo MPT para<br/>ações de combate à Covid-19"
+  - relevance: "lead"
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT"
+    args:
+      - prop: "value"
+        named_prop: "agr_count"
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Denúncias"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -52,17 +63,6 @@ principais:
         zero: 'Nenhum'
       - prop: "description"
         fixed: "Audiências"
-  - relevance: "lead"
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    api: 
-      fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT"
-    args:
-      - prop: "value"
-        named_prop: "agr_count"
-        format: 'inteiro'
-      - prop: "description"
-        fixed: "Denúncias"
 # ========================================================
 secoes:
   - id: 'prevalencia_serie'
@@ -84,22 +84,39 @@ secoes:
           #   - named_prop: "agr_min_last_available_date"
           #     format: 'dataDMY'
         description:
+          - id: "select_origem"
+            type: "select"
+            label: "Origem"
+            api:
+              fixed: "/thematic/coviddestinacaompt?categorias=tipofeito&agregacao=DISTINCT&ordenacao=tipofeito"
+            args:
+              - prop: "id"
+                named_prop: "tipofeito"
+              - prop: "label"
+                named_prop: "tipofeito"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-tipofeito-'{0}'"
+                api:
+                  args:
+                    - named_prop: "tipofeito"
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 reactive: true
                 api: 
-                  fixed: "/thematic/coviddestinacaompt?categorias=1&valor=valor&agregacao=SUM"
+                  fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM&filtros=eq-1-1"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_valor'
+                    named_prop: 'agr_sum_destinacaovalor'
                     format: 'monetario'
                     precision: 2
                     default: 'Nenhum'
                     zero: 'Nenhum'
                   - prop: "description"
-                    fixed: "Total Destinado pelo MPT para<br/>ações de combate à Covid-19"
+                    fixed: "Total Destinado pelo MPT para ações de combate à Covid-19"
           - type: "text"
             title: ""
             content:
@@ -107,10 +124,10 @@ secoes:
                       O gráfico apresenta o valor das destinações por Procuradoria Regional do Trabalho (PRT)."
         chart_type: "BAR"
         api:
-          fixed: "/thematic/coviddestinacaompt?categorias=unidade&valor=valor&agregacao=SUM&ordenacao=-agr_sum_valor&filtros=eq-1-1"
+          fixed: "/thematic/coviddestinacaompt?categorias=tipofeito,id_prt,nm_prt,nm_unidade&valor=destinacaovalor&agregacao=SUM&ordenacao=-agr_sum_destinacaovalor&filtros=eq-1-1"
           options:
             formatters:
-              - id: "agr_sum_valor"
+              - id: "agr_sum_destinacaovalor"
                 format: 'monetario'
                 precision: 2
             calcs:
@@ -118,31 +135,32 @@ secoes:
                 function: "applyInterpolReplaceDatasetParam"
                 fn_args:
                   - fixed: 
-                      template: "{0} - {1}"
+                      template: "{0}"
                       args:
-                        - named_prop: "unidade"
-                        - named_prop: "agr_sum_valor"
+                        - named_prop: "agr_sum_destinacaovalor"
                           format: "monetario"
                           collapse:
                             format: 'monetario'
         headers:
+          - text: 'Origem'
+            align: 'left'
+            value: 'tipofeito'
           - text: 'PRT'
             align: 'left'
-            value: 'unidade'
+            value: 'nm_unidade'
           - text: 'Valor'
-            value: 'fmt_agr_sum_valor'
+            value: 'fmt_agr_sum_destinacaovalor'
         chart_options:
-          id: "unidade"
-          x: "unidade"
-          y: "agr_sum_valor"
+          id: "tipofeito"
+          x: "nm_prt"
+          y: "agr_sum_destinacaovalor"
           text: "calc_bar_description"
           orientation: "vertical"
+          stacked: true
           show_x_axis: true
           show_y_axis: false
-          colorScale:
-            name: "Reds"
-            type: "singleHue"
-            order: "desc"
+          # colorArray: ["#a50f15","#fee0d2","#cb181d","#fcbba1","#ef3b2c","#fc9272","#fb6a4a"]  # Reds
+          colorArray: ["#cb181d","#fcbba1"]  # Reds
         source:
           desc: "MPT Digital"
 # ========================================================
@@ -167,36 +185,42 @@ secoes:
             multiple: true
             label: "MPT"
             api:
-              fixed: "/thematic/coviddestinacaompt?categorias=unidade&agregacao=DISTINCT&ordenacao=unidade"
+              fixed: "/thematic/coviddestinacaompt?categorias=nm_unidade,nm_prt&agregacao=DISTINCT&ordenacao=nm_prt"
+              options:
+                calcs:
+                  - id: "prt"
+                    function: "replace_text"
+                    fn_args:
+                      - fixed: "nm_unidade"
+                      - fixed: "PROC. REGIONAL TRABALHO"
+                      - fixed: "PRT"
             args:
               - prop: "id"
-                named_prop: "unidade"
+                named_prop: "nm_prt"
               - prop: "label"
-                named_prop: "unidade"
+                named_prop: "calc_prt"
             selection:
               event: "selection" 
               rules:
-                filter: ",and,in-unidade-{0}"
+                filter: ",and,in-nm_prt-{0}"
                 api:
                   args:
-                    - named_prop: "unidade"
+                    - named_prop: "nm_prt"
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 reactive: true
                 api: 
-                  fixed: "/thematic/coviddestinacaompt?categorias=1&valor=valor&agregacao=SUM&filtros=eq-1-1"
+                  fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM&filtros=eq-1-1"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_valor'
+                    named_prop: 'agr_sum_destinacaovalor'
                     format: 'monetario'
-                    collapse:
-                      format: 'monetario'
                     default: 'Nenhum'
                     zero: 'Nenhum'
                   - prop: "description"
-                    fixed: "Total Destinado pelo MPT para<br/>ações de combate à Covid-19"
+                    fixed: "Total Destinado pelo MPT para ações de combate à Covid-19"
           - type: "text"
             title: ""
             content:
@@ -204,65 +228,56 @@ secoes:
                       O gráfico apresenta o valor das destinações por Procuradoria Regional do Trabalho (PRT)."
         chart_type: "TREEMAP"
         api:
-          fixed: "/thematic/coviddestinacaompt?categorias=unidade,valor,beneficiario,data_destinacao,objeto&filtros=eq-1-1"
+          fixed: "/thematic/coviddestinacaompt?categorias=tipofeito,id_prt,nm_prt,nm_unidade,iddestinacoescnmp,destinacaovalor,destinacaobeneficiario,dtlancamento,destinacaoobjeto&filtros=eq-1-1"
           options:
             formatters:
-              - id: "valor"
+              - id: "destinacaovalor"
                 format: 'monetario'
                 precision: 2
-              - id: "data_destinacao"
+              - id: "dtlancamento"
                 format: 'dataDMY'
             calcs:
-              - id: "prt"
-                function: "replace_text"
-                fn_args:
-                  - fixed: "unidade"
-                  - fixed: "PRT"
-                  - fixed: ""
-              - id: "num_prt"
-                function: "get_number"
-                fn_args:
-                  - named_prop: "calc_prt"
               - id: "treemap_description"
                 function: "applyInterpolReplaceDatasetParam"
                 fn_args:
                   - fixed: 
-                      template: "{0}: {1} - {2}"
+                      template: "{0} - {1}"
                       args:
-                        - named_prop: "unidade"
-                        - named_prop: "valor"
+                        # - named_prop: "nm_prt"
+                        - named_prop: "destinacaovalor"
                           format: "monetario"
                           collapse:
                             format: 'monetario'
-                        - named_prop: "beneficiario"
+                        - named_prop: "destinacaobeneficiario"
         headers:
           - text: 'PRT'
             align: 'left'
-            value: 'unidade'
+            value: 'nm_unidade'
           - text: 'Valor'
-            value: 'fmt_valor'
-          - text: 'Data'
+            value: 'fmt_destinacaovalor'
+          - text: 'Data Lançamento'
             align: 'left'
-            value: 'fmt_data_destinacao'
+            value: 'fmt_dtlancamento'
           - text: 'Beneficiário'
             align: 'left'
-            value: 'beneficiario'
+            value: 'destinacaobeneficiario'
           - text: 'Finalidade'
             align: 'left'
-            value: 'objeto'
+            value: 'destinacaoobjeto'
         chart_options:
-          parent: "calc_num_prt"
-          id: "valor"
+          parent: "id_prt"
+          id: "iddestinacoescnmp"
           text: "calc_treemap_description"
-          size: "valor"
-          colorScale:
-            type: "categorical"
+          size: "destinacaovalor"
+          colorArray: ["#67000d","#fff5f0","#a50f15","#fee0d2","#cb181d","#fcbba1","#ef3b2c","#fc9272","#fb6a4a",
+                      "#7f2704","#fff5eb","#a63603","#fee6ce","#d94801","#fdd0a2","#f16913","#fdae6b","#fd8d3c",
+                      "#d9ef8b","#a50026","#ffffbf","#d73027","#fee08b","#f46d43","#fdae61"]  # Reds
         source:
           desc: "MPT Digital"
 # ========================================================
       - id: "line_denuncias"
         title:
-          fixed: "Denúncias ligadas à COVID-19"
+          fixed: "Denúncias relacionadas à COVID-19"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -342,7 +357,7 @@ secoes:
           x_options:
             labelMaxNumber: 15
           hide_legend: true
-          colorArray: ["#377EB8"]  # blue
+          colorArray: ["#cb181d"]  # red
         source:
           desc: "MPT Digital"          
 # ========================================================
@@ -553,6 +568,8 @@ secoes:
           show_x_axis: true
           show_y_axis: true
           stacked: true
+          colorArray: ["#a50f15","#fee0d2","#cb181d","#fcbba1","#ef3b2c","#fc9272","#fb6a4a"]  # Reds
+          # colorArray: ["#a50f15","#cb181d","#ef3b2c","#fb6a4a","#fc9272","#fcbba1","#fee0d2"]  # Reds
         source:
           desc: "MPT Digital"
 # =====================================================
@@ -934,5 +951,6 @@ secoes:
           show_x_axis: true
           show_y_axis: true
           stacked: true
+          colorArray: ["#a50f15","#fee0d2","#cb181d","#fcbba1","#ef3b2c","#fc9272","#fb6a4a"]  # Reds
         source:
           desc: "MPT Digital"
