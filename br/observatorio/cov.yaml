@@ -85,18 +85,19 @@ prevalencia:
   #   colorScale:
   #     name: 'Reds'
   api:
-    - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-valor,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-    - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-valor,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-    # - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'conf100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_death_rate,last_available_confirmed_per_100k_inhabitants-valor,latitude,longitude&valor=last_available_confirmed_per_100k_inhabitants&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-    # - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate-valor,latitude,longitude&valor=last_available_death_rate&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+    - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-agr_count,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+    - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-agr_count,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+    - fixed: "/thematic/coviddenunciampt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'denuncia'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-1-1"
+    - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'acoesMPT'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=in-tipodocumento-'ACPs'-'TAC'-'RECOMENDAÇÃO'"
   chart_type: "MAP_BUBBLES"
   chart_options:
     colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)", "rgba(25, 125, 25, 0.7)", "#9C27B0"]
-    indicadores: ["obitos","casos","conf100M", "obitos100M"]
+    indicadores: ["obitos","casos","denuncia", "acoesMPT"]
     lat: 'latitude'
     long: 'longitude'
     id_field: 'codigo' 
     clickable: true
+    tooltip_function: 'obsCovidMunicipioTooltip'
     height_proportion: 1
     radius:
       base: 10000
@@ -140,16 +141,16 @@ prevalencia:
           default: true
           color: "red"
           label: "ÓBITOS CONFIRMADOS"
-        # - id: "conf100M"
-        #   cls: "xs12"
-        #   default: false
-        #   color: "green accent-4"
-        #   label: "CASOS CONFIRMADOS/100.000 hab."
-        # - id: "obitos100M"
-        #   cls: "xs12"
-        #   default: false
-        #   color: "purple"
-        #   label: "ÓBITOS CONFIRMADOS/100.000 hab."
+        - id: "denuncia"
+          cls: "xs12"
+          default: true
+          color: "green accent-4"
+          label: "DENÚNCIAS AO MPT"
+        - id: "acoesMPT"
+          cls: "xs12"
+          default: true
+          color: "purple"
+          label: "ATUAÇÃO MPT"
       event: 'selection'
     - type: "text"
       cls: "ma-0 pa-0"
@@ -200,88 +201,112 @@ prevalencia:
               named_prop: "agr_max_last_available_date"
               format: 'dataDMY'
               default: "Sem Registros"
+        # - relevance: "lead"
+        #   cls: "xs12 sm6 md12 lg6 text-xs-center "
+        #   color: "light-blue pa-3"
+        #   api: 
+        #     fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_confirmed-0"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_count_cd_municipio_ibge_dv"
+        #       format: "inteiro"
+        #     - prop: "description"
+        #       fixed: "Municípios atingidos"
+        #     - prop: 'comment'
+        #       template: "{0}% de um total de 5.570 municípios"
+        #       args:
+        #         - function: 'calc_percentage'
+        #           format: 'inteiro'
+        #           fn_args:
+        #             - named_prop: "agr_count_cd_municipio_ibge_dv"
+        #             - fixed: 5570
+        # - relevance: "lead"
+        #   cls: "xs12 sm6 md12 lg6 text-xs-center "
+        #   color: "red pa-3"
+        #   api: 
+        #     fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_count_cd_municipio_ibge_dv"
+        #       format: "inteiro"
+        #     - prop: "description"
+        #       fixed: "Municípios com óbitos"
+        #     - prop: 'comment'
+        #       template: "{0}% de um total de 5.570 municípios"
+        #       args:
+        #         - function: 'calc_percentage'
+        #           format: 'inteiro'
+        #           fn_args:
+        #             - named_prop: "agr_count_cd_municipio_ibge_dv"
+        #             - fixed: 5570
+        # - relevance: "lead"
+        #   cls: "xs12 sm6 md12 lg6 text-xs-center "
+        #   color: "light-blue px-3 pt-3"
+        #   api: 
+        #     fixed: "/thematic/covidcasos?categorias=1&valor=estimated_population_2019&agregacao=SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_sum_estimated_population_2019"
+        #       format: 'real'
+        #       collapse: 
+        #         format: 'real'
+        #         precision: 1
+        #     - prop: "description"
+        #       fixed: "População dos Municípios atingidos"
+        #     - prop: 'comment'
+        #       template: "{0}% da população brasileira"
+        #       args:
+        #         - function: 'calc_percentage'
+        #           format: 'inteiro'
+        #           fn_args:
+        #             - named_prop: "agr_sum_estimated_population_2019"
+        #             - fixed: 210147125
+        # - relevance: "lead"
+        #   cls: "xs12 sm6 md12 lg6 text-xs-center "
+        #   color: "red px-3 pt-3"
+        #   api: 
+        #     fixed: "/thematic/covidcasos?categorias=1&valor=estimated_population_2019&agregacao=SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_sum_estimated_population_2019"
+        #       format: 'real'
+        #       collapse: 
+        #         format: 'real'
+        #         precision: 1
+        #     - prop: "description"
+        #       fixed: "População dos Municípios com óbitos"
+        #     - prop: 'comment'
+        #       template: "{0}% da população brasileira"
+        #       args:
+        #         - function: 'calc_percentage'
+        #           format: 'inteiro'
+        #           fn_args:
+        #             - named_prop: "agr_sum_estimated_population_2019"
+        #             - fixed: 210147125
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "light-blue pa-3"
+          color: "green accent-4 px-3 pt-3"
           api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_confirmed-0"
+            fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT"
           args:
             - prop: "value"
-              named_prop: "agr_count_cd_municipio_ibge_dv"
-              format: "inteiro"
+              named_prop: "agr_count"
+              format: 'inteiro'
             - prop: "description"
-              fixed: "Municípios atingidos"
-            - prop: 'comment'
-              template: "{0}% de um total de 5.570 municípios"
-              args:
-                - function: 'calc_percentage'
-                  format: 'inteiro'
-                  fn_args:
-                    - named_prop: "agr_count_cd_municipio_ibge_dv"
-                    - fixed: 5570
+              fixed: "Denúncias ao MPT relacionadas à COVID-19"
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "red pa-3"
+          color: "purple px-3 pt-3"
           api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=in-tipodocumento-'ACPs'-'TAC'-'RECOMENDAÇÃO'"
           args:
             - prop: "value"
-              named_prop: "agr_count_cd_municipio_ibge_dv"
-              format: "inteiro"
+              named_prop: "agr_count"
+              format: 'inteiro'
             - prop: "description"
-              fixed: "Municípios com óbitos"
-            - prop: 'comment'
-              template: "{0}% de um total de 5.570 municípios"
-              args:
-                - function: 'calc_percentage'
-                  format: 'inteiro'
-                  fn_args:
-                    - named_prop: "agr_count_cd_municipio_ibge_dv"
-                    - fixed: 5570
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "light-blue px-3 pt-3"
-          api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=estimated_population_2019&agregacao=SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
-          args:
-            - prop: "value"
-              named_prop: "agr_sum_estimated_population_2019"
-              format: 'real'
-              collapse: 
-                format: 'real'
-                precision: 1
-            - prop: "description"
-              fixed: "População dos Municípios atingidos"
-            - prop: 'comment'
-              template: "{0}% da população brasileira"
-              args:
-                - function: 'calc_percentage'
-                  format: 'inteiro'
-                  fn_args:
-                    - named_prop: "agr_sum_estimated_population_2019"
-                    - fixed: 210147125
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "red px-3 pt-3"
-          api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=estimated_population_2019&agregacao=SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
-          args:
-            - prop: "value"
-              named_prop: "agr_sum_estimated_population_2019"
-              format: 'real'
-              collapse: 
-                format: 'real'
-                precision: 1
-            - prop: "description"
-              fixed: "População dos Municípios com óbitos"
-            - prop: 'comment'
-              template: "{0}% da população brasileira"
-              args:
-                - function: 'calc_percentage'
-                  format: 'inteiro'
-                  fn_args:
-                    - named_prop: "agr_sum_estimated_population_2019"
-                    - fixed: 210147125
+              fixed: "Atuação MPT"
+            - prop: "comment"
+              fixed: "(Ação Civil Pública / Termo de Ajuste de Conduta / Recomendação)"
   mapa_filtros:
     - id: "selectlayer"
       type: "switch-group"
@@ -296,16 +321,16 @@ prevalencia:
           default: true
           color: "red"
           label: "ÓBITOS CONFIRMADOS"
-        - id: "conf100M"
+        - id: "denuncia"
           cls: "xs12"
-          default: false
+          default: true
           color: "green accent-4"
-          label: "CASOS CONFIRMADOS/100.000 hab."
-        - id: "obitos100M"
+          label: "DENÚNCIAS AO MPT"
+        - id: "acoesMPT"
           cls: "xs12"
-          default: false
+          default: true
           color: "purple"
-          label: "ÓBITOS CONFIRMADOS/100.000 hab."
+          label: "ATUAÇÃO MPT"
       event: 'selection'
     - id: "select_uf"
       type: "select"
@@ -405,6 +430,30 @@ prevalencia:
             #       fn_args:
             #         - named_prop: "agr_count_cd_municipio_ibge_dv"
             #         - fixed: 5570
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "green accent-4 pa-3"
+          reactive: true
+          api: 
+            fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+          args:
+            - prop: "value"
+              named_prop: "agr_count_cd_municipio_ibge_dv"
+              format: "inteiro"
+            - prop: "description"
+              fixed: "Denúncias ao MPT"
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "purple pa-3"
+          reactive: true
+          api: 
+            fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+          args:
+            - prop: "value"
+              named_prop: "agr_count_cd_municipio_ibge_dv"
+              format: "inteiro"
+            - prop: "description"
+              fixed: "Atuação MPT"
     - id: "ranking_list_covid"
       type: "ranking_list"
       rankings:
