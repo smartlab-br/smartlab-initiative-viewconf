@@ -145,7 +145,7 @@ prevalencia:
           cls: "xs12"
           default: true
           color: "green accent-4"
-          label: "DENÚNCIAS AO MPT"
+          label: "Denúncias ao MPT relacionadas à COVID-19"
         - id: "acoesMPT"
           cls: "xs12"
           default: true
@@ -325,7 +325,7 @@ prevalencia:
           cls: "xs12"
           default: true
           color: "green accent-4"
-          label: "DENÚNCIAS AO MPT"
+          label: "Denúncias ao MPT relacionadas à COVID-19"
         - id: "acoesMPT"
           cls: "xs12"
           default: true
@@ -435,30 +435,32 @@ prevalencia:
           color: "green accent-4 pa-3"
           reactive: true
           api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+            fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
           args:
             - prop: "value"
-              named_prop: "agr_count_cd_municipio_ibge_dv"
+              named_prop: "agr_count"
               format: "inteiro"
             - prop: "description"
-              fixed: "Denúncias ao MPT"
+              fixed: "Denúncias  ao MPT relacionadas à COVID-19"
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
           color: "purple pa-3"
           reactive: true
           api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=in-tipodocumento-'ACPs'-'TAC'-'RECOMENDAÇÃO'"
           args:
             - prop: "value"
-              named_prop: "agr_count_cd_municipio_ibge_dv"
+              named_prop: "agr_count"
               format: "inteiro"
             - prop: "description"
               fixed: "Atuação MPT"
+            - prop: "comment"
+              fixed: "(Ação Civil Pública / Termo de Ajuste de Conduta / Recomendação)"
     - id: "ranking_list_covid"
       type: "ranking_list"
       rankings:
         - title: "Municípios com maior número de casos confirmados"
-          cls: "xs12 sm6 xl3 pa-3"
+          cls: "xs12 sm6 md12 lg6 pa-3"
           reactive: true
           api: 
             fixed: "/thematic/covidcasos?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_confirmed&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&limit=5&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
@@ -471,7 +473,7 @@ prevalencia:
             - prop: 'rank'
               named_prop: "agr_rank_dense_sum_last_available_confirmed"
         - title: "Municípios com maior número de óbitos confirmados"
-          cls: "xs12 sm6 xl3 pa-3"
+          cls: "xs12 sm6 md12 lg6 pa-3"
           reactive: true
           api: 
             fixed: "/thematic/covidcasos?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_deaths&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&limit=5&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
