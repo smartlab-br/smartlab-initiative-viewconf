@@ -228,7 +228,7 @@ secoes:
                       O gráfico apresenta o valor das destinações por Procuradoria Regional do Trabalho (PRT)."
         chart_type: "TREEMAP"
         api:
-          fixed: "/thematic/coviddestinacaompt?categorias=tipofeito,id_prt,nm_prt,nm_unidade,iddestinacoescnmp,destinacaovalor,destinacaobeneficiario,dtlancamento,destinacaoobjeto&filtros=eq-1-1"
+          fixed: "/thematic/coviddestinacaompt?categorias=temacnmp,id_prt,nm_prt,nm_unidade,iddestinacoescnmp,destinacaovalor,destinacaobeneficiario,dtlancamento,destinacaoobjeto&filtros=eq-1-1"
           options:
             formatters:
               - id: "destinacaovalor"
@@ -253,6 +253,8 @@ secoes:
           - text: 'PRT'
             align: 'left'
             value: 'nm_unidade'
+          - text: 'Tema CNMP'
+            value: 'temacnmp'
           - text: 'Valor'
             value: 'fmt_destinacaovalor'
           - text: 'Data Lançamento'
@@ -269,9 +271,9 @@ secoes:
           id: "iddestinacoescnmp"
           text: "calc_treemap_description"
           size: "destinacaovalor"
-          colorArray: ["#67000d","#fff5f0","#a50f15","#fee0d2","#cb181d","#fcbba1","#ef3b2c","#fc9272","#fb6a4a",
+          colorArray: ["#a50f15","#fee0d2","#67000d","#fff5f0","#cb181d","#fcbba1","#ef3b2c","#fc9272","#fb6a4a",
                       "#7f2704","#fff5eb","#a63603","#fee6ce","#d94801","#fdd0a2","#f16913","#fdae6b","#fd8d3c",
-                      "#d9ef8b","#a50026","#ffffbf","#d73027","#fee08b","#f46d43","#fdae61"]  # Reds
+                      "#d9ef8b","#a50026","#ffffbf","#d73027","#fee08b","#f46d43","#fdae61"]  # Reds/Oranges/RdYlGn
         source:
           desc: "MPT Digital"
 # ========================================================
@@ -403,6 +405,24 @@ secoes:
                 api:
                   args:
                     - named_prop: "nm_prt"
+          - id: "select_classe"
+            type: "select"
+            multiple: true
+            label: "Classe"
+            api:
+              fixed: "/thematic/covidclassempt?categorias=classe,descricao_classe&agregacao=DISTINCT&ordenacao=classe"
+            args:
+              - prop: "id"
+                named_prop: "classe"
+              - prop: "label"
+                named_prop: "descricao_classe"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-classe-{0}"
+                api:
+                  args:
+                    - named_prop: "classe"
           - type: "minicards"
             cards:
               - relevance: 'high'
@@ -426,7 +446,7 @@ secoes:
                       É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) no filtro acima."
         chart_type: "BAR"
         api:
-          fixed: "/thematic/covidclassempt?categorias=classe&agregacao=COUNT&ordenacao=-agr_count&filtros=eq-1-1"
+          fixed: "/thematic/covidclassempt?categorias=descricao_classe,classe&agregacao=COUNT&ordenacao=-agr_count&filtros=eq-1-1"
           options:
             formatters:
               - id: "agr_count"
@@ -444,11 +464,11 @@ secoes:
         headers:
           - text: 'Classe'
             align: 'left'
-            value: 'classe'
+            value: 'descricao_classe'
           - text: 'Número de procedimentos'
             value: 'fmt_agr_count'
         chart_options:
-          id: "classe"
+          id: "descricao_classe"
           x: "classe"
           y: "agr_count"
           text: "calc_bar_description"
@@ -509,12 +529,12 @@ secoes:
             multiple: true
             label: "Classe"
             api:
-              fixed: "/thematic/covidclassempt?categorias=classe&agregacao=DISTINCT&ordenacao=classe"
+              fixed: "/thematic/covidclassempt?categorias=classe,descricao_classe&agregacao=DISTINCT&ordenacao=classe"
             args:
               - prop: "id"
                 named_prop: "classe"
               - prop: "label"
-                named_prop: "classe"
+                named_prop: "descricao_classe"
             selection:
               event: "selection" 
               rules:
@@ -545,7 +565,7 @@ secoes:
                       É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) e classes nos filtros acima."
         chart_type: "BAR"
         api:
-          fixed: "/thematic/covidclassempt?categorias=nm_unidade,nm_prt,cd_prt,classe&agregacao=COUNT&ordenacao=nm_prt,-agr_count&filtros=eq-1-1"
+          fixed: "/thematic/covidclassempt?categorias=nm_unidade,nm_prt,cd_prt,classe,descricao_classe&agregacao=COUNT&ordenacao=nm_prt,-agr_count&filtros=eq-1-1"
           options:
             formatters:
               - id: "agr_count"
@@ -553,14 +573,14 @@ secoes:
         headers:
           - text: 'Classe'
             align: 'left'
-            value: 'classe'
+            value: 'descricao_classe'
           - text: 'PRT'
             align: 'left'
             value: 'nm_unidade'
           - text: 'Número de procedimentos'
             value: 'fmt_agr_count'
         chart_options:
-          id: "classe"
+          id: "descricao_classe"
           x: "nm_prt"
           y: "agr_count"
           text: "fmt_agr_count"
@@ -629,6 +649,24 @@ secoes:
                 api:
                   args:
                     - named_prop: "cod_tema_principal"
+          - id: "select_classe"
+            type: "select"
+            multiple: true
+            label: "Classe"
+            api:
+              fixed: "/thematic/covidclassempt?categorias=classe,descricao_classe&agregacao=DISTINCT&ordenacao=classe"
+            args:
+              - prop: "id"
+                named_prop: "classe"
+              - prop: "label"
+                named_prop: "descricao_classe"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-classe-{0}"
+                api:
+                  args:
+                    - named_prop: "classe"
           - type: "text"
             title: ""
             content:
@@ -760,6 +798,24 @@ secoes:
                 api:
                   args:
                     - named_prop: "nm_prt"
+          - id: "select_tipo"
+            type: "select"
+            multiple: true
+            label: "Tipo"
+            api:
+              fixed: "/thematic/coviddocumentompt?categorias=tipodocumento,descricao_tipodocumento&agregacao=DISTINCT&ordenacao=tipodocumento"
+            args:
+              - prop: "id"
+                named_prop: "tipodocumento"
+              - prop: "label"
+                named_prop: "descricao_tipodocumento"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-tipodocumento-{0}"
+                api:
+                  args:
+                    - named_prop: "tipodocumento"
           - type: "minicards"
             cards:
               - relevance: 'high'
@@ -796,7 +852,7 @@ secoes:
                       É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) no filtro acima."
         chart_type: "BAR"
         api:
-          fixed: "/thematic/coviddocumentompt?categorias=tipodocumento&agregacao=COUNT&ordenacao=-agr_count&filtros=eq-1-1"
+          fixed: "/thematic/coviddocumentompt?categorias=tipodocumento,descricao_tipodocumento&agregacao=COUNT&ordenacao=-agr_count&filtros=eq-1-1"
           options:
             formatters:
               - id: "agr_count"
@@ -814,11 +870,11 @@ secoes:
         headers:
           - text: 'Documento'
             align: 'left'
-            value: 'tipodocumento'
+            value: 'descricao_tipodocumento'
           - text: 'Número de documentos'
             value: 'fmt_agr_count'
         chart_options:
-          id: "tipodocumento"
+          id: "descricao_tipodocumento"
           x: "tipodocumento"
           y: "agr_count"
           text: "calc_bar_description"
@@ -879,12 +935,12 @@ secoes:
             multiple: true
             label: "Tipo"
             api:
-              fixed: "/thematic/coviddocumentompt?categorias=tipodocumento&agregacao=DISTINCT&ordenacao=tipodocumento"
+              fixed: "/thematic/coviddocumentompt?categorias=tipodocumento,descricao_tipodocumento&agregacao=DISTINCT&ordenacao=tipodocumento"
             args:
               - prop: "id"
                 named_prop: "tipodocumento"
               - prop: "label"
-                named_prop: "tipodocumento"
+                named_prop: "descricao_tipodocumento"
             selection:
               event: "selection" 
               rules:
@@ -928,7 +984,7 @@ secoes:
                       É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) e tipos nos filtros acima."
         chart_type: "BAR"
         api:
-          fixed: "/thematic/coviddocumentompt?categorias=nm_unidade,nm_prt,cd_prt,tipodocumento&agregacao=COUNT&ordenacao=nm_prt,-agr_count&filtros=eq-1-1"
+          fixed: "/thematic/coviddocumentompt?categorias=nm_unidade,nm_prt,cd_prt,tipodocumento,descricao_tipodocumento&agregacao=COUNT&ordenacao=nm_prt,-agr_count&filtros=eq-1-1"
           options:
             formatters:
               - id: "agr_count"
@@ -936,14 +992,14 @@ secoes:
         headers:
           - text: 'Tipo Documento'
             align: 'left'
-            value: 'tipodocumento'
+            value: 'descricao_tipodocumento'
           - text: 'PRT'
             align: 'left'
             value: 'nm_unidade'
           - text: 'Número de documentos'
             value: 'fmt_agr_count'
         chart_options:
-          id: "tipodocumento"
+          id: "descricao_tipodocumento"
           x: "nm_prt"
           y: "agr_count"
           text: "fmt_agr_count"
