@@ -88,11 +88,13 @@ prevalencia:
     - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-agr_count,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
     - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-agr_count,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
     - fixed: "/thematic/coviddenunciampt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'denuncia'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-1-1"
-    - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'acoesMPT'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=in-tipodocumento-'ACPs'-'TAC'-'RECOMENDAÇÃO'"
+    - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'ACP'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
+    - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'TAC'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
+    - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'recomendacao'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
   chart_type: "MAP_BUBBLES"
   chart_options:
-    colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)", "rgba(25, 125, 25, 0.7)", "#9C27B0"]
-    indicadores: ["obitos","casos","denuncia", "acoesMPT"]
+    colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)", "rgba(25, 125, 25, 0.7)", "#9C27B0", "#303F9F","#795548"]
+    indicadores: ["obitos","casos","denuncia", "ACP", "TAC", "recomendacao"]
     lat: 'latitude'
     long: 'longitude'
     id_field: 'codigo' 
@@ -133,6 +135,7 @@ prevalencia:
       switches:
         - id: "casos"
           cls: "xs12"
+          title: "COVID-19"
           default: true
           color: "light-blue"
           label: "CASOS CONFIRMADOS"
@@ -143,14 +146,25 @@ prevalencia:
           label: "ÓBITOS CONFIRMADOS"
         - id: "denuncia"
           cls: "xs12"
+          title: "ATUAÇÃO MPT"
           default: true
           color: "green accent-4"
-          label: "Denúncias ao MPT relacionadas à COVID-19"
-        - id: "acoesMPT"
+          label: "DENÚNCIAS AO MPT"
+        - id: "ACP"
           cls: "xs12"
           default: true
           color: "purple"
-          label: "ATUAÇÃO MPT"
+          label: "AÇÕES CIVIS PÚBLICAS"
+        - id: "TAC"
+          cls: "xs12"
+          default: true
+          color: "indigo darken-2"
+          label: "TERMOS DE AJUSTE DE CONDUTA"
+        - id: "recomendacao"
+          cls: "xs12"
+          default: true
+          color: "brown"
+          label: "RECOMENDAÇÕES"
       event: 'selection'
     - type: "text"
       cls: "ma-0 pa-0"
@@ -298,21 +312,42 @@ prevalencia:
           cls: "xs12 sm6 md12 lg6 text-xs-center "
           color: "purple px-3 pt-3"
           api: 
-            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=in-tipodocumento-'ACPs'-'TAC'-'RECOMENDAÇÃO'"
+            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
           args:
             - prop: "value"
               named_prop: "agr_count"
               format: 'inteiro'
             - prop: "description"
-              fixed: "Atuação MPT"
-            - prop: "comment"
-              fixed: "(Ação Civil Pública / Termo de Ajuste de Conduta / Recomendação)"
+              fixed: "AÇÕES CIVIS PÚBLICAS"
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "indigo darken-2 px-3 pt-3"
+          api: 
+            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
+          args:
+            - prop: "value"
+              named_prop: "agr_count"
+              format: 'inteiro'
+            - prop: "description"
+              fixed: "TERMOS DE AJUSTE DE CONDUTA"
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "brown px-3 pt-3"
+          api: 
+            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
+          args:
+            - prop: "value"
+              named_prop: "agr_count"
+              format: 'inteiro'
+            - prop: "description"
+              fixed: "RECOMENDAÇÕES"
   mapa_filtros:
     - id: "selectlayer"
       type: "switch-group"
       switches:
         - id: "casos"
           cls: "xs12"
+          title: "COVID-19"
           default: true
           color: "light-blue"
           label: "CASOS CONFIRMADOS"
@@ -323,14 +358,25 @@ prevalencia:
           label: "ÓBITOS CONFIRMADOS"
         - id: "denuncia"
           cls: "xs12"
+          title: "ATUAÇÃO MPT"
           default: true
           color: "green accent-4"
-          label: "Denúncias ao MPT relacionadas à COVID-19"
-        - id: "acoesMPT"
+          label: "DENÚNCIAS AO MPT"
+        - id: "ACP"
           cls: "xs12"
           default: true
           color: "purple"
-          label: "ATUAÇÃO MPT"
+          label: "AÇÕES CIVIS PÚBLICAS"
+        - id: "TAC"
+          cls: "xs12"
+          default: true
+          color: "indigo darken-2"
+          label: "TERMOS DE AJUSTE DE CONDUTA"
+        - id: "recomendacao"
+          cls: "xs12"
+          default: true
+          color: "brown"
+          label: "RECOMENDAÇÕES"
       event: 'selection'
     - id: "select_uf"
       type: "select"
@@ -390,18 +436,18 @@ prevalencia:
               named_prop: "agr_max_last_available_date"
               format: 'dataDMY'
               default: "Sem Registros"
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "light-blue pa-3"
-          reactive: true
-          api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_confirmed-0"
-          args:
-            - prop: "value"
-              named_prop: "agr_count_cd_municipio_ibge_dv"
-              format: "inteiro"
-            - prop: "description"
-              fixed: "Municípios atingidos"
+        # - relevance: "lead"
+        #   cls: "xs12 sm6 md12 lg6 text-xs-center "
+        #   color: "light-blue pa-3"
+        #   reactive: true
+        #   api: 
+        #     fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_confirmed-0"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_count_cd_municipio_ibge_dv"
+        #       format: "inteiro"
+        #     - prop: "description"
+        #       fixed: "Municípios atingidos"
             # - prop: 'comment'
             #   template: "{0}% de um total de 5.570 municípios"
             #   args:
@@ -410,18 +456,18 @@ prevalencia:
             #       fn_args:
             #         - named_prop: "agr_count_cd_municipio_ibge_dv"
             #         - fixed: 5570
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "red pa-3"
-          reactive: true
-          api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
-          args:
-            - prop: "value"
-              named_prop: "agr_count_cd_municipio_ibge_dv"
-              format: "inteiro"
-            - prop: "description"
-              fixed: "Municípios com óbitos"
+        # - relevance: "lead"
+        #   cls: "xs12 sm6 md12 lg6 text-xs-center "
+        #   color: "red pa-3"
+        #   reactive: true
+        #   api: 
+        #     fixed: "/thematic/covidcasos?categorias=1&valor=cd_municipio_ibge_dv,last_available_date&agregacao=COUNT,MAX&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_count_cd_municipio_ibge_dv"
+        #       format: "inteiro"
+        #     - prop: "description"
+        #       fixed: "Municípios com óbitos"
             # - prop: 'comment'
             #   template: "{0}% de um total de 5.570 municípios"
             #   args:
@@ -441,21 +487,43 @@ prevalencia:
               named_prop: "agr_count"
               format: "inteiro"
             - prop: "description"
-              fixed: "Denúncias  ao MPT relacionadas à COVID-19"
+              fixed: "Denúncias ao MPT relacionadas à COVID-19"
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
           color: "purple pa-3"
           reactive: true
           api: 
-            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=in-tipodocumento-'ACPs'-'TAC'-'RECOMENDAÇÃO'"
+            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
           args:
             - prop: "value"
               named_prop: "agr_count"
               format: "inteiro"
             - prop: "description"
-              fixed: "Atuação MPT"
-            - prop: "comment"
-              fixed: "(Ação Civil Pública / Termo de Ajuste de Conduta / Recomendação)"
+              fixed: "AÇÕES CIVIS PÚBLICAS"
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "indigo darken-2 pa-3"
+          reactive: true
+          api: 
+            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
+          args:
+            - prop: "value"
+              named_prop: "agr_count"
+              format: "inteiro"
+            - prop: "description"
+              fixed: "TERMOS DE AJUSTE DE CONDUTA"
+        - relevance: "lead"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "brown pa-3"
+          reactive: true
+          api: 
+            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
+          args:
+            - prop: "value"
+              named_prop: "agr_count"
+              format: "inteiro"
+            - prop: "description"
+              fixed: "RECOMENDAÇÕES"
     - id: "ranking_list_covid"
       type: "ranking_list"
       rankings:
