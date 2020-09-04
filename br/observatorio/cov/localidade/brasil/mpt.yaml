@@ -259,7 +259,7 @@ secoes:
                       É possível selecionar uma Unidade Federativa no filtro acima."
         chart_type: "TREEMAP"
         api:
-          fixed: "/thematic/coviddenunciampt?categorias=cd_uf,nm_uf,sg_uf&agregacao=COUNT&filtros=eq-1-1"
+          fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe&agregacao=COUNT&filtros=eq-1-1"
           options:
             formatters:
               - id: "agr_count"
@@ -267,14 +267,13 @@ secoes:
         headers:
           - text: 'Setor Econômico'
             align: 'left'
-            value: 'nm_uf'
+            value: 'cnae_classe'
           - text: 'Número de denúncias'
             value: 'fmt_agr_count'
         chart_options:
-          id: "cd_uf"
-          text: "nm_uf"
+          id: "cnae_classe"
+          text: "cnae_classe"
           size: "agr_count"
-          legend_field: "sg_uf"
           colorScale:
             name: "Reds"
         source:
@@ -384,7 +383,6 @@ secoes:
         description:
           - type: "minicards"
             cards:
-            cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 reactive: true
@@ -432,8 +430,7 @@ secoes:
             type: "singleHue"
             name: "Blues"
         source:
-          desc: "Brasil.io"
-          link: "https://brasil.io/covid19/"
+          desc: "MPT Digital"
 # # ========================================================
 #       - id: "bar_destinacao_prt"
 #         title:
@@ -530,149 +527,149 @@ secoes:
 #           colorArray: ["#cb181d","#fcbba1"]  # Reds
 #         source:
 #           desc: "MPT Digital"
-# ========================================================
-      - id: "treemap_destinacao"
-        title:
-          fixed: "Recursos destinados para ações de combate à COVID-19 por Valores e Beneficiários"
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       fixed: ""
-        title_comment:
-          fixed: "Brasil"
-          # api: 
-          #   fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
-          # args:
-          #   - named_prop: "agr_min_last_available_date"
-          #     format: 'dataDMY'
-        description:
-          # - id: "select_prt"
-          #   type: "select"
-          #   multiple: true
-          #   label: "MPT"
-          #   api:
-          #     fixed: "/thematic/coviddestinacaompt?categorias=nm_unidade,nm_prt&agregacao=DISTINCT&ordenacao=nm_prt"
-          #     options:
-          #       calcs:
-          #         - id: "prt"
-          #           function: "replace_text"
-          #           fn_args:
-          #             - fixed: "nm_unidade"
-          #             - fixed: "PROC. REGIONAL TRABALHO"
-          #             - fixed: "PRT"
-          #   args:
-          #     - prop: "id"
-          #       named_prop: "nm_prt"
-          #     - prop: "label"
-          #       named_prop: "calc_prt"
-          #   selection:
-          #     event: "selection" 
-          #     rules:
-          #       filter: ",and,in-nm_prt-{0}"
-          #       api:
-          #         args:
-          #           - named_prop: "nm_prt"
-          - id: "select_uf"
-            type: "select"
-            label: "Unidade Federativa"
-            api:
-              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
-            args:
-              - prop: "id"
-                named_prop: "cd_uf"
-              - prop: "label"
-                named_prop: "nm_uf"
-            selection:
-              event: "selection"
-              rules:
-                filter: ",and,eq-cd_uf-{0}"
-                api: 
-                  args:
-                    - named_prop: "cd_uf"
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                reactive: true
-                api: 
-                  fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM&filtros=eq-1-1"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_destinacaovalor'
-                    format: 'monetario'
-                    precision: 2
-                    default: 'Nenhum'
-                    zero: 'Nenhum'
-                  - prop: "description"
-                    fixed: "Total Destinado pelo MPT para ações de combate à Covid-19"
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o valor total destinado pelo Ministério Público do Trabalho (MPT) para ações de combate à COVID-19. 
-                      O gráfico apresenta a distribuição dos recursos por beneficiário e por Procuradoria Regional do Trabalho (PRT)."
-        chart_type: "TREEMAP"
-        api:
-          fixed: "/thematic/coviddestinacaompt?categorias=temacnmp,nm_uf,id_prt,nm_prt,nm_unidade,iddestinacoescnmp,destinacaovalor,destinacaobeneficiario,dtlancamento,destinacaoobjeto&ordenacao=nm_prt&filtros=eq-1-1"
-          options:
-            formatters:
-              - id: "destinacaovalor"
-                format: 'monetario'
-                precision: 2
-              - id: "dtlancamento"
-                format: 'dataDMY'
-            calcs:
-              - id: "treemap_description"
-                function: "applyInterpolReplaceDatasetParam"
-                fn_args:
-                  - fixed: 
-                      template: "{0} - {1}"
-                      args:
-                        # - named_prop: "nm_prt"
-                        - named_prop: "destinacaovalor"
-                          format: "monetario"
-                          collapse:
-                            format: 'monetario'
-                        - named_prop: "destinacaobeneficiario"
-              - id: "unique_index"
-                function: "applyInterpolReplaceDatasetParam"
-                fn_args:
-                  - fixed: 
-                      template: "{0}{1}"
-                      args:
-                        - named_prop: "id_prt"
-                        - named_prop: "iddestinacoescnmp"
+# # ========================================================
+#       - id: "treemap_destinacao"
+#         title:
+#           fixed: "Recursos destinados para ações de combate à COVID-19 por Valores e Beneficiários"
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       fixed: ""
+#         title_comment:
+#           fixed: "Brasil"
+#           # api: 
+#           #   fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
+#           # args:
+#           #   - named_prop: "agr_min_last_available_date"
+#           #     format: 'dataDMY'
+#         description:
+#           # - id: "select_prt"
+#           #   type: "select"
+#           #   multiple: true
+#           #   label: "MPT"
+#           #   api:
+#           #     fixed: "/thematic/coviddestinacaompt?categorias=nm_unidade,nm_prt&agregacao=DISTINCT&ordenacao=nm_prt"
+#           #     options:
+#           #       calcs:
+#           #         - id: "prt"
+#           #           function: "replace_text"
+#           #           fn_args:
+#           #             - fixed: "nm_unidade"
+#           #             - fixed: "PROC. REGIONAL TRABALHO"
+#           #             - fixed: "PRT"
+#           #   args:
+#           #     - prop: "id"
+#           #       named_prop: "nm_prt"
+#           #     - prop: "label"
+#           #       named_prop: "calc_prt"
+#           #   selection:
+#           #     event: "selection" 
+#           #     rules:
+#           #       filter: ",and,in-nm_prt-{0}"
+#           #       api:
+#           #         args:
+#           #           - named_prop: "nm_prt"
+#           - id: "select_uf"
+#             type: "select"
+#             label: "Unidade Federativa"
+#             api:
+#               fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
+#             args:
+#               - prop: "id"
+#                 named_prop: "cd_uf"
+#               - prop: "label"
+#                 named_prop: "nm_uf"
+#             selection:
+#               event: "selection"
+#               rules:
+#                 filter: ",and,eq-cd_uf-{0}"
+#                 api: 
+#                   args:
+#                     - named_prop: "cd_uf"
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 reactive: true
+#                 api: 
+#                   fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM&filtros=eq-1-1"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_destinacaovalor'
+#                     format: 'monetario'
+#                     precision: 2
+#                     default: 'Nenhum'
+#                     zero: 'Nenhum'
+#                   - prop: "description"
+#                     fixed: "Total Destinado pelo MPT para ações de combate à Covid-19"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o valor total destinado pelo Ministério Público do Trabalho (MPT) para ações de combate à COVID-19. 
+#                       O gráfico apresenta a distribuição dos recursos por beneficiário e por Procuradoria Regional do Trabalho (PRT)."
+#         chart_type: "TREEMAP"
+#         api:
+#           fixed: "/thematic/coviddestinacaompt?categorias=temacnmp,nm_uf,id_prt,nm_prt,nm_unidade,iddestinacoescnmp,destinacaovalor,destinacaobeneficiario,dtlancamento,destinacaoobjeto&ordenacao=nm_prt&filtros=eq-1-1"
+#           options:
+#             formatters:
+#               - id: "destinacaovalor"
+#                 format: 'monetario'
+#                 precision: 2
+#               - id: "dtlancamento"
+#                 format: 'dataDMY'
+#             calcs:
+#               - id: "treemap_description"
+#                 function: "applyInterpolReplaceDatasetParam"
+#                 fn_args:
+#                   - fixed: 
+#                       template: "{0} - {1}"
+#                       args:
+#                         # - named_prop: "nm_prt"
+#                         - named_prop: "destinacaovalor"
+#                           format: "monetario"
+#                           collapse:
+#                             format: 'monetario'
+#                         - named_prop: "destinacaobeneficiario"
+#               - id: "unique_index"
+#                 function: "applyInterpolReplaceDatasetParam"
+#                 fn_args:
+#                   - fixed: 
+#                       template: "{0}{1}"
+#                       args:
+#                         - named_prop: "id_prt"
+#                         - named_prop: "iddestinacoescnmp"
 
-        headers:
-          - text: 'PRT'
-            align: 'left'
-            value: 'nm_unidade'
-          - text: 'Tema CNMP'
-            value: 'temacnmp'
-          - text: 'Valor'
-            value: 'fmt_destinacaovalor'
-          - text: 'Data Lançamento'
-            align: 'left'
-            value: 'fmt_dtlancamento'
-          - text: 'Beneficiário'
-            align: 'left'
-            value: 'destinacaobeneficiario'
-          - text: 'Finalidade'
-            align: 'left'
-            value: 'destinacaoobjeto'
-        chart_options:
-          # parent: "id_prt"
-          id: "calc_unique_index"
-          text: "calc_treemap_description"
-          size: "destinacaovalor"
-          # legend_field: "nm_prt"
-          colorScale:
-            name: "Blues"
-          # colorArray: ["#a50f15","#fee0d2","#67000d","#fff5f0","#cb181d","#fcbba1","#ef3b2c","#fc9272","#fb6a4a",
-          #             "#7f2704","#fff5eb","#a63603","#fee6ce","#d94801","#fdd0a2","#f16913","#fdae6b","#fd8d3c",
-          #             "#d9ef8b","#a50026","#ffffbf","#d73027","#fee08b","#f46d43","#fdae61"]  # Reds/Oranges/RdYlGn
-        source:
-          desc: "MPT Digital"
+#         headers:
+#           - text: 'PRT'
+#             align: 'left'
+#             value: 'nm_unidade'
+#           - text: 'Tema CNMP'
+#             value: 'temacnmp'
+#           - text: 'Valor'
+#             value: 'fmt_destinacaovalor'
+#           - text: 'Data Lançamento'
+#             align: 'left'
+#             value: 'fmt_dtlancamento'
+#           - text: 'Beneficiário'
+#             align: 'left'
+#             value: 'destinacaobeneficiario'
+#           - text: 'Finalidade'
+#             align: 'left'
+#             value: 'destinacaoobjeto'
+#         chart_options:
+#           # parent: "id_prt"
+#           id: "calc_unique_index"
+#           text: "calc_treemap_description"
+#           size: "destinacaovalor"
+#           # legend_field: "nm_prt"
+#           colorScale:
+#             name: "Blues"
+#           # colorArray: ["#a50f15","#fee0d2","#67000d","#fff5f0","#cb181d","#fcbba1","#ef3b2c","#fc9272","#fb6a4a",
+#           #             "#7f2704","#fff5eb","#a63603","#fee6ce","#d94801","#fdd0a2","#f16913","#fdae6b","#fd8d3c",
+#           #             "#d9ef8b","#a50026","#ffffbf","#d73027","#fee08b","#f46d43","#fdae61"]  # Reds/Oranges/RdYlGn
+#         source:
+#           desc: "MPT Digital"
 # # ========================================================
 #       - id: "bar_classe"
 #         title:

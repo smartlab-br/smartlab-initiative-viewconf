@@ -9,33 +9,20 @@ theme:
   toolbar:
     title: "Smartlab - Observatório da pandemia COVID-19 no mundo do Trabalho"
 ranking_cards:
-  - title: "Setores com maior número de denúncias"
-    cls: "xs12 sm6 xl3 pa-3"
-    api: 
-      fixed: "/thematic/coviddenunciampt?categorias=cnae_classe&agregacao=COUNT,RANK_DENSE_COUNT&limit=5"
-    args:
-      - prop: 'localidade'
-        named_prop: "nm_uf"
-      - prop: 'vl_indicador'
-        named_prop: "agr_count"
-        format: "inteiro"
-      - prop: 'rank'
-        named_prop: "agr_rank_dense_count"
   - title: "UFs com maior número de empregados potencialmente atingidos "
-    cls: "xs12 sm6 xl3 pa-3"
+    cls: "xs12 sm6 xl4 pa-3"
     api: 
-      fixed: "/thematic/covidcasos?categorias=nm_uf,city_ibge_code,state,last_available_confirmed&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE&limit=5"
-      fixed: "/thematic/coviddenunciampt?categorias=1&valor=trab_atingidos&agregacao=SUM,RANK_DENSE_SUM&limit=5"
+      fixed: "/thematic/coviddenunciacnpjmpt?categorias=nm_uf&valor=nr_trabalhadores&agregacao=SUM,RANK_DENSE_SUM&limit=5"
     args:
       - prop: 'localidade'
         named_prop: "nm_uf"
       - prop: 'vl_indicador'
-        named_prop: "agr_sum_trab_atingidos"
+        named_prop: "agr_sum_nr_trabalhadores"
         format: "inteiro"
       - prop: 'rank'
-        named_prop: "agr_rank_dense_sum_trab_atingidos"
+        named_prop: "agr_rank_dense_sum_nr_trabalhadores"
   - title: "UF com maior número de denúcias ao MPT"
-    cls: "xs12 sm6 xl3 pa-3"
+    cls: "xs12 sm6 xl4 pa-3"
     api: 
       fixed: "/thematic/coviddenunciampt?categorias=nm_uf,cd_uf&agregacao=COUNT,RANK_DENSE_COUNT&limit=5"
     args:
@@ -47,7 +34,7 @@ ranking_cards:
       - prop: 'rank'
         named_prop: "agr_rank_dense_count"
   - title: "UF com maior número de casos confirmados"
-    cls: "xs12 sm6 xl3 pa-3"
+    cls: "xs12 sm6 xl4 pa-3"
     api: 
       fixed: "/thematic/covidcasos?categorias=nm_uf,city_ibge_code,state,last_available_confirmed&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE&limit=5"
     args:
@@ -384,9 +371,25 @@ prevalencia:
               named_prop: "agr_max_last_available_date"
               format: 'dataDMY'
               default: "Sem Registros"
+    - id: "ranking_list_sst"
+      type: "ranking_list"
+      rankings:
+        - title: "Setores com maior número de denúncias <sup>2</sup>"
+          cls: "xs12 px-3 pb-3"
+          api: 
+            fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe&agregacao=COUNT,RANK_DENSE_COUNT&limit=10"
+          args:
+            - prop: 'localidade'
+              named_prop: "cnae_classe"
+            - prop: 'vl_indicador'
+              named_prop: "agr_count"
+              format: "inteiro"
+            - prop: 'rank'
+              named_prop: "agr_rank_dense_count"
     - type: "text"
       content:
-        fixed: "1. Os valores destinados pelo Ministério Público do Trabalho a ações de prevenção e mitigação dos efeitos da pandemia COVID-19 são provenientes de condenações ou acordos para reparar danos difusos e coletivos causados à sociedade, de acordo com as disposições da Lei 7.347, de 24 de julho de 1985, e da Lei 8.078, de 11 de setembro de 1990."
+        fixed: "1. Os valores destinados pelo Ministério Público do Trabalho a ações de prevenção e mitigação dos efeitos da pandemia COVID-19 são provenientes de condenações ou acordos para reparar danos difusos e coletivos causados à sociedade, de acordo com as disposições da Lei 7.347, de 24 de julho de 1985, e da Lei 8.078, de 11 de setembro de 1990.<br/>
+                2. As atividades econômicas indicadas foram identificadas por meio do setor de atuação do estabelecimento declarado pelos denunciados à Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas)."
   mapa_filtros:
     - id: "selectlayer"
       type: "switch-group"

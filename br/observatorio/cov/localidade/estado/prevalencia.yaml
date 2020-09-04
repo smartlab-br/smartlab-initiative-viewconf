@@ -35,25 +35,6 @@ principais:
       - prop: 'comment'
         named_prop: 'date_info'
         format: 'dataDMY'
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    api: 
-      template: "/thematic/covidcasos?categorias=city_ibge_code,date_info,last_available_deaths,last_available_confirmed&filtros=eq-city_ibge_code-{0},and,eq-place_type-'state',and,eq-is_last-TRUE"
-      args:
-        - named_prop: "idLocalidade"
-    args:
-      - prop: "value"
-        function: 'calc_percentage'
-        format: 'porcentagem'
-        fn_args:
-          - named_prop: "last_available_deaths"
-          - named_prop: "last_available_confirmed"
-      - prop: "description"
-        fixed: "Letalidade"
-      - prop: 'comment'
-        named_prop: 'date_info'
-        format: 'dataDMY'
   - relevance: "lead"
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -108,15 +89,117 @@ principais:
             fn_args:
               - named_prop: "agr_sum_estimated_population_2019"
               - named_prop: "populacao_uf"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/covidcasos?categorias=city_ibge_code,date_info,last_available_deaths,last_available_confirmed&filtros=eq-city_ibge_code-{0},and,eq-place_type-'state',and,eq-is_last-TRUE"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        function: 'calc_percentage'
+        format: 'porcentagem'
+        fn_args:
+          - named_prop: "last_available_deaths"
+          - named_prop: "last_available_confirmed"
+      - prop: "description"
+        fixed: "Letalidade"
+      - prop: 'comment'
+        named_prop: 'date_info'
+        format: 'dataDMY'
+  - relevance: "lead"
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-cd_uf-{0}"
+      args:
+        - named_prop: "cd_uf"
+    args:
+      - prop: "value"
+        named_prop: "agr_count"
+        format: 'inteiro'
+        default: "Nenhuma"
+        zero: "Nenhuma"
+      - prop: "description"
+        fixed: "Denúncias relacionadas<br/>à COVID-19 na UF"
 # ========================================================
 secoes:
   - id: 'prevalencia_prioridade'
     name: 'Contexto Geográfico e Áreas Prioritárias'
     cards:
 # ========================================================
+      - id: "mapa_denúncias"
+        title: 
+          fixed: "Denúncias relacionadas à COVID-19 por Município"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}"
+          api: 
+            template: "/municipios?categorias=nm_uf&filtros=eq-cd_uf-{0}&limit=1"
+            args:
+              - named_prop: "cd_uf"
+          args:
+            - named_prop: "nm_uf"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Nenhuma"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Denúncias relacionadas<br/>à COVID-19 na UF'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de denúncias ao Ministério Público do Trabalho (MPT) relacionadas à COVID-19 na Unidade Federativa selecionada. 
+                      No mapa, apresenta-se a perspectiva comparativa do número de denúncias entre os municípios da Unidade Federativa, com escala de cores que varia do vermelho claro (menor) para o vermelho escuro (maior)."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/thematic/coviddenunciampt?categorias=cd_municipio_ibge_dv,nm_municipio_uf&agregacao=COUNT&filtros=eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Número de denúncias'
+            value: 'fmt_agr_count'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+          colorScale: 
+            type: "singleHue"
+            name: "Reds"
+        source:
+          desc: "MPT Digital"
+# ========================================================
       - id: "mapa_casos"
         title: 
-          fixed: "Distribuição Geográfica"
+          fixed: "Casos de COVID-19 por Município"
         title_comment:
           template: "{0}, {1}"
           api: 
@@ -316,7 +399,7 @@ secoes:
 # ========================================================
       - id: "mapa_casos_regic"
         title: 
-          fixed: "Distribuição Geográfica por Pólo de Atendimento de Alta Complexidade"
+          fixed: "Casos de COVID-19 por Pólo de Atendimento de Alta Complexidade"
         title_comment:
           template: "{0}, {1}"
           api: 
@@ -608,7 +691,7 @@ secoes:
       - id: "mapa_prev_brasil_calor"
         chart_type: "MAP_HEAT"
         title: 
-          fixed: "Mapa de Calor"
+          fixed: "Mapa de Calor dos casos de COVID-19"
         title_comment:
           template: "{0}, {1}"
           api: 
