@@ -31,23 +31,6 @@ principais:
       - prop: 'comment'
         named_prop: 'agr_max_last_available_date'
         format: 'dataDMY'
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    api: 
-      fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_deaths,last_available_confirmed&agregacao=MAX,SUM,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-    args:
-      - prop: "value"
-        function: 'calc_percentage'
-        format: 'porcentagem'
-        fn_args:
-          - named_prop: "agr_sum_last_available_deaths"
-          - named_prop: "agr_sum_last_available_confirmed"
-      - prop: "description"
-        fixed: "Letalidade"
-      - prop: 'comment'
-        named_prop: 'agr_max_last_available_date'
-        format: 'dataDMY'
   - relevance: "lead"
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -98,6 +81,34 @@ principais:
             fn_args:
               - named_prop: "agr_sum_estimated_population_2019"
               - fixed: 210147125
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_deaths,last_available_confirmed&agregacao=MAX,SUM,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+    args:
+      - prop: "value"
+        function: 'calc_percentage'
+        format: 'porcentagem'
+        fn_args:
+          - named_prop: "agr_sum_last_available_deaths"
+          - named_prop: "agr_sum_last_available_confirmed"
+      - prop: "description"
+        fixed: "Letalidade"
+      - prop: 'comment'
+        named_prop: 'agr_max_last_available_date'
+        format: 'dataDMY'
+  - relevance: "lead"
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT"
+    args:
+      - prop: "value"
+        named_prop: "agr_count"
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Denúncias relacionadas<br/>à COVID-19"
 # ========================================================
 secoes:
   - id: 'prevalencia_serie'
@@ -107,7 +118,7 @@ secoes:
       - id: "bar_serie_casos_semana_epidemiologica"
         type: "multiple-charts"
         title:
-          fixed: "Casos por Semana Epidemiológica - Série Histórica"
+          fixed: "Casos confirmados por Semana Epidemiológica"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -204,10 +215,147 @@ secoes:
           desc: "Brasil.io"
           link: "https://brasil.io/covid19/"
 # ========================================================
+      - id: "bar_serie_casos_denuncias_semana"
+        type: "multiple-charts"
+        title:
+          fixed: "Casos confirmados e Denúncias ao MPT por Semana Epidemiológica"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "Brasil, {0} a {1}"
+          api: 
+            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
+          args:
+            - named_prop: "agr_min_last_available_date"
+              format: 'dataDMY'
+            - named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_confirmed&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                reactive: true
+                api: 
+                  fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Nenhuma"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Denúncias relacionadas<br/>à COVID-19'
+              # - relevance: 'high'
+              #   cls: 'xs12 md6'
+              #   api: 
+              #     fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_deaths&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'agr_sum_last_available_deaths'
+              #       format: 'inteiro'
+              #       default: "Sem Registros"
+              #       zero: "Nenhum"
+              #     - prop: "description"
+              #       fixed: 'Óbitos confirmados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de casos confirmados por COVID-19 e o total de denúncias ao Ministério Público do Trabalho (MPT) relacionadas à COVID-19. O gráfico apresenta a série histórica dos casos e denúncias por semana epidemiológica.<br/>
+                      Por convenção internacional, as semanas epidemiológicas são contadas de domingo a sábado. A primeira semana do ano é aquela que contém o maior número de dias de janeiro e a última, a que contém o maior número de dias de dezembro.<br/>
+                      <b>A última semana apresentada no gráfico é a semana corrente, podendo, pois, apresentar um total parcial.</b>"
+        charts:
+          - id: "bar_casos_denuncia"
+            title: "Casos confirmados e Denúncias ao MPT por Semana Epidemiológica"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              - fixed: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,epidemiological_week,epidemiological_week_start,epidemiological_week_end&valor=new_confirmed&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_repeated-false&ordenacao=epidemiological_week"
+                options:
+                  calcs:
+                    - id: "total"
+                      function: "applyInterpolReplaceDatasetParam"
+                      fn_args:
+                        - fixed: 
+                            template: "{0}"
+                            args:
+                              - named_prop: "agr_sum_new_confirmed"
+                                format: "inteiro"
+              - fixed: "/thematic/coviddenunciampt?categorias='Denúncias ao MPT'-cd_indicador,semana_denuncia-epidemiological_week,semana_inicio-epidemiological_week_start,semana_fim-epidemiological_week_end&agregacao=COUNT&ordenacao=semana_denuncia"
+                options:
+                  calcs:
+                    - id: "total"
+                      function: "applyInterpolReplaceDatasetParam"
+                      fn_args:
+                        - fixed: 
+                            template: "{0}"
+                            args:
+                              - named_prop: "agr_count"
+                                format: "inteiro"
+            api_options:
+              formatters:
+                - id: "calc_total"
+                  format: 'inteiro'
+                - id: "epidemiological_week_start"
+                  format: 'dataDMY'
+                - id: "epidemiological_week_end"
+                  format: 'dataDMY'
+              calcs:
+                - id: "week_status"
+                  function: "get_week_status"
+                  fn_args:
+                    - named_prop: "epidemiological_week"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'cd_indicador'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'epidemiological_week'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_epidemiological_week_start'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_epidemiological_week_end'
+              - text: 'Total'
+                value: 'calc_total'
+            options:
+              # id: "calc_week_status"
+              id: "cd_indicador"
+              x: "epidemiological_week"
+              y: "agr_sum_new_confirmed"
+              y2: "agr_count"
+              text: "calc_total"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: false
+              # legend_field: "calc_week_status"
+              # colorArray: ["#377EB8", "#BBDEFB"]  # blue
+              colorArray: ["#377EB8", "green"]  # blue/red
+        source:
+          desc: "Brasil.io e MPT Digital"
+          # link: "https://brasil.io/covid19/"
+# ========================================================
       - id: "bar_serie_obitos_semana_epidemiologica"
         type: "multiple-charts"
         title:
-          fixed: "Óbitos por Semana Epidemiológica - Série Histórica"
+          fixed: "Óbitos confirmados por Semana Epidemiológica"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -304,10 +452,15 @@ secoes:
           desc: "Brasil.io"
           link: "https://brasil.io/covid19/"
 # ========================================================
-      - id: "line_casos"
+      - id: "bar_serie_obitos_denuncias_semana"
         type: "multiple-charts"
-        title: 
-          fixed: "Casos por dia - Série Histórica"
+        title:
+          fixed: "Óbitos confirmados e Denúncias ao MPT por Semana Epidemiológica"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
         title_comment:
           template: "Brasil, {0} a {1}"
           api: 
@@ -317,111 +470,6 @@ secoes:
               format: 'dataDMY'
             - named_prop: "agr_max_last_available_date"
               format: 'dataDMY'
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       fixed: ""
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api: 
-                  fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_confirmed&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_last_available_confirmed'
-                    format: 'inteiro'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: 'Casos confirmados'
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o número total de casos confirmados de COVID-19. Os gráficos apresentam a série histórica dos casos confirmados, com o total diário e o total acumulado.<br/>"
-        charts:
-          - id: "line_casos_diarios"  
-            title: "Casos confirmados diários"
-            cls: "xs12 md6"
-            type: "LINE"
-            api: 
-              - fixed: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=new_confirmed&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_repeated-false&ordenacao=date_info"
-                options:
-                  formatters:
-                    - id: "agr_sum_new_confirmed"
-                      format: 'inteiro'
-                    - id: "date_info"
-                      format: 'dataYMD'
-                    - id: "tooltip_date"
-                      format: 'dataDMY'
-            headers:
-              - text: 'Data'
-                align: 'left'
-                value: 'fmt_tooltip_date'
-              - text: 'Casos confirmados'
-                value: 'fmt_agr_sum_new_confirmed'
-            options:
-              id: "cd_indicador"
-              x: "fmt_date_info"
-              y: "agr_sum_new_confirmed"
-              x_options:
-                labelMaxNumber: 15
-              hide_legend: false
-              legend_field: "cd_indicador"
-              colorArray: ["#377EB8"]  # blue
-          - id: "line_casos_acumulados"  
-            title: "Casos confirmados acumulados"
-            cls: "xs12 md6"
-            type: "LINE"
-            api: 
-              - fixed: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=last_available_confirmed&agregacao=SUM&filtros=eq-place_type-'state'&ordenacao=date_info"
-                options:
-                  formatters:
-                    - id: "agr_sum_last_available_confirmed"
-                      format: 'inteiro'
-                    - id: "date_info"
-                      format: 'dataYMD'
-                    - id: "tooltip_date"
-                      format: 'dataDMY'
-            headers:
-              - text: 'Data'
-                align: 'left'
-                value: 'fmt_tooltip_date'
-              - text: 'Casos acumulados'
-                value: 'fmt_agr_sum_last_available_confirmed'
-            options:
-              id: "cd_indicador"
-              x: "fmt_date_info"
-              y: "agr_sum_last_available_confirmed"
-              x_options:
-                labelMaxNumber: 15
-              hide_legend: false
-              legend_field: "cd_indicador"
-              colorArray: ["#377EB8"]  # blue
-        source:
-          desc: "Brasil.io"
-          link: "https://brasil.io/covid19/"
-# ========================================================
-      - id: "line_obitos"
-        type: "multiple-charts"
-        title: 
-          fixed: "Óbitos por dia - Série Histórica"
-        title_comment:
-          template: "Brasil, {0} a {1}"
-          api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
-          args:
-            - named_prop: "agr_min_last_available_date"
-              format: 'dataDMY'
-            - named_prop: "agr_max_last_available_date"
-              format: 'dataDMY'
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       fixed: ""
         description:
           - type: "minicards"
             cards:
@@ -437,69 +485,294 @@ secoes:
                     zero: "Nenhum"
                   - prop: "description"
                     fixed: 'Óbitos confirmados'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                reactive: true
+                api: 
+                  fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Nenhuma"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Denúncias relacionadas<br/>à COVID-19'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número total de óbitos confirmados por COVID-19. Os gráficos apresentam a série histórica dos óbitos confirmados, com o total diário e o total acumulado.<br/>"
+              fixed: "Em destaque, o número total de óbitos confirmados por COVID-19 e o total de denúncias ao Ministério Público do Trabalho (MPT) relacionadas à COVID-19. O gráfico apresenta a série histórica dos óbitos e denúncias por semana epidemiológica.<br/>
+                      Por convenção internacional, as semanas epidemiológicas são contadas de domingo a sábado. A primeira semana do ano é aquela que contém o maior número de dias de janeiro e a última, a que contém o maior número de dias de dezembro.<br/>
+                      <b>A última semana apresentada no gráfico é a semana corrente, podendo, pois, apresentar um total parcial.</b>"
         charts:
-          - id: "line_obitos_diarios"
-            title: "Óbitos confirmados diários"
-            cls: "xs12 md6"
-            type: "LINE"
-            api: 
-              - fixed: "/thematic/covidcasos?categorias='Óbitos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=new_deaths&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_repeated-false&ordenacao=date_info"
+          - id: "bar_obitos_denuncia"
+            title: "Óbitos confirmados e Denúncias ao MPT por Semana Epidemiológica"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              - fixed: "/thematic/covidcasos?categorias='Óbitos confirmados'-cd_indicador,epidemiological_week,epidemiological_week_start,epidemiological_week_end&valor=new_deaths&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_repeated-false&ordenacao=epidemiological_week"
                 options:
-                  formatters:
-                    - id: "agr_sum_new_deaths"
-                      format: 'inteiro'
-                    - id: "date_info"
-                      format: 'dataYMD'
-                    - id: "tooltip_date"
-                      format: 'dataDMY'
+                  calcs:
+                    - id: "total"
+                      function: "applyInterpolReplaceDatasetParam"
+                      fn_args:
+                        - fixed: 
+                            template: "{0}"
+                            args:
+                              - named_prop: "agr_sum_new_deaths"
+                                format: "inteiro"
+              - fixed: "/thematic/coviddenunciampt?categorias='Denúncias ao MPT'-cd_indicador,semana_denuncia-epidemiological_week,semana_inicio-epidemiological_week_start,semana_fim-epidemiological_week_end&agregacao=COUNT&ordenacao=semana_denuncia"
+                options:
+                  calcs:
+                    - id: "total"
+                      function: "applyInterpolReplaceDatasetParam"
+                      fn_args:
+                        - fixed: 
+                            template: "{0}"
+                            args:
+                              - named_prop: "agr_count"
+                                format: "inteiro"
+            api_options:
+              formatters:
+                - id: "calc_total"
+                  format: 'inteiro'
+                - id: "epidemiological_week_start"
+                  format: 'dataDMY'
+                - id: "epidemiological_week_end"
+                  format: 'dataDMY'
+              calcs:
+                - id: "week_status"
+                  function: "get_week_status"
+                  fn_args:
+                    - named_prop: "epidemiological_week"
             headers:
-              - text: 'Data'
+              - text: 'Indicador'
                 align: 'left'
-                value: 'fmt_tooltip_date'
-              - text: 'Óbitos confirmados'
-                value: 'fmt_agr_sum_new_deaths'
+                value: 'cd_indicador'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'epidemiological_week'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_epidemiological_week_start'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_epidemiological_week_end'
+              - text: 'Total'
+                value: 'calc_total'
             options:
+              # id: "calc_week_status"
               id: "cd_indicador"
-              x: "fmt_date_info"
+              x: "epidemiological_week"
               y: "agr_sum_new_deaths"
-              x_options:
-                labelMaxNumber: 15
-              hide_legend: false
-              legend_field: "cd_indicador"
-              colorArray: ["#E41A1C"]  # red
-          - id: "line_obitos_acumulados"  
-            title: "Óbitos confirmados acumulados"
-            cls: "xs12 md6"
-            type: "LINE"
-            api: 
-              - fixed: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=last_available_deaths&agregacao=SUM&filtros=eq-place_type-'state'&ordenacao=date_info"
-                options:
-                  formatters:
-                    - id: "agr_sum_last_available_deaths"
-                      format: 'inteiro'
-                    - id: "date_info"
-                      format: 'dataYMD'
-                    - id: "tooltip_date"
-                      format: 'dataDMY'
-            headers:
-              - text: 'Data'
-                align: 'left'
-                value: 'fmt_tooltip_date'
-              - text: 'Óbitos acumulados'
-                value: 'fmt_agr_sum_last_available_deaths'
-            options:
-              id: "cd_indicador"
-              x: "fmt_date_info"
-              y: "agr_sum_last_available_deaths"
-              x_options:
-                labelMaxNumber: 15
-              hide_legend: false
-              legend_field: "cd_indicador"
-              colorArray: ["#E41A1C"]  # blue
+              y2: "agr_count"
+              text: "calc_total"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: false
+              # legend_field: "calc_week_status"
+              # colorArray: ["#377EB8", "#BBDEFB"]  # blue
+              colorArray: ["red", "green"]  # blue/red
         source:
-          desc: "Brasil.io"
-          link: "https://brasil.io/covid19/"
+          desc: "Brasil.io e MPT Digital"
+          # link: "https://brasil.io/covid19/"
+# # ========================================================
+#       - id: "line_casos"
+#         type: "multiple-charts"
+#         title: 
+#           fixed: "Casos por dia - Série Histórica"
+#         title_comment:
+#           template: "Brasil, {0} a {1}"
+#           api: 
+#             fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
+#           args:
+#             - named_prop: "agr_min_last_available_date"
+#               format: 'dataDMY'
+#             - named_prop: "agr_max_last_available_date"
+#               format: 'dataDMY'
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       fixed: ""
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_confirmed&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_last_available_confirmed'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: 'Casos confirmados'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número total de casos confirmados de COVID-19. Os gráficos apresentam a série histórica dos casos confirmados, com o total diário e o total acumulado.<br/>"
+#         charts:
+#           - id: "line_casos_diarios"  
+#             title: "Casos confirmados diários"
+#             cls: "xs12 md6"
+#             type: "LINE"
+#             api: 
+#               - fixed: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=new_confirmed&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_repeated-false&ordenacao=date_info"
+#                 options:
+#                   formatters:
+#                     - id: "agr_sum_new_confirmed"
+#                       format: 'inteiro'
+#                     - id: "date_info"
+#                       format: 'dataYMD'
+#                     - id: "tooltip_date"
+#                       format: 'dataDMY'
+#             headers:
+#               - text: 'Data'
+#                 align: 'left'
+#                 value: 'fmt_tooltip_date'
+#               - text: 'Casos confirmados'
+#                 value: 'fmt_agr_sum_new_confirmed'
+#             options:
+#               id: "cd_indicador"
+#               x: "fmt_date_info"
+#               y: "agr_sum_new_confirmed"
+#               x_options:
+#                 labelMaxNumber: 15
+#               hide_legend: false
+#               legend_field: "cd_indicador"
+#               colorArray: ["#377EB8"]  # blue
+#           - id: "line_casos_acumulados"  
+#             title: "Casos confirmados acumulados"
+#             cls: "xs12 md6"
+#             type: "LINE"
+#             api: 
+#               - fixed: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=last_available_confirmed&agregacao=SUM&filtros=eq-place_type-'state'&ordenacao=date_info"
+#                 options:
+#                   formatters:
+#                     - id: "agr_sum_last_available_confirmed"
+#                       format: 'inteiro'
+#                     - id: "date_info"
+#                       format: 'dataYMD'
+#                     - id: "tooltip_date"
+#                       format: 'dataDMY'
+#             headers:
+#               - text: 'Data'
+#                 align: 'left'
+#                 value: 'fmt_tooltip_date'
+#               - text: 'Casos acumulados'
+#                 value: 'fmt_agr_sum_last_available_confirmed'
+#             options:
+#               id: "cd_indicador"
+#               x: "fmt_date_info"
+#               y: "agr_sum_last_available_confirmed"
+#               x_options:
+#                 labelMaxNumber: 15
+#               hide_legend: false
+#               legend_field: "cd_indicador"
+#               colorArray: ["#377EB8"]  # blue
+#         source:
+#           desc: "Brasil.io"
+#           link: "https://brasil.io/covid19/"
+# # ========================================================
+#       - id: "line_obitos"
+#         type: "multiple-charts"
+#         title: 
+#           fixed: "Óbitos por dia - Série Histórica"
+#         title_comment:
+#           template: "Brasil, {0} a {1}"
+#           api: 
+#             fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
+#           args:
+#             - named_prop: "agr_min_last_available_date"
+#               format: 'dataDMY'
+#             - named_prop: "agr_max_last_available_date"
+#               format: 'dataDMY'
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       fixed: ""
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_deaths&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_last_available_deaths'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: 'Óbitos confirmados'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número total de óbitos confirmados por COVID-19. Os gráficos apresentam a série histórica dos óbitos confirmados, com o total diário e o total acumulado.<br/>"
+#         charts:
+#           - id: "line_obitos_diarios"
+#             title: "Óbitos confirmados diários"
+#             cls: "xs12 md6"
+#             type: "LINE"
+#             api: 
+#               - fixed: "/thematic/covidcasos?categorias='Óbitos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=new_deaths&agregacao=SUM&filtros=eq-place_type-'state',and,eq-is_repeated-false&ordenacao=date_info"
+#                 options:
+#                   formatters:
+#                     - id: "agr_sum_new_deaths"
+#                       format: 'inteiro'
+#                     - id: "date_info"
+#                       format: 'dataYMD'
+#                     - id: "tooltip_date"
+#                       format: 'dataDMY'
+#             headers:
+#               - text: 'Data'
+#                 align: 'left'
+#                 value: 'fmt_tooltip_date'
+#               - text: 'Óbitos confirmados'
+#                 value: 'fmt_agr_sum_new_deaths'
+#             options:
+#               id: "cd_indicador"
+#               x: "fmt_date_info"
+#               y: "agr_sum_new_deaths"
+#               x_options:
+#                 labelMaxNumber: 15
+#               hide_legend: false
+#               legend_field: "cd_indicador"
+#               colorArray: ["#E41A1C"]  # red
+#           - id: "line_obitos_acumulados"  
+#             title: "Óbitos confirmados acumulados"
+#             cls: "xs12 md6"
+#             type: "LINE"
+#             api: 
+#               - fixed: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date&valor=last_available_deaths&agregacao=SUM&filtros=eq-place_type-'state'&ordenacao=date_info"
+#                 options:
+#                   formatters:
+#                     - id: "agr_sum_last_available_deaths"
+#                       format: 'inteiro'
+#                     - id: "date_info"
+#                       format: 'dataYMD'
+#                     - id: "tooltip_date"
+#                       format: 'dataDMY'
+#             headers:
+#               - text: 'Data'
+#                 align: 'left'
+#                 value: 'fmt_tooltip_date'
+#               - text: 'Óbitos acumulados'
+#                 value: 'fmt_agr_sum_last_available_deaths'
+#             options:
+#               id: "cd_indicador"
+#               x: "fmt_date_info"
+#               y: "agr_sum_last_available_deaths"
+#               x_options:
+#                 labelMaxNumber: 15
+#               hide_legend: false
+#               legend_field: "cd_indicador"
+#               colorArray: ["#E41A1C"]  # blue
+#         source:
+#           desc: "Brasil.io"
+#           link: "https://brasil.io/covid19/"

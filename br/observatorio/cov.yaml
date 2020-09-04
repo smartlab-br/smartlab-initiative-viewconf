@@ -7,10 +7,34 @@ map_image: "te.jpg"
 background_images: ["te1.jpg","te2.jpg","te3.jpg","te4.jpg","te5.jpg","te6.jpg"]
 theme:
   toolbar:
-    title: "Smartlab - Observatório da COVID-19"
+    title: "Smartlab - Observatório da pandemia COVID-19 no mundo do Trabalho"
 ranking_cards:
+  - title: "UFs com maior número de empregados potencialmente atingidos "
+    cls: "xs12 sm6 xl4 pa-3"
+    api: 
+      fixed: "/thematic/coviddenunciacnpjmpt?categorias=nm_uf&valor=nr_trabalhadores&agregacao=SUM,RANK_DENSE_SUM&limit=5"
+    args:
+      - prop: 'localidade'
+        named_prop: "nm_uf"
+      - prop: 'vl_indicador'
+        named_prop: "agr_sum_nr_trabalhadores"
+        format: "inteiro"
+      - prop: 'rank'
+        named_prop: "agr_rank_dense_sum_nr_trabalhadores"
+  - title: "UF com maior número de denúcias ao MPT"
+    cls: "xs12 sm6 xl4 pa-3"
+    api: 
+      fixed: "/thematic/coviddenunciampt?categorias=nm_uf,cd_uf&agregacao=COUNT,RANK_DENSE_COUNT&limit=5"
+    args:
+      - prop: 'localidade'
+        named_prop: "nm_uf"
+      - prop: 'vl_indicador'
+        named_prop: "agr_count"
+        format: "inteiro"
+      - prop: 'rank'
+        named_prop: "agr_rank_dense_count"
   - title: "UF com maior número de casos confirmados"
-    cls: "xs12 sm6 xl3 pa-3"
+    cls: "xs12 sm6 xl4 pa-3"
     api: 
       fixed: "/thematic/covidcasos?categorias=nm_uf,city_ibge_code,state,last_available_confirmed&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE&limit=5"
     args:
@@ -21,42 +45,42 @@ ranking_cards:
         format: "inteiro"
       - prop: 'rank'
         named_prop: "agr_rank_dense_sum_last_available_confirmed"
-  - title: "UF com maior número de óbitos confirmados"
-    cls: "xs12 sm6 xl3 pa-3"
-    api: 
-      fixed: "/thematic/covidcasos?categorias=nm_uf,city_ibge_code,state,last_available_deaths&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE&limit=5"
-    args:
-      - prop: 'localidade'
-        named_prop: "nm_uf"
-      - prop: 'vl_indicador'
-        named_prop: "last_available_deaths"
-        format: "inteiro"
-      - prop: 'rank'
-        named_prop: "agr_rank_dense_sum_last_available_deaths"
-  - title: "Municípios com maior número de casos confirmados"
-    cls: "xs12 sm6 xl3 pa-3"
-    api: 
-      fixed: "/thematic/covidcasos?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_confirmed&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE&limit=5"
-    args:
-      - prop: 'localidade'
-        named_prop: "nm_municipio_uf"
-      - prop: 'vl_indicador'
-        named_prop: "last_available_confirmed"
-        format: "inteiro"
-      - prop: 'rank'
-        named_prop: "agr_rank_dense_sum_last_available_confirmed"
-  - title: "Municípios com maior número de óbitos confirmados"
-    cls: "xs12 sm6 xl3 pa-3"
-    api: 
-      fixed: "/thematic/covidcasos?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_deaths&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE&limit=5"
-    args:
-      - prop: 'localidade'
-        named_prop: "nm_municipio_uf"
-      - prop: 'vl_indicador'
-        named_prop: "last_available_deaths"
-        format: "inteiro"
-      - prop: 'rank'
-        named_prop: "agr_rank_dense_sum_last_available_deaths"
+  # - title: "UF com maior número de óbitos confirmados"
+  #   cls: "xs12 sm6 xl3 pa-3"
+  #   api: 
+  #     fixed: "/thematic/covidcasos?categorias=nm_uf,city_ibge_code,state,last_available_deaths&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE&limit=5"
+  #   args:
+  #     - prop: 'localidade'
+  #       named_prop: "nm_uf"
+  #     - prop: 'vl_indicador'
+  #       named_prop: "last_available_deaths"
+  #       format: "inteiro"
+  #     - prop: 'rank'
+  #       named_prop: "agr_rank_dense_sum_last_available_deaths"
+  # - title: "Municípios com maior número de casos confirmados"
+  #   cls: "xs12 sm6 xl3 pa-3"
+  #   api: 
+  #     fixed: "/thematic/covidcasos?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_confirmed&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE&limit=5"
+  #   args:
+  #     - prop: 'localidade'
+  #       named_prop: "nm_municipio_uf"
+  #     - prop: 'vl_indicador'
+  #       named_prop: "last_available_confirmed"
+  #       format: "inteiro"
+  #     - prop: 'rank'
+  #       named_prop: "agr_rank_dense_sum_last_available_confirmed"
+  # - title: "Municípios com maior número de óbitos confirmados"
+  #   cls: "xs12 sm6 xl3 pa-3"
+  #   api: 
+  #     fixed: "/thematic/covidcasos?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_deaths&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'city',and,eq-is_last-TRUE&limit=5"
+  #   args:
+  #     - prop: 'localidade'
+  #       named_prop: "nm_municipio_uf"
+  #     - prop: 'vl_indicador'
+  #       named_prop: "last_available_deaths"
+  #       format: "inteiro"
+  #     - prop: 'rank'
+  #       named_prop: "agr_rank_dense_sum_last_available_deaths"
 prevalencia:
   id: "mapa_prev_brasil"
   title: 
@@ -88,13 +112,14 @@ prevalencia:
     - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-agr_count,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
     - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-agr_count,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
     - fixed: "/thematic/coviddenunciampt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'denuncia'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-1-1"
-    - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'ACP'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
-    - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'TAC'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
-    - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'recomendacao'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
+    - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'atuacaoMPT'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=in-tipodocumento-'ACPs'-'TAC'-'RECOMENDAÇÃO'"
+    - fixed: "/thematic/coviddestinacaompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'destinacao'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=SUM&filtros=eq-1-1"
+    # - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'TAC'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
+    # - fixed: "/thematic/coviddocumentompt?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'recomendacao'-codigo,latitude,longitude&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
   chart_type: "MAP_BUBBLES"
   chart_options:
-    colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)", "rgba(25, 125, 25, 0.7)", "#9C27B0", "#303F9F","#795548"]
-    indicadores: ["obitos","casos","denuncia", "ACP", "TAC", "recomendacao"]
+    colorArray: ["#795548","black","rgba(179, 9, 0, 0.7)", "rgba(25, 125, 25, 0.7)","rgba(21, 101, 192, 0.7)"]
+    indicadores: ["casos","obitos","denuncia", "atuacaoMPT", "destinacao"]
     lat: 'latitude'
     long: 'longitude'
     id_field: 'codigo' 
@@ -133,88 +158,47 @@ prevalencia:
     - id: "selectlayer"
       type: "switch-group"
       switches:
+        - id: "denuncia"
+          cls: "xs12"
+          title: "MPT"
+          default: true
+          color: "red"
+          label: "DENÚNCIAS AO MPT"
+        - id: "atuacaoMPT"
+          cls: "xs12"
+          default: true
+          color: "green accent-4"
+          label: "ATUAÇÃO MPT"
+        - id: "destinacao"
+          cls: "xs12"
+          default: true
+          color: "light-blue"
+          label: "RECURSOS PARA AÇÕES DE COMBATE À COVID-19"
         - id: "casos"
           cls: "xs12"
           title: "COVID-19"
-          default: true
-          color: "light-blue"
+          default: false
+          color: "brown"
           label: "CASOS CONFIRMADOS"
         - id: "obitos"
           cls: "xs12"
-          default: true
-          color: "red"
+          default: false
+          color: "black"
           label: "ÓBITOS CONFIRMADOS"
-        - id: "denuncia"
-          cls: "xs12"
-          title: "ATUAÇÃO MPT"
-          default: true
-          color: "green accent-4"
-          label: "DENÚNCIAS AO MPT"
-        - id: "ACP"
-          cls: "xs12"
-          default: true
-          color: "purple"
-          label: "AÇÕES CIVIS PÚBLICAS"
-        - id: "TAC"
-          cls: "xs12"
-          default: true
-          color: "indigo darken-2"
-          label: "TERMOS DE AJUSTE DE CONDUTA"
-        - id: "recomendacao"
-          cls: "xs12"
-          default: true
-          color: "brown"
-          label: "RECOMENDAÇÕES"
       event: 'selection'
     - type: "text"
       cls: "ma-0 pa-0"
       content:
         cls: "pa-0"
-        fixed: "O objetivo fundamental da ferramenta é o de melhor informar políticas públicas de prevenção de contágio da Covid-19, de modo que todas as ações, programas e iniciativas passem a ser orientadas por evidências não apenas em nível nacional, mas principalmente em cada um dos 5.570 municípios brasileiros.<br/>
-                Com esse objetivo, a iniciativa facilita o acesso a estatísticas sobre a pandemia e informações originárias de cruzamentos de diversos bancos de dados, auxiliando a pesquisa sobre o assunto e sua compreensão.<br/>
-                Além disso, o Observatório expõe a atuação do Ministério Público do Trabalho em defesa dos trabalhadores durante a pandemia, seja sob o viés da destinação de recursos derivados da atuação finalística da instituição, seja sob o aspecto quantitativo das atividades realizadas."      
-        read_more_limit: "620"
+        fixed: "O mapa de distribuição geográfica de demanda por tutela coletiva de direitos afetados pelas repercussões da pandemia COVID-19 no mundo do trabalho leva em consideração as denúncias recebidas pelo Ministério Público do Trabalho (MPT) sobre o tema. Exibe-se, ainda, um panorama da atuação do órgão (com recomendações expedidas, ações ajuizadas e termos de ajuste de conduta celebrados) sobre o assunto. Apresenta-se, ainda, a distribuição de destinações de recursos - obtidos com condenações e acordos - por polo regional em todo o Brasil.<br/>
+                Pode-se, ainda, ativar a exibição da distribuição de casos e óbitos por COVID-19 como forma de analisar, por aproximação e de maneira contextual, a correlação entre a prevalência de casos e a existência de conflitos no mundo do trabalho, em situações nas quais se deve equilibrar a preservação de empregos e a manutenção da da atividade econômica, na medida do possível e de acordo com o imperativo de persevação da saúde coletiva."      
+        # read_more_limit: "620"
   description_right:
     - id: "minicards_right"
       class: "pr-0 pl-2 pb-0 pt-0"
       type: "minicards"
       rowCalss: "pa-1"
       cards:
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "light-blue pa-3"
-          api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_confirmed,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-          args:
-            - prop: "value"
-              named_prop: "agr_sum_last_available_confirmed"
-              format: 'real'
-              collapse: 
-                format: 'real'
-                precision: 1
-              default: "Sem Registros"
-            - prop: "description"
-              fixed: "Casos confirmados"
-            - prop: 'comment'
-              named_prop: "agr_max_last_available_date"
-              format: 'dataDMY'
-              default: "Sem Registros"
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "red pa-3"
-          api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_deaths,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-          args:
-            - prop: "value"
-              named_prop: "agr_sum_last_available_deaths"
-              format: "inteiro"
-              default: "Sem Registros"
-            - prop: "description"
-              fixed: "Óbitos confirmados"
-            - prop: 'comment'
-              named_prop: "agr_max_last_available_date"
-              format: 'dataDMY'
-              default: "Sem Registros"
         # - relevance: "lead"
         #   cls: "xs12 sm6 md12 lg6 text-xs-center "
         #   color: "light-blue pa-3"
@@ -299,7 +283,7 @@ prevalencia:
         #             - fixed: 210147125
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "green accent-4 px-3 pt-3"
+          color: "red px-3 pt-3"
           api: 
             fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT"
           args:
@@ -310,7 +294,7 @@ prevalencia:
               fixed: "Denúncias ao MPT relacionadas à COVID-19"
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "purple px-3 pt-3"
+          color: "green accent-4 px-3 pt-3"
           api: 
             fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
           args:
@@ -321,7 +305,7 @@ prevalencia:
               fixed: "AÇÕES CIVIS PÚBLICAS"
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "indigo darken-2 px-3 pt-3"
+          color: "green accent-4 px-3 pt-3"
           api: 
             fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
           args:
@@ -332,7 +316,7 @@ prevalencia:
               fixed: "TERMOS DE AJUSTE DE CONDUTA"
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "brown px-3 pt-3"
+          color: "green accent-4  px-3 pt-3"
           api: 
             fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
           args:
@@ -341,42 +325,102 @@ prevalencia:
               format: 'inteiro'
             - prop: "description"
               fixed: "RECOMENDAÇÕES"
+        - relevance: "lead"
+          cls: "xs12 text-xs-center "
+          color: "light-blue pa-3"
+          api: 
+            fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM"
+          args:
+            - prop: "value"
+              named_prop: 'agr_sum_destinacaovalor'
+              format: 'monetario'
+              precision: 2
+              default: 'Nenhum'
+              zero: 'Nenhum'
+            - prop: "description"
+              fixed: "Recursos destinados pelo MPT para<br/>ações de combate à Covid-19 <sup>1</sup>"
+        - relevance: "lead"
+          cls: "xs12 text-xs-center "
+          color: "brown pa-3"
+          api: 
+            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_confirmed,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_last_available_confirmed"
+              format: 'inteiro'
+              default: "Sem Registros"
+            - prop: "description"
+              fixed: "Casos confirmados"
+            - prop: 'comment'
+              named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+              default: "Sem Registros"
+        - relevance: "lead"
+          cls: "xs12 text-xs-center "
+          color: "black pa-3"
+          api: 
+            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_deaths,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_last_available_deaths"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              fixed: "Óbitos confirmados"
+            - prop: 'comment'
+              named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+              default: "Sem Registros"
+    - id: "ranking_list_sst"
+      type: "ranking_list"
+      rankings:
+        - title: "Setores com maior número de denúncias <sup>2</sup>"
+          cls: "xs12 px-3 pb-3"
+          api: 
+            fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe&agregacao=COUNT,RANK_DENSE_COUNT&limit=10"
+          args:
+            - prop: 'localidade'
+              named_prop: "cnae_classe"
+            - prop: 'vl_indicador'
+              named_prop: "agr_count"
+              format: "inteiro"
+            - prop: 'rank'
+              named_prop: "agr_rank_dense_count"
+    - type: "text"
+      content:
+        fixed: "1. Os valores destinados pelo Ministério Público do Trabalho a ações de prevenção e mitigação dos efeitos da pandemia COVID-19 são provenientes de condenações ou acordos para reparar danos difusos e coletivos causados à sociedade, de acordo com as disposições da Lei 7.347, de 24 de julho de 1985, e da Lei 8.078, de 11 de setembro de 1990.<br/>
+                2. As atividades econômicas indicadas foram identificadas por meio do setor de atuação do estabelecimento declarado pelos denunciados à Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas)."
   mapa_filtros:
     - id: "selectlayer"
       type: "switch-group"
       switches:
+        - id: "denuncia"
+          cls: "xs12"
+          title: "MPT"
+          default: true
+          color: "red"
+          label: "DENÚNCIAS AO MPT"
+        - id: "atuacaoMPT"
+          cls: "xs12"
+          default: true
+          color: "green accent-4"
+          label: "ATUAÇÃO MPT"
+        - id: "destinacao"
+          cls: "xs12"
+          default: true
+          color: "light-blue"
+          label: "RECURSOS PARA AÇÕES DE COMBATE À COVID-19"
         - id: "casos"
           cls: "xs12"
           title: "COVID-19"
-          default: true
-          color: "light-blue"
+          default: false
+          color: "brown"
           label: "CASOS CONFIRMADOS"
         - id: "obitos"
           cls: "xs12"
-          default: true
-          color: "red"
+          default: false
+          color: "black"
           label: "ÓBITOS CONFIRMADOS"
-        - id: "denuncia"
-          cls: "xs12"
-          title: "ATUAÇÃO MPT"
-          default: true
-          color: "green accent-4"
-          label: "DENÚNCIAS AO MPT"
-        - id: "ACP"
-          cls: "xs12"
-          default: true
-          color: "purple"
-          label: "AÇÕES CIVIS PÚBLICAS"
-        - id: "TAC"
-          cls: "xs12"
-          default: true
-          color: "indigo darken-2"
-          label: "TERMOS DE AJUSTE DE CONDUTA"
-        - id: "recomendacao"
-          cls: "xs12"
-          default: true
-          color: "brown"
-          label: "RECOMENDAÇÕES"
       event: 'selection'
     - id: "select_uf"
       type: "select"
@@ -402,40 +446,6 @@ prevalencia:
       type: "minicards"
       rowCalss: "pa-1"
       cards:
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "light-blue pa-3"
-          reactive: true
-          api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_confirmed,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-          args:
-            - prop: "value"
-              named_prop: "agr_sum_last_available_confirmed"
-              format: "inteiro"
-              default: "Sem Registros"
-            - prop: "description"
-              fixed: "Casos confirmados"
-            - prop: 'comment'
-              named_prop: "agr_max_last_available_date"
-              format: 'dataDMY'
-              default: "Sem Registros"
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "red pa-3"
-          reactive: true
-          api: 
-            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_deaths,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-          args:
-            - prop: "value"
-              named_prop: "agr_sum_last_available_deaths"
-              format: "inteiro"
-              default: "Sem Registros"
-            - prop: "description"
-              fixed: "Óbitos confirmados"
-            - prop: 'comment'
-              named_prop: "agr_max_last_available_date"
-              format: 'dataDMY'
-              default: "Sem Registros"
         # - relevance: "lead"
         #   cls: "xs12 sm6 md12 lg6 text-xs-center "
         #   color: "light-blue pa-3"
@@ -478,7 +488,7 @@ prevalencia:
             #         - fixed: 5570
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "green accent-4 pa-3"
+          color: "red pa-3"
           reactive: true
           api: 
             fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
@@ -490,7 +500,7 @@ prevalencia:
               fixed: "Denúncias ao MPT relacionadas à COVID-19"
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "purple pa-3"
+          color: "green accent-4 pa-3"
           reactive: true
           api: 
             fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
@@ -502,7 +512,7 @@ prevalencia:
               fixed: "AÇÕES CIVIS PÚBLICAS"
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "indigo darken-2 pa-3"
+          color: "green accent-4 pa-3"
           reactive: true
           api: 
             fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
@@ -514,7 +524,7 @@ prevalencia:
               fixed: "TERMOS DE AJUSTE DE CONDUTA"
         - relevance: "lead"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "brown pa-3"
+          color: "green accent-4 pa-3"
           reactive: true
           api: 
             fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
@@ -524,6 +534,59 @@ prevalencia:
               format: "inteiro"
             - prop: "description"
               fixed: "RECOMENDAÇÕES"
+        - relevance: "lead"
+          cls: "xs12 text-xs-center "
+          color: "light-blue pa-3"
+          reactive: true
+          api: 
+            fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM&filtros=eq-1-1"
+          args:
+            - prop: "value"
+              named_prop: 'agr_sum_destinacaovalor'
+              format: 'monetario'
+              precision: 2
+              default: 'Nenhum'
+              zero: 'Nenhum'
+            - prop: "description"
+              fixed: "Recursos destinados pelo MPT para<br/>ações de combate à Covid-19 <sup>1</sup>"
+        - relevance: "lead"
+          cls: "xs12 text-xs-center "
+          color: "brown pa-3"
+          reactive: true
+          api: 
+            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_confirmed,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_last_available_confirmed"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              fixed: "Casos confirmados"
+            - prop: 'comment'
+              named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+              default: "Sem Registros"
+        - relevance: "lead"
+          cls: "xs12 text-xs-center "
+          color: "black pa-3"
+          reactive: true
+          api: 
+            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_deaths,last_available_date&agregacao=SUM,MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_last_available_deaths"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              fixed: "Óbitos confirmados"
+            - prop: 'comment'
+              named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+              default: "Sem Registros"
+    - type: "text"
+      content:
+        fixed: "1. Os valores destinados pelo Ministério Público do Trabalho a ações de prevenção e mitigação dos efeitos da pandemia COVID-19 são provenientes de condenações ou acordos para reparar danos difusos e coletivos causados à sociedade, de acordo com as disposições da Lei 7.347, de 24 de julho de 1985, e da Lei 8.078, de 11 de setembro de 1990."
+
     - id: "ranking_list_covid"
       type: "ranking_list"
       rankings:
@@ -569,21 +632,64 @@ sparklines:
           - named_prop: "agr_max_date_info"
             format: "dataDMY"
   tables:
+    - id: "sparklines_denuncias"
+      title: "Denúncias ao MPT"
+      cls: "xs12 md6 lg4"
+      id_field: "cd_uf"
+      value_field: "agr_count"
+      series_field: "codigo"
+      category_field: "data_denuncia"
+      category_type: "timestamp"
+      category_aggregation: "week"
+      fillZeros: false
+      api:
+        fixed: "/thematic/coviddenunciampt?categorias=cd_uf,nm_uf,'denuncia'-codigo,data_denuncia&agregacao=COUNT"
+      headers:
+        - text: 'UF'
+          align: 'center'
+          width: '30%'
+          value: 'nm_uf'
+          item_align: 'right'
+        - text: 'Total'
+          align: 'center'
+          width: '10%'
+          value: 'total_denuncia'
+          item_align: 'center'
+          format: 'inteiro'
+        - text: 'Smartline'
+          align: 'center'
+          width: '30%'
+          value: 'last_value_denuncia'
+          item_align: 'center'
+          type: 'spark'
+          show_labels: false
+          series: 'denuncia'
+          bgColor: '#F44336'
+          stroke: 2
+          format: 'inteiro'
+        - text: 'Pico'
+          align: 'center'
+          width: '30%'
+          value: 'higher_value_str_denuncia'
+          item_align: 'center'
+          sort_field: 'higher_value_denuncia'
+          format: 'inteiro'
     - id: "sparklines_casos"
       title: "Casos Confirmados"
-      cls: "xs12 md6"
+      cls: "xs12 md6 lg4"
       id_field: "city_ibge_code"
       value_field: "new_confirmed"
       series_field: "place_type"
       category_field: "date_info"
       category_type: "timestamp"
+      category_aggregation: "week"
       fillZeros: false
       api:
         fixed: "/thematic/covidcasos?categorias=nm_uf,place_type,city_ibge_code,date_info,new_confirmed&&filtros=eq-place_type-'state',and,eq-is_repeated-false"
       headers:
         - text: 'UF'
           align: 'center'
-          width: '33.33%'
+          width: '30%'
           value: 'nm_uf'
           item_align: 'right'
         - text: 'Total'
@@ -594,34 +700,36 @@ sparklines:
           format: 'inteiro'
         - text: 'Smartline'
           align: 'center'
-          width: '33.33%'
+          width: '30%'
           value: 'last_value_state'
           item_align: 'center'
           type: 'spark'
+          show_labels: false
           series: 'state'
-          bgColor: '#03A9F4'
+          bgColor: 'brown'
           stroke: 2
         - text: 'Pico'
           align: 'center'
-          width: '23.34%'
+          width: '30%'
           value: 'higher_value_str_state'
           item_align: 'center'
           sort_field: 'higher_value_state'
     - id: "sparklines_obitos"
       title: "Óbitos Confirmados"
-      cls: "xs12 md6"
+      cls: "xs12 md6 lg4"
       id_field: "city_ibge_code"
       value_field: "new_deaths"
       series_field: "place_type"
       category_field: "date_info"
       category_type: "timestamp"
+      category_aggregation: "week"
       fillZeros: false
       api:
         fixed: "/thematic/covidcasos?categorias=nm_uf,place_type,city_ibge_code,date_info,new_deaths&&filtros=eq-place_type-'state',and,eq-is_repeated-false"
       headers:
         - text: 'UF'
           align: 'center'
-          width: '33.33%'
+          width: '30%'
           value: 'nm_uf'
           item_align: 'right'
         - text: 'Total'
@@ -632,16 +740,17 @@ sparklines:
           format: 'inteiro'
         - text: 'Smartline'
           align: 'center'
-          width: '33.33%'
+          width: '30%'
           value: 'last_value_state'
           item_align: 'center'
           type: 'spark'
+          show_labels: false
           series: 'state'
-          bgColor: 'red'
+          bgColor: 'black'
           stroke: 2
         - text: 'Pico'
           align: 'center'
-          width: '23.34%'
+          width: '30%'
           value: 'higher_value_str_state'
           item_align: 'center'
           sort_field: 'higher_value_state'

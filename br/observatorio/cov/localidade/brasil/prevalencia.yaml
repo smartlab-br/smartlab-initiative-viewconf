@@ -31,23 +31,6 @@ principais:
       - prop: 'comment'
         named_prop: 'agr_max_last_available_date'
         format: 'dataDMY'
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    api: 
-      fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_deaths,last_available_confirmed&agregacao=MAX,SUM,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
-    args:
-      - prop: "value"
-        function: 'calc_percentage'
-        format: 'porcentagem'
-        fn_args:
-          - named_prop: "agr_sum_last_available_deaths"
-          - named_prop: "agr_sum_last_available_confirmed"
-      - prop: "description"
-        fixed: "Letalidade"
-      - prop: 'comment'
-        named_prop: 'agr_max_last_available_date'
-        format: 'dataDMY'
   - relevance: "lead"
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -98,15 +81,175 @@ principais:
             fn_args:
               - named_prop: "agr_sum_estimated_population_2019"
               - fixed: 210147125
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_deaths,last_available_confirmed&agregacao=MAX,SUM,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+    args:
+      - prop: "value"
+        function: 'calc_percentage'
+        format: 'porcentagem'
+        fn_args:
+          - named_prop: "agr_sum_last_available_deaths"
+          - named_prop: "agr_sum_last_available_confirmed"
+      - prop: "description"
+        fixed: "Letalidade"
+      - prop: 'comment'
+        named_prop: 'agr_max_last_available_date'
+        format: 'dataDMY'
+  - relevance: "lead"
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT"
+    args:
+      - prop: "value"
+        named_prop: "agr_count"
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Denúncias relacionadas<br/>à COVID-19"
 # ========================================================
 secoes:
   - id: 'prevalencia_geografico'
     name: 'Contexto Geográfico'
     cards:
+# # ========================================================
+#       - id: "mapa_destinacoes"
+#         title: 
+#           fixed: "Recursos destinados para ações de combate à COVID-19 por UF"
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       fixed: ""
+#         title_comment:
+#           fixed: "Brasil"
+#           # api: 
+#           #   fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
+#           # args:
+#           #   - named_prop: "agr_min_last_available_date"
+#           #     format: 'dataDMY'
+#         description:
+#           - type: "minicards"
+#             cards:
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 reactive: true
+#                 api: 
+#                   fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM&filtros=eq-1-1"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_destinacaovalor'
+#                     format: 'monetario'
+#                     precision: 2
+#                     default: 'Nenhum'
+#                     zero: 'Nenhum'
+#                   - prop: "description"
+#                     fixed: "Total Destinado pelo MPT para ações de combate à Covid-19"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o valor total destinado pelo Ministério Público do Trabalho (MPT) para ações de combate à COVID-19. 
+#                       No mapa, apresenta-se a perspectiva comparativa do valor total de recursos entre as unidades federativas, com escala de cores que varia do azul claro (menor) para o azul escuro (maior)."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           fixed: "/thematic/coviddestinacaompt?categorias=cd_uf,nm_uf&valor=destinacaovalor&agregacao=SUM"
+#           options:
+#             calcs:
+#               - id: "deviation_destinacao"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_destinacaovalor"
+#             formatters:
+#               - id: "agr_sum_destinacaovalor"
+#                 format: 'monetario'
+#                 precision: 2
+#                 default: 'Nenhum'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Total destinado'
+#             value: 'fmt_agr_sum_destinacaovalor'
+#         chart_options:
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'calc_deviation_destinacao'
+#           colorScale: 
+#             type: "singleHue"
+#             name: "Blues"
+#         source:
+#           desc: "MPT Digital"
+# ========================================================
+      - id: "mapa_denúncias"
+        title: 
+          fixed: "Denúncias relacionadas à COVID-19 por UF"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          fixed: "Brasil"
+          # api: 
+          #   fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
+          # args:
+          #   - named_prop: "agr_min_last_available_date"
+          #     format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                reactive: true
+                api: 
+                  fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Nenhuma"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Denúncias relacionadas<br/>à COVID-19'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de denúncias ao Ministério Público do Trabalho (MPT) relacionadas à COVID-19. 
+                      No mapa, apresenta-se a perspectiva comparativa do número de denúncias entre as unidades federativas, com escala de cores que varia do vermelho claro (menor) para o vermelho escuro (maior)."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          fixed: "/thematic/coviddenunciampt?categorias=cd_uf,nm_uf&agregacao=COUNT"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Número de denúncias'
+            value: 'fmt_agr_count'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_deviation'
+          colorScale: 
+            type: "singleHue"
+            name: "Reds"
+        source:
+          desc: "MPT Digital"
 # ========================================================
       - id: "mapa_casos"
         title: 
-          fixed: "Distribuição Geográfica por UF"
+          fixed: "Casos de COVID-19 por UF"
         title_comment:
           template: "Brasil, {0}"
           api: 
@@ -259,7 +402,7 @@ secoes:
 # ========================================================
       - id: "mapa_casos_regic"
         title: 
-          fixed: "Distribuição Geográfica por Pólo de Atendimento de Alta Complexidade"
+          fixed: "Casos de COVID-19 por Pólo de Atendimento de Alta Complexidade"
         title_comment:
           template: "Brasil, {0}"
           api: 
@@ -405,7 +548,7 @@ secoes:
       - id: "mapa_prev_brasil"
         chart_type: "MAP_BUBBLES"
         title: 
-          fixed: "Distribuição Geográfica por Município"
+          fixed: "Casos de COVID-19 por Município"
         title_comment:
           template: "Brasil, {0}"
           api: 
@@ -472,51 +615,26 @@ secoes:
                 default: true
                 color: "red"
                 label: "ÓBITOS CONFIRMADOS"
-              # - id: "conf100M"
-              #   default: false
-              #   color: "green accent-4"
-              #   label: "CASOS CONFIRMADOS/100.000 hab."
-              # - id: "obitos100M"
-              #   default: false
-              #   color: "purple"
-              #   label: "ÓBITOS CONFIRMADOS/100.000 hab."
             event: 'selection'
         api:
-        # &calcs=ln_norm_pos_part&partition=cd_municipio_ibge_dv
           - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'casos'-codigo,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-valor,latitude,longitude,estimated_population_2019&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-            options:
-              formatters:
-                - id: "estimated_population_2019"
-                  format: 'inteiro'
-                - id: "last_available_deaths"
-                  format: 'inteiro'
-                - id: "last_available_confirmed"
-                  format: 'inteiro'
-                - id: "last_available_confirmed_per_100k_inhabitants"
-                  format: 'real'
-                  precision: 2
-                - id: "last_available_death_rate"
-                  format: 'real'
-                  precision: 2
-                - id: "last_available_date"
-                  format: 'dataDMY'
           - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos'-codigo,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-valor,latitude,longitude,estimated_population_2019&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-            options:
-              formatters:
-                - id: "estimated_population_2019"
-                  format: 'inteiro'
-                - id: "last_available_deaths"
-                  format: 'inteiro'
-                - id: "last_available_confirmed"
-                  format: 'inteiro'
-                - id: "last_available_confirmed_per_100k_inhabitants"
-                  format: 'real'
-                  precision: 2
-                - id: "last_available_death_rate"
-                  format: 'real'
-                  precision: 2
-                - id: "last_available_date"
-                  format: 'dataDMY'
+        api_options:
+          formatters:
+            - id: "estimated_population_2019"
+              format: 'inteiro'
+            - id: "last_available_deaths"
+              format: 'inteiro'
+            - id: "last_available_confirmed"
+              format: 'inteiro'
+            - id: "last_available_confirmed_per_100k_inhabitants"
+              format: 'real'
+              precision: 2
+            - id: "last_available_death_rate"
+              format: 'real'
+              precision: 2
+            - id: "last_available_date"
+              format: 'dataDMY'
           # - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'conf100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_death_rate,last_available_confirmed_per_100k_inhabitants-valor,latitude,longitude&valor=last_available_confirmed_per_100k_inhabitants&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
           # - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'obitos100M'-codigo,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate-valor,latitude,longitude&valor=last_available_death_rate&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
         chart_options:
@@ -554,7 +672,7 @@ secoes:
       - id: "mapa_prev_brasil_calor"
         chart_type: "MAP_HEAT"
         title: 
-          fixed: "Mapa de Calor"
+          fixed: "Mapa de Calor dos casos de COVID-19"
         title_comment:
           template: "Brasil, {0}"
           api: 
@@ -627,44 +745,26 @@ secoes:
                 value: "obitos"
             event: 'selection'
         api:
-          - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-cd_indicador,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-vl_indicador,latitude,longitude,estimated_population_2019&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-            options:
-              formatters:
-                - id: "estimated_population_2019"
-                  format: 'inteiro'
-                - id: "vl_indicador"
-                  format: 'inteiro'
-                - id: "last_available_deaths"
-                  format: 'inteiro'
-                - id: "last_available_confirmed"
-                  format: 'inteiro'
-                - id: "last_available_confirmed_per_100k_inhabitants"
-                  format: 'real'
-                  precision: 2
-                - id: "last_available_death_rate"
-                  format: 'real'
-                  precision: 2
-                - id: "last_available_date"
-                  format: 'dataDMY'
-          - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos'-cd_indicador,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-vl_indicador,latitude,longitude,estimated_population_2019&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
-            options:
-              formatters:
-                - id: "estimated_population_2019"
-                  format: 'inteiro'
-                - id: "vl_indicador"
-                  format: 'inteiro'
-                - id: "last_available_deaths"
-                  format: 'inteiro'
-                - id: "last_available_confirmed"
-                  format: 'inteiro'
-                - id: "last_available_confirmed_per_100k_inhabitants"
-                  format: 'real'
-                  precision: 2
-                - id: "last_available_death_rate"
-                  format: 'real'
-                  precision: 2
-                - id: "last_available_date"
-                  format: 'dataDMY'
+          - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-cd_indicador,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_confirmed-vl_indicador,latitude,longitude,estimated_population_2019&valor=last_available_confirmed&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+          - fixed: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos'-cd_indicador,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,last_available_deaths-vl_indicador,latitude,longitude,estimated_population_2019&valor=last_available_deaths&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0"
+        api_options:
+          formatters:
+            - id: "estimated_population_2019"
+              format: 'inteiro'
+            - id: "vl_indicador"
+              format: 'inteiro'
+            - id: "last_available_deaths"
+              format: 'inteiro'
+            - id: "last_available_confirmed"
+              format: 'inteiro'
+            - id: "last_available_confirmed_per_100k_inhabitants"
+              format: 'real'
+              precision: 2
+            - id: "last_available_death_rate"
+              format: 'real'
+              precision: 2
+            - id: "last_available_date"
+              format: 'dataDMY'
         chart_options:
           colorArray: ["rgba(21, 101, 192, 0.7)", "rgba(179, 9, 0, 0.7)"]
           height_proportion: 1
