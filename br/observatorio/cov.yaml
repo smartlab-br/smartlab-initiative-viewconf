@@ -12,15 +12,15 @@ ranking_cards:
   - title: "UFs com maior número de empregados potencialmente atingidos "
     cls: "xs12 sm6 xl4 pa-3"
     api: 
-      fixed: "/thematic/coviddenunciacnpjmpt?categorias=nm_uf&valor=nr_trabalhadores&agregacao=SUM,RANK_DENSE_SUM&limit=5"
+      fixed: "/thematic/coviddenunciacnpjmpt?categorias=nm_uf,total_trabalhadores_uf&agregacao=DISTINCT&ordenacao=-total_trabalhadores_uf&limit=5"
     args:
       - prop: 'localidade'
         named_prop: "nm_uf"
       - prop: 'vl_indicador'
-        named_prop: "agr_sum_nr_trabalhadores"
+        named_prop: "total_trabalhadores_uf"
         format: "inteiro"
-      - prop: 'rank'
-        named_prop: "agr_rank_dense_sum_nr_trabalhadores"
+      # - prop: 'rank'
+      #   named_prop: "agr_rank_dense_sum_nr_trabalhadores"
   - title: "UF com maior número de denúcias ao MPT"
     cls: "xs12 sm6 xl4 pa-3"
     api: 
@@ -371,7 +371,7 @@ prevalencia:
               named_prop: "agr_max_last_available_date"
               format: 'dataDMY'
               default: "Sem Registros"
-    - id: "ranking_list_sst"
+    - id: "ranking_list_setores"
       type: "ranking_list"
       rankings:
         - title: "Setores com maior número de denúncias <sup>2</sup>"
@@ -583,39 +583,55 @@ prevalencia:
               named_prop: "agr_max_last_available_date"
               format: 'dataDMY'
               default: "Sem Registros"
-    - type: "text"
-      content:
-        fixed: "1. Os valores destinados pelo Ministério Público do Trabalho a ações de prevenção e mitigação dos efeitos da pandemia COVID-19 são provenientes de condenações ou acordos para reparar danos difusos e coletivos causados à sociedade, de acordo com as disposições da Lei 7.347, de 24 de julho de 1985, e da Lei 8.078, de 11 de setembro de 1990."
-
-    - id: "ranking_list_covid"
+    - id: "ranking_list_setores"
       type: "ranking_list"
       rankings:
-        - title: "Municípios com maior número de casos confirmados"
-          cls: "xs12 sm6 md12 lg6 pa-3"
-          reactive: true
+        - title: "Setores com maior número de denúncias <sup>2</sup>"
+          cls: "xs12 px-3 pb-3"
           api: 
-            fixed: "/thematic/covidcasos?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_confirmed&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&limit=5&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
+            fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe&agregacao=COUNT,RANK_DENSE_COUNT&limit=10"
           args:
             - prop: 'localidade'
-              named_prop: "nm_municipio_uf"
+              named_prop: "cnae_classe"
             - prop: 'vl_indicador'
-              named_prop: "last_available_confirmed"
+              named_prop: "agr_count"
               format: "inteiro"
             - prop: 'rank'
-              named_prop: "agr_rank_dense_sum_last_available_confirmed"
-        - title: "Municípios com maior número de óbitos confirmados"
-          cls: "xs12 sm6 md12 lg6 pa-3"
-          reactive: true
-          api: 
-            fixed: "/thematic/covidcasos?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_deaths&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&limit=5&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
-          args:
-            - prop: 'localidade'
-              named_prop: "nm_municipio_uf"
-            - prop: 'vl_indicador'
-              named_prop: "last_available_deaths"
-              format: "inteiro"
-            - prop: 'rank'
-              named_prop: "agr_rank_dense_sum_last_available_deaths"
+              named_prop: "agr_rank_dense_count"
+    - type: "text"
+      content:
+        fixed: "1. Os valores destinados pelo Ministério Público do Trabalho a ações de prevenção e mitigação dos efeitos da pandemia COVID-19 são provenientes de condenações ou acordos para reparar danos difusos e coletivos causados à sociedade, de acordo com as disposições da Lei 7.347, de 24 de julho de 1985, e da Lei 8.078, de 11 de setembro de 1990.<br/>
+                2. As atividades econômicas indicadas foram identificadas por meio do setor de atuação do estabelecimento declarado pelos denunciados à Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas)."
+
+    # - id: "ranking_list_covid"
+    #   type: "ranking_list"
+    #   rankings:
+    #     - title: "Municípios com maior número de casos confirmados"
+    #       cls: "xs12 sm6 md12 lg6 pa-3"
+    #       reactive: true
+    #       api: 
+    #         fixed: "/thematic/covidcasos?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_confirmed&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&limit=5&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
+    #       args:
+    #         - prop: 'localidade'
+    #           named_prop: "nm_municipio_uf"
+    #         - prop: 'vl_indicador'
+    #           named_prop: "last_available_confirmed"
+    #           format: "inteiro"
+    #         - prop: 'rank'
+    #           named_prop: "agr_rank_dense_sum_last_available_confirmed"
+    #     - title: "Municípios com maior número de óbitos confirmados"
+    #       cls: "xs12 sm6 md12 lg6 pa-3"
+    #       reactive: true
+    #       api: 
+    #         fixed: "/thematic/covidcasos?categorias=nm_municipio_uf,city_ibge_code,city,state,last_available_deaths&valor=last_available_deaths&agregacao=RANK_DENSE_SUM&limit=5&filtros=eq-place_type-'city',and,eq-is_last-TRUE"
+    #       args:
+    #         - prop: 'localidade'
+    #           named_prop: "nm_municipio_uf"
+    #         - prop: 'vl_indicador'
+    #           named_prop: "last_available_deaths"
+    #           format: "inteiro"
+    #         - prop: 'rank'
+    #           named_prop: "agr_rank_dense_sum_last_available_deaths"
 sparklines:
   title:
     - type: "text"
