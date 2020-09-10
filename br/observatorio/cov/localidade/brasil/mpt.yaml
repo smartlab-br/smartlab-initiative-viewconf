@@ -385,7 +385,6 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
-                reactive: true
                 api: 
                   fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM&filtros=eq-1-1"
                 args:
@@ -902,7 +901,7 @@ secoes:
 #           desc: "MPT Digital"
 # =====================================================
       - id: "multi_temas"
-        type: "multiple-charts"
+        # type: "multiple-charts"
         title: 
           fixed: "Procedimentos com Atuação no Combate à COVID-19 por Tema"
         title_comment:
@@ -992,49 +991,65 @@ secoes:
                 api: 
                   args:
                     - named_prop: "cd_uf"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                reactive: true
+                api: 
+                  fixed: "/thematic/covidclassempt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Procedimentos'
           - type: "text"
             title: ""
             content:
-              fixed: "Os gráficos apresentam a distribuição por Temas dos procedimentos do Ministério Público do Trabalho (MPT) com atuação no combate à COVID-19.
+              fixed: "Em destaque, o número total de procedimentos do Ministério Público do Trabalho (MPT) com atuação no combate à COVID-19. 
+                      O gráfico apresenta a distribuição dos procedimentos por Temas. Cada procedimento pode estar relacionado a mais de um tema.
                       É possível selecionar uma Unidade Federativa no filtro acima."
-        charts:
-          - id: "treemap_tema_area"
-            title: "Demandas por Área Temática" 
-            cls: "xs12"
-            type: "TREEMAP"
-            api: 
-              fixed: "/thematic/covidtemampt?categorias=cod_tema_principal,desc_tema_principal&agregacao=count&filtros=nn-cod_tema,and,ne-cod_tema_principal-'10.'"
-              options:
-                formatters:
-                  - id: "agr_count"
-                    format: 'inteiro'
-                calcs:
-                  # - id: "treemap_description"
-                  #   function: "applyInterpolReplaceDatasetParam"
-                  #   fn_args:
-                  #     - fixed: 
-                  #         template: "{0} - {1}"
-                  #         args:
-                  #           - named_prop: "desc_tema_principal"
-                  #           - named_prop: "agr_count"
-                  #             format: 'inteiro'
-                  - id: "num_tema_principal"
-                    function: "get_number"
-                    fn_args:
-                      - named_prop: "cod_tema_principal"
-            headers:
-              - text: 'Área Temática'
-                align: 'left'
-                value: 'desc_tema_principal'
-              - text: 'Qtde'
-                value: 'fmt_agr_count'
-            options:
-              id: "calc_num_tema_principal"
-              text: "desc_tema_principal"
-              size: "agr_count"
-              colorScale:
-                name: "Blues"
-                # type: "categorical"
+        # charts:
+        #   - id: "treemap_tema_area"
+        #     title: "Demandas por Área Temática" 
+        #     cls: "xs12"
+        chart_type: "TREEMAP"
+        api: 
+          fixed: "/thematic/covidtemampt?categorias=cod_tema_principal,desc_tema_principal&agregacao=count&filtros=ne-cod_tema_principal-'10.'"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+            calcs:
+              # - id: "treemap_description"
+              #   function: "applyInterpolReplaceDatasetParam"
+              #   fn_args:
+              #     - fixed: 
+              #         template: "{0} - {1}"
+              #         args:
+              #           - named_prop: "desc_tema_principal"
+              #           - named_prop: "agr_count"
+              #             format: 'inteiro'
+              - id: "num_tema_principal"
+                function: "get_number"
+                fn_args:
+                  - named_prop: "cod_tema_principal"
+        headers:
+          - text: 'Área Temática'
+            align: 'left'
+            value: 'desc_tema_principal'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "calc_num_tema_principal"
+          text: "desc_tema_principal"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            # type: "categorical"
           # - id: "treemap_tema"
           #   title: "Demandas por Tema"
           #   cls: "xs12 md6"

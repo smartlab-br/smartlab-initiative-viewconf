@@ -151,7 +151,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número total de denúncias ao Ministério Público do Trabalho (MPT) na UF relacionadas à COVID-19. 
+              fixed: "Em destaque, o número total de denúncias ao Ministério Público do Trabalho (MPT) relacionadas à COVID-19 na UF. 
                       O gráfico apresenta a série histórica com o total de denúncias por semana."
                       # É possível selecionar uma Unidade Federativa no filtro acima."
         chart_type: "BAR"
@@ -274,7 +274,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número total de denúncias ao Ministério Público do Trabalho (MPT) na UF relacionadas à COVID-19. 
+              fixed: "Em destaque, o número total de denúncias ao Ministério Público do Trabalho (MPT) relacionadas à COVID-19 na UF. 
                       O gráfico apresenta distribuição de denúncias pelo Setor Econômico da empresa denunciada."
                       # É possível selecionar uma Unidade Federativa no filtro acima."
         chart_type: "TREEMAP"
@@ -1009,10 +1009,27 @@ secoes:
           #       api:
           #         args:
           #           - named_prop: "classe"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/covidclassempt?categorias=1&agregacao=COUNT&filtros=eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Procedimentos na UF'
           - type: "text"
             title: ""
             content:
-              fixed: "Os gráficos apresentam a distribuição por Temas dos procedimentos do Ministério Público do Trabalho (MPT) com atuação no combate à COVID-19 na UF."
+              fixed: "Em destaque, o número total de procedimentos do Ministério Público do Trabalho (MPT) com atuação no combate à COVID-19 na UF. 
+                      O gráfico apresenta a distribuição dos procedimentos por Temas. Cada procedimento pode estar relacionado a mais de um tema."
                       # É possível selecionar uma ou mais Procuradorias Regionais do Trabalho (PRT) ou uma ou mais Áreas Temáticas nos filtros acima."
         charts:
           - id: "treemap_tema_area"
@@ -1020,7 +1037,7 @@ secoes:
             cls: "xs12"
             type: "TREEMAP"
             api: 
-              template: "/thematic/covidtemampt?categorias=cod_tema_principal,desc_tema_principal&agregacao=count&filtros=nn-cod_tema,and,ne-cod_tema_principal-'10.',and,eq-cd_uf-{0}"
+              template: "/thematic/covidtemampt?categorias=cod_tema_principal,desc_tema_principal&agregacao=count&filtros=ne-cod_tema_principal-'10.',and,eq-cd_uf-{0}"
               args:
                 - named_prop: "cd_uf"
               options:
