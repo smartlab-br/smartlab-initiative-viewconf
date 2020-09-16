@@ -122,9 +122,9 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      template: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-cd_uf-{0}"
+      template: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-cd_municipio_ibge_dv-{0}"
       args:
-        - named_prop: "cd_uf"
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: "agr_count"
@@ -132,7 +132,7 @@ principais:
         default: "Nenhuma"
         zero: "Nenhuma"
       - prop: "description"
-        fixed: "Denúncias relacionadas<br/>à COVID-19 na UF"
+        fixed: "Denúncias relacionadas<br/>à COVID-19"
 # ========================================================
 secoes:
   - id: 'prevalencia_main_story'
@@ -148,19 +148,25 @@ secoes:
         #     content:
         #       fixed: ""
         title_comment:
-          template: "{0}"
+          template: "{0}, {1}"
+          api: 
+            template: "/thematic/coviddenunciampt?categorias=data_atualizacao,nm_municipio_uf&filtros=eq-cd_uf-{0}&limit=1"
+            args:
+              - named_prop: "cd_uf"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
+            - named_prop: "data_atualizacao"
+              format: "dataDMY"
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  template: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-cd_uf-{0}"
+                  template: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-cd_municipio_ibge_dv-{0}"
                   args:
-                    - named_prop: "cd_uf"
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -168,7 +174,7 @@ secoes:
                     default: "Nenhuma"
                     zero: "Nenhuma"
                   - prop: "description"
-                    fixed: 'Denúncias relacionadas<br/>à COVID-19 na UF'
+                    fixed: 'Denúncias relacionadas<br/>à COVID-19'
           - type: "text"
             title: ""
             content:
