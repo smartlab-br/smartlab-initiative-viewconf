@@ -9,8 +9,20 @@ theme:
   toolbar:
     title: "Smartlab - Observatório da pandemia COVID-19 no mundo do Trabalho"
 ranking_cards:
+  - title: "Setores com maior número de denúncias <sup>1</sup>"
+    cls: "xs12 pa-3"
+    api: 
+      fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe&agregacao=COUNT,RANK_DENSE_COUNT&limit=10"
+    args:
+      - prop: 'localidade'
+        named_prop: "cnae_classe"
+      - prop: 'vl_indicador'
+        named_prop: "agr_count"
+        format: "inteiro"
+      - prop: 'rank'
+        named_prop: "agr_rank_dense_count"
   - title: "UFs com maior número de empregados potencialmente atingidos "
-    cls: "xs12 sm6 xl4 pa-3"
+    cls: "xs12 sm4 pa-3"
     api: 
       fixed: "/thematic/coviddenunciacnpjmpt?categorias=nm_uf,total_trabalhadores_uf&agregacao=DISTINCT&ordenacao=-total_trabalhadores_uf&limit=5"
     args:
@@ -22,7 +34,7 @@ ranking_cards:
       # - prop: 'rank'
       #   named_prop: "agr_rank_dense_sum_nr_trabalhadores"
   - title: "UF com maior número de denúcias ao MPT"
-    cls: "xs12 sm6 xl4 pa-3"
+    cls: "xs12 sm4 pa-3"
     api: 
       fixed: "/thematic/coviddenunciampt?categorias=nm_uf,cd_uf&agregacao=COUNT,RANK_DENSE_COUNT&limit=5"
     args:
@@ -34,7 +46,7 @@ ranking_cards:
       - prop: 'rank'
         named_prop: "agr_rank_dense_count"
   - title: "UF com maior número de casos confirmados"
-    cls: "xs12 sm6 xl4 pa-3"
+    cls: "xs12 sm4 pa-3"
     api: 
       fixed: "/thematic/covidcasos?categorias=nm_uf,city_ibge_code,state,last_available_confirmed&valor=last_available_confirmed&agregacao=RANK_DENSE_SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE&limit=5"
     args:
@@ -281,7 +293,7 @@ prevalencia:
         #             - named_prop: "agr_sum_estimated_population_2019"
         #             - fixed: 210147125
         - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          cls: "xs12 sm6 text-xs-center "
           color: "red px-3 pt-3"
           api: 
             fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT"
@@ -292,7 +304,7 @@ prevalencia:
             - prop: "description"
               fixed: "Denúncias ao MPT relacionadas à COVID-19"
         - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          cls: "xs12 sm6 text-xs-center "
           color: "green accent-4 px-3 pt-3"
           api: 
             fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
@@ -303,7 +315,7 @@ prevalencia:
             - prop: "description"
               fixed: "AÇÕES CIVIS PÚBLICAS"
         - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          cls: "xs12 sm6 text-xs-center "
           color: "green accent-4 px-3 pt-3"
           api: 
             fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
@@ -314,7 +326,7 @@ prevalencia:
             - prop: "description"
               fixed: "TERMOS DE AJUSTE DE CONDUTA"
         - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          cls: "xs12 sm6 text-xs-center "
           color: "green accent-4  px-3 pt-3"
           api: 
             fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
@@ -337,7 +349,7 @@ prevalencia:
               default: 'Nenhum'
               zero: 'Nenhum'
             - prop: "description"
-              fixed: "Recursos destinados pelo MPT para<br/>ações de combate à Covid-19 <sup>1</sup>"
+              fixed: "Recursos destinados pelo MPT para<br/>ações de combate à Covid-19 <sup>2</sup>"
         - relevance: "lead"
           cls: "xs12 text-xs-center "
           color: "brown pa-3"
@@ -370,25 +382,10 @@ prevalencia:
               named_prop: "agr_max_last_available_date"
               format: 'dataDMY'
               default: "Sem Registros"
-    - id: "ranking_list_setores"
-      type: "ranking_list"
-      rankings:
-        - title: "Setores com maior número de denúncias <sup>2</sup>"
-          cls: "xs12 px-3 pb-3"
-          api: 
-            fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe&agregacao=COUNT,RANK_DENSE_COUNT&limit=10"
-          args:
-            - prop: 'localidade'
-              named_prop: "cnae_classe"
-            - prop: 'vl_indicador'
-              named_prop: "agr_count"
-              format: "inteiro"
-            - prop: 'rank'
-              named_prop: "agr_rank_dense_count"
     - type: "text"
       content:
-        fixed: "1. Os valores destinados pelo Ministério Público do Trabalho a ações de prevenção e mitigação dos efeitos da pandemia COVID-19 são provenientes de condenações ou acordos para reparar danos difusos e coletivos causados à sociedade, de acordo com as disposições da Lei 7.347, de 24 de julho de 1985, e da Lei 8.078, de 11 de setembro de 1990.<br/>
-                2. As atividades econômicas indicadas foram identificadas por meio do setor de atuação do estabelecimento declarado pelos denunciados à Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas)."
+        fixed: "1. As atividades econômicas indicadas foram identificadas por meio do setor de atuação do estabelecimento declarado pelos denunciados à Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas).<br/>
+                2. Os valores destinados pelo Ministério Público do Trabalho a ações de prevenção e mitigação dos efeitos da pandemia COVID-19 são provenientes de condenações ou acordos para reparar danos difusos e coletivos causados à sociedade, de acordo com as disposições da Lei 7.347, de 24 de julho de 1985, e da Lei 8.078, de 11 de setembro de 1990."
   mapa_filtros:
     - id: "selectlayer"
       type: "switch-group"
