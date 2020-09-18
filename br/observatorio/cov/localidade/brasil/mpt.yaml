@@ -1,18 +1,18 @@
 principais:
-  - relevance: 'lead' 
-    cls: 'xs12'
-    rowClass: "pt-0 px-3 pb-5"
-    api: 
-      fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM"
-    args:
-      - prop: "value"
-        named_prop: 'agr_sum_destinacaovalor'
-        format: 'monetario'
-        precision: 2
-        default: 'Nenhum'
-        zero: 'Nenhum'
-      - prop: "description"
-        fixed: "Total Destinado pelo MPT para<br/>ações de combate à Covid-19"
+  # - relevance: 'lead' 
+  #   cls: 'xs12'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   api: 
+  #     fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM"
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'agr_sum_destinacaovalor'
+  #       format: 'monetario'
+  #       precision: 2
+  #       default: 'Nenhum'
+  #       zero: 'Nenhum'
+  #     - prop: "description"
+  #       fixed: "Total Destinado pelo MPT para<br/>ações de combate à Covid-19"
   - relevance: "lead"
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
@@ -24,7 +24,39 @@ principais:
         format: 'inteiro'
       - prop: "description"
         fixed: "Denúncias relacionadas<br/>à COVID-19"
-  # - relevance: 'lead' 
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_confirmed&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_last_available_confirmed'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Casos de COVID-19 Confirmados"
+      - prop: 'comment'
+        named_prop: 'agr_max_last_available_date'
+        format: 'dataDMY'
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_deaths&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_last_available_deaths'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Óbitos por COVID-19 Confirmados"
+      - prop: 'comment'
+        named_prop: 'agr_max_last_available_date'
+        format: 'dataDMY'
+# - relevance: 'lead' 
   #   cls: 'xs12 xl6'
   #   rowClass: "pt-0 px-3 pb-5"
   #   api: 
@@ -67,6 +99,316 @@ principais:
 secoes:
   - id: 'prevalencia_serie'
     cards:
+# ========================================================
+      - id: "treemap_denuncias"
+        title:
+          fixed: "Denúncias relacionadas à COVID-19 por Setor Econômico"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "Brasil, {0}"
+          api: 
+            fixed: "/thematic/coviddenunciacnpjmpt?categorias=data_atualizacao&limit=1"
+          args:
+            - named_prop: "data_atualizacao"
+              format: "dataDMY"
+        description:
+          # - id: "select_prt"
+          #   type: "select"
+          #   multiple: true
+          #   label: "MPT"
+          #   api:
+          #     fixed: "/thematic/coviddenunciampt?categorias=nm_unidade,nm_prt&agregacao=DISTINCT&ordenacao=nm_prt"
+          #     options:
+          #       calcs:
+          #         - id: "prt"
+          #           function: "replace_text"
+          #           fn_args:
+          #             - fixed: "nm_unidade"
+          #             - fixed: "PROC. REGIONAL TRABALHO"
+          #             - fixed: "PRT"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "nm_prt"
+          #     - prop: "label"
+          #       named_prop: "calc_prt"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-nm_prt-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "nm_prt"
+          - id: "select_uf"
+            type: "select"
+            label: "Unidade Federativa"
+            api:
+              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
+            args:
+              - prop: "id"
+                named_prop: "cd_uf"
+              - prop: "label"
+                named_prop: "nm_uf"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,eq-cd_uf-{0}"
+                api: 
+                  args:
+                    - named_prop: "cd_uf"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                reactive: true
+                api: 
+                  fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Nenhuma"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Denúncias relacionadas<br/>à COVID-19'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de denúncias ao Ministério Público do Trabalho (MPT) relacionadas à COVID-19. 
+                      O gráfico apresenta distribuição de denúncias pelo Setor Econômico da empresa denunciada. 
+                      As atividades econômicas indicadas foram identificadas por meio do setor de atuação do estabelecimento declarado pelos denunciados à Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas).
+                      É possível selecionar uma Unidade Federativa no filtro acima."
+        chart_type: "TREEMAP"
+        api:
+          fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe&agregacao=COUNT&filtros=eq-1-1"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Setor Econômico'
+            align: 'left'
+            value: 'cnae_classe'
+          - text: 'Número de denúncias'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "cnae_classe"
+          text: "cnae_classe"
+          size: "agr_count"
+          colorScale:
+            name: "Reds"
+        source:
+          desc: "MPT Digital e Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas)"          
+# =====================================================
+      - id: "multi_temas"
+        # type: "multiple-charts"
+        title: 
+          fixed: "Procedimentos com Atuação no Combate à COVID-19 por Tema"
+        title_comment:
+          template: "Brasil, {0}"
+          api: 
+            fixed: "/thematic/covidtemampt?categorias=data_atualizacao&limit=1"
+          args:
+            - named_prop: "data_atualizacao"
+              format: "dataDMY"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          # - id: "select_prt"
+          #   type: "select"
+          #   multiple: true
+          #   label: "MPT"
+          #   api:
+          #     fixed: "/thematic/covidclassempt?categorias=nm_unidade,nm_prt,cd_prt&agregacao=DISTINCT&ordenacao=nm_prt"
+          #     options:
+          #       calcs:
+          #         - id: "prt"
+          #           function: "replace_text"
+          #           fn_args:
+          #             - fixed: "nm_unidade"
+          #             - fixed: "PROC. REGIONAL TRABALHO"
+          #             - fixed: "PRT"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_prt"
+          #     - prop: "label"
+          #       named_prop: "calc_prt"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-unidade-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_prt"
+          # - id: "select_tema"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Área Temática"
+          #   api:
+          #     fixed: "/thematic/covidtemampt?categorias=cod_tema_principal,desc_tema_principal&agregacao=DISTINCT&ordenacao=cod_tema_principal"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cod_tema_principal"
+          #     - prop: "label"
+          #       named_prop: "desc_tema_principal"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cod_tema_principal-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cod_tema_principal"
+          # - id: "select_classe"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Classe"
+          #   api:
+          #     fixed: "/thematic/covidclassempt?categorias=classe,descricao_classe&agregacao=DISTINCT&ordenacao=classe"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "classe"
+          #     - prop: "label"
+          #       named_prop: "descricao_classe"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-classe-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "classe"
+          - id: "select_uf"
+            type: "select"
+            label: "Unidade Federativa"
+            api:
+              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
+            args:
+              - prop: "id"
+                named_prop: "cd_uf"
+              - prop: "label"
+                named_prop: "nm_uf"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,eq-cd_uf-{0}"
+                api: 
+                  args:
+                    - named_prop: "cd_uf"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                reactive: true
+                api: 
+                  fixed: "/thematic/covidclassempt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Procedimentos'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de procedimentos do Ministério Público do Trabalho (MPT) com atuação no combate à COVID-19. 
+                      O gráfico apresenta a distribuição dos procedimentos por Temas. Cada procedimento pode estar relacionado a mais de um tema.
+                      É possível selecionar uma Unidade Federativa no filtro acima."
+        # charts:
+        #   - id: "treemap_tema_area"
+        #     title: "Demandas por Área Temática" 
+        #     cls: "xs12"
+        chart_type: "TREEMAP"
+        api: 
+          fixed: "/thematic/covidtemampt?categorias=cod_tema_principal,desc_tema_principal&agregacao=count&filtros=ne-cod_tema_principal-'10.'"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+            calcs:
+              # - id: "treemap_description"
+              #   function: "applyInterpolReplaceDatasetParam"
+              #   fn_args:
+              #     - fixed: 
+              #         template: "{0} - {1}"
+              #         args:
+              #           - named_prop: "desc_tema_principal"
+              #           - named_prop: "agr_count"
+              #             format: 'inteiro'
+              - id: "num_tema_principal"
+                function: "get_number"
+                fn_args:
+                  - named_prop: "cod_tema_principal"
+        headers:
+          - text: 'Área Temática'
+            align: 'left'
+            value: 'desc_tema_principal'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "calc_num_tema_principal"
+          text: "desc_tema_principal"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            # type: "categorical"
+          # - id: "treemap_tema"
+          #   title: "Demandas por Tema"
+          #   cls: "xs12 md6"
+          #   type: "TREEMAP"
+          #   api: 
+          #     fixed: "/thematic/covidtemampt?categorias=cod_tema_principal,desc_tema_principal,cod_tema,desc_tema&agregacao=count&filtros=nn-cod_tema,and,ne-cod_tema_principal-'10.'"
+          #     options:
+          #       formatters:
+          #         - id: "agr_count"
+          #           format: 'inteiro'
+          #       calcs:
+          #         - id: "treemap_description"
+          #           function: "applyInterpolReplaceDatasetParam"
+          #           fn_args:
+          #             - fixed: 
+          #                 template: "{0}{1} - {2}"
+          #                 args:
+          #                   - named_prop: "cod_tema"
+          #                   - named_prop: "desc_tema"
+          #                   - named_prop: "agr_count"
+          #                     format: 'inteiro'
+          #         - id: "num_tema_principal"
+          #           function: "get_number"
+          #           fn_args:
+          #             - named_prop: "cod_tema_principal"
+          #         - id: "tema"
+          #           function: "applyInterpolReplaceDatasetParam"
+          #           fn_args:
+          #             - fixed: 
+          #                 template: "{0}{1}"
+          #                 args:
+          #                   - named_prop: "cod_tema"
+          #                   - named_prop: "desc_tema"
+          #   headers:
+          #     - text: 'Área Temática'
+          #       align: 'left'
+          #       value: 'desc_tema_principal'
+          #     - text: 'Tema'
+          #       align: 'left'
+          #       value: 'calc_tema'
+          #     - text: 'Qtde'
+          #       value: 'fmt_agr_count'
+          #   options:
+          #     parent: "calc_num_tema_principal"
+          #     id: "cod_tema"
+          #     text: "calc_treemap_description"
+          #     size: "agr_count"
+          #     colorScale:
+          #       type: "categorical"
+        source:
+          desc: "MPT Digital"
 # ========================================================
       - id: "bar_denuncias"
         title:
@@ -187,9 +529,9 @@ secoes:
         source:
           desc: "MPT Digital"          
 # ========================================================
-      - id: "treemap_denuncias"
-        title:
-          fixed: "Denúncias relacionadas à COVID-19 por Setor Econômico"
+      - id: "mapa_denúncias"
+        title: 
+          fixed: "Denúncias relacionadas à COVID-19 por UF"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -198,61 +540,17 @@ secoes:
         title_comment:
           template: "Brasil, {0}"
           api: 
-            fixed: "/thematic/coviddenunciacnpjmpt?categorias=data_atualizacao&limit=1"
+            fixed: "/thematic/coviddenunciampt?categorias=data_atualizacao&limit=1"
           args:
             - named_prop: "data_atualizacao"
               format: "dataDMY"
         description:
-          # - id: "select_prt"
-          #   type: "select"
-          #   multiple: true
-          #   label: "MPT"
-          #   api:
-          #     fixed: "/thematic/coviddenunciampt?categorias=nm_unidade,nm_prt&agregacao=DISTINCT&ordenacao=nm_prt"
-          #     options:
-          #       calcs:
-          #         - id: "prt"
-          #           function: "replace_text"
-          #           fn_args:
-          #             - fixed: "nm_unidade"
-          #             - fixed: "PROC. REGIONAL TRABALHO"
-          #             - fixed: "PRT"
-          #   args:
-          #     - prop: "id"
-          #       named_prop: "nm_prt"
-          #     - prop: "label"
-          #       named_prop: "calc_prt"
-          #   selection:
-          #     event: "selection" 
-          #     rules:
-          #       filter: ",and,in-nm_prt-{0}"
-          #       api:
-          #         args:
-          #           - named_prop: "nm_prt"
-          - id: "select_uf"
-            type: "select"
-            label: "Unidade Federativa"
-            api:
-              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
-            args:
-              - prop: "id"
-                named_prop: "cd_uf"
-              - prop: "label"
-                named_prop: "nm_uf"
-            selection:
-              event: "selection"
-              rules:
-                filter: ",and,eq-cd_uf-{0}"
-                api: 
-                  args:
-                    - named_prop: "cd_uf"
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
-                reactive: true
                 api: 
-                  fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
+                  fixed: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -265,30 +563,303 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o número total de denúncias ao Ministério Público do Trabalho (MPT) relacionadas à COVID-19. 
-                      O gráfico apresenta distribuição de denúncias pelo Setor Econômico da empresa denunciada. 
-                      As atividades econômicas indicadas foram identificadas por meio do setor de atuação do estabelecimento declarado pelos denunciados à Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas).
-                      É possível selecionar uma Unidade Federativa no filtro acima."
-        chart_type: "TREEMAP"
-        api:
-          fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe&agregacao=COUNT&filtros=eq-1-1"
+                      No mapa, apresenta-se a perspectiva comparativa do número de denúncias entre as unidades federativas, com escala de cores que varia do vermelho claro (menor) para o vermelho escuro (maior)."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          fixed: "/thematic/coviddenunciampt?categorias=cd_uf,nm_uf&agregacao=COUNT"
           options:
+            calcs:
+              - id: "deviation"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
             formatters:
               - id: "agr_count"
                 format: 'inteiro'
         headers:
-          - text: 'Setor Econômico'
+          - text: 'UF'
             align: 'left'
-            value: 'cnae_classe'
+            value: 'nm_uf'
           - text: 'Número de denúncias'
             value: 'fmt_agr_count'
         chart_options:
-          id: "cnae_classe"
-          text: "cnae_classe"
-          size: "agr_count"
-          colorScale:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_deviation'
+          colorScale: 
+            type: "singleHue"
             name: "Reds"
         source:
-          desc: "MPT Digital e Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas)"          
+          desc: "MPT Digital"
+# ========================================================
+      - id: "mapa_atuacao"
+        title: 
+          fixed: "Atuação do MPT no combate à COVID-19 por UF"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "Brasil, {0}"
+          api: 
+            fixed: "/thematic/coviddocumentompt?categorias=data_atualizacao&limit=1"
+          args:
+            - named_prop: "data_atualizacao"
+              format: "dataDMY"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Nenhuma"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: "AÇÕES CIVIS PÚBLICAS"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Nenhuma"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: "TERMOS DE AJUSTE DE CONDUTA"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Nenhuma"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: "RECOMENDAÇÕES"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de Ações Civis Públicas, Termos de Ajuste de Conduta e Recomendações feitas pelo Ministério Público do Trabalho (MPT) relacionadas à COVID-19. 
+                      No mapa, apresenta-se a perspectiva comparativa entre as unidades federativas, com escala de cores que varia do claro (menor) para o escuro (maior), para a opção selecionada abaixo:<br/>"
+          - id: "tipodocumento"
+            type: "radio"
+            items:
+              - id: "RECOMENDAÇÃO"
+                value: "RECOMENDAÇÃO"
+                color: "light-blue"
+                default: true
+                label: "RECOMENDAÇÕES"
+              - id: "ACPs"
+                value: "ACPs"
+                color: "green"
+                label: "AÇÕES CIVIS PÚBLICAS"
+              - id: "TAC"
+                value: "TAC"
+                color: "orange"
+                label: "TERMOS DE AJUSTE DE CONDUTA"
+            selection:
+              event: 'selection'
+              rules:
+                api:
+                  template: "/thematic/coviddocumentompt?categorias=cd_uf,nm_uf,tipodocumento,descricao_tipodocumento&agregacao=COUNT&filtros=eq-tipodocumento-'{0}'"
+                  args:
+                    - named_prop: "tipodocumento"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/thematic/coviddocumentompt?categorias=cd_uf,nm_uf,tipodocumento,descricao_tipodocumento&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Tipo de Atuação'
+            value: 'descricao_tipodocumento'
+          - text: 'Total'
+            value: 'fmt_agr_count'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_deviation'
+          colorScale: 
+            type: "singleHue"
+            scale_name_value: "tipodocumento"
+            color_array: 
+              "RECOMENDAÇÃO": "Blues"
+              "ACPs": "Greens"
+              "TAC": "Oranges"
+        source:
+          desc: "MPT Digital"
+# ========================================================
+      - id: "mapa_casos"
+        title: 
+          fixed: "Casos de COVID-19 por UF"
+        title_comment:
+          template: "Brasil, {0}"
+          api: 
+            fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+          args:
+            - named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_confirmed&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_deaths&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_last_available_deaths'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date,last_available_deaths,last_available_confirmed&agregacao=MAX,SUM,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                args:
+                  - prop: "value"
+                    function: 'calc_percentage'
+                    format: 'porcentagem'
+                    fn_args:
+                      - named_prop: "agr_sum_last_available_deaths"
+                      - named_prop: "agr_sum_last_available_confirmed"
+                  - prop: "description"
+                    fixed: 'Letalidade'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de casos e óbitos confirmados por COVID-19 e a taxa de letalidade no Brasil.
+              No mapa, apresenta-se a perspectiva comparativa entre as unidades federativas, com escala de cores que varia do claro (menor) para o escuro (maior), para a opção selecionada abaixo:<br/>"
+          - id: "covid_valor"
+            type: "radio"
+            items:
+              - id: "casos"
+                value: "last_available_confirmed"
+                default: true
+                color: "light-blue"
+                label: "CASOS CONFIRMADOS"
+              - id: "obitos"
+                value: "last_available_deaths"
+                color: "red"
+                label: "ÓBITOS CONFIRMADOS"
+              - id: "letalidade"
+                value: "last_available_death_rate"
+                color: "orange"
+                label: "LETALIDADE"
+              - id: "casos100M"
+                value: "last_available_confirmed_per_100k_inhabitants"
+                color: "green accent-4"
+                label: "CASOS CONFIRMADOS/100.000 hab."
+              - id: "obitos100M"
+                value: "last_available_death_per_100k_inhabitants"
+                color: "purple"
+                label: "ÓBITOS CONFIRMADOS/100.000 hab."
+            selection:
+              event: 'selection'
+              rules:
+                api:
+                  template: "/thematic/covidcasos?categorias={0}-valor,estimated_population_2019,cd_uf,nm_uf,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+                  args:
+                    - named_prop: "covid_valor"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          fixed: "/thematic/covidcasos?categorias=last_available_confirmed-valor,estimated_population_2019,cd_uf,nm_uf,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+          options:
+            calcs:
+              - id: "deviation_casos"
+                function: "get_log"
+                fn_args:
+                  - fixed: "valor"
+            formatters:
+              - id: "estimated_population_2019"
+                format: 'inteiro'
+              - id: "last_available_deaths"
+                format: 'inteiro'
+              - id: "last_available_confirmed"
+                format: 'inteiro'
+              - id: "last_available_death_rate"
+                format: 'porcentagem'
+                multiplier: 100
+              - id: "last_available_confirmed_per_100k_inhabitants"
+                format: 'real'
+                precision: 2
+              - id: "last_available_death_per_100k_inhabitants"
+                format: 'real'
+                precision: 2
+              - id: "last_available_date"
+                format: 'dataDMY'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'População estimada (2019)'
+            value: 'fmt_estimated_population_2019'
+          - text: 'Casos confirmados'
+            value: 'fmt_last_available_confirmed'
+          - text: 'Óbitos confirmados'
+            value: 'fmt_last_available_deaths'
+          - text: 'Letalidade'
+            value: 'fmt_last_available_death_rate'
+          - text: 'Casos confirmados/100.000 hab.'
+            value: 'fmt_last_available_confirmed_per_100k_inhabitants'
+          - text: 'Óbitos confirmados/100.000 hab.'
+            value: 'fmt_last_available_death_per_100k_inhabitants'
+          - text: 'Data coleta'
+            value: 'fmt_last_available_date'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_deviation_casos'
+          colorScale: 
+            type: "singleHue"
+            scale_name_value: "covid_valor"
+            color_array: 
+              "last_available_confirmed": "Blues"
+              "last_available_deaths": "Reds"
+              "last_available_death_rate": "Oranges"
+              "last_available_confirmed_per_100k_inhabitants": "Greens"
+              "last_available_death_per_100k_inhabitants": "Purples"
+        source:
+          desc: "Brasil.io"
+          link: "https://brasil.io/covid19/"
 # # ========================================================
 #       - id: "line_denuncias"
 #         title:
@@ -375,77 +946,77 @@ secoes:
 #           colorArray: ["#cb181d"]  # red
 #         source:
 #           desc: "MPT Digital"          
-# ========================================================
-      - id: "mapa_destinacoes"
-        title: 
-          fixed: "Recursos destinados para ações de combate à COVID-19 por Unidade Federativa"
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       fixed: ""
-        title_comment:
-          template: "Brasil, {0}"
-          api: 
-            fixed: "/thematic/coviddestinacaompt?categorias=data_atualizacao&limit=1"
-          args:
-            - named_prop: "data_atualizacao"
-              format: "dataDMY"
-          # api: 
-          #   fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
-          # args:
-          #   - named_prop: "agr_min_last_available_date"
-          #     format: 'dataDMY'
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api: 
-                  fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM&filtros=eq-1-1"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_destinacaovalor'
-                    format: 'monetario'
-                    precision: 2
-                    default: 'Nenhum'
-                    zero: 'Nenhum'
-                  - prop: "description"
-                    fixed: "Total Destinado pelo MPT para ações de combate à Covid-19"
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o valor total destinado pelo Ministério Público do Trabalho (MPT) para ações de combate à COVID-19. 
-                      No mapa, apresenta-se a perspectiva comparativa do valor total de recursos entre as unidades federativas, com escala de cores que varia do azul claro (menor) para o azul escuro (maior)."
-        chart_type: "MAP_TOPOJSON"
-        api: 
-          fixed: "/thematic/coviddestinacaompt?categorias=cd_uf,nm_uf&valor=destinacaovalor&agregacao=SUM"
-          options:
-            calcs:
-              - id: "deviation_destinacao"
-                function: "get_log"
-                fn_args:
-                  - fixed: "agr_sum_destinacaovalor"
-            formatters:
-              - id: "agr_sum_destinacaovalor"
-                format: 'monetario'
-                precision: 2
-                default: 'Nenhum'
-        headers:
-          - text: 'UF'
-            align: 'left'
-            value: 'nm_uf'
-          - text: 'Total destinado'
-            value: 'fmt_agr_sum_destinacaovalor'
-        chart_options:
-          id_field: 'cd_uf'
-          topo_key: "codigo"
-          value_field: 'calc_deviation_destinacao'
-          colorScale: 
-            type: "singleHue"
-            name: "Blues"
-        source:
-          desc: "MPT Digital"
+# # ========================================================
+#       - id: "mapa_destinacoes"
+#         title: 
+#           fixed: "Recursos destinados para ações de combate à COVID-19 por Unidade Federativa"
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       fixed: ""
+#         title_comment:
+#           template: "Brasil, {0}"
+#           api: 
+#             fixed: "/thematic/coviddestinacaompt?categorias=data_atualizacao&limit=1"
+#           args:
+#             - named_prop: "data_atualizacao"
+#               format: "dataDMY"
+#           # api: 
+#           #   fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'state'"
+#           # args:
+#           #   - named_prop: "agr_min_last_available_date"
+#           #     format: 'dataDMY'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   fixed: "/thematic/coviddestinacaompt?categorias=1&valor=destinacaovalor&agregacao=SUM&filtros=eq-1-1"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_destinacaovalor'
+#                     format: 'monetario'
+#                     precision: 2
+#                     default: 'Nenhum'
+#                     zero: 'Nenhum'
+#                   - prop: "description"
+#                     fixed: "Total Destinado pelo MPT para ações de combate à Covid-19"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o valor total destinado pelo Ministério Público do Trabalho (MPT) para ações de combate à COVID-19. 
+#                       No mapa, apresenta-se a perspectiva comparativa do valor total de recursos entre as unidades federativas, com escala de cores que varia do azul claro (menor) para o azul escuro (maior)."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           fixed: "/thematic/coviddestinacaompt?categorias=cd_uf,nm_uf&valor=destinacaovalor&agregacao=SUM"
+#           options:
+#             calcs:
+#               - id: "deviation_destinacao"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_destinacaovalor"
+#             formatters:
+#               - id: "agr_sum_destinacaovalor"
+#                 format: 'monetario'
+#                 precision: 2
+#                 default: 'Nenhum'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Total destinado'
+#             value: 'fmt_agr_sum_destinacaovalor'
+#         chart_options:
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'calc_deviation_destinacao'
+#           colorScale: 
+#             type: "singleHue"
+#             name: "Blues"
+#         source:
+#           desc: "MPT Digital"
 # # ========================================================
 #       - id: "bar_destinacao_prt"
 #         title:
@@ -915,213 +1486,6 @@ secoes:
 #           # colorArray: ["#a50f15","#cb181d","#ef3b2c","#fb6a4a","#fc9272","#fcbba1","#fee0d2"]  # Reds
 #         source:
 #           desc: "MPT Digital"
-# =====================================================
-      - id: "multi_temas"
-        # type: "multiple-charts"
-        title: 
-          fixed: "Procedimentos com Atuação no Combate à COVID-19 por Tema"
-        title_comment:
-          template: "Brasil, {0}"
-          api: 
-            fixed: "/thematic/covidtemampt?categorias=data_atualizacao&limit=1"
-          args:
-            - named_prop: "data_atualizacao"
-              format: "dataDMY"
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       fixed: "Sem observações adicionais. Vide descrição"
-        description:
-          # - id: "select_prt"
-          #   type: "select"
-          #   multiple: true
-          #   label: "MPT"
-          #   api:
-          #     fixed: "/thematic/covidclassempt?categorias=nm_unidade,nm_prt,cd_prt&agregacao=DISTINCT&ordenacao=nm_prt"
-          #     options:
-          #       calcs:
-          #         - id: "prt"
-          #           function: "replace_text"
-          #           fn_args:
-          #             - fixed: "nm_unidade"
-          #             - fixed: "PROC. REGIONAL TRABALHO"
-          #             - fixed: "PRT"
-          #   args:
-          #     - prop: "id"
-          #       named_prop: "cd_prt"
-          #     - prop: "label"
-          #       named_prop: "calc_prt"
-          #   selection:
-          #     event: "selection" 
-          #     rules:
-          #       filter: ",and,in-unidade-{0}"
-          #       api:
-          #         args:
-          #           - named_prop: "cd_prt"
-          # - id: "select_tema"
-          #   type: "select"
-          #   multiple: true
-          #   label: "Área Temática"
-          #   api:
-          #     fixed: "/thematic/covidtemampt?categorias=cod_tema_principal,desc_tema_principal&agregacao=DISTINCT&ordenacao=cod_tema_principal"
-          #   args:
-          #     - prop: "id"
-          #       named_prop: "cod_tema_principal"
-          #     - prop: "label"
-          #       named_prop: "desc_tema_principal"
-          #   selection:
-          #     event: "selection" 
-          #     rules:
-          #       filter: ",and,in-cod_tema_principal-{0}"
-          #       api:
-          #         args:
-          #           - named_prop: "cod_tema_principal"
-          # - id: "select_classe"
-          #   type: "select"
-          #   multiple: true
-          #   label: "Classe"
-          #   api:
-          #     fixed: "/thematic/covidclassempt?categorias=classe,descricao_classe&agregacao=DISTINCT&ordenacao=classe"
-          #   args:
-          #     - prop: "id"
-          #       named_prop: "classe"
-          #     - prop: "label"
-          #       named_prop: "descricao_classe"
-          #   selection:
-          #     event: "selection" 
-          #     rules:
-          #       filter: ",and,in-classe-{0}"
-          #       api:
-          #         args:
-          #           - named_prop: "classe"
-          - id: "select_uf"
-            type: "select"
-            label: "Unidade Federativa"
-            api:
-              fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf&filtros=eq-1-1"
-            args:
-              - prop: "id"
-                named_prop: "cd_uf"
-              - prop: "label"
-                named_prop: "nm_uf"
-            selection:
-              event: "selection"
-              rules:
-                filter: ",and,eq-cd_uf-{0}"
-                api: 
-                  args:
-                    - named_prop: "cd_uf"
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                reactive: true
-                api: 
-                  fixed: "/thematic/covidclassempt?categorias=1&agregacao=COUNT&filtros=eq-1-1"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_count'
-                    format: 'inteiro'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: 'Procedimentos'
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o número total de procedimentos do Ministério Público do Trabalho (MPT) com atuação no combate à COVID-19. 
-                      O gráfico apresenta a distribuição dos procedimentos por Temas. Cada procedimento pode estar relacionado a mais de um tema.
-                      É possível selecionar uma Unidade Federativa no filtro acima."
-        # charts:
-        #   - id: "treemap_tema_area"
-        #     title: "Demandas por Área Temática" 
-        #     cls: "xs12"
-        chart_type: "TREEMAP"
-        api: 
-          fixed: "/thematic/covidtemampt?categorias=cod_tema_principal,desc_tema_principal&agregacao=count&filtros=ne-cod_tema_principal-'10.'"
-          options:
-            formatters:
-              - id: "agr_count"
-                format: 'inteiro'
-            calcs:
-              # - id: "treemap_description"
-              #   function: "applyInterpolReplaceDatasetParam"
-              #   fn_args:
-              #     - fixed: 
-              #         template: "{0} - {1}"
-              #         args:
-              #           - named_prop: "desc_tema_principal"
-              #           - named_prop: "agr_count"
-              #             format: 'inteiro'
-              - id: "num_tema_principal"
-                function: "get_number"
-                fn_args:
-                  - named_prop: "cod_tema_principal"
-        headers:
-          - text: 'Área Temática'
-            align: 'left'
-            value: 'desc_tema_principal'
-          - text: 'Qtde'
-            value: 'fmt_agr_count'
-        chart_options:
-          id: "calc_num_tema_principal"
-          text: "desc_tema_principal"
-          size: "agr_count"
-          colorScale:
-            name: "Blues"
-            # type: "categorical"
-          # - id: "treemap_tema"
-          #   title: "Demandas por Tema"
-          #   cls: "xs12 md6"
-          #   type: "TREEMAP"
-          #   api: 
-          #     fixed: "/thematic/covidtemampt?categorias=cod_tema_principal,desc_tema_principal,cod_tema,desc_tema&agregacao=count&filtros=nn-cod_tema,and,ne-cod_tema_principal-'10.'"
-          #     options:
-          #       formatters:
-          #         - id: "agr_count"
-          #           format: 'inteiro'
-          #       calcs:
-          #         - id: "treemap_description"
-          #           function: "applyInterpolReplaceDatasetParam"
-          #           fn_args:
-          #             - fixed: 
-          #                 template: "{0}{1} - {2}"
-          #                 args:
-          #                   - named_prop: "cod_tema"
-          #                   - named_prop: "desc_tema"
-          #                   - named_prop: "agr_count"
-          #                     format: 'inteiro'
-          #         - id: "num_tema_principal"
-          #           function: "get_number"
-          #           fn_args:
-          #             - named_prop: "cod_tema_principal"
-          #         - id: "tema"
-          #           function: "applyInterpolReplaceDatasetParam"
-          #           fn_args:
-          #             - fixed: 
-          #                 template: "{0}{1}"
-          #                 args:
-          #                   - named_prop: "cod_tema"
-          #                   - named_prop: "desc_tema"
-          #   headers:
-          #     - text: 'Área Temática'
-          #       align: 'left'
-          #       value: 'desc_tema_principal'
-          #     - text: 'Tema'
-          #       align: 'left'
-          #       value: 'calc_tema'
-          #     - text: 'Qtde'
-          #       value: 'fmt_agr_count'
-          #   options:
-          #     parent: "calc_num_tema_principal"
-          #     id: "cod_tema"
-          #     text: "calc_treemap_description"
-          #     size: "agr_count"
-          #     colorScale:
-          #       type: "categorical"
-        source:
-          desc: "MPT Digital"
 # # ========================================================
 #       - id: "bar_documentos"
 #         title:
