@@ -604,6 +604,122 @@ secoes:
         source:
           desc: "Brasil.io"
           link: "https://brasil.io/covid19/"
+# # ========================================================
+#       - id: "mapa_casos_ultimo_dia"
+#         title: 
+#           fixed: "Casos de COVID-19 por UF no último dia de coleta registrado"
+#         title_comment:
+#           template: "Brasil, {0}"
+#           api: 
+#             fixed: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+#           args:
+#             - named_prop: "agr_max_last_available_date"
+#               format: 'dataDMY'
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       fixed: ""
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   fixed: "/thematic/covidcasos?categorias=1&valor=date_info,new_confirmed&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_new_confirmed'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     template: 'Casos confirmados em {0}'
+#                     args:
+#                       - named_prop: "agr_max_date_info"
+#                         format: "dataDMY"
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   fixed: "/thematic/covidcasos?categorias=1&valor=date_info,new_deaths&agregacao=MAX,SUM&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_sum_new_deaths'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     template: 'Óbitos confirmados em {0}'
+#                     args:
+#                       - named_prop: "agr_max_date_info"
+#                         format: "dataDMY"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número total de casos e óbitos confirmados por COVID-19 e a taxa de letalidade no Brasil.
+#               No mapa, apresenta-se a perspectiva comparativa entre as unidades federativas, com escala de cores que varia do claro (menor) para o escuro (maior), para a opção selecionada abaixo:<br/>"
+#           - id: "covid_valor"
+#             type: "radio"
+#             items:
+#               - id: "casos"
+#                 value: "new_confirmed"
+#                 default: true
+#                 color: "light-blue"
+#                 label: "CASOS CONFIRMADOS"
+#               - id: "obitos"
+#                 value: "new_deaths"
+#                 color: "red"
+#                 label: "ÓBITOS CONFIRMADOS"
+#             selection:
+#               event: 'selection'
+#               rules:
+#                 api:
+#                   template: "/thematic/covidcasos?categorias={0}-valor,estimated_population_2019,cd_uf,nm_uf,date_info,new_confirmed,new_deaths&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+#                   args:
+#                     - named_prop: "covid_valor"
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           fixed: "/thematic/covidcasos?categorias=new_confirmed-valor,estimated_population_2019,cd_uf,nm_uf,date_info,new_confirmed,new_deaths&filtros=eq-place_type-'state',and,eq-is_last-TRUE"
+#           options:
+#             calcs:
+#               - id: "deviation_casos"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "valor"
+#             formatters:
+#               - id: "estimated_population_2019"
+#                 format: 'inteiro'
+#               - id: "new_deaths"
+#                 format: 'inteiro'
+#               - id: "new_confirmed"
+#                 format: 'inteiro'
+#               - id: "date_info"
+#                 format: 'dataDMY'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'População estimada (2019)'
+#             value: 'fmt_estimated_population_2019'
+#           - text: 'Casos confirmados'
+#             value: 'fmt_new_confirmed'
+#           - text: 'Óbitos confirmados'
+#             value: 'fmt_new_deaths'
+#           - text: 'Data coleta'
+#             value: 'fmt_date_info'
+#         chart_options:
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'calc_deviation_casos'
+#           colorScale: 
+#             type: "singleHue"
+#             scale_name_value: "covid_valor"
+#             color_array: 
+#               "new_confirmed": "Blues"
+#               "new_deaths": "Reds"
+#         source:
+#           desc: "Brasil.io"
+#           link: "https://brasil.io/covid19/"
 # ========================================================
       - id: "mapa_casos_regic"
         title: 
