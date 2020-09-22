@@ -226,6 +226,7 @@ prevalencia:
         cls: "pa-0"
         fixed: "O mapa de distribuição geográfica de demanda por tutela coletiva de direitos afetados pelas repercussões da pandemia COVID-19 no mundo do trabalho leva em consideração as denúncias recebidas pelo Ministério Público do Trabalho (MPT) sobre o tema.<br/>
                 Pode-se, ainda, ativar a exibição da distribuição de casos e óbitos por COVID-19 como forma de analisar, por aproximação e de maneira contextual, a correlação entre a prevalência de casos e a existência de conflitos no mundo do trabalho, em situações nas quais se deve equilibrar a preservação de empregos e a manutenção da da atividade econômica, na medida do possível e de acordo com o imperativo de defesa da saúde coletiva e da vida."      
+
         # read_more_limit: "620"
     - type: "text"
       class: "pr-0 pl-2 pb-0 pt-0"
@@ -233,12 +234,25 @@ prevalencia:
       title: "Tutela Coletiva"
       content:
         cls: "pa-0"
-        fixed: "As denúncias são em geral seguidas de investigação e atuação por meio de ações civis públicas, termos de ajuste de conduta e recomendações."      
-    - id: "minicards_mpt"
-      class: "ma-0 pa-0"
-      type: "minicards"
-      rowClass: "px-3 py-2"
-      cards:
+        template: "As denúncias são em geral seguidas de investigação e atuação por meio de ações civis públicas, termos de ajuste de conduta e recomendações.
+                   Desde que surgiu a primeira denúncia, foram ajuizadas {0} Ações Civis Públicas, firmados {1} Termos de Ajuste de Conduta e expedidas {2} Recomendações visando a pacificar os conflitos."      
+        api:
+          fixed: "/thematic/coviddocumentompt?categorias=tipodocumento-cd_indicador&agregacao=COUNT"
+        args:
+          - id: "ACPs"
+            named_prop: "agr_count"
+            format: "inteiro"
+          - id: "TAC"
+            named_prop: "agr_count"
+            format: "inteiro"
+          - id: "RECOMENDAÇÃO"
+            named_prop: "agr_count"
+            format: "inteiro"
+    # - id: "minicards_mpt"
+    #   class: "ma-0 pa-0"
+    #   type: "minicards"
+    #   rowClass: "px-3 py-2"
+    #   cards:
         # - relevance: "lead"
         #   cls: "xs12 sm6 md12 lg6 text-xs-center "
         #   color: "light-blue pa-3"
@@ -332,39 +346,39 @@ prevalencia:
         #       format: 'inteiro'
         #     - prop: "description"
         #       fixed: "Denúncias ao MPT relacionadas à COVID-19"
-        - relevance: "low"
-          cls: "xs12 sm4 text-xs-center "
-          color: "pl-0 pr-1 pt-1"
-          api: 
-            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
-          args:
-            - prop: "value"
-              named_prop: "agr_count"
-              format: 'inteiro'
-            - prop: "description"
-              fixed: "AÇÕES CIVIS PÚBLICAS"
-        - relevance: "low"
-          cls: "xs12 sm4 text-xs-center "
-          color: "px-1 pt-1"
-          api: 
-            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
-          args:
-            - prop: "value"
-              named_prop: "agr_count"
-              format: 'inteiro'
-            - prop: "description"
-              fixed: "TERMOS DE AJUSTE DE CONDUTA"
-        - relevance: "low"
-          cls: "xs12 sm4 text-xs-center "
-          color: "px-1 pt-1"
-          api: 
-            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
-          args:
-            - prop: "value"
-              named_prop: "agr_count"
-              format: 'inteiro'
-            - prop: "description"
-              fixed: "RECOMENDAÇÕES"
+        # - relevance: "low"
+        #   cls: "xs12 sm4 text-xs-center "
+        #   color: "pl-0 pr-1 pt-1"
+        #   api: 
+        #     fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_count"
+        #       format: 'inteiro'
+        #     - prop: "description"
+        #       fixed: "AÇÕES CIVIS PÚBLICAS"
+        # - relevance: "low"
+        #   cls: "xs12 sm4 text-xs-center "
+        #   color: "px-1 pt-1"
+        #   api: 
+        #     fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_count"
+        #       format: 'inteiro'
+        #     - prop: "description"
+        #       fixed: "TERMOS DE AJUSTE DE CONDUTA"
+        # - relevance: "low"
+        #   cls: "xs12 sm4 text-xs-center "
+        #   color: "px-1 pt-1"
+        #   api: 
+        #     fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_count"
+        #       format: 'inteiro'
+        #     - prop: "description"
+        #       fixed: "RECOMENDAÇÕES"
         # - relevance: "lead"
         #   cls: "xs12 text-xs-center "
         #   color: "light-blue pa-3"
@@ -418,13 +432,31 @@ prevalencia:
         - title: "Setores com maior número de denúncias <sup>1</sup>"
           cls: "xs12 px-3 pb-0"
           api: 
-            fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe&agregacao=COUNT,RANK_DENSE_COUNT&limit=10"
+            fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe,total_trabalhadores_cnae&agregacao=COUNT,RANK_DENSE_COUNT&limit=10"
+            options:
+              calcs:
+                - id: "setor"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} ({1} empregos formais no Brasil), com"
+                        args:
+                          - named_prop: "cnae_classe"
+                          - named_prop: "total_trabalhadores_cnae"
+                            format: "inteiro"
+                - id: "denuncias"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} denúncias"
+                        args:
+                          - named_prop: "agr_count"
+                            format: "inteiro"
           args:
             - prop: 'localidade'
-              named_prop: "cnae_classe"
+              named_prop: "calc_setor"
             - prop: 'vl_indicador'
-              named_prop: "agr_count"
-              format: "inteiro"
+              named_prop: "calc_denuncias"
             - prop: 'rank'
               named_prop: "agr_rank_dense_count"
         # - title: "UFs com maior número de empregados potencialmente atingidos "
@@ -465,7 +497,7 @@ prevalencia:
         #       named_prop: "agr_rank_dense_sum_last_available_confirmed"
     - type: "text"
       content:
-        fixed: "1. As atividades econômicas indicadas foram identificadas por meio do setor de atuação do estabelecimento declarado pelos denunciados à Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas).<br/>"
+        fixed: "1. As atividades econômicas indicadas foram identificadas por meio do setor de atuação do estabelecimento declarado pelos denunciados à Receita Federal do Brasil (Cadastro Nacional de Pessoas Jurídicas). A estimativa de empregos formais é baseada na Relação Anual de Informações Sociais.<br/>"
                 # 2. Os valores destinados pelo Ministério Público do Trabalho a ações de prevenção e mitigação dos efeitos da pandemia COVID-19 são provenientes de condenações ou acordos para reparar danos difusos e coletivos causados à sociedade, de acordo com as disposições da Lei 7.347, de 24 de julho de 1985, e da Lei 8.078, de 11 de setembro de 1990."
   mapa_filtros:
     - id: "selectlayer"
@@ -575,42 +607,42 @@ prevalencia:
               format: "inteiro"
             - prop: "description"
               fixed: "Denúncias ao MPT relacionadas à COVID-19"
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "green accent-4 pa-3"
-          reactive: true
-          api: 
-            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
-          args:
-            - prop: "value"
-              named_prop: "agr_count"
-              format: "inteiro"
-            - prop: "description"
-              fixed: "AÇÕES CIVIS PÚBLICAS"
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "green accent-4 pa-3"
-          reactive: true
-          api: 
-            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
-          args:
-            - prop: "value"
-              named_prop: "agr_count"
-              format: "inteiro"
-            - prop: "description"
-              fixed: "TERMOS DE AJUSTE DE CONDUTA"
-        - relevance: "lead"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
-          color: "green accent-4 pa-3"
-          reactive: true
-          api: 
-            fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
-          args:
-            - prop: "value"
-              named_prop: "agr_count"
-              format: "inteiro"
-            - prop: "description"
-              fixed: "RECOMENDAÇÕES"
+        # - relevance: "lead"
+        #   cls: "xs12 sm6 md12 lg6 text-xs-center "
+        #   color: "green accent-4 pa-3"
+        #   reactive: true
+        #   api: 
+        #     fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'ACPs'"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_count"
+        #       format: "inteiro"
+        #     - prop: "description"
+        #       fixed: "AÇÕES CIVIS PÚBLICAS"
+        # - relevance: "lead"
+        #   cls: "xs12 sm6 md12 lg6 text-xs-center "
+        #   color: "green accent-4 pa-3"
+        #   reactive: true
+        #   api: 
+        #     fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'TAC'"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_count"
+        #       format: "inteiro"
+        #     - prop: "description"
+        #       fixed: "TERMOS DE AJUSTE DE CONDUTA"
+        # - relevance: "lead"
+        #   cls: "xs12 sm6 md12 lg6 text-xs-center "
+        #   color: "green accent-4 pa-3"
+        #   reactive: true
+        #   api: 
+        #     fixed: "/thematic/coviddocumentompt?categorias=1&agregacao=COUNT&filtros=eq-tipodocumento-'RECOMENDAÇÃO'"
+        #   args:
+        #     - prop: "value"
+        #       named_prop: "agr_count"
+        #       format: "inteiro"
+        #     - prop: "description"
+        #       fixed: "RECOMENDAÇÕES"
         # - relevance: "lead"
         #   cls: "xs12 text-xs-center "
         #   color: "light-blue pa-3"
