@@ -432,17 +432,24 @@ prevalencia:
         - title: "Setores com maior número de denúncias <sup>1</sup>"
           cls: "xs12 px-3 pb-0"
           api: 
-            fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe,total_trabalhadores_cnae&agregacao=COUNT,RANK_DENSE_COUNT&limit=10"
+            fixed: "/thematic/coviddenunciacnpjmpt?categorias=cnae_classe,total_trabalhadores_cnae,total_estabelecimentos_cnae&agregacao=COUNT,RANK_DENSE_COUNT&limit=10"
             options:
               calcs:
+                - id: "empporestab"
+                  function: "calc_proportion_ds"
+                  fn_args:
+                    - named_prop: "total_trabalhadores_cnae"
+                    - named_prop: "total_estabelecimentos_cnae"
                 - id: "setor"
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed: 
-                        template: "{0} ({1} empregos formais no Brasil), com"
+                        template: "{0} ({1} empregos formais no Brasil e uma média de {2} empregados por estabelecimento), com"
                         args:
                           - named_prop: "cnae_classe"
                           - named_prop: "total_trabalhadores_cnae"
+                            format: "inteiro"
+                          - named_prop: "calc_empporestab"
                             format: "inteiro"
                 - id: "denuncias"
                   function: "applyInterpolReplaceDatasetParam"
