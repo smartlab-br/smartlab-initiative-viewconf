@@ -291,6 +291,193 @@ secoes:
         source:
           desc_field: "ds_fonte"
 # ========================================================
+      - id: "mapa_pib_brasil_api"
+        title:
+          fixed: "Produto Interno Bruto - PIB"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_16_01_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O produto interno bruto (PIB) representa a soma de todos os bens e serviços finais produzidos numa determinada região durante um período determinado. É um dos indicadores mais utilizados para quantificar a atividade econômica de uma região."
+        # msg_nodata:
+        #   desc: "Dados não encontrados"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'auto'
+                    collapse:
+                      format: 'auto'
+                  - prop: "description"
+                    fixed: "PIB"
+                  # - prop: "comment"
+                  #   fixed: "Aprox."
+              - relevance: 'high'
+                cls: 'xs12 md5'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'pct_uf'
+                    format: 'porcentagem'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "DO PIB DA UF"
+              - relevance: 'low'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_uf'
+                    format: 'auto'
+                    collapse:
+                      format: 'auto'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média da UF"
+                  - prop: "comment"
+                    function: "calcIndexPercentage" 
+                    fn_args:
+                      - named_prop: "vl_indicador"
+                      - named_prop: 'media_uf'
+                    color_changing: 
+                      base_value_prop: 'media_uf'
+                      compared_value_prop: 'vl_indicador'
+              - relevance: 'low'
+                cls: 'xs12 md5'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_16_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_br'
+                    format: 'auto'
+                    collapse:
+                      format: 'auto'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média nacional"
+                  - prop: "comment"
+                    function: "calcIndexPercentage" 
+                    fn_args:
+                      - named_prop: "vl_indicador"
+                      - named_prop: 'media_br'
+                    color_changing: 
+                      base_value_prop: 'media_br'
+                      compared_value_prop: 'vl_indicador'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o PIB do município para o ano indicado e a participação no PIB da UF. Compara-se referido valor com a média da UF e do Brasil, tendo em vista a concentração do PIB em certas localidades e regiões. No mapa, {0} está em destaque. A escala de cores varia do menor valor (branco) ao maior valor (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_16_01_00"
+                year: "max"
+              args:
+                - named_prop: 'nm_municipio_uf'
+
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "01_16_01_00"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+          
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_curto,ds_indicador_prefixo,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_16_01_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_pib"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: "auto"
+              - id: "pct_uf"
+                format: 'porcentagem'
+                precision: 2
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_curto'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+          - text: 'Participação na UF'
+            value: 'fmt_pct_uf'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          from_api: true
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_pib'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
       - id: "mapa_pibpc_municipio"
         title:
           fixed: "Produto Interno Bruto (PIB) per capita"
