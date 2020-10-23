@@ -558,6 +558,80 @@ secoes:
                 color: "light-blue"
             event: 'selection'
 # ========================================================
+      - id: "mapa_prev_estado_api"
+        chart_type: "MAP_BUBBLES"
+        title: 
+          fixed: "Locais de resgate, naturalidade e residência dos trabalhadores"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre"
+            content:
+              fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (MTb), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado. O total de egressos com naturalidade e residência declaradas foi calculado com base nos registros administrativos do seguro-desemprego nessa modalidade, isto é, restringe-se aos trabalhadores habilitados ao recebimento do benefício. Diferenças entre os números se explicam por padrões de lançamento desses dados e pelas normas referentes à concessão do benefício vigentes. Entre 1995 a 2017, foram contabilizados mais de 50 mil resgates. Por sua maior consistência, este Observatório analisou dados desde 2003 (ano de lançamento do I Plano Nacional de Erradicação do Trabalho Escravo)."
+        api:
+          template: "/te/indicadoresmunicipais?categorias=nu_competencia,latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res',and,eq-cd_uf-{0}&calcs=ln_norm_pos_part"
+          args:
+            - named_prop: "cd_uf"
+        chart_options:
+          from_api: true
+          timeseries: "nu_competencia"  
+          colorArray: ["rgba(25, 125, 25, 0.7)", "rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
+          height_proportion: 1.77
+          indicadores: ["te_rgt","te_nat","te_res"]
+          lat: 'latitude'
+          long: 'longitude'
+          tooltip_function: 'obsTETooltip'
+        source:
+          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+          link: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              template: "Para a perspectiva geográfica em destaque, foram contabilizados {0} resgates do trabalho escravo desde 2003, quando se iniciou o pagamento do benefício do seguro-desemprego para resgatados. Além disso, {1} declararam haver nascido e {2} informaram residir na localidade. No mapa ao lado, apresentam-se as três perspectivas em diferentes cores. Em verde, os locais de resgate; em vermelho, os locais de naturalidade; em azul, os locais de residência. Nota-se que os locais em que o estado concentra seus esforços de repressão (onde há resgates) são em geral distintos dos locais de origem das vítimas, quer do ponto de vista da naturalidade, quer do ponto de vista da residência. Desse modo, do ponto de vista da prevenção, notam-se oportunidades para o aprimoramento de políticas públicas nos locais de naturalidade (sobretudo com foco em desenvolvimento humano e socioeconômico) e de residência (em especial para a geração de postos de trabalho decente)."
+              preloaded:
+                prop: "trabalho_escravo_agr"
+                function: "slice"
+                id: ['te_rgt','te_nat','te_res']
+              args:
+                - id: "te_rgt"
+                  named_prop: 'agr_sum_vl_indicador'
+                  format: 'inteiro'
+                  default: "0"
+                - id: "te_nat"
+                  named_prop: 'agr_sum_vl_indicador'
+                  format: 'inteiro'
+                  default: "0"
+                - id: "te_res"
+                  named_prop: 'agr_sum_vl_indicador'
+                  format: 'inteiro'
+                  default: "0"
+          - id: "selectlayer"
+            type: "switch-group"
+            cls: "pt-2 pb-4"
+            switches:
+              - id: "te_rgt"
+                label: "Resgates"
+                default: true
+                color: "green accent-4"
+              - id: "te_nat"
+                label: "Naturalidade Apurada"
+                default: true
+                color: "red"
+              - id: "te_res"
+                label: "Residência Apurada"
+                default: true
+                color: "light-blue"
+            event: 'selection'
+# ========================================================
       - id: "mapa_prev_estado_calor"
         chart_type: "MAP_HEAT"
         title: 
