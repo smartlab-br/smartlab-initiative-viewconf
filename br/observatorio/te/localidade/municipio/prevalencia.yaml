@@ -864,6 +864,70 @@ secoes:
                 color: "light-blue"
                 value: "te_res"
             event: 'selection'
+# ========================================================
+      - id: "mapa_mixed_api"
+        chart_type: "MIXED_MAP"
+        title: 
+          fixed: "Teste mixed map"
+        # title_comment:
+        #   template: "{0}, de {1} a {2}"
+        #   api: 
+        #     fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+        #   args:
+        #     - base_object: "localidade"
+        #       named_prop: "nm_localidade"
+        #     - named_prop: "nu_competencia_min"
+        #     - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre"
+        #     content:
+        #       fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (MTb), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado. O total de egressos com naturalidade e residência declaradas foi calculado com base nos registros administrativos do seguro-desemprego nessa modalidade, isto é, restringe-se aos trabalhadores habilitados ao recebimento do benefício. Diferenças entre os números se explicam por padrões de lançamento desses dados e pelas normas referentes à concessão do benefício vigentes. Entre 1995 a 2017, foram contabilizados mais de 50 mil resgates. Por sua maior consistência, este Observatório analisou dados desde 2003 (ano de lançamento do I Plano Nacional de Erradicação do Trabalho Escravo)."
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "MIXED"
+        layers:
+          - title: "Meu título customizado"
+            chart_type: "MAP_TOPOJSON"
+            api:
+              template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio,latitude,longitude&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_uf-{0},and,eq-cd_indicador-'te_nat'"
+              args:
+                - named_prop: "cd_uf"
+              options:
+                calcs:
+                  - id: "deviation_resg_naturais"
+                    function: "get_log"
+                    fn_args:
+                      - fixed: "agr_sum_vl_indicador"
+                formatters:
+                  - id: "agr_sum_vl_indicador"
+                    format: "inteiro"
+            headers: 
+              - text: "Município",
+                align: "left",
+                value: "nm_municipio"
+              - text: "Nº resgatados do trabalho escravo - naturais",
+                value: "fmt_agr_sum_vl_indicador"
+            chart_options:
+              from_api: true
+              id_field: "cd_mun_ibge_dv",
+              topo_key: "codarea",
+              value_field: "agr_sum_vl_indicador",
+              colorScale: 
+                name: "Reds" 
+          - chart_type: "MAP_BUBBLES",
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res',and,eq-cd_uf-{0}&calcs=ln_norm_pos_part",
+              args: 
+                - named_prop: "cd_uf"
+            chart_options: 
+              colorArray": ["rgba(25, 125, 25, 0.7)", "rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
+              height_proportion: 1.77
+              indicadores: ["te_rgt","te_nat","te_res"]
+              lat: "latitude"
+              long: "longitude"
 # ===============================================
       - id: "prevalencia_serie_headline"
         type: "headline"
