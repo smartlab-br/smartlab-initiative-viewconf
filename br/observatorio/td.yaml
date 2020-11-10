@@ -11,7 +11,7 @@ prevalencia:
   id: "mapa_prev_brasil"
   chart_type: "MAP_BUBBLES"
   title: 
-    fixed: "Distribuição Geográfica"
+    fixed: "Distribuição Geográfica - Empregos Formais (CAGED)"
   title_comment:
     fixed: "08/2020"
   # info:
@@ -22,6 +22,9 @@ prevalencia:
   api:
     - fixed: "/thematic/cagedtermometro?categorias=competencia_declarada,'positivo'-cd_indicador,latitude,longitude,cd_municipio_ibge_dv,nm_municipio_uf&valor=saldo_ocupacional_municipio&agregacao=MAX&calcs=ln_norm_pos_part&partition=competencia_declarada&filtros=eq-competencia_declarada-'202008',and,eq-termometro_grupo-'cbo',and,gt-saldo_ocupacional_municipio-0"
     - fixed: "/thematic/cagedtermometro?categorias=competencia_declarada,'negativo'-cd_indicador,latitude,longitude,cd_municipio_ibge_dv,nm_municipio_uf&valor=saldo_ocupacional_absoluto_municipio&agregacao=MAX&calcs=ln_norm_pos_part&partition=competencia_declarada&filtros=eq-competencia_declarada-'202008',and,eq-termometro_grupo-'cbo',and,lt-saldo_ocupacional_municipio-0"
+  apiBase:
+    - fixed: "/thematic/cagedtermometro?categorias=competencia_declarada,'positivo'-cd_indicador,latitude,longitude,cd_municipio_ibge_dv,nm_municipio_uf&valor=saldo_ocupacional_municipio&agregacao=MAX&calcs=ln_norm_pos_part&partition=competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,gt-saldo_ocupacional_municipio-0"
+    - fixed: "/thematic/cagedtermometro?categorias=competencia_declarada,'negativo'-cd_indicador,latitude,longitude,cd_municipio_ibge_dv,nm_municipio_uf&valor=saldo_ocupacional_absoluto_municipio&agregacao=MAX&calcs=ln_norm_pos_part&partition=competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,lt-saldo_ocupacional_municipio-0"
   chart_options:
     colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
     indicadores: ["negativo","positivo"]
@@ -38,11 +41,6 @@ prevalencia:
   source:
     desc: ""
     link: ""
-  footer:
-    - type: "text"
-      class: "pa-0"
-      content:
-        fixed: "<a class='accent--text' href='https://smartlabbr.org/escravo-v1' target='_blank'>Acesse a versão anterior deste Observatório</a>"
   description:
     - id: "selectlayer"
       type: "switch-group"
@@ -64,3 +62,162 @@ prevalencia:
         cls: "pa-0"
         fixed: "O Observatório Digital de Trabalho Decente..."
       read_more_limit: "620"
+  description_right:
+    - id: "ranking_list_caged"
+      type: "ranking_list"
+      rankings:
+        - title: "Ocupações com Maior Aumento de Postos Formais <sup>1</sup>"
+          cls: "xs12 px-3 pb-0"
+          api: 
+            fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo_ocupacional&ordenacao=-saldo_ocupacional&filtros=eq-termometro_grupo-'cbo_brasil',and,eq-competencia_declarada-'202008'&limit=15"
+            options:
+              calcs:
+                - id: "criados"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} novos postos"
+                        args:
+                          - named_prop: "saldo_ocupacional"
+                            format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_criados"
+        - title: "Ocupações com Maior Diminuição de Postos Formais <sup>1</sup>"
+          cls: "xs12 px-3 pb-0"
+          api: 
+            fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo_ocupacional_absoluto&ordenacao=saldo_ocupacional&filtros=eq-termometro_grupo-'cbo_brasil',and,eq-competencia_declarada-'202008'&limit=15"
+            options:
+              calcs:
+                - id: "perdidos"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} postos perdidos"
+                        args:
+                          - named_prop: "saldo_ocupacional_absoluto"
+                            format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_perdidos"
+    - type: "text"
+      content:
+        fixed: "1. Competência declarada de 08/2020."
+  mapa_filtros:
+    - id: "selectlayer"
+      type: "switch-group"
+      switches:
+        - id: "negativo"
+          cls: "xs12"
+          default: true
+          color: "red"
+          label: "SALDO OCUPACIONAL NEGATIVO"
+        - id: "positivo"
+          cls: "xs12"
+          default: true
+          color: "light-blue"
+          label: "SALDO OCUPACIONAL POSITIVO"
+      event: 'selection'
+    - id: "select_competencia"
+      type: "select"
+      clearable: false
+      label: "Competência Declarada"
+      api:
+        fixed: "/thematic/cagedtermometro?categorias=competencia_declarada&agregacao=DISTINCT&ordenacao=-competencia_declarada&filtros=eq-termometro_grupo-'cbo'&ge-ano_declarado-'2019'"
+        options:
+          calcs:
+            - id: "mes_formatado"
+              function: "format_month_ds"
+              fn_args:
+                - named_prop: "competencia_declarada"
+      args:
+        - prop: "id"
+          named_prop: "competencia_declarada"
+        - prop: "label"
+          named_prop: "calc_mes_formatado"
+          # null_value: "(Não informado)"
+      selection:
+        event: "selection" 
+        rules:
+          filter: ",and,eq-competencia_declarada-'{0}'"
+          api:
+            args:
+              - named_prop: "competencia_declarada"
+    - type: "text"
+      cls: "ma-0 pa-0"
+      content:
+        cls: "pa-0"
+        fixed: "O Observatório Digital de Trabalho Decente..."
+      read_more_limit: "620"
+  mapa_description_right:
+    - id: "ranking_list_caged"
+      type: "ranking_list"
+      rankings:
+        - title: "Ocupações com Maior Número de Postos Formais Criados"
+          cls: "xs12 px-3 pb-0"
+          reactive: true
+          api: 
+            fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo_ocupacional&ordenacao=-saldo_ocupacional&limit=15&filtros=eq-termometro_grupo-'cbo_brasil',and,eq-competencia_declarada-'202008'"
+            options:
+              calcs:
+                - id: "criados"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} novos postos"
+                        args:
+                          - named_prop: "saldo_ocupacional"
+                            format: "inteiro"
+          apiBase:
+            fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo_ocupacional&ordenacao=-saldo_ocupacional&limit=15&filtros=eq-termometro_grupo-'cbo_brasil'"
+            options:
+              calcs:
+                - id: "criados"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} novos postos"
+                        args:
+                          - named_prop: "saldo_ocupacional"
+                            format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_criados"
+        - title: "Ocupações com Maior Número de Postos Formais Perdidos"
+          cls: "xs12 px-3 pb-0"
+          reactive: true
+          api: 
+            fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo_ocupacional_absoluto&ordenacao=saldo_ocupacional&limit=15&filtros=eq-termometro_grupo-'cbo_brasil',and,eq-competencia_declarada-'202008'"
+            options:
+              calcs:
+                - id: "perdidos"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} postos perdidos"
+                        args:
+                          - named_prop: "saldo_ocupacional_absoluto"
+                            format: "inteiro"
+          apiBase: 
+            fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo_ocupacional_absoluto&ordenacao=saldo_ocupacional&limit=15&filtros=eq-termometro_grupo-'cbo_brasil'"
+            options:
+              calcs:
+                - id: "perdidos"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} postos perdidos"
+                        args:
+                          - named_prop: "saldo_ocupacional_absoluto"
+                            format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_perdidos"
