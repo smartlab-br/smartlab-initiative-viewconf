@@ -79,6 +79,669 @@ secoes:
     name: ""
     cards:
 # ===============================================
+      - id: "bar_termometro_cbo"
+        type: "multiple-charts"
+        title: 
+          fixed: "Emprego formal por ocupação"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "A Taxa de Participação é medida dividindo a População Economicamente Ativa (PEA) de 16 a 64 anos pela População em Idade Ativa (PIA) da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está participando no mercado de trabalho em relação ao potencial ativo dessa população. Por exemplo, essa métrica demonstra que um significativo aporte laboral e produtivo das mulheres é subestimado e não se reflete na taxa de participação."
+        #   - type: "text"
+        #     title: "Observação:"
+        #     content:
+        #       fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
+        title_comment:
+          template: "{0}"
+          # api:
+          #   fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=MAX"
+          #   options:
+          #     calcs:
+          #       - id: "mes_competencia"
+          #         function: "format_month_ds"
+          #         fn_args:
+          #           - named_prop: "agr_max_competencia_declarada"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            # - named_prop: "calc_mes_competencia"
+        description:
+          # - type: "minicards"
+          #   cards:
+          #     - relevance: 'high'
+          #       cls: 'xs12 md7'
+          #       preloaded:
+          #         prop: "centralindicadores"
+          #         function: "slice"
+          #         id: "02_01_06_00"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'vl_indicador'
+          #           format: 'porcentagem'
+          #           precision: 0
+          #           default: "Sem Registros"
+          #         - prop: "description"
+          #           fixed: "Participação no mercado de trabalho"
+          - id: "select_competencia"
+            type: "select"
+            clearable: false
+            default: 
+              fixed: '202008'
+            label: "Competência Declarada"
+            api:
+              fixed: "/thematic/cagedtermometro?categorias=competencia_declarada&agregacao=DISTINCT&ordenacao=-competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,ge-ano_declarado-'2019'"
+              options:
+                calcs:
+                  - id: "mes_formatado"
+                    function: "format_month_ds"
+                    fn_args:
+                      - named_prop: "competencia_declarada"
+            args:
+              - prop: "id"
+                named_prop: "competencia_declarada"
+              - prop: "label"
+                named_prop: "calc_mes_formatado"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-competencia_declarada-'{0}'"
+                api:
+                  args:
+                    - named_prop: "competencia_declarada"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: ""
+        charts:
+          - id: "bar_cbo_ganho"
+            cls: "xs12 md6"
+            title: "Ocupações com maior número de postos formais criados"
+            type: "BAR"
+            api:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-competencia_declarada-'202008',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: "mes_competencia"
+                    function: "format_month_ds"
+                    fn_args:
+                      - named_prop: "competencia_declarada"
+                formatters:
+                  - id: "admitidos"
+                    format: 'inteiro'
+                  - id: "desligados"
+                    format: 'inteiro'
+                  - id: "saldo"
+                    format: 'inteiro'
+            apiBase:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              args:
+                - named_prop: "idLocalidade"
+            headers:
+              - text: 'Ocupação'
+                align: 'left'
+                value: 'termometro_descricao'
+              - text: 'Competencia declarada'
+                align: 'left'
+                value: 'calc_mes_competencia'
+              - text: 'Admitidos'
+                value: 'fmt_admitidos'
+              - text: 'Desligados'
+                value: 'fmt_desligados'
+              - text: 'Vagas criadas'
+                value: 'fmt_saldo'
+            options:
+              id: "termometro_codigo"
+              x: "saldo"
+              y: "termometro_descricao"
+              show_y_axis: true
+              order_field: "saldo"
+              # text: "termometro_descricao"
+              color: "#084594"
+              hide_legend: true
+          - id: "bar_cbo_perda"
+            cls: "xs12 md6"
+            title: "Ocupações com maior número de postos formais perdidos"
+            type: "BAR"
+            api:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-competencia_declarada-'202008',and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: "mes_competencia"
+                    function: "format_month_ds"
+                    fn_args:
+                      - named_prop: "competencia_declarada"
+                formatters:
+                  - id: "admitidos"
+                    format: 'inteiro'
+                  - id: "desligados"
+                    format: 'inteiro'
+                  - id: "saldo_absoluto"
+                    format: 'inteiro'
+            apiBase:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            headers:
+              - text: 'Ocupação'
+                align: 'left'
+                value: 'termometro_descricao'
+              - text: 'Competencia declarada'
+                align: 'left'
+                value: 'calc_mes_competencia'
+              - text: 'Admitidos'
+                value: 'fmt_admitidos'
+              - text: 'Desligados'
+                value: 'fmt_desligados'
+              - text: 'Vagas perdidas'
+                value: 'fmt_saldo_absoluto'
+            options:
+              id: "termometro_codigo"
+              x: "saldo_absoluto"
+              y: "termometro_descricao"
+              show_y_axis: true
+              order_field: "saldo_absoluto"
+              # text: "termometro_descricao"
+              color: "#cb181d"
+              hide_legend: true
+# ===============================================
+      - id: "bar_termometro_cnae"
+        type: "multiple-charts"
+        title: 
+          fixed: "Emprego formal por Atividade Econômica"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "A Taxa de Participação é medida dividindo a População Economicamente Ativa (PEA) de 16 a 64 anos pela População em Idade Ativa (PIA) da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está participando no mercado de trabalho em relação ao potencial ativo dessa população. Por exemplo, essa métrica demonstra que um significativo aporte laboral e produtivo das mulheres é subestimado e não se reflete na taxa de participação."
+        #   - type: "text"
+        #     title: "Observação:"
+        #     content:
+        #       fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
+        title_comment:
+          template: "{0}"
+          # api:
+          #   fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=MAX"
+          #   options:
+          #     calcs:
+          #       - id: "mes_competencia"
+          #         function: "format_month_ds"
+          #         fn_args:
+          #           - named_prop: "agr_max_competencia_declarada"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            # - named_prop: "calc_mes_competencia"
+        description:
+          # - type: "minicards"
+          #   cards:
+          #     - relevance: 'high'
+          #       cls: 'xs12 md7'
+          #       preloaded:
+          #         prop: "centralindicadores"
+          #         function: "slice"
+          #         id: "02_01_06_00"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'vl_indicador'
+          #           format: 'porcentagem'
+          #           precision: 0
+          #           default: "Sem Registros"
+          #         - prop: "description"
+          #           fixed: "Participação no mercado de trabalho"
+          # - type: "slider"
+          #   id: "slider_competencia"
+          #   range: true
+          #   title: "Período"
+          #   api: 
+          #     fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=min,max&filtros=eq-termometro_grupo-'cbo',and,eq-ano_declarado-'2020'"
+          #   args:
+          #     - prop: "min"
+          #       named_prop: "agr_min_competencia_declarada"
+          #     - prop: "max"
+          #       named_prop: "agr_max_competencia_declarada"
+          #   selection:
+          #     event: "selection"
+          #     rules:
+          #       filter: ",and,ge-competencia_declarada-'{0}',and,le-competencia_declarada-'{1}'"
+          #       api:
+          #         args:
+          #           - named_prop: "value_min"
+          #           - named_prop: "value_max"
+          - id: "select_competencia"
+            type: "select"
+            clearable: false
+            default: 
+              fixed: '202008'
+            label: "Competência Declarada"
+            api:
+              fixed: "/thematic/cagedtermometro?categorias=competencia_declarada&agregacao=DISTINCT&ordenacao=-competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,ge-ano_declarado-'2019'"
+              options:
+                calcs:
+                  - id: "mes_formatado"
+                    function: "format_month_ds"
+                    fn_args:
+                      - named_prop: "competencia_declarada"
+            args:
+              - prop: "id"
+                named_prop: "competencia_declarada"
+              - prop: "label"
+                named_prop: "calc_mes_formatado"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-competencia_declarada-'{0}'"
+                api:
+                  args:
+                    - named_prop: "competencia_declarada"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: ""
+        charts:
+          - id: "bar_cnae_ganho"
+            cls: "xs12 md6"
+            title: "Atividade Econômica com maior número de postos formais criados"
+            type: "BAR"
+            api:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-competencia_declarada-'202008',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: "mes_competencia"
+                    function: "format_month_ds"
+                    fn_args:
+                      - named_prop: "competencia_declarada"
+                formatters:
+                  - id: "admitidos"
+                    format: 'inteiro'
+                  - id: "desligados"
+                    format: 'inteiro'
+                  - id: "saldo"
+                    format: 'inteiro'
+            apiBase:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              args:
+                - named_prop: "idLocalidade"
+            headers:
+              - text: 'Atividade Econômica'
+                align: 'left'
+                value: 'termometro_descricao'
+              - text: 'Competencia declarada'
+                align: 'left'
+                value: 'calc_mes_competencia'
+              - text: 'Admitidos'
+                value: 'fmt_admitidos'
+              - text: 'Desligados'
+                value: 'fmt_desligados'
+              - text: 'Vagas criadas'
+                value: 'fmt_saldo'
+            options:
+              id: "termometro_codigo"
+              x: "saldo"
+              y: "termometro_descricao"
+              show_y_axis: true
+              # text: "termometro_descricao"
+              order_field: "saldo"
+              color: "#084594"
+              hide_legend: true
+          - id: "bar_cnae_perda"
+            cls: "xs12 md6"
+            title: "Atividade Econômica com maior número de postos formais perdidos"
+            type: "BAR"
+            api:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-competencia_declarada-'202008',and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: "mes_competencia"
+                    function: "format_month_ds"
+                    fn_args:
+                      - named_prop: "competencia_declarada"
+                formatters:
+                  - id: "admitidos"
+                    format: 'inteiro'
+                  - id: "desligados"
+                    format: 'inteiro'
+                  - id: "saldo_absoluto"
+                    format: 'inteiro'
+            apiBase:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            headers:
+              - text: 'Atividade Econômica'
+                align: 'left'
+                value: 'termometro_descricao'
+              - text: 'Competencia declarada'
+                align: 'left'
+                value: 'calc_mes_competencia'
+              - text: 'Admitidos'
+                value: 'fmt_admitidos'
+              - text: 'Desligados'
+                value: 'fmt_desligados'
+              - text: 'Vagas perdidas'
+                value: 'fmt_saldo_absoluto'
+            options:
+              id: "termometro_codigo"
+              x: "saldo_absoluto"
+              y: "termometro_descricao"
+              show_y_axis: true
+              order_field: "saldo_absoluto"
+              # text: "termometro_descricao"
+              color: "#cb181d"
+              hide_legend: true
+# ===============================================
+      - id: "treemap_termometro_cnae"
+        type: "multiple-charts"
+        title: 
+          fixed: "Empregos formais por Setores Econômicos"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "A Taxa de Participação é medida dividindo a População Economicamente Ativa (PEA) de 16 a 64 anos pela População em Idade Ativa (PIA) da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está participando no mercado de trabalho em relação ao potencial ativo dessa população. Por exemplo, essa métrica demonstra que um significativo aporte laboral e produtivo das mulheres é subestimado e não se reflete na taxa de participação."
+        #   - type: "text"
+        #     title: "Observação:"
+        #     content:
+        #       fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
+        title_comment:
+          template: "{0}"
+          # api:
+          #   fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=MAX"
+          #   options:
+          #     calcs:
+          #       - id: "mes_competencia"
+          #         function: "format_month_ds"
+          #         fn_args:
+          #           - named_prop: "agr_max_competencia_declarada"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            # - named_prop: "calc_mes_competencia"
+        description:
+          # - type: "minicards"
+          #   cards:
+          #     - relevance: 'high'
+          #       cls: 'xs12 md7'
+          #       preloaded:
+          #         prop: "centralindicadores"
+          #         function: "slice"
+          #         id: "02_01_06_00"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'vl_indicador'
+          #           format: 'porcentagem'
+          #           precision: 0
+          #           default: "Sem Registros"
+          #         - prop: "description"
+          #           fixed: "Participação no mercado de trabalho"
+          # - type: "slider"
+          #   id: "slider_competencia"
+          #   range: true
+          #   title: "Período"
+          #   api: 
+          #     fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=min,max&filtros=eq-termometro_grupo-'cbo',and,eq-ano_declarado-'2020'"
+          #   args:
+          #     - prop: "min"
+          #       named_prop: "agr_min_competencia_declarada"
+          #     - prop: "max"
+          #       named_prop: "agr_max_competencia_declarada"
+          #   selection:
+          #     event: "selection"
+          #     rules:
+          #       filter: ",and,ge-competencia_declarada-'{0}',and,le-competencia_declarada-'{1}'"
+          #       api:
+          #         args:
+          #           - named_prop: "value_min"
+          #           - named_prop: "value_max"
+          - id: "select_competencia"
+            type: "select"
+            clearable: false
+            default: 
+              fixed: '202008'
+            label: "Competência Declarada"
+            api:
+              fixed: "/thematic/cagedtermometro?categorias=competencia_declarada&agregacao=DISTINCT&ordenacao=-competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,ge-ano_declarado-'2019'"
+              options:
+                calcs:
+                  - id: "mes_formatado"
+                    function: "format_month_ds"
+                    fn_args:
+                      - named_prop: "competencia_declarada"
+            args:
+              - prop: "id"
+                named_prop: "competencia_declarada"
+              - prop: "label"
+                named_prop: "calc_mes_formatado"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-competencia_declarada-'{0}'"
+                api:
+                  args:
+                    - named_prop: "competencia_declarada"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: ""
+        charts:
+          - id: "treemap_cnae_secao_criados"
+            title: "Empregos formais criados por setores econômicos"
+            cls: "xs12 md6"
+            type: "TREEMAP"
+            api:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_declarada-'202008',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: "mes_competencia"
+                    function: "format_month_ds"
+                    fn_args:
+                      - named_prop: "competencia_declarada"
+                formatters:
+                  - id: "admitidos"
+                    format: 'inteiro'
+                  - id: "desligados"
+                    format: 'inteiro'
+                  - id: "saldo"
+                    format: 'inteiro'
+            apiBase:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              args:
+                - named_prop: "idLocalidade"
+            headers:
+              - text: 'Setor Econômico'
+                align: 'left'
+                value: 'termometro_descricao'
+              - text: 'Competencia declarada'
+                align: 'left'
+                value: 'calc_mes_competencia'
+              - text: 'Admitidos'
+                value: 'fmt_admitidos'
+              - text: 'Desligados'
+                value: 'fmt_desligados'
+              - text: 'Vagas criadas'
+                value: 'fmt_saldo'
+            options:
+              id: "termometro_codigo"
+              text: "termometro_descricao"
+              size: "saldo"
+              colorScale:
+                name: "Blues"
+                type: "singleHue"
+                levels: 6
+                order: 'asc'
+            source:
+              desc_field: "ds_fonte"
+          - id: "treemap_cnae_secao_perdidos"
+            title: "Empregos formais perdidos por setores econômicos"
+            cls: "xs12 md6"
+            type: "TREEMAP"
+            api:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_declarada-'202008',and,eq-cd_municipio_ibge_dv-{0},and,lt-saldo-0"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: "mes_competencia"
+                    function: "format_month_ds"
+                    fn_args:
+                      - named_prop: "competencia_declarada"
+                formatters:
+                  - id: "admitidos"
+                    format: 'inteiro'
+                  - id: "desligados"
+                    format: 'inteiro'
+                  - id: "saldo_absoluto"
+                    format: 'inteiro'
+            apiBase:
+              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,lt-saldo-0"
+              args:
+                - named_prop: "idLocalidade"
+            headers:
+              - text: 'Setor Econômico'
+                align: 'left'
+                value: 'termometro_descricao'
+              - text: 'Competencia declarada'
+                align: 'left'
+                value: 'calc_mes_competencia'
+              - text: 'Admitidos'
+                value: 'fmt_admitidos'
+              - text: 'Desligados'
+                value: 'fmt_desligados'
+              - text: 'Vagas perdidas'
+                value: 'fmt_saldo_absoluto'
+            options:
+              id: "termometro_codigo"
+              text: "termometro_descricao"
+              size: "saldo_absoluto"
+              colorScale:
+                name: "Reds"
+                type: "singleHue"
+                levels: 6
+                order: 'asc'
+            source:
+              desc_field: "ds_fonte"
+# ===============================================
+      - id: "line_dinamica_emprego_mes"
+        chart_type: "LINE"
+        title:
+          fixed: "Dinâmica do emprego formal (série histórica CAGED)"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api:
+            fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=MIN,MAX&filtros=ge-ano_declarado-'2019'"
+            options:
+              calcs:
+                - id: "mes_competencia_min"
+                  function: "format_month_ds"
+                  fn_args:
+                    - named_prop: "agr_min_competencia_declarada"
+                - id: "mes_competencia_max"
+                  function: "format_month_ds"
+                  fn_args:
+                    - named_prop: "agr_max_competencia_declarada"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "calc_mes_competencia_min"
+            - named_prop: "calc_mes_competencia_max"
+        description:
+          - id: "select_cbo"
+            type: "select"
+            label: "Ocupação"
+            multiple: true
+            api:
+              template: "/thematic/cagedtermometro?categorias=termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cbo',and,ge-ano_declarado-'2019',and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "termometro_descricao"
+              - prop: "label"
+                named_prop: "termometro_descricao"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-termometro_descricao-{0}"
+                api:
+                  args:
+                    - named_prop: "termometro_descricao"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: ""
+        api:
+          - template: "/thematic/cagedtermometro?categorias='Admitidos'-cd_indicador,competencia_declarada&valor=admitidos&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-ano_declarado-'2019'"
+            args:
+              - named_prop: "idLocalidade"
+            options:
+              calcs:
+                - id: "vl_indicador"
+                  function: "calc_subtraction_ds"
+                  fn_args:
+                    - named_prop: "agr_sum_admitidos"
+                    - fixed: 0
+          - template: "/thematic/cagedtermometro?categorias='Desligados'-cd_indicador,competencia_declarada&valor=desligados&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-ano_declarado-'2019'"
+            args:
+              - named_prop: "idLocalidade"
+            options:
+              calcs:
+                - id: "vl_indicador"
+                  function: "calc_subtraction_ds"
+                  fn_args:
+                    - named_prop: "agr_sum_desligados"
+                    - fixed: 0
+        api_options:
+            calcs:
+              - id: "mes_competencia"
+                function: "format_month_ds"
+                fn_args:
+                  - named_prop: "competencia_declarada"
+            formatters:
+              - id: "calc_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'cd_indicador'
+          - text: 'Competência declarada'
+            align: 'left'
+            value: 'calc_mes_competencia'
+          - text: 'Total'
+            value: 'fmt_calc_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "calc_mes_competencia"
+          y: "calc_vl_indicador"
+          hide_legend: false
+          order_field: "competencia_declarada"
+          legend_field: "cd_indicador"
+          colorArray: ["#377EB8","#E41A1C"]  # blue / red
+        source:
+          desc_field: "ds_fonte"
+# ===============================================
       - id: "line_dinamica_emprego"
         chart_type: "LINE"
         title:

@@ -7,3 +7,474 @@ background_images: ["td.jpg"]
 theme:
   toolbar:
     title: "Smartlab - Observatório do Trabalho Decente"
+prevalencia:
+  id: "mapa_prev_brasil"
+  chart_type: "MAP_BUBBLES"
+  title: 
+    fixed: "Distribuição Geográfica - Empregos Formais (CAGED)"
+  title_comment:
+    fixed: "08/2020"
+  # info:
+  #   - type: "text"
+  #     title: "Sobre"
+  #     content:
+  #       fixed: ""
+  api:
+    - fixed: "/thematic/cagedtermometro?categorias=competencia_declarada,'positivo'-cd_indicador,latitude,longitude,cd_municipio_ibge_dv,nm_municipio_uf&valor=saldo_municipio&agregacao=MAX&calcs=ln_norm_pos_part&partition=competencia_declarada&filtros=eq-competencia_declarada-'202008',and,eq-termometro_grupo-'cbo',and,gt-saldo_municipio-0"
+    - fixed: "/thematic/cagedtermometro?categorias=competencia_declarada,'negativo'-cd_indicador,latitude,longitude,cd_municipio_ibge_dv,nm_municipio_uf&valor=saldo_absoluto_municipio&agregacao=MAX&calcs=ln_norm_pos_part&partition=competencia_declarada&filtros=eq-competencia_declarada-'202008',and,eq-termometro_grupo-'cbo',and,lt-saldo_municipio-0"
+  apiBase:
+    - fixed: "/thematic/cagedtermometro?categorias=competencia_declarada,'positivo'-cd_indicador,latitude,longitude,cd_municipio_ibge_dv,nm_municipio_uf&valor=saldo_municipio&agregacao=MAX&calcs=ln_norm_pos_part&partition=competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,gt-saldo_municipio-0"
+    - fixed: "/thematic/cagedtermometro?categorias=competencia_declarada,'negativo'-cd_indicador,latitude,longitude,cd_municipio_ibge_dv,nm_municipio_uf&valor=saldo_absoluto_municipio&agregacao=MAX&calcs=ln_norm_pos_part&partition=competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,lt-saldo_municipio-0"
+  chart_options:
+    colorArray: ["rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
+    indicadores: ["negativo","positivo"]
+    lat: 'latitude'
+    long: 'longitude'
+    tooltip_function: 'obsTDTooltip'
+    clickable: true
+    height_proportion: 1
+    radius:
+      base: 10000
+      multiplier: 400000
+    tiles_url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+    tiles_attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
+  source:
+    desc: ""
+    link: ""
+  description:
+    - id: "selectlayer"
+      type: "switch-group"
+      switches:
+        - id: "negativo"
+          cls: "xs12 pb-2"
+          default: true
+          color: "red"
+          label: "SALDO OCUPACIONAL NEGATIVO"
+        - id: "positivo"
+          cls: "xs12"
+          default: true
+          color: "light-blue"
+          label: "SALDO OCUPACIONAL POSITIVO"
+      event: 'selection'
+    - type: "text"
+      cls: "ma-0 pa-0"
+      content:
+        cls: "pa-0"
+        fixed: "O Observatório Digital de Trabalho Decente..."
+      read_more_limit: "620"
+  description_right:
+    - id: "ranking_list_caged"
+      type: "ranking_list"
+      rankings:
+        - title: "Ocupações com Maior Número de Postos Formais Criados"
+          cls: "xs12 px-3 pb-0"
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_declarada-'202008'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "criados"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} novos postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_criados"
+        - title: "Ocupações com Maior Número de Postos Formais Perdidos"
+          cls: "xs12 px-3 pb-0"
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_declarada-'202008'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "perdidos"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_perdidos"
+        - title: "Atividades Econômicas com Maior Número de Postos Formais Criados"
+          cls: "xs12 px-3 pb-0"
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_declarada-'202008'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "criados"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} novos postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_criados"
+        - title: "Atividades Econômicas com Maior Número de Postos Formais Perdidos"
+          cls: "xs12 px-3 pb-0"
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_declarada-'202008'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "perdidos"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_perdidos"
+        - title: "Saldo de Postos Formais por Setores Econômicos <sup>1</sup>"
+          cls: "xs12 px-3 pb-0"
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=(sum(admitidos)-sum(desligados))&filtros=eq-termometro_grupo-'cnae_secao_uf',and,eq-competencia_declarada-'202008'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_saldo"
+              format: "inteiro"
+    - type: "text"
+      content:
+        fixed: "1. Competência declarada de 08/2020."
+  mapa_filtros:
+    - id: "selectlayer"
+      type: "switch-group"
+      switches:
+        - id: "negativo"
+          cls: "xs12 pb-2"
+          default: true
+          color: "red"
+          label: "SALDO OCUPACIONAL NEGATIVO"
+        - id: "positivo"
+          cls: "xs12"
+          default: true
+          color: "light-blue"
+          label: "SALDO OCUPACIONAL POSITIVO"
+      event: 'selection'
+    - id: "select_uf"
+      type: "select"
+      label: "UF"
+      title: "Unidade Federativa"
+      api:
+        fixed: "/municipios?categorias=cd_uf,nm_uf&agregacao=distinct&ordenacao=nm_uf"
+      args:
+        - prop: "id"
+          named_prop: "cd_uf"
+        - prop: "label"
+          named_prop: "nm_uf"
+      selection:
+        event: "selection"
+        rules:
+          filter: ",and,eq-cd_uf-{0}"
+          api:
+            args:
+              - named_prop: "cd_uf"
+    - id: "select_competencia"
+      type: "select"
+      clearable: false
+      default: 
+        fixed: '202008'
+      label: "Competência Declarada"
+      api:
+        fixed: "/thematic/cagedtermometro?categorias=competencia_declarada&agregacao=DISTINCT&ordenacao=-competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,ge-ano_declarado-'2019'"
+        options:
+          calcs:
+            - id: "mes_formatado"
+              function: "format_month_ds"
+              fn_args:
+                - named_prop: "competencia_declarada"
+      args:
+        - prop: "id"
+          named_prop: "competencia_declarada"
+        - prop: "label"
+          named_prop: "calc_mes_formatado"
+          # null_value: "(Não informado)"
+      selection:
+        event: "selection" 
+        rules:
+          filter: ",and,eq-competencia_declarada-'{0}'"
+          api:
+            args:
+              - named_prop: "competencia_declarada"
+    - type: "text"
+      cls: "ma-0 pa-0"
+      content:
+        cls: "pa-0"
+        fixed: "O Observatório Digital de Trabalho Decente..."
+      read_more_limit: "620"
+  mapa_description_right:
+    - id: "ranking_list_caged"
+      type: "ranking_list"
+      rankings:
+        # - title: "Ocupações com Maior Número de Postos Formais Criados"
+        #   cls: "xs12 px-3 pb-0"
+        #   api: 
+        #     - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo&ordenacao=-saldo&limit=15&filtros=eq-termometro_grupo-'cbo_brasil',and,eq-competencia_declarada-'202008'"
+        #       options:
+        #         calcs:
+        #           - id: "criados"
+        #             function: "applyInterpolReplaceDatasetParam"
+        #             fn_args:
+        #               - fixed: 
+        #                   template: "{0} novos postos"
+        #                   args:
+        #                     - named_prop: "saldo"
+        #                       format: "inteiro"
+        #   apiBase:
+        #     - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo&ordenacao=-saldo&limit=15&filtros=eq-termometro_grupo-'cbo_brasil'"
+        #       options:
+        #         calcs:
+        #           - id: "criados"
+        #             function: "applyInterpolReplaceDatasetParam"
+        #             fn_args:
+        #               - fixed: 
+        #                   template: "{0} novos postos"
+        #                   args:
+        #                     - named_prop: "saldo"
+        #                       format: "inteiro"
+        #   args:
+        #     - prop: 'localidade'
+        #       named_prop: "termometro_descricao"
+        #     - prop: 'vl_indicador'
+        #       named_prop: "calc_criados"
+        - title: "Ocupações com Maior Número de Postos Formais Criados"
+          cls: "xs12 px-3 pb-0"
+          reactive: true
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_declarada-'202008'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "criados"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} novos postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          apiBase:
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cbo_uf'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "criados"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} novos postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_criados"
+        - title: "Ocupações com Maior Número de Postos Formais Perdidos"
+          cls: "xs12 px-3 pb-0"
+          reactive: true
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_declarada-'202008'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "perdidos"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          apiBase:
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cbo_uf'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "perdidos"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_perdidos"
+        - title: "Atividades Econômicas com Maior Número de Postos Formais Criados"
+          cls: "xs12 px-3 pb-0"
+          reactive: true
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_declarada-'202008'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "criados"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} novos postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          apiBase:
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "criados"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} novos postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_criados"
+        - title: "Atividades Econômicas com Maior Número de Postos Formais Perdidos"
+          cls: "xs12 px-3 pb-0"
+          reactive: true
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_declarada-'202008'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "perdidos"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          apiBase:
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "perdidos"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_perdidos"
+        - title: "Saldo de Postos Formais por Setores Econômicos <sup>1</sup>"
+          cls: "xs12 px-3 pb-0"
+          reactive: true
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=(sum(admitidos)-sum(desligados))&filtros=eq-termometro_grupo-'cnae_secao_uf',and,eq-competencia_declarada-'202008'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+          apiBase: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=(sum(admitidos)-sum(desligados))&filtros=eq-termometro_grupo-'cnae_secao_uf'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_saldo"
+              format: "inteiro"
