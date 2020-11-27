@@ -108,28 +108,28 @@ secoes:
           - id: "select_competencia"
             type: "select"
             clearable: false
-            label: "Competência Declarada"
+            label: "Competência"
             api:
-              fixed: "/thematic/cagedtermometro?categorias=competencia_declarada&agregacao=DISTINCT&ordenacao=-competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,ge-ano_declarado-'2019'"
+              fixed: "/thematic/cagedtermometro?categorias=competencia_mov&agregacao=DISTINCT&ordenacao=-competencia_mov&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901"
               options:
                 calcs:
                   - id: "mes_formatado"
                     function: "format_month_ds"
                     fn_args:
-                      - named_prop: "competencia_declarada"
+                      - named_prop: "competencia_mov"
             args:
               - prop: "id"
-                named_prop: "competencia_declarada"
+                named_prop: "competencia_mov"
               - prop: "label"
                 named_prop: "calc_mes_formatado"
                 # null_value: "(Não informado)"
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-competencia_declarada-'{0}'"
+                filter: ",and,eq-competencia_mov-{0}"
                 api:
                   args:
-                    - named_prop: "competencia_declarada"
+                    - named_prop: "competencia_mov"
 
           - type: "text"
             title: ""
@@ -141,7 +141,7 @@ secoes:
             title: "Ocupações com maior número de postos formais criados"
             type: "BAR"
             api:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-competencia_declarada-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -149,7 +149,7 @@ secoes:
                   - id: "mes_competencia"
                     function: "format_month_ds"
                     fn_args:
-                      - named_prop: "competencia_declarada"
+                      - named_prop: "competencia_mov"
                 formatters:
                   - id: "admitidos"
                     format: 'inteiro'
@@ -158,7 +158,7 @@ secoes:
                   - id: "saldo"
                     format: 'inteiro'
             apiBase:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
               args:
                 - named_prop: "idLocalidade"
             headers:
@@ -188,7 +188,7 @@ secoes:
             title: "Ocupações com maior número de postos formais perdidos"
             type: "BAR"
             api:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-competencia_declarada-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -196,7 +196,7 @@ secoes:
                   - id: "mes_competencia"
                     function: "format_month_ds"
                     fn_args:
-                      - named_prop: "competencia_declarada"
+                      - named_prop: "competencia_mov"
                 formatters:
                   - id: "admitidos"
                     format: 'inteiro'
@@ -205,7 +205,7 @@ secoes:
                   - id: "saldo_absoluto"
                     format: 'inteiro'
             apiBase:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0}"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0}"
               args:
                 - named_prop: "idLocalidade"
             headers:
@@ -249,13 +249,13 @@ secoes:
         title_comment:
           template: "{0}"
           # api:
-          #   fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=MAX"
+          #   fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MAX"
           #   options:
           #     calcs:
           #       - id: "mes_competencia"
           #         function: "format_month_ds"
           #         fn_args:
-          #           - named_prop: "agr_max_competencia_declarada"
+          #           - named_prop: "agr_max_competencia_mov"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -282,16 +282,16 @@ secoes:
           #   range: true
           #   title: "Período"
           #   api: 
-          #     fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=min,max&filtros=eq-termometro_grupo-'cbo',and,eq-ano_declarado-'2020'"
+          #     fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=min,max&filtros=eq-termometro_grupo-'cbo',and,eq-ano_declarado-'2020'"
           #   args:
           #     - prop: "min"
-          #       named_prop: "agr_min_competencia_declarada"
+          #       named_prop: "agr_min_competencia_mov"
           #     - prop: "max"
-          #       named_prop: "agr_max_competencia_declarada"
+          #       named_prop: "agr_max_competencia_mov"
           #   selection:
           #     event: "selection"
           #     rules:
-          #       filter: ",and,ge-competencia_declarada-'{0}',and,le-competencia_declarada-'{1}'"
+          #       filter: ",and,ge-competencia_mov-{0},and,le-competencia_mov-'{1}'"
           #       api:
           #         args:
           #           - named_prop: "value_min"
@@ -299,28 +299,28 @@ secoes:
           - id: "select_competencia"
             type: "select"
             clearable: false
-            label: "Competência Declarada"
+            label: "Competência"
             api:
-              fixed: "/thematic/cagedtermometro?categorias=competencia_declarada&agregacao=DISTINCT&ordenacao=-competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,ge-ano_declarado-'2019'"
+              fixed: "/thematic/cagedtermometro?categorias=competencia_mov&agregacao=DISTINCT&ordenacao=-competencia_mov&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901"
               options:
                 calcs:
                   - id: "mes_formatado"
                     function: "format_month_ds"
                     fn_args:
-                      - named_prop: "competencia_declarada"
+                      - named_prop: "competencia_mov"
             args:
               - prop: "id"
-                named_prop: "competencia_declarada"
+                named_prop: "competencia_mov"
               - prop: "label"
                 named_prop: "calc_mes_formatado"
                 # null_value: "(Não informado)"
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-competencia_declarada-'{0}'"
+                filter: ",and,eq-competencia_mov-{0}"
                 api:
                   args:
-                    - named_prop: "competencia_declarada"
+                    - named_prop: "competencia_mov"
 
           - type: "text"
             title: ""
@@ -332,7 +332,7 @@ secoes:
             title: "Atividade Econômica com maior número de postos formais criados"
             type: "BAR"
             api:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-competencia_declarada-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -340,7 +340,7 @@ secoes:
                   - id: "mes_competencia"
                     function: "format_month_ds"
                     fn_args:
-                      - named_prop: "competencia_declarada"
+                      - named_prop: "competencia_mov"
                 formatters:
                   - id: "admitidos"
                     format: 'inteiro'
@@ -349,7 +349,7 @@ secoes:
                   - id: "saldo"
                     format: 'inteiro'
             apiBase:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
               args:
                 - named_prop: "idLocalidade"
             headers:
@@ -379,7 +379,7 @@ secoes:
             title: "Atividade Econômica com maior número de postos formais perdidos"
             type: "BAR"
             api:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-competencia_declarada-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -387,7 +387,7 @@ secoes:
                   - id: "mes_competencia"
                     function: "format_month_ds"
                     fn_args:
-                      - named_prop: "competencia_declarada"
+                      - named_prop: "competencia_mov"
                 formatters:
                   - id: "admitidos"
                     format: 'inteiro'
@@ -396,7 +396,7 @@ secoes:
                   - id: "saldo_absoluto"
                     format: 'inteiro'
             apiBase:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0}"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0}"
               args:
                 - named_prop: "idLocalidade"
             headers:
@@ -440,13 +440,13 @@ secoes:
         title_comment:
           template: "{0}"
           # api:
-          #   fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=MAX"
+          #   fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MAX"
           #   options:
           #     calcs:
           #       - id: "mes_competencia"
           #         function: "format_month_ds"
           #         fn_args:
-          #           - named_prop: "agr_max_competencia_declarada"
+          #           - named_prop: "agr_max_competencia_mov"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -473,16 +473,16 @@ secoes:
           #   range: true
           #   title: "Período"
           #   api: 
-          #     fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=min,max&filtros=eq-termometro_grupo-'cbo',and,eq-ano_declarado-'2020'"
+          #     fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=min,max&filtros=eq-termometro_grupo-'cbo',and,eq-ano_declarado-'2020'"
           #   args:
           #     - prop: "min"
-          #       named_prop: "agr_min_competencia_declarada"
+          #       named_prop: "agr_min_competencia_mov"
           #     - prop: "max"
-          #       named_prop: "agr_max_competencia_declarada"
+          #       named_prop: "agr_max_competencia_mov"
           #   selection:
           #     event: "selection"
           #     rules:
-          #       filter: ",and,ge-competencia_declarada-'{0}',and,le-competencia_declarada-'{1}'"
+          #       filter: ",and,ge-competencia_mov-{0},and,le-competencia_mov-'{1}'"
           #       api:
           #         args:
           #           - named_prop: "value_min"
@@ -490,28 +490,28 @@ secoes:
           - id: "select_competencia"
             type: "select"
             clearable: false
-            label: "Competência Declarada"
+            label: "Competência"
             api:
-              fixed: "/thematic/cagedtermometro?categorias=competencia_declarada&agregacao=DISTINCT&ordenacao=-competencia_declarada&filtros=eq-termometro_grupo-'cbo',and,ge-ano_declarado-'2019'"
+              fixed: "/thematic/cagedtermometro?categorias=competencia_mov&agregacao=DISTINCT&ordenacao=-competencia_mov&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901"
               options:
                 calcs:
                   - id: "mes_formatado"
                     function: "format_month_ds"
                     fn_args:
-                      - named_prop: "competencia_declarada"
+                      - named_prop: "competencia_mov"
             args:
               - prop: "id"
-                named_prop: "competencia_declarada"
+                named_prop: "competencia_mov"
               - prop: "label"
                 named_prop: "calc_mes_formatado"
                 # null_value: "(Não informado)"
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-competencia_declarada-'{0}'"
+                filter: ",and,eq-competencia_mov-{0}"
                 api:
                   args:
-                    - named_prop: "competencia_declarada"
+                    - named_prop: "competencia_mov"
 
           - type: "text"
             title: ""
@@ -523,7 +523,7 @@ secoes:
             cls: "xs12 md6"
             type: "TREEMAP"
             api:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_declarada-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -531,7 +531,7 @@ secoes:
                   - id: "mes_competencia"
                     function: "format_month_ds"
                     fn_args:
-                      - named_prop: "competencia_declarada"
+                      - named_prop: "competencia_mov"
                 formatters:
                   - id: "admitidos"
                     format: 'inteiro'
@@ -540,7 +540,7 @@ secoes:
                   - id: "saldo"
                     format: 'inteiro'
             apiBase:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
               args:
                 - named_prop: "idLocalidade"
             headers:
@@ -570,7 +570,7 @@ secoes:
             cls: "xs12 md6"
             type: "TREEMAP"
             api:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_declarada-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,lt-saldo-0"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,lt-saldo-0"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -578,7 +578,7 @@ secoes:
                   - id: "mes_competencia"
                     function: "format_month_ds"
                     fn_args:
-                      - named_prop: "competencia_declarada"
+                      - named_prop: "competencia_mov"
                 formatters:
                   - id: "admitidos"
                     format: 'inteiro'
@@ -587,7 +587,7 @@ secoes:
                   - id: "saldo_absoluto"
                     format: 'inteiro'
             apiBase:
-              template: "/thematic/cagedtermometro?categorias=competencia_declarada,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,lt-saldo-0"
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,lt-saldo-0"
               args:
                 - named_prop: "idLocalidade"
             headers:
@@ -627,17 +627,17 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=MIN,MAX&filtros=ge-ano_declarado-'2019'"
+            fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MIN,MAX&filtros=ge-competencia_mov-201901"
             options:
               calcs:
                 - id: "mes_competencia_min"
                   function: "format_month_ds"
                   fn_args:
-                    - named_prop: "agr_min_competencia_declarada"
+                    - named_prop: "agr_min_competencia_mov"
                 - id: "mes_competencia_max"
                   function: "format_month_ds"
                   fn_args:
-                    - named_prop: "agr_max_competencia_declarada"
+                    - named_prop: "agr_max_competencia_mov"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -649,7 +649,7 @@ secoes:
             label: "Ocupação"
             multiple: true
             api:
-              template: "/thematic/cagedtermometro?categorias=termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cbo',and,ge-ano_declarado-'2019',and,eq-cd_municipio_ibge_dv-{0}"
+              template: "/thematic/cagedtermometro?categorias=termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901,and,eq-cd_municipio_ibge_dv-{0}"
               args:
                 - named_prop: "idLocalidade"
             args:
@@ -671,7 +671,7 @@ secoes:
             content:
               fixed: ""
         api:
-          - template: "/thematic/cagedtermometro?categorias='Admitidos'-cd_indicador,competencia_declarada&valor=admitidos&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-ano_declarado-'2019'"
+          - template: "/thematic/cagedtermometro?categorias='Admitidos'-cd_indicador,competencia_mov&valor=admitidos&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
             args:
               - named_prop: "idLocalidade"
             options:
@@ -681,7 +681,7 @@ secoes:
                   fn_args:
                     - named_prop: "agr_sum_admitidos"
                     - fixed: 0
-          - template: "/thematic/cagedtermometro?categorias='Desligados'-cd_indicador,competencia_declarada&valor=desligados&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-ano_declarado-'2019'"
+          - template: "/thematic/cagedtermometro?categorias='Desligados'-cd_indicador,competencia_mov&valor=desligados&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
             args:
               - named_prop: "idLocalidade"
             options:
@@ -696,7 +696,7 @@ secoes:
               - id: "mes_competencia"
                 function: "format_month_ds"
                 fn_args:
-                  - named_prop: "competencia_declarada"
+                  - named_prop: "competencia_mov"
             formatters:
               - id: "calc_vl_indicador"
                 format: 'inteiro'
@@ -704,7 +704,7 @@ secoes:
           - text: 'Indicador'
             align: 'left'
             value: 'cd_indicador'
-          - text: 'Competência declarada'
+          - text: 'Competência'
             align: 'left'
             value: 'calc_mes_competencia'
           - text: 'Total'
@@ -714,7 +714,7 @@ secoes:
           x: "calc_mes_competencia"
           y: "calc_vl_indicador"
           hide_legend: false
-          order_field: "competencia_declarada"
+          order_field: "competencia_mov"
           legend_field: "cd_indicador"
           colorArray: ["#377EB8","#E41A1C"]  # blue / red
         source:
@@ -732,17 +732,17 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_declarada&agregacao=MIN,MAX&filtros=ge-ano_declarado-'2019'"
+            fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MIN,MAX&filtros=ge-competencia_mov-201901"
             options:
               calcs:
                 - id: "mes_competencia_min"
                   function: "format_month_ds"
                   fn_args:
-                    - named_prop: "agr_min_competencia_declarada"
+                    - named_prop: "agr_min_competencia_mov"
                 - id: "mes_competencia_max"
                   function: "format_month_ds"
                   fn_args:
-                    - named_prop: "agr_max_competencia_declarada"
+                    - named_prop: "agr_max_competencia_mov"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -753,7 +753,7 @@ secoes:
             type: "select"
             label: "Setor Econômico"
             api:
-              template: "/thematic/cagedtermometro?categorias=termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cnae_secao',and,ge-ano_declarado-'2019',and,eq-cd_municipio_ibge_dv-{0}"
+              template: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cnae_secao',and,ge-competencia_mov-201901,and,eq-cd_municipio_ibge_dv-{0}"
               args:
                 - named_prop: "idLocalidade"
             args:
@@ -775,7 +775,7 @@ secoes:
             content:
               fixed: ""
         api:
-          template: "/thematic/cagedtermometro?categorias=ano_declarado,competencia_declarada&valor=admitidos,desligados&agregacao=SUM,SUM&ordenacao=competencia_declarada&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,ge-ano_declarado-'2019'"
+          template: "/thematic/cagedtermometro?categorias=ano_declarado,competencia_mov&valor=admitidos,desligados&agregacao=SUM,SUM&ordenacao=competencia_mov&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -797,7 +797,7 @@ secoes:
               - id: "mes_competencia"
                 function: "format_month_ds"
                 fn_args:
-                  - named_prop: "competencia_declarada"
+                  - named_prop: "competencia_mov"
             formatters:
               - id: "calc_saldo"
                 format: 'inteiro'
@@ -806,7 +806,7 @@ secoes:
               - id: "agr_sum_desligados"
                 format: 'inteiro'
         headers:
-          - text: 'Competência Declarada'
+          - text: 'Competência'
             align: 'left'
             value: 'calc_mes_competencia'
           - text: 'Admitidos'
@@ -817,14 +817,14 @@ secoes:
             value: 'fmt_calc_saldo'
         chart_options:
           id: "calc_flag_number"
-          x: "competencia_declarada"
+          x: "competencia_mov"
           y: "calc_saldo"
           orientation: "vertical"
           show_x_axis: true
           show_y_axis: false
           text: "fmt_calc_saldo"
           hide_legend: true
-          # order_field: "competencia_declarada"
+          # order_field: "competencia_mov"
           colorScale:
             type: "fixed"
             color_array:
@@ -833,6 +833,218 @@ secoes:
           # colorArray: ["#377EB8","#E41A1C"]  # blue / red
         source:
           desc: "ME - CAGED"
+# # ===============================================
+#       - id: "line_saldo_emprego_mes_setor"
+#         chart_type: "LINE"
+#         title:
+#           fixed: "Saldo do emprego formal por Setor Econômico(série histórica CAGED)"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           api:
+#             fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MIN,MAX&filtros=ge-competencia_mov-201901"
+#             options:
+#               calcs:
+#                 - id: "mes_competencia_min"
+#                   function: "format_month_ds"
+#                   fn_args:
+#                     - named_prop: "agr_min_competencia_mov"
+#                 - id: "mes_competencia_max"
+#                   function: "format_month_ds"
+#                   fn_args:
+#                     - named_prop: "agr_max_competencia_mov"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - named_prop: "calc_mes_competencia_min"
+#             - named_prop: "calc_mes_competencia_max"
+#         description:
+#           - id: "select_cnae_secao"
+#             type: "select"
+#             label: "Setor Econômico"
+#             api:
+#               template: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cnae_secao',and,ge-competencia_mov-201901,and,eq-cd_municipio_ibge_dv-{0}"
+#               args:
+#                 - named_prop: "idLocalidade"
+#             args:
+#               - prop: "id"
+#                 named_prop: "termometro_codigo"
+#               - prop: "label"
+#                 named_prop: "termometro_descricao"
+#                 null_value: "(Não identificado)"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-termometro_codigo-'{0}'"
+#                 api:
+#                   args:
+#                     - named_prop: "termometro_codigo"
+
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: ""
+#         api:
+#           template: "/thematic/cagedtermometro?categorias=ano_declarado,competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=competencia_mov&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
+#           args:
+#             - named_prop: "idLocalidade"
+#           options:
+#             calcs:
+#               - id: "flag_number"
+#                 function: "get_flag_number"
+#                 fn_args:
+#                   - named_prop: "saldo"
+#               - id: "mes_competencia"
+#                 function: "format_month_ds"
+#                 fn_args:
+#                   - named_prop: "competencia_mov"
+#             formatters:
+#               - id: "saldo"
+#                 format: 'inteiro'
+#               - id: "admitidos"
+#                 format: 'inteiro'
+#               - id: "desligados"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Setor Econômico'
+#             align: 'left'
+#             value: 'termometro_descricao'
+#           - text: 'Competência'
+#             align: 'left'
+#             value: 'calc_mes_competencia'
+#           - text: 'Admitidos'
+#             value: 'fmt_admitidos'
+#           - text: 'Desligados'
+#             value: 'fmt_desligados'
+#           - text: 'Saldo'
+#             value: 'fmt_saldo'
+#         chart_options:
+#           id: "termometro_codigo"
+#           x: "competencia_mov"
+#           y: "saldo"
+#           orientation: "vertical"
+#           show_x_axis: true
+#           show_y_axis: false
+#           text: "fmt_saldo"
+#           hide_legend: false
+#           legend_field: "termometro_codigo"
+#           order_field: "competencia_mov"
+#           # colorScale:
+#           #   type: "fixed"
+#           #   color_array:
+#           #     "Positivo": "#377EB8"
+#           #     "Negativo": "#E41A1C"
+#           # colorArray: ["#377EB8","#E41A1C"]  # blue / red
+#         source:
+#           desc: "ME - CAGED"
+# # ===============================================
+#       - id: "stacked_desligados_emprego_mes_setor"
+#         chart_type: "STACKED"
+#         title:
+#           fixed: "Desligados do emprego formal por Setor Econômico(série histórica CAGED)"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           api:
+#             fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MIN,MAX&filtros=ge-competencia_mov-201901"
+#             options:
+#               calcs:
+#                 - id: "mes_competencia_min"
+#                   function: "format_month_ds"
+#                   fn_args:
+#                     - named_prop: "agr_min_competencia_mov"
+#                 - id: "mes_competencia_max"
+#                   function: "format_month_ds"
+#                   fn_args:
+#                     - named_prop: "agr_max_competencia_mov"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - named_prop: "calc_mes_competencia_min"
+#             - named_prop: "calc_mes_competencia_max"
+#         description:
+#           - id: "select_cnae_secao"
+#             type: "select"
+#             label: "Setor Econômico"
+#             api:
+#               template: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cnae_secao',and,ge-competencia_mov-201901,and,eq-cd_municipio_ibge_dv-{0}"
+#               args:
+#                 - named_prop: "idLocalidade"
+#             args:
+#               - prop: "id"
+#                 named_prop: "termometro_codigo"
+#               - prop: "label"
+#                 named_prop: "termometro_descricao"
+#                 null_value: "(Não identificado)"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-termometro_codigo-'{0}'"
+#                 api:
+#                   args:
+#                     - named_prop: "termometro_codigo"
+
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: ""
+#         api:
+#           template: "/thematic/cagedtermometro?categorias=ano_declarado,competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=competencia_mov&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
+#           args:
+#             - named_prop: "idLocalidade"
+#           options:
+#             calcs:
+#               - id: "mes_competencia"
+#                 function: "format_month_ds"
+#                 fn_args:
+#                   - named_prop: "competencia_mov"
+#             formatters:
+#               - id: "saldo"
+#                 format: 'inteiro'
+#               - id: "admitidos"
+#                 format: 'inteiro'
+#               - id: "desligados"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Setor Econômico'
+#             align: 'left'
+#             value: 'termometro_descricao'
+#           - text: 'Competência'
+#             align: 'left'
+#             value: 'calc_mes_competencia'
+#           - text: 'Admitidos'
+#             value: 'fmt_admitidos'
+#           - text: 'Desligados'
+#             value: 'fmt_desligados'
+#           - text: 'Saldo'
+#             value: 'fmt_saldo'
+#         chart_options:
+#           id: "termometro_codigo"
+#           x: "competencia_mov"
+#           y: "desligados"
+#           # orientation: "vertical"
+#           # show_x_axis: true
+#           # show_y_axis: false
+#           # text: "fmt_saldo"
+#           hide_legend: false
+#           legend_field: "termometro_codigo"
+#           order_field: "competencia_mov"
+#           # colorScale:
+#           #   type: "fixed"
+#           #   color_array:
+#           #     "Positivo": "#377EB8"
+#           #     "Negativo": "#E41A1C"
+#           # colorArray: ["#377EB8","#E41A1C"]  # blue / red
+#         source:
+#           desc: "ME - CAGED"
 # ===============================================
       - id: "line_dinamica_emprego"
         chart_type: "LINE"
