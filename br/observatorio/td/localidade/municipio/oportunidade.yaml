@@ -681,111 +681,6 @@ secoes:
         source:
           desc: "ME - CAGED"
 # ===============================================
-      - id: "line_dinamica_emprego_mes"
-        chart_type: "LINE"
-        title:
-          fixed: "Dinâmica recente do emprego formal (série histórica CAGED)"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
-        title_comment:
-          template: "{0}, de {1} a {2}"
-          api:
-            fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MIN,MAX&filtros=ge-competencia_mov-201901"
-            options:
-              calcs:
-                - id: "mes_competencia_min"
-                  function: "format_month_ds"
-                  fn_args:
-                    - named_prop: "agr_min_competencia_mov"
-                - id: "mes_competencia_max"
-                  function: "format_month_ds"
-                  fn_args:
-                    - named_prop: "agr_max_competencia_mov"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - named_prop: "calc_mes_competencia_min"
-            - named_prop: "calc_mes_competencia_max"
-        description:
-          - id: "select_cbo"
-            type: "select"
-            label: "Ocupação"
-            multiple: true
-            api:
-              template: "/thematic/cagedtermometro?categorias=termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901,and,eq-cd_municipio_ibge_dv-{0}"
-              args:
-                - named_prop: "idLocalidade"
-            args:
-              - prop: "id"
-                named_prop: "termometro_descricao"
-              - prop: "label"
-                named_prop: "termometro_descricao"
-                # null_value: "(Não informado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-termometro_descricao-{0}"
-                api:
-                  args:
-                    - named_prop: "termometro_descricao"
-
-          - type: "text"
-            title: ""
-            content:
-              fixed: ""
-        api:
-          - template: "/thematic/cagedtermometro?categorias='Admitidos'-cd_indicador,competencia_mov&valor=admitidos&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
-            args:
-              - named_prop: "idLocalidade"
-            options:
-              calcs:
-                - id: "vl_indicador"
-                  function: "calc_subtraction_ds"
-                  fn_args:
-                    - named_prop: "agr_sum_admitidos"
-                    - fixed: 0
-          - template: "/thematic/cagedtermometro?categorias='Desligados'-cd_indicador,competencia_mov&valor=desligados&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
-            args:
-              - named_prop: "idLocalidade"
-            options:
-              calcs:
-                - id: "vl_indicador"
-                  function: "calc_subtraction_ds"
-                  fn_args:
-                    - named_prop: "agr_sum_desligados"
-                    - fixed: 0
-        api_options:
-            calcs:
-              - id: "mes_competencia"
-                function: "format_month_ds"
-                fn_args:
-                  - named_prop: "competencia_mov"
-            formatters:
-              - id: "calc_vl_indicador"
-                format: 'inteiro'
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'cd_indicador'
-          - text: 'Competência'
-            align: 'left'
-            value: 'calc_mes_competencia'
-          - text: 'Total'
-            value: 'fmt_calc_vl_indicador'
-        chart_options:
-          id: "cd_indicador"
-          x: "calc_mes_competencia"
-          y: "calc_vl_indicador"
-          hide_legend: false
-          order_field: "competencia_mov"
-          legend_field: "cd_indicador"
-          colorArray: ["#377EB8","#E41A1C"]  # blue / red
-        source:
-          desc: "ME - CAGED"
-# ===============================================
       - id: "bar_saldo_emprego_mes"
         chart_type: "BAR"
         title:
@@ -897,6 +792,111 @@ secoes:
               "Positivo": "#377EB8"
               "Negativo": "#E41A1C"
           # colorArray: ["#377EB8","#E41A1C"]  # blue / red
+        source:
+          desc: "ME - CAGED"
+# ===============================================
+      - id: "line_dinamica_emprego_mes"
+        chart_type: "LINE"
+        title:
+          fixed: "Dinâmica recente do emprego formal"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api:
+            fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MIN,MAX&filtros=ge-competencia_mov-201901"
+            options:
+              calcs:
+                - id: "mes_competencia_min"
+                  function: "format_month_ds"
+                  fn_args:
+                    - named_prop: "agr_min_competencia_mov"
+                - id: "mes_competencia_max"
+                  function: "format_month_ds"
+                  fn_args:
+                    - named_prop: "agr_max_competencia_mov"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "calc_mes_competencia_min"
+            - named_prop: "calc_mes_competencia_max"
+        description:
+          - id: "select_cbo"
+            type: "select"
+            label: "Ocupação"
+            multiple: true
+            api:
+              template: "/thematic/cagedtermometro?categorias=termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901,and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "termometro_descricao"
+              - prop: "label"
+                named_prop: "termometro_descricao"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-termometro_descricao-{0}"
+                api:
+                  args:
+                    - named_prop: "termometro_descricao"
+
+          - type: "text"
+            title: ""
+            content:
+              fixed: ""
+        api:
+          - template: "/thematic/cagedtermometro?categorias='Admitidos'-cd_indicador,competencia_mov&valor=admitidos&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
+            args:
+              - named_prop: "idLocalidade"
+            options:
+              calcs:
+                - id: "vl_indicador"
+                  function: "calc_subtraction_ds"
+                  fn_args:
+                    - named_prop: "agr_sum_admitidos"
+                    - fixed: 0
+          - template: "/thematic/cagedtermometro?categorias='Desligados'-cd_indicador,competencia_mov&valor=desligados&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
+            args:
+              - named_prop: "idLocalidade"
+            options:
+              calcs:
+                - id: "vl_indicador"
+                  function: "calc_subtraction_ds"
+                  fn_args:
+                    - named_prop: "agr_sum_desligados"
+                    - fixed: 0
+        api_options:
+            calcs:
+              - id: "mes_competencia"
+                function: "format_month_ds"
+                fn_args:
+                  - named_prop: "competencia_mov"
+            formatters:
+              - id: "calc_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'cd_indicador'
+          - text: 'Competência'
+            align: 'left'
+            value: 'calc_mes_competencia'
+          - text: 'Total'
+            value: 'fmt_calc_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "calc_mes_competencia"
+          y: "calc_vl_indicador"
+          hide_legend: false
+          order_field: "competencia_mov"
+          legend_field: "cd_indicador"
+          colorArray: ["#377EB8","#E41A1C"]  # blue / red
         source:
           desc: "ME - CAGED"
 # # ===============================================
@@ -1303,7 +1303,7 @@ secoes:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              fixed: "A RAIS é um Registro Administrativo, de periodicidade anual, criada com a finalidade de suprir as necessidades de controle, de estatísticas e de informações às entidades governamentais da área social. Constitui um instrumento imprescindível para o cumprimento das normas legais, como também é de fundamental importância para o acompanhamento e a caracterização do mercado de trabalho formal. O crescimento é calculado de forma a mostrar quanto o mercado formal de trabalho adiciona de número de vínculos na média ao ano em termos percentuais ao que já existe no mercado."
+              fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
         title_comment:
           template: "{0}, {1}"
           preloaded:
