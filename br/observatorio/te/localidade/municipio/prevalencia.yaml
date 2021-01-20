@@ -6,7 +6,7 @@ principais:
     preloaded:
       prop: "trabalho_escravo_agr"
       function: "slice"
-      id: ['te_rgt']
+      id: ['te_sit_trab_resgatados']
     args:
       - prop: "value"
         named_prop: 'agr_sum_vl_indicador'
@@ -18,7 +18,7 @@ principais:
       - prop: 'comment'
         template: "(De {0} a {1})"
         api: 
-          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_rgt'"
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
         args:
           - named_prop: "nu_competencia_min"
           - named_prop: "nu_competencia_max"
@@ -26,7 +26,7 @@ principais:
       id: "line_te_rgt"
       type: "LINE"
       api: 
-        template: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge_dv-{0},and,eq-cd_indicador-'te_rgt'"
+        template: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge_dv-{0},and,eq-cd_indicador-'te_sit_trab_resgatados'"
         args:
           - named_prop: "idLocalidade"
         options:
@@ -393,7 +393,7 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_rgt'"
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -403,7 +403,7 @@ secoes:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+              fixed: "O total de resgates foi calculado com base em informações extraídas do Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
           - type: "text"
             title: "Observação Importante"
             content:
@@ -419,7 +419,7 @@ secoes:
                 preloaded:
                   prop: "trabalho_escravo_agr"
                   function: "slice"
-                  id: ['te_rgt']
+                  id: ['te_sit_trab_resgatados']
                 args:
                   - prop: "value"
                     named_prop: 'agr_sum_vl_indicador'
@@ -431,11 +431,11 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de vítimas do trabalho escravo resgatadas na localidade selecionada desde {0}, quando se iniciou o pagamento do benefício do seguro-desemprego para resgatados. No mapa ao lado, o município selecionado está em destaque e é comparado a diferentes municípios da mesma unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
+              template: "Em destaque, o número de vítimas do trabalho escravo resgatadas na localidade selecionada desde {0}. No mapa ao lado, o município selecionado está em destaque e é comparado a diferentes municípios da mesma unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
               preloaded:
                 prop: "trabalho_escravo_agr"
                 function: "slice"
-                id: ['te_rgt']
+                id: ['te_sit_trab_resgatados']
               args:
                 - named_prop: "nu_competencia_min"
                   required: true
@@ -445,7 +445,7 @@ secoes:
             range: true
             title: ""
             api: 
-              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_rgt'"
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
             args:
               - prop: "min"
                 named_prop: "nu_competencia_min"
@@ -461,7 +461,7 @@ secoes:
                     - named_prop: "value_max"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_uf-{0},and,eq-cd_indicador-'te_rgt'"
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,eq-cd_uf-{0},and,eq-cd_indicador-'te_sit_trab_resgatados'"
           args:
             - named_prop: "cd_uf"
           options:
@@ -485,6 +485,9 @@ secoes:
           value_field: 'calc_deviation_resg'
           colorScale:
             name: 'Reds'
+        source:
+          desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
+          link: "https://sit.trabalho.gov.br/radar/"
 # ========================================================
       - id: "mapa_prev_estado"
         chart_type: "MAP_BUBBLES"
@@ -493,7 +496,7 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -505,33 +508,35 @@ secoes:
             content:
               fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (MTb), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado. O total de egressos com naturalidade e residência declaradas foi calculado com base nos registros administrativos do seguro-desemprego nessa modalidade, isto é, restringe-se aos trabalhadores habilitados ao recebimento do benefício. Diferenças entre os números se explicam por padrões de lançamento desses dados e pelas normas referentes à concessão do benefício vigentes. Entre 1995 a 2017, foram contabilizados mais de 50 mil resgates. Por sua maior consistência, este Observatório analisou dados desde 2003 (ano de lançamento do I Plano Nacional de Erradicação do Trabalho Escravo)."
         api:
-          template: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res',and,eq-cd_uf-{0}&calcs=ln_norm_pos_part"
+          template: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados'-'te_nat'-'te_res',and,eq-cd_uf-{0}&calcs=ln_norm_pos_part"
           args:
             - named_prop: "cd_uf"
         chart_options:
           colorArray: ["rgba(25, 125, 25, 0.7)", "rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
           height_proportion: 1.77
-          indicadores: ["te_rgt","te_nat","te_res"]
+          indicadores: ["te_sit_trab_resgatados","te_nat","te_res"]
           lat: 'latitude'
           long: 'longitude'
           tooltip_function: 'obsTETooltip'
         source:
-          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE), do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo), e do Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil. Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
           link: ""
         description:
           - type: "text"
             title: ""
             content:
-              template: "Para a perspectiva geográfica em destaque, foram contabilizados {0} resgates do trabalho escravo desde 2003, quando se iniciou o pagamento do benefício do seguro-desemprego para resgatados. Além disso, {1} declararam haver nascido e {2} informaram residir na localidade. No mapa ao lado, apresentam-se as três perspectivas em diferentes cores. Em verde, os locais de resgate; em vermelho, os locais de naturalidade; em azul, os locais de residência. Nota-se que os locais em que o estado concentra seus esforços de repressão (onde há resgates) são em geral distintos dos locais de origem das vítimas, quer do ponto de vista da naturalidade, quer do ponto de vista da residência. Desse modo, do ponto de vista da prevenção, notam-se oportunidades para o aprimoramento de políticas públicas nos locais de naturalidade (sobretudo com foco em desenvolvimento humano e socioeconômico) e de residência (em especial para a geração de postos de trabalho decente)."
+              template: "Para a perspectiva geográfica em destaque, foram contabilizados {0} resgates do trabalho escravo desde {1}. Além disso, desde 2003, quando se iniciou o pagamento do benefício do seguro-desemprego para resgatados, {2} declararam haver nascido e {3} informaram residir na localidade. No mapa ao lado, apresentam-se as três perspectivas em diferentes cores. Em verde, os locais de resgate; em vermelho, os locais de naturalidade; em azul, os locais de residência. Nota-se que os locais em que o estado concentra seus esforços de repressão (onde há resgates) são em geral distintos dos locais de origem das vítimas, quer do ponto de vista da naturalidade, quer do ponto de vista da residência. Desse modo, do ponto de vista da prevenção, notam-se oportunidades para o aprimoramento de políticas públicas nos locais de naturalidade (sobretudo com foco em desenvolvimento humano e socioeconômico) e de residência (em especial para a geração de postos de trabalho decente)."
               preloaded:
                 prop: "trabalho_escravo_agr"
                 function: "slice"
-                id: ['te_rgt','te_nat','te_res']
+                id: ['te_sit_trab_resgatados','te_nat','te_res']
               args:
-                - id: "te_rgt"
+                - id: "te_sit_trab_resgatados"
                   named_prop: 'agr_sum_vl_indicador'
                   format: 'inteiro'
                   default: "0"
+                - id: "te_sit_trab_resgatados"
+                  named_prop: 'nu_competencia_min'
                 - id: "te_nat"
                   named_prop: 'agr_sum_vl_indicador'
                   format: 'inteiro'
@@ -544,18 +549,48 @@ secoes:
             type: "switch-group"
             cls: "pt-2 pb-4"
             switches:
-              - id: "te_rgt"
+              - id: "te_sit_trab_resgatados"
                 label: "Resgates"
                 default: true
                 color: "green accent-4"
+                minicards:
+                  - relevance: 'low'
+                    args:
+                      - prop: "description"
+                        api: 
+                          fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'te_sit_trab_resgatados'&limit=1"
+                        template: "({0} a {1})"
+                        args:
+                          - named_prop: "nu_competencia_min"
+                          - named_prop: "nu_competencia_max"
               - id: "te_nat"
                 label: "Naturalidade Apurada"
                 default: true
                 color: "red"
+                minicards:
+                  - relevance: 'low'
+                    args:
+                      - prop: "description"
+                        api: 
+                          fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'te_nat'&limit=1"
+                        template: "({0} a {1})"
+                        args:
+                          - named_prop: "nu_competencia_min"
+                          - named_prop: "nu_competencia_max"
               - id: "te_res"
                 label: "Residência Apurada"
                 default: true
                 color: "light-blue"
+                minicards:
+                  - relevance: 'low'
+                    args:
+                      - prop: "description"
+                        api: 
+                          fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'te_res'&limit=1"
+                        template: "({0} a {1})"
+                        args:
+                          - named_prop: "nu_competencia_min"
+                          - named_prop: "nu_competencia_max"
             event: 'selection'
 # ========================================================
       - id: "mapa_prev_estado_calor"
@@ -730,6 +765,62 @@ secoes:
           legend_field: "calc_ds_indicador_radical"
           show_x_axis: true
           show_y_axis: false
+          colorScale: 
+            type: "fixed"
+            color_array: 
+              'te_rgt': "green"
+              'te_res': "blue"
+              'te_nat': "red"
         source:
           desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
           link: ""
+# ========================================================
+      - id: "bar_serie_resgate_radar"
+        chart_type: "BAR"
+        title:
+          fixed: "Trabalhadores resgatados - Série Histórica"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "No gráfico ao lado, destaca-se a série histórica dos registros relacionados a resgates do trabalho escravo."
+        api:
+          template: "/te/indicadoresmunicipais?categorias=cd_indicador,ds_indicador,cd_mun_ibge,vl_indicador,nu_competencia&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_sit_trab_resgatados'"
+          args:
+            - named_prop: "idLocalidade"
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Quantidade'
+            value: 'vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          text: "vl_indicador"
+          orientation: "vertical"
+          legend_field: "ds_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          color: "green"
+        source:
+          desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
+          link: "https://sit.trabalho.gov.br/radar/"
