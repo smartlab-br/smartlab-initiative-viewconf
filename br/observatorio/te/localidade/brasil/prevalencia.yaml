@@ -148,7 +148,7 @@ principais:
     preloaded:
       prop: "trabalho_escravo_agr"
       function: "slice"
-      id: ['te_rgt']
+      id: ['te_sit_trab_resgatados']
     args:
       - prop: "value"
         function: "calc_average_by_year"
@@ -753,7 +753,7 @@ secoes:
 # ========================================================
           - id: "treemap_priori_uf_nat"
             title: "Naturalidade Apurada"
-            cls: "xs12 md4"
+            cls: "xs12 md6"
             type: "TREEMAP"
             api:
               fixed: "/te/indicadoresestaduais?categorias=cd_uf,nm_uf,cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_nat'"
@@ -779,7 +779,7 @@ secoes:
 # ========================================================
           - id: "treemap_priori_uf_res"
             title: "Residência Apurada"
-            cls: "xs12 md4"
+            cls: "xs12 md6"
             type: "TREEMAP"
             api:
               fixed: "/te/indicadoresestaduais?categorias=cd_uf,nm_uf,cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_res'"
@@ -802,12 +802,38 @@ secoes:
             # source:
             #   desc_field: "ds_fonte"
 # ========================================================
+      - id: "multi_priori_uf"
+        type: "multiple-charts"
+        title:
+          fixed: "Áreas Prioritárias - UF"
+        title_comment:
+          template: "Brasil, {0} a {1}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description: 
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Destacam-se, neste estudo, as unidades federativas com maior número de trabalhadores explorados pelas perspectivas da naturalidade, da residência e do local de resgate. O estabelecimento de áreas prioritárias é importante para o direcionamento de recursos e esforços no combate ao trabalho escravo não apenas pela perspectiva tradicional (das operações de resgate), mas também, e principalmente, pela perspectiva da prevenção, com foco na elevação dos padrões de vida e das oportunidades nos locais de nascimento e residência."
+        source:
+          desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
+          link: "https://sit.trabalho.gov.br/radar/"
+        charts:
+# ========================================================
           - id: "treemap_priori_uf_rgt"
             title: "Resgatados"
-            cls: "xs12 md4"
+            cls: "xs12"
             type: "TREEMAP"
             api:
-              fixed: "/te/indicadoresestaduais?categorias=cd_uf,nm_uf,cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_rgt'"
+              fixed: "/te/indicadoresestaduais?categorias=cd_uf,nm_uf,cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
               options:
                 formatters:
                   - id: "agr_sum_vl_indicador"
