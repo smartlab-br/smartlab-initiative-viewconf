@@ -6,7 +6,7 @@ principais:
     preloaded:
       prop: "trabalho_escravo_agr"
       function: "slice"
-      id: ['te_rgt']
+      id: ['te_sit_trab_resgatados']
     args:
       - prop: "value"
         named_prop: 'agr_sum_vl_indicador'
@@ -18,7 +18,7 @@ principais:
       - prop: 'comment'
         template: "(De {0} a {1})"
         api: 
-          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_rgt'"
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
         args:
           - named_prop: "nu_competencia_min"
           - named_prop: "nu_competencia_max"
@@ -26,7 +26,7 @@ principais:
       id: "line_te_rgt"
       type: "LINE"
       api: 
-        template: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge_dv-{0},and,eq-cd_indicador-'te_rgt'"
+        template: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge_dv-{0},and,eq-cd_indicador-'te_sit_trab_resgatados'"
         args:
           - named_prop: "idLocalidade"
         options:
@@ -153,7 +153,7 @@ principais:
     preloaded:
       prop: "trabalho_escravo_agr"
       function: "slice"
-      id: ['te_rgt']
+      id: ['te_sit_trab_resgatados']
     args:
       - prop: "value"
         function: "calc_average_by_year"
@@ -169,14 +169,14 @@ principais:
       - prop: 'comment'
         template: "(De {0} a {1})"
         api: 
-          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_res'"
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
         args:
           - named_prop: "nu_competencia_min"
           - named_prop: "nu_competencia_max"
 # ===================================================
 secoes:
   - id: "perfil_trabalho_escravo"
-    name: "Resgatados Naturais ou Residentes na UF"
+    name: "Resgatados Naturais ou Residentes no Município"
     cards:
 # =====================================================
       - id: "treemap_te_ocupacao"
@@ -186,7 +186,7 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1"
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -202,12 +202,32 @@ secoes:
             title: ""
             content:
               fixed: "No gráfico ao lado, destaca-se o perfil das vítimas resgatadas quanto à atividade laboral desempenhada no momento do resgate. Essas informações permitem identificar de um lado os riscos específicos existentes em determinadas atividades econômicas e cadeias produtivas e, de outro lado, vulnerabilidades relacionadas a padrões sociodemográficos e identitários. Foram considerados apenas os registros com especificação das ocupações, de forma a permitir a percepção da participação proporcional de cada uma no total."
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_nat"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
         source:
           desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."    
         charts:
           - id: "treemap_te_nat_ocupacoes"
             cls: "xs12 md6"
-            title: "Ocupações - Resgatados Naturais da UF"
+            title: "Ocupações - Resgatados Naturais do Município"
             type: "TREEMAP"
             api: 
               template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_nat_ocup_atual'"
@@ -234,7 +254,7 @@ secoes:
             #   fixed: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
           - id: "treemap_te_res_ocupacoes"
             cls: "xs12 md6"
-            title: "Ocupações - Resgatados Residentes na UF"
+            title: "Ocupações - Resgatados Residentes no Município"
             type: "TREEMAP"
             api: 
               template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_res_ocup_atual'"
@@ -267,7 +287,7 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1"
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -283,13 +303,33 @@ secoes:
             title: ""
             content:
               fixed: "No gráfico ao lado, destaca-se o perfil das vítimas quanto à raça dos resgatados. Essas informações permitem identificar vulnerabilidades relacionadas a padrões sociodemográficos e identitários. Foram considerados apenas os registros com especificação da raça, de forma a permitir a percepção da participação proporcional de cada uma no total."
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_nat"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
         source:
           desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."    
         
         charts:
           - id: "treemap_te_nat_raca"
             cls: "xs12 md6"
-            title: "Raça - Resgatados Naturais da UF"
+            title: "Raça - Resgatados Naturais do Município"
             type: "TREEMAP"
             api: 
               template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_nat_raca',and,ne-ds_agreg_primaria-'>Não Informado'"
@@ -316,7 +356,7 @@ secoes:
             #   desc_field: "ds_fonte"                    
           - id: "treemap_te_res_raca"
             cls: "xs12 md6"
-            title: "Raça - Resgatados Residentes na UF"
+            title: "Raça - Resgatados Residentes no Município"
             type: "TREEMAP"
             api: 
               template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_res_raca',and,ne-ds_agreg_primaria-'>Não Informado'"
@@ -349,7 +389,7 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1"
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -365,12 +405,32 @@ secoes:
             title: ""
             content:
               fixed: "No gráfico ao lado, destacam-se os setores econômicos mais frequentemente envolvidos nos resgates. Essas informações permitem identificar riscos específicos existentes em determinadas atividades econômicas e cadeias produtivas. Foram considerados apenas os registros com especificação dos setores, de forma a permitir a percepção da participação proporcional de cada um no total."
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_nat"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
         source:
           desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
         charts:
           - id: "treemap_te_nat_cnae"
             cls: "xs12 md6"
-            title: "Setores Econômicos - Resgatados Naturais da UF"
+            title: "Setores Econômicos - Resgatados Naturais do Município"
             type: "TREEMAP"
             api: 
               template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_nat_cnae',and,ne-ds_agreg_primaria-'Ignorado',and,ne-ds_agreg_primaria-'Nao Se Aplica'"
@@ -397,7 +457,7 @@ secoes:
             #   desc_field: "ds_fonte"                    
           - id: "treemap_te_res_cnae"
             cls: "xs12 md6"
-            title: "Setores Econômicos - Resgatados Residentes na UF"
+            title: "Setores Econômicos - Resgatados Residentes no Município"
             type: "TREEMAP"
             api: 
               template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_res_cnae',and,ne-ds_agreg_primaria-'Ignorado',and,ne-ds_agreg_primaria-'Nao Se Aplica'"
@@ -423,6 +483,79 @@ secoes:
             # source:
             #   desc_field: "ds_fonte"                    
 # =====================================================
+      - id: "treemap_te_cnae_radar"
+        type: "multiple-charts"
+        title: 
+          fixed: "Setores Econômicos mais frequentemente Envolvidos"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "No gráfico ao lado, destacam-se os setores econômicos mais frequentemente envolvidos nos resgates. Essas informações permitem identificar riscos específicos existentes em determinadas atividades econômicas e cadeias produtivas. Foram considerados apenas os registros com especificação dos setores, de forma a permitir a percepção da participação proporcional de cada um no total."
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_nat"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        source:
+          desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
+          link: "https://sit.trabalho.gov.br/radar/"
+        charts:
+          - id: "treemap_te_rgt_cnae"
+            cls: "xs12"
+            title: "Setores Econômicos - Resgatados no município"
+            type: "TREEMAP"
+            api: 
+              template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_sit_trab_resgatados_cnae'"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                  formatters:
+                    - id: "agr_sum_vl_indicador"
+                      format: 'inteiro'
+            headers:
+              - text: 'Setor Econômico'
+                align: 'left'
+                value: 'ds_agreg_primaria'
+              - text: 'Qtde'
+                value: 'fmt_agr_sum_vl_indicador'
+            options:
+              id: "ds_agreg_primaria"
+              size: "agr_sum_vl_indicador"
+              text: "ds_agreg_primaria"
+              hide_legend: true
+              colorScale:
+                name: "Greens"
+# =====================================================
       - id: "treemap_te_escolaridade"
         type: "multiple-charts"
         title: 
@@ -430,7 +563,7 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1"
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -446,12 +579,32 @@ secoes:
             title: ""
             content:
               fixed: "No gráfico ao lado, destaca-se o perfil das vítimas quanto à escolaridade dos resgatados. Essas informações permitem identificar vulnerabilidades relacionadas a padrões sociodemográficos. Foram considerados apenas os registros com especificação da escolaridade, de forma a permitir a percepção da participação proporcional de cada uma no total."
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_nat"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
         source:
           desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
         charts:
           - id: "treemap_te_nat_escolaridade"
             cls: "xs12 md6"
-            title: "Escolaridade - Resgatados Naturais da UF"
+            title: "Escolaridade - Resgatados Naturais do Município"
             type: "TREEMAP"
             api: 
               template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_nat_instrucao',and,ne-ds_agreg_primaria-'>Ignorado'"
@@ -478,7 +631,7 @@ secoes:
             #   desc_field: "ds_fonte"                    
           - id: "treemap_te_res_escolaridade"
             cls: "xs12 md6"
-            title: "Escolaridade - Resgatados Residentes na UF"
+            title: "Escolaridade - Resgatados Residentes no Município"
             type: "TREEMAP"
             api: 
               template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_res_instrucao',and,ne-ds_agreg_primaria-'>Ignorado'"
@@ -511,7 +664,7 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1"
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -527,12 +680,32 @@ secoes:
             title: ""
             content:
               fixed: "No gráfico ao lado, destaca-se o perfil etário e de sexo das vítimas. Essas informações permitem identificar vulnerabilidades relacionadas a padrões sociodemográficos, com foco na perspectiva etária e de sexo. Foram considerados apenas os registros com especificação do sexo e da idade, de forma a permitir a percepção da participação proporcional de cada uma no total."
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_nat"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
         source:
           desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
         charts:
           - id: "bar_te_nat_idade_sexo"
             cls: "xs12 md6"
-            title: "Perfil Etário e de Sexo - Resgatados Naturais da UF"
+            title: "Perfil Etário e de Sexo - Resgatados Naturais do Município"
             type: "BAR"
             api: 
               template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_nat_sexo_idade'"
@@ -581,7 +754,7 @@ secoes:
               desc_field: "ds_fonte"                    
           - id: "bar_te_res_idade_sexo"
             cls: "xs12 md6"
-            title: "Perfil Etário e de Sexo - Resgatados Residentes na UF"
+            title: "Perfil Etário e de Sexo - Resgatados Residentes no Município"
             type: "BAR"
             api: 
               template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'te_res_sexo_idade'"

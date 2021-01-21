@@ -14,7 +14,7 @@ ranking_cards:
   - title: "Municípios com maior prevalência de resgates "
     cls: "xs12 sm6 xl3 pa-3"
     api: 
-      fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_rgt'&limit=5"
+      fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'&limit=5"
     args:
       - prop: 'localidade'
         named_prop: "nm_municipio_uf"
@@ -64,23 +64,23 @@ prevalencia:
   chart_type: "MAP_BUBBLES"
   title: 
     fixed: "Distribuição Geográfica"
-  title_comment:
-    template: "{0} a {1}"
-    api: 
-      template: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
-    args:
-      - named_prop: "nu_competencia_min"
-      - named_prop: "nu_competencia_max"
+  # title_comment:
+  #   template: "{0} a {1}"
+  #   api: 
+  #     template: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+  #   args:
+  #     - named_prop: "nu_competencia_min"
+  #     - named_prop: "nu_competencia_max"
   # info:
   #   - type: "text"
   #     title: "Sobre"
   #     content:
   #       fixed: ""
   api:
-    fixed: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,in-cd_indicador-'te_rgt'-'te_nat'-'te_res'"
+    fixed: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados'-'te_nat'-'te_res'"
   chart_options:
     colorArray: ["rgba(25, 125, 25, 0.7)", "rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
-    indicadores: ["te_rgt","te_nat","te_res"]
+    indicadores: ["te_sit_trab_resgatados","te_nat","te_res"]
     lat: 'latitude'
     long: 'longitude'
     tooltip_function: 'obsTETooltip'
@@ -92,7 +92,7 @@ prevalencia:
     tiles_url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
     tiles_attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
   source:
-    desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
+    desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE), do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo), e do Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil. Os dados brutos foram fornecidos pelo Ministério da Economia do Brasil."
     link: ""
   footer:
     - type: "text"
@@ -103,29 +103,44 @@ prevalencia:
     - id: "selectlayer"
       type: "switch-group"
       switches:
-        - id: "te_rgt"
+        - id: "te_sit_trab_resgatados"
           cls: "xs12"
           default: true
           color: "green accent-4"
           label: "RESGATES"
-          # minicards:
-          #   - relevance: 'high'
-          #     preloaded:
-          #       prop: "trabalho_escravo_agr"
-          #       function: "slice"
-          #       id: "te_rgt"
-          #     args:
-          #       - prop: "value"
-          #         named_prop: 'agr_sum_vl_indicador'
-          #         format: 'inteiro'
-          #         default: "Sem Registros"
-          #       - prop: "description"
-          #         fixed: "Resgates"
+          minicards:
+            - relevance: 'low'
+              args:
+                # - prop: "value"
+                #   named_prop: 'agr_sum_vl_indicador'
+                #   format: 'inteiro'
+                #   default: "Sem Registros"
+                - prop: "description"
+                  api: 
+                    fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'te_sit_trab_resgatados'&limit=1"
+                  template: "({0} a {1})"
+                  args:
+                    - named_prop: "nu_competencia_min"
+                    - named_prop: "nu_competencia_max"
         - id: "te_nat"
           cls: "xs12"
           default: true
           color: "red"
           label: "NATURALIDADE APURADA"
+          minicards:
+            - relevance: 'low'
+              args:
+                # - prop: "value"
+                #   named_prop: 'agr_sum_vl_indicador'
+                #   format: 'inteiro'
+                #   default: "Sem Registros"
+                - prop: "description"
+                  api: 
+                    fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'te_nat'&limit=1"
+                  template: "({0} a {1})"
+                  args:
+                    - named_prop: "nu_competencia_min"
+                    - named_prop: "nu_competencia_max"
           # minicards:
           #   - relevance: 'high'
           #     preloaded:
@@ -144,6 +159,20 @@ prevalencia:
           default: true
           color: "light-blue"
           label: "RESIDÊNCIA APURADA"
+          minicards:
+            - relevance: 'low'
+              args:
+                # - prop: "value"
+                #   named_prop: 'agr_sum_vl_indicador'
+                #   format: 'inteiro'
+                #   default: "Sem Registros"
+                - prop: "description"
+                  api: 
+                    fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'te_res'&limit=1"
+                  template: "({0} a {1})"
+                  args:
+                    - named_prop: "nu_competencia_min"
+                    - named_prop: "nu_competencia_max"
           # minicards:
           #   - relevance: 'high'
           #     preloaded:
@@ -178,24 +207,25 @@ prevalencia:
           cls: "xs12 sm6 md12 lg6 text-xs-center "
           color: "orange pa-3"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_rgt'"
+            fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
           # preloaded:
           #   prop: "trabalho_escravo_agr"
           #   function: "slice"
-          #   id: "te_rgt"
+          #   id: "te_sit_trab_resgatados"
           args:
             - prop: "value"
-              fixed: "53.741"
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+              default: "Sem Registros"
             - prop: "description"
-              template: "Resgatados desde 1995<sup>1</sup>"
+              template: "Resgatados desde {0}<sup>1</sup>"
               args:
                 - named_prop: "nu_competencia_min"
-                - named_prop: "nu_competencia_max"
         - relevance: "high"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
           color: "green accent-4 pa-3"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_rgt'"
+            fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,gt-nu_competencia-2002"
           # preloaded:
           #   prop: "trabalho_escravo_agr"
           #   function: "slice"
@@ -208,7 +238,7 @@ prevalencia:
             - prop: "description"
               template: "Resgates<sup>2</sup><br/>({0} a {1})"
               args:
-                - named_prop: "nu_competencia_min"
+                - fixed: "2003"
                 - named_prop: "nu_competencia_max"
         - relevance: "high"
           cls: "xs12 sm6 md12 lg6 text-xs-center "
@@ -250,28 +280,58 @@ prevalencia:
                 - named_prop: "nu_competencia_max"
     - type: "text"
       content:
-        fixed: "1. Entre 1995 a 2018, segundo a Inspeção do Trabalho (Ministério da Economia), foram realizados mais de 50 mil resgates. A coleta de dados vem melhorando sobretudo desde 2002, com a Lei 10.608/2002 (seguro-desemprego destinado a resgatados). Este Observatório analisa com mais detalhamento os dados dos benefícios de seguro-desemprego de resgatados requeridos na série histórica desde 2003. A qualidade desses dados é comparativamente mnelhor por se tratar de despesas oficiais. Não obstante, deficiências e lacunas apuradas têm sido comunicadas às autoridades de inspeção para que promovam mais aprimoramentos na coleta.<br/><br/>
-                2. O total de resgates de 2003 a 2018 foi calculado com base em informações do Banco de Dados COETE (Inspeção do trabalho), que também inclui trabalhadores resgatados mas que não receberam o Seguro-Desemprego.<br/><br/>
+        fixed: "1. Entre 1995 a 2020, segundo a Inspeção do Trabalho (Ministério da Economia), foram realizados mais de 50 mil resgates. A coleta de dados vem melhorando sobretudo desde 2002, com a Lei 10.608/2002 (seguro-desemprego destinado a resgatados). Este Observatório analisa com mais detalhamento os dados dos benefícios de seguro-desemprego de resgatados requeridos na série histórica desde 2003. A qualidade desses dados é comparativamente melhor por se tratar de despesas oficiais. Não obstante, deficiências e lacunas apuradas têm sido comunicadas às autoridades de inspeção para que promovam mais aprimoramentos na coleta.<br/><br/>
+                2. O total de resgates de 2003 a 2020 foi calculado com base no Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, que também inclui trabalhadores resgatados mas que não receberam o Seguro-Desemprego.<br/><br/>
                 3. O total de resgatados com naturalidade e residência declaradas foi calculado com base nos dados do seguro-desemprego e se restringe aos resgatados que se habilitaram ao recebimento do benefício. O foco nesses dado, além de considerar apenas os resgates reconhecidos pelo Estado na forma da Lei 10.608/2002, permite desagregar as informações ao nível municipal, o que é essencial às políticas públicas de prevenção e combate. Além disso, pode-se com eles traçar perfis de vulnerabilidade à exploração."
   mapa_filtros:
     - id: "selectlayer"
       type: "switch-group"
       switches:
-        - id: "te_rgt"
+        - id: "te_sit_trab_resgatados"
           cls: "xs12"
           default: true
           color: "green accent-4"
           label: "RESGATES"
+          minicards:
+            - relevance: 'low'
+              args:
+                - prop: "description"
+                  api: 
+                    fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'te_sit_trab_resgatados'&limit=1"
+                  template: "({0} a {1})"
+                  args:
+                    - named_prop: "nu_competencia_min"
+                    - named_prop: "nu_competencia_max"
         - id: "te_nat"
           cls: "xs12"
           default: true
           color: "red"
           label: "NATURALIDADE APURADA"
+          minicards:
+            - relevance: 'low'
+              args:
+                - prop: "description"
+                  api: 
+                    fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'te_nat'&limit=1"
+                  template: "({0} a {1})"
+                  args:
+                    - named_prop: "nu_competencia_min"
+                    - named_prop: "nu_competencia_max"
         - id: "te_res"
           cls: "xs12"
           default: true
           color: "light-blue"
           label: "RESIDÊNCIA APURADA"
+          minicards:
+            - relevance: 'low'
+              args:
+                - prop: "description"
+                  api: 
+                    fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'te_res'&limit=1"
+                  template: "({0} a {1})"
+                  args:
+                    - named_prop: "nu_competencia_min"
+                    - named_prop: "nu_competencia_max"
       event: 'selection'
     - id: "select_uf"
       type: "select"
@@ -320,7 +380,7 @@ prevalencia:
       range: true
       title: "Período"
       api: 
-        fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+        fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
       args:
         - prop: "min"
           named_prop: "nu_competencia_min"
@@ -364,7 +424,7 @@ prevalencia:
           color: "green accent-4 pa-3"
           reactive: true
           api: 
-            fixed: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_rgt'"
+            fixed: "/te/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
           # preloaded:
           #   prop: "trabalho_escravo_agr"
           #   function: "slice"
@@ -422,7 +482,7 @@ prevalencia:
           reactive: true
           cls: "xs12 px-3 pb-3"
           api: 
-            fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_rgt'"
+            fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,cd_indicador,nu_competencia_min,nu_competencia_max,cd_mun_ibge_dv&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM&limit=5&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
           args:
             - prop: 'localidade'
               named_prop: "nm_municipio_uf"
@@ -503,12 +563,13 @@ sparklines:
       class: "pa-0"
       content:
         cls: "pl-2"
-        template: "{0} a {1}"
-        api: 
-          template: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
-        args:
-          - named_prop: "nu_competencia_min"
-          - named_prop: "nu_competencia_max"
+        fixed: ""
+        # template: "{0} a {1}"
+        # api: 
+        #   template: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+        # args:
+        #   - named_prop: "nu_competencia_min"
+        #   - named_prop: "nu_competencia_max"
   tables:
     - id: "sparklines_freq_rgt"
       title: "Resgatados do Trabalho Escravo"
@@ -518,7 +579,7 @@ sparklines:
       series_field: "cd_indicador"
       category_field: "nu_competencia"
       api:
-        fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_rgt'"
+        fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
       # sorter:
       #   indicador: 'te_rgt'
       # chart_type: "LINE"
@@ -543,23 +604,23 @@ sparklines:
         - text: 'Total'
           align: 'center'
           width: '10%'
-          value: 'total_te_rgt'
+          value: 'total_te_sit_trab_resgatados'
           item_align: 'center'
         - text: 'Smartline'
           align: 'center'
           width: '33.33%'
-          value: 'last_value_te_rgt'
+          value: 'last_value_te_sit_trab_resgatados'
           item_align: 'center'
           type: 'spark'
-          series: 'te_rgt'
+          series: 'te_sit_trab_resgatados'
           bgColor: '#00C853'
           stroke: 2
         - text: 'Pico'
           align: 'center'
           width: '23.34%'
-          value: 'higher_value_str_te_rgt'
+          value: 'higher_value_str_te_sit_trab_resgatados'
           item_align: 'center'
-          sort_field: 'higher_value_te_rgt'
+          sort_field: 'higher_value_te_sit_trab_resgatados'
         # - text: 'Resgatados do trabalho escravo'
         #   value: 'total_te_rgt'
         #   width: '27%'
