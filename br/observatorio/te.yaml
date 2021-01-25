@@ -204,8 +204,27 @@ prevalencia:
       rowCalss: "pa-1"
       cards:
         - relevance: "high"
-          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          cls: "xs12 text-xs-center "
           color: "orange pa-3"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_sit_trab_escravos'"
+          # preloaded:
+          #   prop: "trabalho_escravo_agr"
+          #   function: "slice"
+          #   id: "te_sit_trab_resgatados"
+          args:
+            - prop: "value"
+              named_prop: "agr_sum_vl_indicador"
+              format: "inteiro"
+              default: "Sem Registros"
+            - prop: "description"
+              template: "Trabalhadores em Condições Análogas à de Escravo Encontrados<br/>({0} a {1})"
+              args:
+                - named_prop: "nu_competencia_min"
+                - named_prop: "nu_competencia_max"
+        - relevance: "high"
+          cls: "xs12 sm6 md12 lg6 text-xs-center "
+          color: "green pa-3"
           api: 
             fixed: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
           # preloaded:
@@ -572,14 +591,14 @@ sparklines:
         #   - named_prop: "nu_competencia_max"
   tables:
     - id: "sparklines_freq_rgt"
-      title: "Resgatados do Trabalho Escravo"
+      title: "Resgatados do Trabalho Escravo desde 2016"
       cls: "xs12 md6 lg4"
       id_field: "cd_mun_ibge"
       value_field: "agr_sum_vl_indicador"
       series_field: "cd_indicador"
       category_field: "nu_competencia"
       api:
-        fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
+        fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados',and,gt-nu_competencia-2015"
       # sorter:
       #   indicador: 'te_rgt'
       # chart_type: "LINE"
