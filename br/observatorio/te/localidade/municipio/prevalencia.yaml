@@ -1,5 +1,27 @@
 # ========================================================
 principais:
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   preloaded:
+  #     prop: "trabalho_escravo_agr"
+  #     function: "slice"
+  #     id: ['te_sit_trab_escravos']
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'agr_sum_vl_indicador'
+  #       format: 'inteiro'
+  #       default: 'Nenhum'
+  #       zero: 'Nenhum'
+  #     - prop: "description"
+  #       fixed: "Trabalhadores em Condições Análogas à de Escravo Encontrados"
+  #     - prop: 'comment'
+  #       template: "(De {0} a {1})"
+  #       api: 
+  #         fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_escravos'"
+  #       args:
+  #         - named_prop: "nu_competencia_min"
+  #         - named_prop: "nu_competencia_max"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -178,6 +200,108 @@ secoes:
   - id: 'prevalencia_main_story'
     name: "Contexto Geográfico e Áreas Prioritárias"
     cards:
+# ========================================================
+      - id: "mapa_resgatados_escravo"
+        title: 
+          fixed: "Resgatados do trabalho escravo no município e na UF"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O total de resgates foi calculado com base em informações extraídas do Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "Esse tipo de informação ajuda gestores na definição de regiões geográficas prioritárias para atividades de combate e prevenção, as quais também obedecem a lógica das curvas de oferta e de demanda do trabalho escravo no Brasil. Ilustrativamente, locais de maior intensidade de resgates devem ser prioritários quanto a atividades de inspeção do trabalho, sobretudo quanto às operações promovidas pela Divisão de Fiscalização para Erradicação do Trabalho Escravo (DETRAE – Ministério do Trabalho) e pelas equipes interinstitucionais do Grupo Especial de Fiscalização Móvel, conjuntamente com as ações coordenadas no âmbito das Superintendências Regionais do Trabalho nos Estados. Nesses locais, a orquestração interinstitucional fomenta e facilita a atuação efetiva e eficiente de operadores da lei, incluindo as forças policiais, da Justiça e do Ministério Público.<br/><br/>
+                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+        msgNoData:
+          desc: "No período, não houve resgates de trabalhadores em condição análoga à de escravo no município"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "trabalho_escravo_agr"
+                  function: "slice"
+                  id: ['te_sit_trab_resgatados']
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Resgatados'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de vítimas do trabalho escravo resgatadas na localidade selecionada desde {0}. No mapa ao lado, o município selecionado está em destaque e é comparado a diferentes municípios da mesma unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
+              preloaded:
+                prop: "trabalho_escravo_agr"
+                function: "slice"
+                id: ['te_sit_trab_resgatados']
+              args:
+                - named_prop: "nu_competencia_min"
+                  required: true
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_rgt"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,eq-cd_uf-{0},and,eq-cd_indicador-'te_sit_trab_resgatados'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_resg"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Nº resgatados do trabalho escravo no município'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_resg'
+          colorScale:
+            name: 'Reds'
+        source:
+          desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
+          link: "https://sit.trabalho.gov.br/radar/"
 # ========================================================
       - id: "mapa_resgatados_escravo_naturais"
         title: 
@@ -387,108 +511,6 @@ secoes:
           colorScale:
             name: 'Reds'
 # ========================================================
-      - id: "mapa_resgatados_escravo"
-        title: 
-          fixed: "Resgatados do trabalho escravo no município e na UF"
-        title_comment:
-          template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "O total de resgates foi calculado com base em informações extraídas do Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
-          - type: "text"
-            title: "Observação Importante"
-            content:
-              fixed: "Esse tipo de informação ajuda gestores na definição de regiões geográficas prioritárias para atividades de combate e prevenção, as quais também obedecem a lógica das curvas de oferta e de demanda do trabalho escravo no Brasil. Ilustrativamente, locais de maior intensidade de resgates devem ser prioritários quanto a atividades de inspeção do trabalho, sobretudo quanto às operações promovidas pela Divisão de Fiscalização para Erradicação do Trabalho Escravo (DETRAE – Ministério do Trabalho) e pelas equipes interinstitucionais do Grupo Especial de Fiscalização Móvel, conjuntamente com as ações coordenadas no âmbito das Superintendências Regionais do Trabalho nos Estados. Nesses locais, a orquestração interinstitucional fomenta e facilita a atuação efetiva e eficiente de operadores da lei, incluindo as forças policiais, da Justiça e do Ministério Público.<br/><br/>
-                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
-        msgNoData:
-          desc: "No período, não houve resgates de trabalhadores em condição análoga à de escravo no município"
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "trabalho_escravo_agr"
-                  function: "slice"
-                  id: ['te_sit_trab_resgatados']
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: 'Resgatados'
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, o número de vítimas do trabalho escravo resgatadas na localidade selecionada desde {0}. No mapa ao lado, o município selecionado está em destaque e é comparado a diferentes municípios da mesma unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
-              preloaded:
-                prop: "trabalho_escravo_agr"
-                function: "slice"
-                id: ['te_sit_trab_resgatados']
-              args:
-                - named_prop: "nu_competencia_min"
-                  required: true
-          - type: "slider"
-            cls: "pl-2"
-            id: "slider_rgt"
-            range: true
-            title: ""
-            api: 
-              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
-            args:
-              - prop: "min"
-                named_prop: "nu_competencia_min"
-              - prop: "max"
-                named_prop: "nu_competencia_max"
-            selection:
-              event: "selection"
-              rules:
-                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
-                api:
-                  args:
-                    - named_prop: "value_min"
-                    - named_prop: "value_max"
-        chart_type: "MAP_TOPOJSON"
-        api: 
-          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,eq-cd_uf-{0},and,eq-cd_indicador-'te_sit_trab_resgatados'"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation_resg"
-                function: "get_log"
-                fn_args:
-                  - fixed: "agr_sum_vl_indicador"
-            formatters:
-              - id: "agr_sum_vl_indicador"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio'
-          - text: 'Nº resgatados do trabalho escravo no município'
-            value: 'fmt_agr_sum_vl_indicador'
-        chart_options:
-          id_field: 'cd_mun_ibge_dv'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_resg'
-          colorScale:
-            name: 'Reds'
-        source:
-          desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
-          link: "https://sit.trabalho.gov.br/radar/"
-# ========================================================
       - id: "mapa_prev_estado"
         chart_type: "MAP_BUBBLES"
         title: 
@@ -508,7 +530,7 @@ secoes:
             content:
               fixed: "O total de resgates foi calculado com base em informações extraídas do Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado. O total de egressos com naturalidade e residência declaradas foi calculado com base nos registros administrativos do seguro-desemprego nessa modalidade, isto é, restringe-se aos trabalhadores habilitados ao recebimento do benefício. Diferenças entre os números se explicam por padrões de lançamento desses dados e pelas normas referentes à concessão do benefício vigentes. Entre 1995 a 2020, foram contabilizados mais de 50 mil resgates. Por sua maior consistência, este Observatório analisou dados desde 2003 (ano de lançamento do I Plano Nacional de Erradicação do Trabalho Escravo)."
         api:
-          template: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados'-'te_nat'-'te_res',and,eq-cd_uf-{0}&calcs=ln_norm_pos_part"
+          template: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados'-'te_nat'-'te_res',and,eq-cd_uf-{0}"
           args:
             - named_prop: "cd_uf"
         chart_options:
@@ -592,6 +614,26 @@ secoes:
                           - named_prop: "nu_competencia_min"
                           - named_prop: "nu_competencia_max"
             event: 'selection'
+          - type: "slider"
+            cls: "pt-3 pl-2"
+            id: "slider_rgt"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
 # ========================================================
       - id: "mapa_prev_estado_calor"
         chart_type: "MAP_HEAT"
