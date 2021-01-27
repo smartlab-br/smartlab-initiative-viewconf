@@ -39,7 +39,7 @@ principais:
   #   cls: 'xs12 xl6'
   #   rowClass: "pt-0 px-3 pb-5"
   #   api: 
-  #     template: "/thematic/covidcasos?categorias=qtd_municipios_uf,populacao_uf&valor=cd_municipio_ibge_dv,estimated_population_2019&agregacao=COUNT,SUM&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_confirmed-0"
+  #     template: "/thematic/covidcasos?categorias=qtd_municipios_uf,populacao_uf&valor=cd_municipio_ibge_dv,estimated_population&agregacao=COUNT,SUM&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_confirmed-0"
   #     args:
   #       - named_prop: "idLocalidade"
   #   args:
@@ -60,13 +60,13 @@ principais:
   #         - function: 'calc_percentage'
   #           format: 'real'
   #           fn_args:
-  #             - named_prop: "agr_sum_estimated_population_2019"
+  #             - named_prop: "agr_sum_estimated_population"
   #             - named_prop: "populacao_uf"
   # - relevance: "lead"
   #   cls: 'xs12 xl6'
   #   rowClass: "pt-0 px-3 pb-5"
   #   api: 
-  #     template: "/thematic/covidcasos?categorias=qtd_municipios_uf,populacao_uf&valor=cd_municipio_ibge_dv,estimated_population_2019&agregacao=COUNT,SUM&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
+  #     template: "/thematic/covidcasos?categorias=qtd_municipios_uf,populacao_uf&valor=cd_municipio_ibge_dv,estimated_population&agregacao=COUNT,SUM&filtros=eq-cd_uf-{0},and,eq-place_type-'city',and,eq-is_last-TRUE,and,ne-last_available_deaths-0"
   #     args:
   #       - named_prop: "idLocalidade"
   #   args:
@@ -87,7 +87,7 @@ principais:
   #         - function: 'calc_percentage'
   #           format: 'real'
   #           fn_args:
-  #             - named_prop: "agr_sum_estimated_population_2019"
+  #             - named_prop: "agr_sum_estimated_population"
   #             - named_prop: "populacao_uf"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
@@ -194,7 +194,7 @@ secoes:
             cls: "xs12"
             type: "BAR"
             api:
-              template: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,epidemiological_week,epidemiological_week_start,epidemiological_week_end&valor=new_confirmed&agregacao=SUM&filtros=eq-place_type-'state',and,eq-cd_uf-{0},and,eq-is_repeated-false&ordenacao=epidemiological_week"
+              template: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,epidemiological_week,epidemiological_week_start,epidemiological_week_end&valor=new_confirmed&agregacao=SUM&filtros=eq-place_type-'state',and,eq-cd_uf-{0},and,eq-is_repeated-false&ordenacao=epidemiological_week_start"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -210,6 +210,11 @@ secoes:
                     function: "get_week_status"
                     fn_args:
                       - named_prop: "epidemiological_week"
+                  - id: "week_year"
+                    function: "get_week_year"
+                    fn_args:
+                      - named_prop: "epidemiological_week"
+                      - named_prop: "epidemiological_week_start"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -227,7 +232,7 @@ secoes:
                 value: 'fmt_agr_sum_new_confirmed'
             options:
               id: "calc_week_status"
-              x: "epidemiological_week"
+              x: "calc_week_year"
               y: "agr_sum_new_confirmed"
               text: "fmt_agr_sum_new_confirmed"
               orientation: "vertical"
@@ -304,7 +309,7 @@ secoes:
             cls: "xs12"
             type: "BAR"
             api:
-              template: "/thematic/covidcasos?categorias='Óbitos confirmados'-cd_indicador,epidemiological_week,epidemiological_week_start,epidemiological_week_end&valor=new_deaths&agregacao=SUM&filtros=eq-place_type-'state',and,eq-cd_uf-{0},and,eq-is_repeated-false&ordenacao=epidemiological_week"
+              template: "/thematic/covidcasos?categorias='Óbitos confirmados'-cd_indicador,epidemiological_week,epidemiological_week_start,epidemiological_week_end&valor=new_deaths&agregacao=SUM&filtros=eq-place_type-'state',and,eq-cd_uf-{0},and,eq-is_repeated-false&ordenacao=epidemiological_week_start"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -320,6 +325,11 @@ secoes:
                     function: "get_week_status"
                     fn_args:
                       - named_prop: "epidemiological_week"
+                  - id: "week_year"
+                    function: "get_week_year"
+                    fn_args:
+                      - named_prop: "epidemiological_week"
+                      - named_prop: "epidemiological_week_start"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -337,7 +347,7 @@ secoes:
                 value: 'fmt_agr_sum_new_deaths'
             options:
               id: "calc_week_status"
-              x: "epidemiological_week"
+              x: "calc_week_year"
               y: "agr_sum_new_deaths"
               text: "fmt_agr_sum_new_deaths"
               orientation: "vertical"
@@ -556,13 +566,13 @@ secoes:
               event: 'selection'
               rules:
                 api:
-                  template: "/thematic/covidcasos?categorias={0}-valor,estimated_population_2019,cd_municipio_ibge_dv,city,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_uf-{1},and,ne-{0}-0"
+                  template: "/thematic/covidcasos?categorias={0}-valor,estimated_population,cd_municipio_ibge_dv,city,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_uf-{1},and,ne-{0}-0"
                   args:
                     - named_prop: "covid_valor"
                     - named_prop: 'cd_uf'
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/thematic/covidcasos?categorias=last_available_confirmed-valor,estimated_population_2019,cd_municipio_ibge_dv,city,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_uf-{0},and,ne-last_available_confirmed-0"
+          template: "/thematic/covidcasos?categorias=last_available_confirmed-valor,estimated_population,cd_municipio_ibge_dv,city,last_available_date,last_available_confirmed,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_per_100k_inhabitants,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_uf-{0},and,ne-last_available_confirmed-0"
           args:
             - named_prop: 'idLocalidade'
           options:
@@ -572,7 +582,7 @@ secoes:
                 fn_args:
                   - fixed: "valor"
             formatters:
-              - id: "estimated_population_2019"
+              - id: "estimated_population"
                 format: 'inteiro'
               - id: "last_available_deaths"
                 format: 'inteiro'
@@ -594,7 +604,7 @@ secoes:
             align: 'left'
             value: 'city'
           - text: 'População estimada (2019)'
-            value: 'fmt_estimated_population_2019'
+            value: 'fmt_estimated_population'
           - text: 'Casos confirmados'
             value: 'fmt_last_available_confirmed'
           - text: 'Óbitos confirmados'
@@ -1037,12 +1047,12 @@ secoes:
 #                 value: "obitos"
 #             event: 'selection'
 #         api:
-#           - template: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-cd_indicador,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,estimated_population_2019,last_available_confirmed-vl_indicador,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
+#           - template: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'casos'-cd_indicador,last_available_date,last_available_deaths,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,estimated_population,last_available_confirmed-vl_indicador,latitude,longitude&valor=last_available_confirmed&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
 #             args:
 #               - named_prop: 'idLocalidade'
 #             options:
 #               formatters:
-#                 - id: "estimated_population_2019"
+#                 - id: "estimated_population"
 #                   format: 'inteiro'
 #                 - id: "vl_indicador"
 #                   format: 'inteiro'
@@ -1058,12 +1068,12 @@ secoes:
 #                   precision: 2
 #                 - id: "last_available_date"
 #                   format: 'dataDMY'
-#           - template: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos'-cd_indicador,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,estimated_population_2019,last_available_deaths-vl_indicador,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
+#           - template: "/thematic/covidcasos?categorias=cd_municipio_ibge_dv,nm_municipio_uf,'obitos'-cd_indicador,last_available_date,last_available_confirmed,last_available_confirmed_per_100k_inhabitants,last_available_death_rate,estimated_population,last_available_deaths-vl_indicador,latitude,longitude&valor=last_available_deaths&calcs=ln_norm_pos_part&partition=is_last&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,ne-latitude-0,and,ne-longitude-0,and,eq-cd_uf-{0}"
 #             args:
 #               - named_prop: 'idLocalidade'
 #             options:
 #               formatters:
-#                 - id: "estimated_population_2019"
+#                 - id: "estimated_population"
 #                   format: 'inteiro'
 #                 - id: "vl_indicador"
 #                   format: 'inteiro'
@@ -1087,7 +1097,7 @@ secoes:
 #           - text: 'Valor'
 #             value: 'fmt_vl_indicador'
 #           - text: 'População estimada (2019)'
-#             value: 'fmt_estimated_population_2019'
+#             value: 'fmt_estimated_population'
 #           - text: 'Casos confirmados'
 #             value: 'fmt_last_available_confirmed'
 #           - text: 'Óbitos confirmados'
