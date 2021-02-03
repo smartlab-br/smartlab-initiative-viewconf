@@ -10,7 +10,6 @@ principais:
       year: "max"
     args:
       - prop: "value"
-        id: "JD_RAIS_39"
         named_prop: 'vl_indicador'
         format: 'inteiro'
         collapse:
@@ -19,7 +18,10 @@ principais:
       - prop: "description"
         fixed: 'Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)'
       - prop: 'comment'
-        fixed: "(RAIS, 2017)"
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
@@ -47,7 +49,12 @@ principais:
       - prop: "description"
         fixed: 'Vínculos Formais de Pessoas com Deficiência sobre o total de empregos formais'
       - prop: 'comment'
-        fixed: "(RAIS, 2017)"
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+            id: "JD_RAIS_41"
+          - named_prop: "nu_competencia"
+            id: "JD_RAIS_41"
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
@@ -66,7 +73,10 @@ principais:
       - prop: "description"
         fixed: "Remuneração dos Trabalhadores com Deficiência (PCD) no Mercado Formal"
       - prop: 'comment'
-        fixed: "(RAIS, 2017)"
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
@@ -793,6 +803,7 @@ secoes:
             prop: "centralindicadores"
             function: "slice"
             id: ['JD_RAIS_09_AUDITIVA','JD_RAIS_09_FISICA', 'JD_RAIS_09_MENTAL', 'JD_RAIS_09_MULTIPLA', 'JD_RAIS_09_REABILITADO', 'JD_RAIS_09_VISUAL']
+            year: "max"
             options:
               calcs:
                 - id: "bar_description"
@@ -887,7 +898,7 @@ secoes:
 
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'08_10_04_00'"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'08_10_04_00',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "cd_uf"
           options:
