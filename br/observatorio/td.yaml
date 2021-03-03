@@ -8,7 +8,7 @@ theme:
   toolbar:
     title: "Smartlab - Observatório do Trabalho Decente"
 ranking_cards:
-  - title: "Ocupações com Maior Número de Postos Formais Criados <sup>4</sup>"
+  - title: "Ocupações com Maior Número de Postos Formais Criados "
     cls: "xs12 sm6 pa-3"
     api: 
       - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=10&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_mov-max_competencia"
@@ -32,7 +32,7 @@ ranking_cards:
         named_prop: "termometro_descricao"
       - prop: 'vl_indicador'
         named_prop: "calc_criados"
-  - title: "Ocupações com Maior Número de Postos Formais Perdidos <sup>4</sup>"
+  - title: "Ocupações com Maior Número de Postos Formais Perdidos "
     cls: "xs12 sm6 pa-3"
     api: 
       - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=10&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_mov-max_competencia"
@@ -124,7 +124,7 @@ prevalencia:
     - id: "ranking_list_saldo"
       type: "ranking_list"
       rankings:
-        - title: "Saldo de Postos Formais por Setores Econômicos <sup>4</sup>"
+        - title: "Saldo de Postos Formais por Setores Econômicos "
           cls: "xs12"
           api: 
             - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=(sum(admitidos)-sum(desligados))&filtros=eq-termometro_grupo-'cnae_secao_uf',and,eq-competencia_mov-max_competencia"
@@ -166,7 +166,7 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Trabalhadores Admitidos<br/>Empregos Formais<sup>1</sup><br/>({0})"
+              template: "Trabalhadores Admitidos<br/>Empregos Formais*<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
         # - relevance: "high"
@@ -210,7 +210,7 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Trabalhadores Desligados<br/>Empregos Formais<sup>2</sup><br/>({0})"
+              template: "Trabalhadores Desligados<br/>Empregos Formais**<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
         # - relevance: "high"
@@ -259,13 +259,13 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Saldo de Empregos Formais<sup>3</sup><br/>({0})"
+              template: "Saldo de Empregos Formais***<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
     - id: "ranking_list_atividade"
       type: "ranking_list"
       rankings:
-        - title: "Atividades Econômicas com Maior Número de Postos Formais Criados <sup>4</sup>"
+        - title: "Atividades Econômicas com Maior Número de Postos Formais Criados "
           cls: "xs12"
           api: 
             - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_mov-max_competencia"
@@ -289,7 +289,7 @@ prevalencia:
               named_prop: "termometro_descricao"
             - prop: 'vl_indicador'
               named_prop: "calc_criados"
-        - title: "Atividades Econômicas com Maior Número de Postos Formais Perdidos <sup>4</sup>"
+        - title: "Atividades Econômicas com Maior Número de Postos Formais Perdidos "
           cls: "xs12"
           api: 
             - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_mov-max_competencia"
@@ -315,22 +315,21 @@ prevalencia:
               named_prop: "calc_perdidos"
     - type: "text"
       content:
-        api:
-          fixed: "/thematic/cagedtermometro?categorias=max_competencia&limit=1"
-          options:
-            calcs:
-              - id: "max_competencia"
-                function: "format_quarter_ds"
-                fn_args:
-                  - named_prop: "max_competencia"
+        # api:
+        #   fixed: "/thematic/cagedtermometro?categorias=max_competencia&limit=1"
+        #   options:
+        #     calcs:
+        #       - id: "max_competencia"
+        #         function: "format_quarter_ds"
+        #         fn_args:
+        #           - named_prop: "max_competencia"
 
-        template: "
-          1. Quantidade de admissões registradas no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
-          2. Quantidade de desligamentos registrados no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
-          3. O saldo é calculado pela subtração entre o total de trabalhadores admitidos e o total de trabalhadores desligados, o que pode resultar em valor positivo (no mapa, em azul) ou negativo (no mapa, em vermelho).<br/>
-          4. Competência da movimentação: {0}."
-        args:
-          - named_prop: "calc_max_competencia"
+        fixed: "
+          * Quantidade de admissões registradas no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
+          ** Quantidade de desligamentos registrados no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
+          *** O saldo é calculado pela subtração entre o total de trabalhadores admitidos e o total de trabalhadores desligados, o que pode resultar em valor positivo (no mapa, em azul) ou negativo (no mapa, em vermelho)."
+        # args:
+        #   - named_prop: "calc_max_competencia"
   mapa_filtros:
     - id: "selectlayer"
       type: "switch-group"
@@ -399,7 +398,7 @@ prevalencia:
     - id: "ranking_list_saldo"
       type: "ranking_list"
       rankings:
-        - title: "Saldo de Postos Formais por Setores Econômicos <sup>1</sup>"
+        - title: "Saldo de Postos Formais por Setores Econômicos"
           cls: "xs12"
           reactive: true
           api: 
@@ -460,7 +459,7 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Trabalhadores Admitidos<br/>Empregos Formais<sup>1</sup><br/>({0})"
+              template: "Trabalhadores Admitidos<br/>Empregos Formais*<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
         # - relevance: "high"
@@ -522,7 +521,7 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Trabalhadores Desligados<br/>Empregos Formais<sup>2</sup><br/>({0})"
+              template: "Trabalhadores Desligados<br/>Empregos Formais**<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
         # - relevance: "high"
@@ -594,7 +593,7 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Saldo de Empregos Formais<sup>3</sup><br/>({0})"
+              template: "Saldo de Empregos Formais***<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
     - id: "ranking_list_caged"
@@ -771,6 +770,6 @@ prevalencia:
     - type: "text"
       content:
         fixed: "
-          1. Quantidade de admissões registradas no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
-          2. Quantidade de desligamentos registrados no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
-          3. O saldo é calculado pela subtração entre o total de trabalhadores admitidos e o total de trabalhadores desligados, o que pode resultar em valor positivo (no mapa, em azul) ou negativo (no mapa, em vermelho)."
+          * Quantidade de admissões registradas no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
+          ** Quantidade de desligamentos registrados no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
+          *** O saldo é calculado pela subtração entre o total de trabalhadores admitidos e o total de trabalhadores desligados, o que pode resultar em valor positivo (no mapa, em azul) ou negativo (no mapa, em vermelho)."
