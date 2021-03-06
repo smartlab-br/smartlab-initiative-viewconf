@@ -8,7 +8,7 @@ theme:
   toolbar:
     title: "Smartlab - Observatório do Trabalho Decente"
 ranking_cards:
-  - title: "Ocupações com Maior Número de Postos Formais Criados <sup>4</sup>"
+  - title: "Ocupações com Maiores Saldos Positivos "
     cls: "xs12 sm6 pa-3"
     api: 
       - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=10&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_mov-max_competencia"
@@ -23,7 +23,7 @@ ranking_cards:
               function: "applyInterpolReplaceDatasetParam"
               fn_args:
                 - fixed: 
-                    template: "{0} novos postos"
+                    template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} novos postos"
                     args:
                       - named_prop: "calc_saldo"
                         format: "inteiro"
@@ -32,7 +32,7 @@ ranking_cards:
         named_prop: "termometro_descricao"
       - prop: 'vl_indicador'
         named_prop: "calc_criados"
-  - title: "Ocupações com Maior Número de Postos Formais Perdidos <sup>4</sup>"
+  - title: "Ocupações com Maiores Saldos Negativos "
     cls: "xs12 sm6 pa-3"
     api: 
       - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=10&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_mov-max_competencia"
@@ -47,7 +47,7 @@ ranking_cards:
               function: "applyInterpolReplaceDatasetParam"
               fn_args:
                 - fixed: 
-                    template: "{0} postos"
+                    template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} postos perdidos"
                     args:
                       - named_prop: "calc_saldo"
                         format: "inteiro"
@@ -56,6 +56,44 @@ ranking_cards:
         named_prop: "termometro_descricao"
       - prop: 'vl_indicador'
         named_prop: "calc_perdidos"
+  - title: "Ocupações com Maior Número de Admissões"
+    cls: "xs12 sm6 pa-3"
+    api: 
+      - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos&agregacao=sum&ordenacao=-sum(admitidos)&limit=10&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_mov-max_competencia"
+        options:
+          calcs:
+            - id: "admitidos"
+              function: "applyInterpolReplaceDatasetParam"
+              fn_args:
+                - fixed: 
+                    template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} admitidos"
+                    args:
+                      - named_prop: "agr_sum_admitidos"
+                        format: "inteiro"
+    args:
+      - prop: 'localidade'
+        named_prop: "termometro_descricao"
+      - prop: 'vl_indicador'
+        named_prop: "calc_admitidos"
+  - title: "Ocupações com Maior Número de Desligados"
+    cls: "xs12 sm6 pa-3"
+    api: 
+      - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=desligados&agregacao=sum&ordenacao=-sum(desligados)&limit=10&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_mov-max_competencia"
+        options:
+          calcs:
+            - id: "desligados"
+              function: "applyInterpolReplaceDatasetParam"
+              fn_args:
+                - fixed: 
+                    template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} desligados"
+                    args:
+                      - named_prop: "agr_sum_desligados"
+                        format: "inteiro"
+    args:
+      - prop: 'localidade'
+        named_prop: "termometro_descricao"
+      - prop: 'vl_indicador'
+        named_prop: "calc_desligados"
 prevalencia:
   id: "mapa_prev_brasil"
   chart_type: "MAP_BUBBLES"
@@ -109,43 +147,43 @@ prevalencia:
           cls: "xs12 pb-2"
           default: true
           color: "red"
-          label: "SALDO OCUPACIONAL NEGATIVO"
+          label: "SALDO NEGATIVO"
         - id: "positivo"
           cls: "xs12"
           default: true
           color: "light-blue"
-          label: "SALDO OCUPACIONAL POSITIVO"
+          label: "SALDO POSITIVO"
       event: 'selection'
     - type: "text"
       cls: "ma-0 pa-0"
       content:
         cls: "pa-0"
         fixed: "No mapa ao lado, visualiza-se um termômetro do mercado de trabalho formal no Brasil com base em informações organizadas de acordo com o último trimestre disponível de informações do Cadastro Geral de Empregados e Desempregados (CAGED). Em grande parte dos municípios brasileiros, os indicadores de trabalho formal são muito desfavoráveis. As informações sobre a demanda por postos de trabalho, com detalhamento de ocupações, são de extrema relevância não apenas para a definição de políticas de emprego e renda, mas também para investimento em programas de capacitação de pessoas vulneráveis em diferentes localidades, de acordo com o comportamento da atividade econômica e do mercado de trabalho. Em razão disso, pode-se visualizar, também, o comportamento do PIB per capita na localidade e a quantidade de pessoas que vivem em situação de pobreza ou extrema pobreza. Essas informações são relevantes, inclusive, para o exame das consequências econômicas e sociais da pandemia COVID-19."
-    - id: "ranking_list_saldo"
-      type: "ranking_list"
-      rankings:
-        - title: "Saldo de Postos Formais por Setores Econômicos <sup>4</sup>"
-          cls: "xs12"
-          api: 
-            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=(sum(admitidos)-sum(desligados))&filtros=eq-termometro_grupo-'cnae_secao_uf',and,eq-competencia_mov-max_competencia"
-              options:
-                calcs:
-                  - id: "saldo"
-                    function: "calc_subtraction_ds"
-                    fn_args:
-                      - fixed: "agr_sum_admitidos"
-                      - fixed: "agr_sum_desligados"
-          args:
-            - prop: 'localidade'
-              named_prop: "termometro_descricao"
-            - prop: 'vl_indicador'
-              named_prop: "calc_saldo"
-              format: "inteiro"
+    # - id: "ranking_list_saldo"
+    #   type: "ranking_list"
+    #   rankings:
+    #     - title: "Saldo de Postos Formais por Setores Econômicos "
+    #       cls: "xs12"
+    #       api: 
+    #         - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=(sum(admitidos)-sum(desligados))&filtros=eq-termometro_grupo-'cnae_secao_uf',and,eq-competencia_mov-max_competencia"
+    #           options:
+    #             calcs:
+    #               - id: "saldo"
+    #                 function: "calc_subtraction_ds"
+    #                 fn_args:
+    #                   - fixed: "agr_sum_admitidos"
+    #                   - fixed: "agr_sum_desligados"
+    #       args:
+    #         - prop: 'localidade'
+    #           named_prop: "termometro_descricao"
+    #         - prop: 'vl_indicador'
+    #           named_prop: "calc_saldo"
+    #           format: "inteiro"
   description_right:
     - id: "minicards_right"
-      class: "pr-0 pl-2 pb-0 pt-0"
+      class: "pr-0 pl-0 pb-0 pt-0"
       type: "minicards"
-      rowCalss: "pa-1"
+      groupClass: "pb-0"
       cards:
         - relevance: "high"
           cls: "xs12 lg6 text-xs-center "
@@ -166,7 +204,7 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Trabalhadores Admitidos<br/>Empregos Formais<sup>1</sup><br/>({0})"
+              template: "Trabalhadores Admitidos*<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
         # - relevance: "high"
@@ -210,7 +248,7 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Trabalhadores Desligados<br/>Empregos Formais<sup>2</sup><br/>({0})"
+              template: "Trabalhadores Desligados**<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
         # - relevance: "high"
@@ -259,16 +297,36 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Saldo de Empregos Formais<sup>3</sup><br/>({0})"
+              template: "Saldo de Empregos Formais***<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
+    - type: "text"
+      class: "pr-0 pl-0 py-0"
+      content:
+        cls: "pl-2 py-0 pb-0"
+        # api:
+        #   fixed: "/thematic/cagedtermometro?categorias=max_competencia&limit=1"
+        #   options:
+        #     calcs:
+        #       - id: "max_competencia"
+        #         function: "format_quarter_ds"
+        #         fn_args:
+        #           - named_prop: "max_competencia"
+
+        fixed: "
+          * Quantidade de admissões registradas no último trimestre disponível do CAGED.<br/>
+          ** Quantidade de desligamentos registrados no último trimestre disponível do CAGED.<br/>
+          *** O saldo é calculado pela subtração entre o total de trabalhadores admitidos e o total de trabalhadores desligados, o que pode resultar em valor positivo (no mapa, em azul) ou negativo (no mapa, em vermelho)."
+        # args:
+        #   - named_prop: "calc_max_competencia"
     - id: "ranking_list_atividade"
       type: "ranking_list"
+      sectionClass: "pb-2 pl-2"
       rankings:
-        - title: "Atividades Econômicas com Maior Número de Postos Formais Criados <sup>4</sup>"
+        - title: "Setores com Maiores Saldos Positivos"
           cls: "xs12"
           api: 
-            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_mov-max_competencia"
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_mov-max_competencia,and,nl-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
               options:
                 calcs:
                   - id: "saldo"
@@ -280,7 +338,7 @@ prevalencia:
                     function: "applyInterpolReplaceDatasetParam"
                     fn_args:
                       - fixed: 
-                          template: "{0} novos postos"
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} novos postos"
                           args:
                             - named_prop: "calc_saldo"
                               format: "inteiro"
@@ -289,10 +347,10 @@ prevalencia:
               named_prop: "termometro_descricao"
             - prop: 'vl_indicador'
               named_prop: "calc_criados"
-        - title: "Atividades Econômicas com Maior Número de Postos Formais Perdidos <sup>4</sup>"
+        - title: "Setores com Maiores Saldos Negativos "
           cls: "xs12"
           api: 
-            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_mov-max_competencia"
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_mov-max_competencia,and,nl-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
               options:
                 calcs:
                   - id: "saldo"
@@ -304,7 +362,7 @@ prevalencia:
                     function: "applyInterpolReplaceDatasetParam"
                     fn_args:
                       - fixed: 
-                          template: "{0} postos"
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} postos perdidos"
                           args:
                             - named_prop: "calc_saldo"
                               format: "inteiro"
@@ -313,24 +371,44 @@ prevalencia:
               named_prop: "termometro_descricao"
             - prop: 'vl_indicador'
               named_prop: "calc_perdidos"
-    - type: "text"
-      content:
-        api:
-          fixed: "/thematic/cagedtermometro?categorias=max_competencia&limit=1"
-          options:
-            calcs:
-              - id: "max_competencia"
-                function: "format_quarter_ds"
-                fn_args:
-                  - named_prop: "max_competencia"
-
-        template: "
-          1. Quantidade de admissões registradas no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
-          2. Quantidade de desligamentos registrados no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
-          3. O saldo é calculado pela subtração entre o total de trabalhadores admitidos e o total de trabalhadores desligados, o que pode resultar em valor positivo (no mapa, em azul) ou negativo (no mapa, em vermelho).<br/>
-          4. Competência da movimentação: {0}."
-        args:
-          - named_prop: "calc_max_competencia"
+        - title: "Setores com Maior Número de Admissões"
+          cls: "xs12"
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos&agregacao=sum&ordenacao=-sum(admitidos)&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_mov-max_competencia,and,nl-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
+              options:
+                calcs:
+                  - id: "admitidos"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} admitidos"
+                          args:
+                            - named_prop: "agr_sum_admitidos"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_admitidos"
+        - title: "Setores com Maior Número de Desligados"
+          cls: "xs12"
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=desligados&agregacao=sum&ordenacao=-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cnae_classe_uf',and,eq-competencia_mov-max_competencia,and,nl-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
+              options:
+                calcs:
+                  - id: "desligados"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} desligados"
+                          args:
+                            - named_prop: "agr_sum_desligados"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_desligados"
   mapa_filtros:
     - id: "selectlayer"
       type: "switch-group"
@@ -339,12 +417,12 @@ prevalencia:
           cls: "xs12 pb-2"
           default: true
           color: "red"
-          label: "SALDO OCUPACIONAL NEGATIVO"
+          label: "SALDO NEGATIVO"
         - id: "positivo"
           cls: "xs12"
           default: true
           color: "light-blue"
-          label: "SALDO OCUPACIONAL POSITIVO"
+          label: "SALDO POSITIVO"
       event: 'selection'
     - id: "select_uf"
       type: "select"
@@ -396,41 +474,41 @@ prevalencia:
       content:
         cls: "pa-0"
         fixed: "No mapa ao lado, visualiza-se um termômetro do mercado de trabalho formal no Brasil com base em informações organizadas de acordo com o último trimestre disponível de informações do Cadastro Geral de Empregados e Desempregados (CAGED). Em grande parte dos municípios brasileiros, os indicadores de trabalho formal são muito desfavoráveis. As informações sobre a demanda por postos de trabalho, com detalhamento de ocupações, são de extrema relevância não apenas para a definição de políticas de emprego e renda, mas também para investimento em programas de capacitação de pessoas vulneráveis em diferentes localidades, de acordo com o comportamento da atividade econômica e do mercado de trabalho. Em razão disso, pode-se visualizar, também, o comportamento do PIB per capita na localidade e a quantidade de pessoas que vivem em situação de pobreza ou extrema pobreza. Essas informações são relevantes, inclusive, para o exame das consequências econômicas e sociais da pandemia COVID-19."
-    - id: "ranking_list_saldo"
-      type: "ranking_list"
-      rankings:
-        - title: "Saldo de Postos Formais por Setores Econômicos <sup>1</sup>"
-          cls: "xs12"
-          reactive: true
-          api: 
-            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=(sum(admitidos)-sum(desligados))&filtros=eq-termometro_grupo-'cnae_secao_uf',and,eq-competencia_mov-max_competencia"
-              options:
-                calcs:
-                  - id: "saldo"
-                    function: "calc_subtraction_ds"
-                    fn_args:
-                      - fixed: "agr_sum_admitidos"
-                      - fixed: "agr_sum_desligados"
-          apiBase: 
-            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=(sum(admitidos)-sum(desligados))&filtros=eq-termometro_grupo-'cnae_secao_uf'"
-              options:
-                calcs:
-                  - id: "saldo"
-                    function: "calc_subtraction_ds"
-                    fn_args:
-                      - fixed: "agr_sum_admitidos"
-                      - fixed: "agr_sum_desligados"
-          args:
-            - prop: 'localidade'
-              named_prop: "termometro_descricao"
-            - prop: 'vl_indicador'
-              named_prop: "calc_saldo"
-              format: "inteiro"
+    # - id: "ranking_list_saldo"
+    #   type: "ranking_list"
+    #   rankings:
+    #     - title: "Saldo de Postos Formais por Setores Econômicos"
+    #       cls: "xs12"
+    #       reactive: true
+    #       api: 
+    #         - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=(sum(admitidos)-sum(desligados))&filtros=eq-termometro_grupo-'cnae_secao_uf',and,eq-competencia_mov-max_competencia"
+    #           options:
+    #             calcs:
+    #               - id: "saldo"
+    #                 function: "calc_subtraction_ds"
+    #                 fn_args:
+    #                   - fixed: "agr_sum_admitidos"
+    #                   - fixed: "agr_sum_desligados"
+    #       apiBase: 
+    #         - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=(sum(admitidos)-sum(desligados))&filtros=eq-termometro_grupo-'cnae_secao_uf'"
+    #           options:
+    #             calcs:
+    #               - id: "saldo"
+    #                 function: "calc_subtraction_ds"
+    #                 fn_args:
+    #                   - fixed: "agr_sum_admitidos"
+    #                   - fixed: "agr_sum_desligados"
+    #       args:
+    #         - prop: 'localidade'
+    #           named_prop: "termometro_descricao"
+    #         - prop: 'vl_indicador'
+    #           named_prop: "calc_saldo"
+    #           format: "inteiro"
   mapa_description_right:
     - id: "minicards_right"
       class: "pr-0 pl-2 pb-0 pt-0"
       type: "minicards"
-      rowCalss: "pa-1"
+      sectionClass: "pb-0"
       cards:
         - relevance: "high"
           cls: "xs12 lg6 text-xs-center "
@@ -460,7 +538,7 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Trabalhadores Admitidos<br/>Empregos Formais<sup>1</sup><br/>({0})"
+              template: "Trabalhadores Admitidos*<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
         # - relevance: "high"
@@ -522,7 +600,7 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Trabalhadores Desligados<br/>Empregos Formais<sup>2</sup><br/>({0})"
+              template: "Trabalhadores Desligados**<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
         # - relevance: "high"
@@ -594,97 +672,20 @@ prevalencia:
                 format: 'real'
                 precision: 1
             - prop: "description"
-              template: "Saldo de Empregos Formais<sup>3</sup><br/>({0})"
+              template: "Saldo de Empregos Formais***<br/>({0})"
               args:
                 - named_prop: "calc_mes_competencia"
+    - type: "text"
+      content:
+        cls: "pl-2 py-0 pb-0"
+        fixed: "
+          * Quantidade de admissões registradas no último trimestre disponível do CAGED.<br/>
+          ** Quantidade de desligamentos registrados no último trimestre disponível do CAGED.<br/>
+          *** O saldo é calculado pela subtração entre o total de trabalhadores admitidos e o total de trabalhadores desligados, o que pode resultar em valor positivo (no mapa, em azul) ou negativo (no mapa, em vermelho)."
     - id: "ranking_list_caged"
       type: "ranking_list"
       rankings:
-        - title: "Ocupações com Maior Número de Postos Formais Criados"
-          cls: "xs12 px-3 pb-0"
-          reactive: true
-          api: 
-            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_mov-max_competencia"
-              options:
-                calcs:
-                  - id: "saldo"
-                    function: "calc_subtraction_ds"
-                    fn_args:
-                      - fixed: "agr_sum_admitidos"
-                      - fixed: "agr_sum_desligados"
-                  - id: "criados"
-                    function: "applyInterpolReplaceDatasetParam"
-                    fn_args:
-                      - fixed: 
-                          template: "{0} novos postos"
-                          args:
-                            - named_prop: "calc_saldo"
-                              format: "inteiro"
-          apiBase:
-            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=5&filtros=eq-termometro_grupo-'cbo_uf'"
-              options:
-                calcs:
-                  - id: "saldo"
-                    function: "calc_subtraction_ds"
-                    fn_args:
-                      - fixed: "agr_sum_admitidos"
-                      - fixed: "agr_sum_desligados"
-                  - id: "criados"
-                    function: "applyInterpolReplaceDatasetParam"
-                    fn_args:
-                      - fixed: 
-                          template: "{0} novos postos"
-                          args:
-                            - named_prop: "calc_saldo"
-                              format: "inteiro"
-          args:
-            - prop: 'localidade'
-              named_prop: "termometro_descricao"
-            - prop: 'vl_indicador'
-              named_prop: "calc_criados"
-        - title: "Ocupações com Maior Número de Postos Formais Perdidos"
-          cls: "xs12 px-3 pb-0"
-          reactive: true
-          api: 
-            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_mov-max_competencia"
-              options:
-                calcs:
-                  - id: "saldo"
-                    function: "calc_subtraction_ds"
-                    fn_args:
-                      - fixed: "agr_sum_admitidos"
-                      - fixed: "agr_sum_desligados"
-                  - id: "perdidos"
-                    function: "applyInterpolReplaceDatasetParam"
-                    fn_args:
-                      - fixed: 
-                          template: "{0} postos"
-                          args:
-                            - named_prop: "calc_saldo"
-                              format: "inteiro"
-          apiBase:
-            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=5&filtros=eq-termometro_grupo-'cbo_uf'"
-              options:
-                calcs:
-                  - id: "saldo"
-                    function: "calc_subtraction_ds"
-                    fn_args:
-                      - fixed: "agr_sum_admitidos"
-                      - fixed: "agr_sum_desligados"
-                  - id: "perdidos"
-                    function: "applyInterpolReplaceDatasetParam"
-                    fn_args:
-                      - fixed: 
-                          template: "{0} postos"
-                          args:
-                            - named_prop: "calc_saldo"
-                              format: "inteiro"
-          args:
-            - prop: 'localidade'
-              named_prop: "termometro_descricao"
-            - prop: 'vl_indicador'
-              named_prop: "calc_perdidos"
-        - title: "Atividades Econômicas com Maior Número de Postos Formais Criados"
+        - title: "Maiores Saldos Positivos"
           cls: "xs12 px-3 pb-0"
           reactive: true
           api: 
@@ -700,7 +701,7 @@ prevalencia:
                     function: "applyInterpolReplaceDatasetParam"
                     fn_args:
                       - fixed: 
-                          template: "{0} novos postos"
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} novos postos"
                           args:
                             - named_prop: "calc_saldo"
                               format: "inteiro"
@@ -717,7 +718,7 @@ prevalencia:
                     function: "applyInterpolReplaceDatasetParam"
                     fn_args:
                       - fixed: 
-                          template: "{0} novos postos"
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} novos postos"
                           args:
                             - named_prop: "calc_saldo"
                               format: "inteiro"
@@ -726,7 +727,7 @@ prevalencia:
               named_prop: "termometro_descricao"
             - prop: 'vl_indicador'
               named_prop: "calc_criados"
-        - title: "Atividades Econômicas com Maior Número de Postos Formais Perdidos"
+        - title: "Maiores Saldos Negativos"
           cls: "xs12 px-3 pb-0"
           reactive: true
           api: 
@@ -742,7 +743,7 @@ prevalencia:
                     function: "applyInterpolReplaceDatasetParam"
                     fn_args:
                       - fixed: 
-                          template: "{0} postos"
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} postos perdidos"
                           args:
                             - named_prop: "calc_saldo"
                               format: "inteiro"
@@ -759,7 +760,7 @@ prevalencia:
                     function: "applyInterpolReplaceDatasetParam"
                     fn_args:
                       - fixed: 
-                          template: "{0} postos"
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} postos perdidos"
                           args:
                             - named_prop: "calc_saldo"
                               format: "inteiro"
@@ -768,9 +769,87 @@ prevalencia:
               named_prop: "termometro_descricao"
             - prop: 'vl_indicador'
               named_prop: "calc_perdidos"
-    - type: "text"
-      content:
-        fixed: "
-          1. Quantidade de admissões registradas no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
-          2. Quantidade de desligamentos registrados no último trimestre disponível do Cadastro Geral de Empregados e Desempregados (CAGED).<br/>
-          3. O saldo é calculado pela subtração entre o total de trabalhadores admitidos e o total de trabalhadores desligados, o que pode resultar em valor positivo (no mapa, em azul) ou negativo (no mapa, em vermelho)."
+        - title: "Ocupações com Maiores Saldos Positivos"
+          cls: "xs12 px-3 pb-0"
+          reactive: true
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=10&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_mov-max_competencia"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "criados"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} novos postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          apiBase:
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=-(sum(admitidos)-sum(desligados))&limit=10&filtros=eq-termometro_grupo-'cbo_uf'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "criados"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} novos postos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_criados"
+        - title: "Ocupações com Maiores Saldos Negativos"
+          cls: "xs12 px-3 pb-0"
+          reactive: true
+          api: 
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=10&filtros=eq-termometro_grupo-'cbo_uf',and,eq-competencia_mov-max_competencia"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "perdidos"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} postos perdidos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          apiBase:
+            - fixed: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&valor=admitidos,desligados&agregacao=sum,sum&ordenacao=sum(admitidos)-sum(desligados)&limit=10&filtros=eq-termometro_grupo-'cbo_uf'"
+              options:
+                calcs:
+                  - id: "saldo"
+                    function: "calc_subtraction_ds"
+                    fn_args:
+                      - fixed: "agr_sum_admitidos"
+                      - fixed: "agr_sum_desligados"
+                  - id: "perdidos"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "<br/>&nbsp;&nbsp;&nbsp;&nbsp;{0} postos perdidos"
+                          args:
+                            - named_prop: "calc_saldo"
+                              format: "inteiro"
+          args:
+            - prop: 'localidade'
+              named_prop: "termometro_descricao"
+            - prop: 'vl_indicador'
+              named_prop: "calc_perdidos"
