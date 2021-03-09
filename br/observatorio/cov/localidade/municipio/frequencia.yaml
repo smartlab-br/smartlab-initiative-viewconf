@@ -1,0 +1,538 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/covidcasos?categorias=city_ibge_code,last_available_date,last_available_confirmed&filtros=eq-city_ibge_code-{0},and,eq-place_type-'city',and,eq-is_last-TRUE"
+      args:
+        - named_prop: "idLocalidadeD6"
+    args:
+      - prop: "value"
+        named_prop: 'last_available_confirmed'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Casos Confirmados"
+      - prop: 'comment'
+        named_prop: 'last_available_date'
+        format: 'dataDMY'
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/covidcasos?categorias=city_ibge_code,last_available_date,last_available_deaths&filtros=eq-city_ibge_code-{0},and,eq-place_type-'city',and,eq-is_last-TRUE"
+      args:
+        - named_prop: "idLocalidadeD6"
+    args:
+      - prop: "value"
+        named_prop: 'last_available_deaths'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Óbitos Confirmados"
+      - prop: 'comment'
+        named_prop: 'last_available_date'
+        format: 'dataDMY'
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/covidcasos?categorias=last_available_date,last_available_confirmed_per_100k_inhabitants&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+      args:
+        - named_prop: 'idLocalidade'
+    args:
+      - prop: "value"
+        named_prop: 'last_available_confirmed_per_100k_inhabitants'
+        format: 'real'
+        precision: 2
+        default: "Sem Registros"
+        zero: "Nenhum"
+      - prop: "description"
+        fixed: 'Casos confirmados'
+      - prop: "comment"
+        fixed: 'por 100.000 hab.'
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/covidcasos?categorias=last_available_date,last_available_death_rate&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+      args:
+        - named_prop: 'idLocalidade'
+    args:
+      - prop: "value"
+        named_prop: 'last_available_death_rate'
+        format: 'real'
+        precision: 2
+        default: "Sem Registros"
+        zero: "Nenhum"
+      - prop: "description"
+        fixed: 'Óbitos confirmados'
+      - prop: "comment"
+        fixed: 'por 100.000 hab.'
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/covidcasos?categorias=city_ibge_code,last_available_date,last_available_confirmed,last_available_deaths&filtros=eq-city_ibge_code-{0},and,eq-place_type-'city',and,eq-is_last-TRUE"
+      args:
+        - named_prop: "idLocalidadeD6"
+    args:
+      - prop: "value"
+        function: 'calc_percentage'
+        format: 'porcentagem'
+        fn_args:
+          - named_prop: "last_available_deaths"
+          - named_prop: "last_available_confirmed"
+      - prop: "description"
+        fixed: "Letalidade"
+      - prop: 'comment'
+        named_prop: 'date_info'
+        format: 'dataDMY'
+# ========================================================
+secoes:
+  - id: 'frequencia_serie'
+    name: "Série Histórica"
+    cards:
+# ========================================================
+      - id: "bar_serie_casos_semana_epidemiologica"
+        type: "multiple-charts"
+        title:
+          fixed: "Casos por Semana Epidemiológica - Série Histórica"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_last_available_date"
+              format: 'dataDMY'
+            - named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/covidcasos?categorias=last_available_date,last_available_confirmed&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/covidcasos?categorias=last_available_date,last_available_deaths&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_deaths'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de casos e óbitos confirmados por COVID-19 no município selecionado. O gráfico apresenta a série histórica dos casos por semana epidemiológica.<br/>
+                      Por convenção internacional, as semanas epidemiológicas são contadas de domingo a sábado. A primeira semana do ano é aquela que contém o maior número de dias de janeiro e a última, a que contém o maior número de dias de dezembro.<br/>
+                      <b>A última semana apresentada no gráfico é a semana corrente, podendo, pois, apresentar um total parcial.</b>"
+        charts:
+          - id: "bar_casos"
+            title: "Casos de COVID-19 por semana epidemiológica"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              template: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,epidemiological_week,epidemiological_week_start,epidemiological_week_end&valor=new_confirmed&agregacao=SUM&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0},and,eq-is_repeated-false&ordenacao=epidemiological_week"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_sum_new_confirmed"
+                    format: 'inteiro'
+                  - id: "epidemiological_week_start"
+                    format: 'dataDMY'
+                  - id: "epidemiological_week_end"
+                    format: 'dataDMY'
+                calcs:
+                  - id: "week_status"
+                    function: "get_week_status"
+                    fn_args:
+                      - named_prop: "epidemiological_week"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'cd_indicador'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'epidemiological_week'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_epidemiological_week_start'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_epidemiological_week_end'
+              - text: 'Número de casos'
+                value: 'fmt_agr_sum_new_confirmed'
+            options:
+              id: "calc_week_status"
+              x: "epidemiological_week"
+              y: "agr_sum_new_confirmed"
+              text: "fmt_agr_sum_new_confirmed"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: false
+              legend_field: "calc_week_status"
+              colorArray: ["#377EB8", "#BBDEFB"]  # blue
+        source:
+          desc: "Brasil.io"
+          link: "https://brasil.io/covid19/"
+# ========================================================
+      - id: "bar_serie_obitos_semana_epidemiologica"
+        type: "multiple-charts"
+        title:
+          fixed: "Óbitos por Semana Epidemiológica - Série Histórica"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_last_available_date"
+              format: 'dataDMY'
+            - named_prop: "agr_max_last_available_date"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/covidcasos?categorias=last_available_date,last_available_confirmed&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_confirmed'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos confirmados'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/covidcasos?categorias=last_available_date,last_available_deaths&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'last_available_deaths'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos confirmados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de casos e óbitos confirmados por COVID-19 no município selecionado. O gráfico apresenta a série histórica dos óbitos por semana epidemiológica.<br/>
+                      Por convenção internacional, as semanas epidemiológicas são contadas de domingo a sábado. A primeira semana do ano é aquela que contém o maior número de dias de janeiro e a última, a que contém o maior número de dias de dezembro.<br/>
+                      <b>A última semana apresentada no gráfico é a semana corrente, podendo, pois, apresentar um total parcial.</b>"
+        charts:
+          - id: "bar_obitos"
+            title: "Óbitos por COVID-19 por semana epidemiológica"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              template: "/thematic/covidcasos?categorias='Óbitos confirmados'-cd_indicador,epidemiological_week,epidemiological_week_start,epidemiological_week_end&valor=new_deaths&agregacao=SUM&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0},and,eq-is_repeated-false&ordenacao=epidemiological_week"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_sum_new_deaths"
+                    format: 'inteiro'
+                  - id: "epidemiological_week_start"
+                    format: 'dataDMY'
+                  - id: "epidemiological_week_end"
+                    format: 'dataDMY'
+                calcs:
+                  - id: "week_status"
+                    function: "get_week_status"
+                    fn_args:
+                      - named_prop: "epidemiological_week"
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'cd_indicador'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'epidemiological_week'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_epidemiological_week_start'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_epidemiological_week_end'
+              - text: 'Número de óbitos'
+                value: 'fmt_agr_sum_new_deaths'
+            options:
+              id: "calc_week_status"
+              x: "epidemiological_week"
+              y: "agr_sum_new_deaths"
+              text: "fmt_agr_sum_new_deaths"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: false
+              legend_field: "calc_week_status"
+              colorArray: ["red", "#FFCDD2"]
+        source:
+          desc: "Brasil.io"
+          link: "https://brasil.io/covid19/"
+# # ========================================================
+#       - id: "line_casos"
+#         type: "multiple-charts"
+#         title: 
+#           fixed: "Casos por dia - Série Histórica"
+#         title_comment:
+#           template: "{0}, {1} a {2}"
+#           api: 
+#             template: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0}"
+#             args:
+#               - named_prop: "idLocalidade"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - named_prop: "agr_min_last_available_date"
+#               format: 'dataDMY'
+#             - named_prop: "agr_max_last_available_date"
+#               format: 'dataDMY'
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       fixed: ""
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/thematic/covidcasos?categorias=last_available_date,last_available_confirmed&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'last_available_confirmed'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: 'Casos confirmados'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número total de casos confirmados de COVID-19 no município selecionado. Os gráficos apresentam a série histórica dos casos confirmados, com o total diário e o total acumulado.<br/>"
+#         charts:
+#           - id: "line_casos_diarios"
+#             title: "Casos confirmados diários"
+#             cls: "xs12 md6"
+#             type: "LINE"
+#             api: 
+#               - template: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date,new_confirmed&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0},and,eq-is_repeated-false&ordenacao=date_info"
+#                 args:
+#                   - named_prop: "idLocalidade"
+#                 options:
+#                   formatters:
+#                     - id: "new_confirmed"
+#                       format: 'inteiro'
+#                     - id: "date_info"
+#                       format: 'dataYMD'
+#                     - id: "tooltip_date"
+#                       format: 'dataDMY'
+#             headers:
+#               - text: 'Data'
+#                 align: 'left'
+#                 value: 'fmt_tooltip_date'
+#               - text: 'Casos confirmados'
+#                 value: 'fmt_new_confirmed'
+#             options:
+#               id: "cd_indicador"
+#               x: "fmt_date_info"
+#               y: "new_confirmed"
+#               x_options:
+#                 labelMaxNumber: 15
+#               hide_legend: false
+#               legend_field: "cd_indicador"
+#               colorArray: ["#377EB8"]  # blue
+#           - id: "line_casos_acumulados"  
+#             title: "Casos confirmados acumulados"
+#             cls: "xs12 md6"
+#             type: "LINE"
+#             api: 
+#               - template: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,last_available_date,last_available_date-tooltip_date,last_available_confirmed&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0},and,eq-is_repeated-false&ordenacao=last_available_date"
+#                 args:
+#                   - named_prop: "idLocalidade"
+#                 options:
+#                   formatters:
+#                     - id: "last_available_confirmed"
+#                       format: 'inteiro'
+#                     - id: "last_available_date"
+#                       format: 'dataYMD'
+#                     - id: "tooltip_date"
+#                       format: 'dataDMY'
+#             headers:
+#               - text: 'Data'
+#                 align: 'left'
+#                 value: 'fmt_tooltip_date'
+#               - text: 'Casos acumulados'
+#                 value: 'fmt_last_available_confirmed'
+#             options:
+#               id: "cd_indicador"
+#               x: "fmt_last_available_date"
+#               y: "last_available_confirmed"
+#               x_options:
+#                 labelMaxNumber: 15
+#               hide_legend: false
+#               legend_field: "cd_indicador"
+#               colorArray: ["#377EB8"]  # blue
+#         source:
+#           desc: "Brasil.io"
+#           link: "https://brasil.io/covid19/"
+# # ========================================================
+#       - id: "line_obitos"
+#         type: "multiple-charts"
+#         title: 
+#           fixed: "Óbitos por dia - Série Histórica"
+#         title_comment:
+#           template: "{0}, {1} a {2}"
+#           api: 
+#             template: "/thematic/covidcasos?categorias=1&valor=last_available_date&agregacao=MAX,MIN&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0}"
+#             args:
+#               - named_prop: "idLocalidade"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - named_prop: "agr_min_last_available_date"
+#               format: 'dataDMY'
+#             - named_prop: "agr_max_last_available_date"
+#               format: 'dataDMY'
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       fixed: ""
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/thematic/covidcasos?categorias=last_available_date,last_available_deaths&filtros=eq-place_type-'city',and,eq-is_last-TRUE,and,eq-cd_municipio_ibge_dv-{0}"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'last_available_deaths'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: 'Óbitos confirmados'
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número total de óbitos confirmados por COVID-19 no município selecionado. Os gráficos apresentam a série histórica dos óbitos confirmados, com o total diário e o total acumulado.<br/>"
+#         charts:
+#           - id: "line_obitos_diarios"  
+#             title: "Óbitos confirmados diários"
+#             cls: "xs12 md6"
+#             type: "LINE"
+#             api: 
+#               - template: "/thematic/covidcasos?categorias='Óbitos confirmados'-cd_indicador,date_info,date_info-tooltip_date,new_deaths&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0},and,eq-is_repeated-false&ordenacao=date_info"
+#                 args:
+#                   - named_prop: "idLocalidade"
+#                 options:
+#                   formatters:
+#                     - id: "new_deaths"
+#                       format: 'inteiro'
+#                     - id: "date_info"
+#                       format: 'dataYMD'
+#                     - id: "tooltip_date"
+#                       format: 'dataDMY'
+#             headers:
+#               - text: 'Data'
+#                 align: 'left'
+#                 value: 'fmt_tooltip_date'
+#               - text: 'Óbitos confirmados'
+#                 value: 'fmt_new_deaths'
+#             options:
+#               id: "cd_indicador"
+#               x: "fmt_date_info"
+#               y: "new_deaths"
+#               x_options:
+#                 labelMaxNumber: 15
+#               hide_legend: false
+#               legend_field: "cd_indicador"
+#               colorArray: ["#E41A1C"]  # red
+#           - id: "line_obitos_acumulados"  
+#             title: "Óbitos confirmados acumulados"
+#             cls: "xs12 md6"
+#             type: "LINE"
+#             api: 
+#               - template: "/thematic/covidcasos?categorias='Casos confirmados'-cd_indicador,date_info,date_info-tooltip_date,last_available_deaths&filtros=eq-place_type-'city',and,eq-cd_municipio_ibge_dv-{0}&ordenacao=date_info"
+#                 args:
+#                   - named_prop: "idLocalidade"
+#                 options:
+#                   formatters:
+#                     - id: "last_available_deaths"
+#                       format: 'inteiro'
+#                     - id: "date_info"
+#                       format: 'dataYMD'
+#                     - id: "tooltip_date"
+#                       format: 'dataDMY'
+#             headers:
+#               - text: 'Data'
+#                 align: 'left'
+#                 value: 'fmt_tooltip_date'
+#               - text: 'Óbitos acumulados'
+#                 value: 'fmt_last_available_deaths'
+#             options:
+#               id: "cd_indicador"
+#               x: "fmt_date_info"
+#               y: "last_available_deaths"
+#               x_options:
+#                 labelMaxNumber: 15
+#               hide_legend: false
+#               legend_field: "cd_indicador"
+#               colorArray: ["#E41A1C"]  # red
+#         source:
+#           desc: "Brasil.io"
+#           link: "https://brasil.io/covid19/"

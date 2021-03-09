@@ -1,0 +1,1642 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/srag?categorias=cd_municipio_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Casos - SRAG por COVID-19<br/>Notificados no município"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - fixed: "SIVEP-Gripe/SVS/MS"
+          - fixed: "2020"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Casos - SRAG por COVID-19<br/>Residentes no município"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - fixed: "SIVEP-Gripe/SVS/MS"
+          - fixed: "2020"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,eq-evolucao-'Óbito',and,gt-ano_notificacao-2019"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Óbitos - SRAG por COVID-19<br/>Residentes no município"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - fixed: "SIVEP-Gripe/SVS/MS"
+          - fixed: "2020"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'SRAG não especificado',and,gt-ano_notificacao-2019"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Casos - SRAG não especificado<br/>Residentes no município"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - fixed: "SIVEP-Gripe/SVS/MS"
+          - fixed: "2020"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'SRAG não especificado',and,eq-evolucao-'Óbito',and,gt-ano_notificacao-2019"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Óbitos - SRAG não especificado<br/>Residentes no município"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - fixed: "SIVEP-Gripe/SVS/MS"
+          - fixed: "2020"
+# ========================================================
+secoes:
+  - id: 'srag_serie'
+    name: "Série Histórica"
+    cards:
+# ========================================================
+      - id: "bar_serie_srag_semana_epidemiologica"
+        type: "multiple-charts"
+        title:
+          fixed: "Comparação por ano - Casos de SRAG por Semana Epidemiológica de início dos sintomas"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            template: "/thematic/srag?categorias=1&valor=dt_prim_sintomas&agregacao=MAX,MIN&filtros=gt-ano_prim_sintomas-2018"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_prim_sintomas"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_prim_sintomas"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos de SRAG'
+                  - prop: "comment"
+                    fixed: "2019"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-ano_notificacao-2020"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos de SRAG até o momento'
+                  - prop: "comment"
+                    fixed: "2020"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) para os anos de 2019 e 2020.
+              O gráfico apresenta a série histórica de todos os casos registrados de SRAG dos residentes no município selecionado, por semana epidemiológica do início dos sintomas. 
+              <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+        charts:
+          - id: "bar_casos"
+            title: "Casos de SRAG por semana epidemiológica"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              template: "/thematic/srag?categorias=ano_prim_sintomas,semana_prim_sintomas,semana_prim_sintomas_inicio,semana_prim_sintomas_fim&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,gt-ano_prim_sintomas-2018&ordenacao=ano_prim_sintomas"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+                  - id: "semana_prim_sintomas_inicio"
+                    format: 'dataDMY'
+                  - id: "semana_prim_sintomas_fim"
+                    format: 'dataDMY'
+            headers:
+              - text: 'Ano'
+                align: 'left'
+                value: 'ano_prim_sintomas'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'semana_prim_sintomas'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_semana_prim_sintomas_inicio'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_semana_prim_sintomas_fim'
+              - text: 'Número de casos'
+                value: 'fmt_agr_count'
+            options:
+              id: "ano_prim_sintomas"
+              x: "semana_prim_sintomas"
+              y: "agr_count"
+              text: "fmt_agr_count"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: true
+              legend_field: "ano_prim_sintomas"
+              colorArray: ["#377EB8", "red"]
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# ========================================================
+      - id: "bar_serie_srag_obitos_semana_epidemiologica"
+        type: "multiple-charts"
+        title:
+          fixed: "Comparação por ano - Óbitos por SRAG por Semana Epidemiológica da notificação"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos por SRAG'
+                  - prop: "comment"
+                    fixed: "2019"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-ano_notificacao-2020,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos por SRAG até o momento'
+                  - prop: "comment"
+                    fixed: "2020"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) para os anos de 2019 e 2020.
+              O gráfico apresenta a série histórica de todos os óbitos registrados relacionados à SRAG dos residentes no município selecionado, por semana epidemiológica da notificação. 
+              <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+        charts:
+          - id: "bar_obitos"
+            title: "Óbitos por SRAG por semana epidemiológica"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              template: "/thematic/srag?categorias=ano_notificacao,semana_notificacao,semana_notificacao_inicio,semana_notificacao_fim&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,gt-ano_notificacao-2018,and,eq-evolucao-'Óbito'&ordenacao=ano_notificacao"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+                  - id: "semana_notificacao_inicio"
+                    format: 'dataDMY'
+                  - id: "semana_notificacao_fim"
+                    format: 'dataDMY'
+            headers:
+              - text: 'Ano'
+                align: 'left'
+                value: 'ano_notificacao'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'semana_notificacao'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_semana_notificacao_inicio'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_semana_notificacao_fim'
+              - text: 'Número de óbitos'
+                value: 'fmt_agr_count'
+            options:
+              id: "ano_notificacao"
+              x: "semana_notificacao"
+              y: "agr_count"
+              text: "fmt_agr_count"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: true
+              legend_field: "ano_notificacao"
+              colorArray: ["#377EB8", "red"]
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# ========================================================
+      - id: "bar_serie_srag_classificacao"
+        type: "multiple-charts"
+        title:
+          fixed: "Casos de SRAG por etiologia e por Semana Epidemiológica de início dos sintomas"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_prim_sintomas&agregacao=MAX,MIN&filtros=gt-ano_prim_sintomas-2019"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_prim_sintomas"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_prim_sintomas"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'SRAG não especificado',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG não especificado<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'Investigação',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - Em Investigação<br/>Residentes no município"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19, causas não especificadas e em investigação.
+              O gráfico apresenta a série histórica de todos os casos registrados de SRAG dos residentes no município selecionado, por semana epidemiológica do início dos sintomas, conforme etiologia. 
+              <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+        charts:
+          - id: "bar_srag_classificacao"
+            title: "Casos de SRAG por etiologia"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              template: "/thematic/srag?categorias=srag_classificacao,semana_prim_sintomas,semana_prim_sintomas_inicio,semana_prim_sintomas_fim&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,gt-ano_prim_sintomas-2019&ordenacao=srag_classificacao"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+                  - id: "semana_prim_sintomas_inicio"
+                    format: 'dataDMY'
+                  - id: "semana_prim_sintomas_fim"
+                    format: 'dataDMY'
+            headers:
+              - text: 'Etiologia'
+                align: 'left'
+                value: 'srag_classificacao'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'semana_prim_sintomas'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_semana_prim_sintomas_inicio'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_semana_prim_sintomas_fim'
+              - text: 'Número de casos'
+                value: 'fmt_agr_count'
+            options:
+              id: "srag_classificacao"
+              x: "semana_prim_sintomas"
+              y: "agr_count"
+              text: "fmt_agr_count"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: true
+              stacked: true
+              legend_field: "srag_classificacao"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# ========================================================
+      - id: "bar_serie_srag_classificacao_obitos"
+        type: "multiple-charts"
+        title:
+          fixed: "Óbitos por SRAG por etiologia e por Semana Epidemiológica da notificação"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2019"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'SRAG não especificado',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG não especificado<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'Investigação',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - em Investigação<br/>Residentes no município"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19, causas não especificadas e em investigação.
+              O gráfico apresenta a série histórica de todos os óbitos registrados relacionados à SRAG dos residentes no município selecionado, por semana epidemiológica da notificação, conforme etiologia. 
+              <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+        charts:
+          - id: "bar_srag_classificacao_obitos"
+            title: "Óbitos de SRAG por etiologia"
+            cls: "xs12"
+            type: "BAR"
+            api:
+              template: "/thematic/srag?categorias=srag_classificacao,semana_notificacao,semana_notificacao_inicio,semana_notificacao_fim&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'&ordenacao=srag_classificacao"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+                  - id: "semana_notificacao_inicio"
+                    format: 'dataDMY'
+                  - id: "semana_notificacao_fim"
+                    format: 'dataDMY'
+            headers:
+              - text: 'Etiologia'
+                align: 'left'
+                value: 'srag_classificacao'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'semana_notificacao'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_semana_notificacao_inicio'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_semana_notificacao_fim'
+              - text: 'Número de óbitos'
+                value: 'fmt_agr_count'
+            options:
+              id: "srag_classificacao"
+              x: "semana_notificacao"
+              y: "agr_count"
+              text: "fmt_agr_count"
+              orientation: "vertical"
+              show_x_axis: true
+              show_y_axis: true
+              stacked: true
+              legend_field: "srag_classificacao"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# ===============================================
+      - id: "perfil_headline"
+        type: "headline"
+        title:
+          fixed: "Perfil dos casos"
+  # =====================================================
+      - id: "cat_piramide_idade_sexo"
+        title: 
+          fixed: "Casos de SRAG por COVID-19 por faixa etária e sexo"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  - template: "/thematic/srag?categorias='total_casos_srag'-cd_indicador&&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/thematic/srag?categorias='total_casos_srag_homens'-cd_indicador&&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-sexo-'Masculino'"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "perc_homens"
+                    desc: "% Homens com SRAG por COVID"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "total_casos_srag_homens"
+                        named_prop: "agr_count"
+                      - id: "total_casos_srag"
+                        named_prop: "agr_count"
+                args:
+                  - prop: "value"
+                    id: "perc_homens"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Homens"
+                  - prop: "comment"
+                    template: "{0} casos"
+                    args:
+                      - id: "total_casos_srag_homens"
+                        named_prop: "agr_count"
+                        default: 0
+                        format: "inteiro"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  - template: "/thematic/srag?categorias='total_casos_srag'-cd_indicador&&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/thematic/srag?categorias='total_casos_srag_mulheres'-cd_indicador&&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-sexo-'Feminino'"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "perc_mulheres"
+                    desc: "% Mulheres com SRAG por COVID"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "total_casos_srag_mulheres"
+                        named_prop: "agr_count"
+                      - id: "total_casos_srag"
+                        named_prop: "agr_count"
+                args:
+                  - prop: "value"
+                    id: "perc_mulheres"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Mulheres"
+                  - prop: "comment"
+                    template: "{0} casos"
+                    args:
+                      - id: "total_casos_srag_mulheres"
+                        named_prop: "agr_count"
+                        default: 0
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 (total e por sexo). 
+              O gráfico apresenta a pirâmide com a faixa etária e o sexo dos casos de SRAG por COVID-19 dos residentes no município selecionado."
+        chart_type: "BAR"
+        api: 
+          template: "/thematic/srag?categorias=idade_bin_ordem,idade_bin,sexo&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,ne-sexo-'Ignorado'&ordenacao=sexo"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: 'agr_count'
+                function: 'oppose'
+                fn_args:
+                  - fixed: 'sexo'
+                  - fixed: 'Feminino'
+                  - fixed: 'agr_count'
+        headers:
+          - text: 'Sexo'
+            align: 'left'
+            value: 'sexo'
+          - text: 'Faixa etária'
+            align: 'left'
+            value: 'idade_bin'
+          - text: 'Qtde'
+            value: 'agr_count'
+        chart_options:
+          id: "sexo"
+          x: "calc_agr_count"
+          y: "idade_bin_ordem"
+          text: "idade_bin"
+          orientation: "horizontal"
+          hide_legend: false
+          legend_field: "sexo"
+          stacked: true
+          show_x_axis: false
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "cat_piramide_idade_sexo_obitos"
+        title: 
+          fixed: "Óbitos por SRAG por COVID-19 por faixa etária e sexo"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2019"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  - template: "/thematic/srag?categorias='total_obito_srag'-cd_indicador&&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/thematic/srag?categorias='total_obito_srag_homens'-cd_indicador&&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-sexo-'Masculino',and,eq-evolucao-'Óbito'"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "perc_homens"
+                    desc: "% Homens com SRAG por COVID"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "total_obito_srag_homens"
+                        named_prop: "agr_count"
+                      - id: "total_obito_srag"
+                        named_prop: "agr_count"
+                args:
+                  - prop: "value"
+                    id: "perc_homens"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Homens"
+                  - prop: "comment"
+                    template: "{0} óbitos"
+                    args:
+                      - id: "total_obito_srag_homens"
+                        named_prop: "agr_count"
+                        default: 0
+                        format: "inteiro"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  - template: "/thematic/srag?categorias='total_obito_srag'-cd_indicador&&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/thematic/srag?categorias='total_obito_srag_mulheres'-cd_indicador&&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-sexo-'Feminino',and,eq-evolucao-'Óbito'"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "perc_mulheres"
+                    desc: "% Mulheres com SRAG por COVID"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "total_obito_srag_mulheres"
+                        named_prop: "agr_count"
+                      - id: "total_obito_srag"
+                        named_prop: "agr_count"
+                args:
+                  - prop: "value"
+                    id: "perc_mulheres"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Mulheres"
+                  - prop: "comment"
+                    template: "{0} óbitos"
+                    args:
+                      - id: "total_obito_srag_mulheres"
+                        named_prop: "agr_count"
+                        default: 0
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de registros de óbitos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 (total e por sexo). 
+              O gráfico apresenta a pirâmide com a faixa etária e o sexo dos óbitos por SRAG por COVID-19 dos residentes no município selecionado."
+        chart_type: "BAR"
+        api: 
+          template: "/thematic/srag?categorias=idade_bin_ordem,idade_bin,sexo&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ne-sexo-'Ignorado'&ordenacao=sexo"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: 'agr_count'
+                function: 'oppose'
+                fn_args:
+                  - fixed: 'sexo'
+                  - fixed: 'Feminino'
+                  - fixed: 'agr_count'
+        headers:
+          - text: 'Sexo'
+            align: 'left'
+            value: 'sexo'
+          - text: 'Faixa etária'
+            align: 'left'
+            value: 'idade_bin'
+          - text: 'Qtde'
+            value: 'agr_count'
+        chart_options:
+          id: "sexo"
+          x: "calc_agr_count"
+          y: "idade_bin_ordem"
+          text: "idade_bin"
+          orientation: "horizontal"
+          hide_legend: false
+          legend_field: "sexo"
+          stacked: true
+          show_x_axis: false
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_raca"
+        title: 
+          fixed: "Casos de SRAG por COVID-19 por raça"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes no município"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
+              O gráfico apresenta os casos de SRAG por COVID-19 por raça dos residentes no município selecionado."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=raca&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Raça'
+            align: 'left'
+            value: 'raca'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "raca"
+          text: "raca"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_escolaridade"
+        title: 
+          fixed: "Casos de SRAG por COVID-19 por escolaridade"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes no município"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
+              O gráfico apresenta os casos de SRAG por COVID-19 por escolaridade dos residentes no município selecionado."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=escolaridade&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Escolaridade'
+            align: 'left'
+            value: 'escolaridade'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "escolaridade"
+          text: "escolaridade"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_respirador"
+        title: 
+          fixed: "Casos de SRAG por COVID-19 por utilização de suporte ventilatório"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes no município"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
+              O gráfico apresenta os casos de SRAG por COVID-19 por utilização de suporte respiratório dos residentes no município selecionado."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=respirador&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Suporte Respiratório'
+            align: 'left'
+            value: 'respirador'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "respirador"
+          text: "respirador"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "multi_srag_uti"
+        type: "multiple-charts"
+        title: 
+          fixed: "Casos de SRAG por COVID-19 por internação na UTI"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes no município"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=1&valor=internado_uti_dias&agregacao=AVG&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,nn-internado_uti_dias"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    template: "{0} <span>dias</span>"
+                    args:
+                      - named_prop: "agr_avg_internado_uti_dias"
+                        format: 'real'
+                        default: 'Sem registros'
+                  - prop: "description"
+                    fixed: "Tempo médio de<br/>internação na UTI"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos da Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e o tempo médio de internação na UTI.  
+              O gráfico apresenta os casos de SRAG por COVID-19 por internação na UTI dos residentes no município selecionado."
+        charts:
+          - id: "treemap_srag_uti"
+            title: "Casos de SRAG por COVID-19 por internação na UTI"
+            cls: "xs12"
+            type: "TREEMAP"
+            api: 
+              template: "/thematic/srag?categorias=internado_uti&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+            headers:
+              - text: 'UTI'
+                align: 'left'
+                value: 'internado_uti'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "internado_uti"
+              text: "internado_uti"
+              size: "agr_count"
+              colorScale:
+                name: "Blues"
+                type: "singleHue"
+          # - id: "bar_tempo_uti"
+          #   title: "Tempo Médio de Internação na UTI por Evolução dos Casos"
+          #   cls: "xs12 md6"
+          #   type: "BAR"
+          #   api:
+          #     template: "/thematic/srag?categorias=evolucao&valor=internado_uti_dias&agregacao=avg&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019&ordenacao=evolucao"
+          #     args:
+          #       - named_prop: "idLocalidade"
+          #     options:
+          #       formatters:
+          #         - id: "agr_avg_internado_uti_dias"
+          #           format: 'real'
+          #       calcs:
+          #         - id: "bar_description"
+          #           function: "applyInterpolReplaceDatasetParam"
+          #           fn_args:
+          #             - fixed: 
+          #                 template: "{0} dias"
+          #                 args:
+          #                   - named_prop: "agr_avg_internado_uti_dias"
+          #                     format: 'real'
+          #   headers:
+          #     - text: 'Evolução'
+          #       align: 'left'
+          #       value: 'evolucao'
+          #     - text: 'Tempo médio de internação na UTI (dias):'
+          #       value: 'fmt_agr_avg_internado_uti_dias'
+          #   options:
+          #     id: "evolucao"
+          #     x: "evolucao"
+          #     y: "agr_avg_internado_uti_dias"
+          #     text: "calc_bar_description"
+          #     orientation: "vertical"
+          #     show_x_axis: true
+          #     show_y_axis: false
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_comorbidade"
+        title: 
+          fixed: "Óbitos por SRAG por COVID-19 por comorbidade"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ne-comorbidade-'Sem comorbidade'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Pacientes com comorbidade<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,eq-comorbidade-'Sem comorbidade'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Pacientes sem comorbidade<br/>Residentes no município"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
+                      O gráfico apresenta os óbitos por SRAG por COVID-19 por comorbidade dos residentes no município selecionado. 
+                      Apenas uma comorbidade por paciente está sendo considerada, a partir da seguinte ordem: 'Puérpera ou Parturiente', 'Doença Cardiovascular Crônica', 'Doença Hematológica Crônica', 'Síndrome de Down', 
+                      'Doença Hepática Crônica', 'Asma', 'Diabetes mellitus', 'Doença Neurológica Crônica', 'Pneumatopatia Crônica', 
+                      'Imunodeficiência ou Imunodepressão', 'Doença Renal Crônica', 'Obesidade' e 'Outra comorbidade'."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=comorbidade&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Comorbidade'
+            align: 'left'
+            value: 'comorbidade'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "comorbidade"
+          text: "comorbidade"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_evolucao"
+        title: 
+          fixed: "Evolução dos casos de SRAG por COVID-19"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Casos - SRAG por COVID-19<br/>Residentes no município"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ne-comorbidade-'Sem comorbidade'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Pacientes com comorbidade<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,eq-comorbidade-'Sem comorbidade'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Pacientes sem comorbidade<br/>Residentes no município"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de casos e óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19.  
+                      O gráfico apresenta a evolução dos casos de SRAG por COVID-19 dos residentes no município selecionado."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=evolucao&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Evolução'
+            align: 'left'
+            value: 'evolucao'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "evolucao"
+          text: "evolucao"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_jovens"
+        title: 
+          fixed: "Evolução dos casos de SRAG por COVID-19 em jovens"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19<br/>Residentes no município"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  - template: "/thematic/srag?categorias='total_obito_srag'-cd_indicador,cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/thematic/srag?categorias='total_obito_srag_jovens'-cd_indicador,cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,le-idade-39"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "perc_jovens"
+                    desc: "% Jovens com SRAG por COVID"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "total_obito_srag_jovens"
+                        named_prop: "agr_count"
+                      - id: "total_obito_srag"
+                        named_prop: "agr_count"
+                args:
+                  - prop: "value"
+                    id: "perc_jovens"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: '0%'
+                  - prop: "description"
+                    fixed: "Óbitos de Jovens<br/>até 39 anos"
+                  - prop: "comment"
+                    template: "{0} óbitos"
+                    args:
+                      - id: "total_obito_srag_jovens"
+                        named_prop: "agr_count"
+                        format: "inteiro"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,le-idade-39,and,ne-comorbidade-'Sem comorbidade'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Jovens com comorbidade<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,le-idade-39,and,eq-comorbidade-'Sem comorbidade'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Jovens sem comorbidade<br/>Residentes no município"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e a porcentagem de óbitos de jovens.  
+                      O gráfico apresenta a evolução dos casos de SRAG por COVID-19 em jovens (até 39 anos) residentes no município selecionado."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=evolucao&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,le-idade-39"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Evolução'
+            align: 'left'
+            value: 'evolucao'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "evolucao"
+          text: "evolucao"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
+# =====================================================
+      - id: "treemap_srag_idosos"
+        title: 
+          fixed: "Evolução dos casos de SRAG por COVID-19 em idosos"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2018"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19<br/>Residentes no município"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  - template: "/thematic/srag?categorias='total_obito_srag'-cd_indicador,cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/thematic/srag?categorias='total_obito_srag_idosos'-cd_indicador,cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ge-idade-60"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "perc_idosos"
+                    desc: "% Idosos com SRAG por COVID"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "total_obito_srag_idosos"
+                        named_prop: "agr_count"
+                      - id: "total_obito_srag"
+                        named_prop: "agr_count"
+                args:
+                  - prop: "value"
+                    id: "perc_idosos"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: '0%'
+                  - prop: "description"
+                    fixed: "Óbitos de Idosos<br/>a partir de 60 anos"
+                  - prop: "comment"
+                    template: "{0} óbitos"
+                    args:
+                      - id: "total_obito_srag_idosos"
+                        named_prop: "agr_count"
+                        format: "inteiro"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ge-idade-60,and,ne-comorbidade-'Sem comorbidade'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Idosos com comorbidade<br/>Residentes no município"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=cd_municipio_res_ibge_dv&agregacao=COUNT&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,ge-idade-60,and,eq-comorbidade-'Sem comorbidade'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos de Idosos sem comorbidade<br/>Residentes no município"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19 e a porcentagem de óbitos de idosos.  
+                      O gráfico apresenta a evolução dos casos de SRAG por COVID-19 em idosos (a partir de 60 anos) residentes no município selecionado."
+        chart_type: "TREEMAP"
+        api: 
+          template: "/thematic/srag?categorias=evolucao&agregacao=count&filtros=eq-cd_municipio_res_ibge_dv-{0},and,eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,ge-idade-60"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Evolução'
+            align: 'left'
+            value: 'evolucao'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "evolucao"
+          text: "evolucao"
+          size: "agr_count"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
