@@ -3,11 +3,10 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "02_11_20_00"
-      year: "max"
+    api:
+      template: "/thematic/cagedindicadores?categorias=ds_indicador_radical,ds_fonte,nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -17,19 +16,24 @@ principais:
         named_prop: "ds_indicador_radical"
       - prop: 'comment'
         template: "({0}, {1})"
+        api:
+          fixed: "/thematic/cagedindicadores?categorias=ds_fonte,nu_competencia_max&filtros=eq-cd_indicador-'caged_admitidos_intermitente'&limit=1"
+          options:
+            calcs:
+              - id: "competencia"
+                function: "format_quarter_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
         args:
           - named_prop: "ds_fonte"
-            default: "MT - CAGED"
-          - named_prop: "nu_competencia"
-            default: "2018"
+          - named_prop: "calc_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "02_11_10_00"
-      year: "max"
+    api:
+      template: "/thematic/cagedindicadores?categorias=ds_indicador_radical,ds_fonte,nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -39,11 +43,17 @@ principais:
         named_prop: "ds_indicador_radical"
       - prop: 'comment'
         template: "({0}, {1})"
+        api:
+          fixed: "/thematic/cagedindicadores?categorias=ds_fonte,nu_competencia_max&filtros=eq-cd_indicador-'caged_admitidos_parcial'&limit=1"
+          options:
+            calcs:
+              - id: "competencia"
+                function: "format_quarter_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
         args:
           - named_prop: "ds_fonte"
-            default: "MT - CAGED"
-          - named_prop: "nu_competencia"
-            default: "2018"
+          - named_prop: "calc_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
