@@ -3,11 +3,10 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "02_11_20_00"
-      year: "max"
+    api:
+      template: "/thematic/cagedindicadores?categorias=ds_indicador_radical,ds_fonte,nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -17,19 +16,24 @@ principais:
         named_prop: "ds_indicador_radical"
       - prop: 'comment'
         template: "({0}, {1})"
+        api:
+          fixed: "/thematic/cagedindicadores?categorias=ds_fonte,nu_competencia_max&filtros=eq-cd_indicador-'caged_admitidos_intermitente'&limit=1"
+          options:
+            calcs:
+              - id: "competencia"
+                function: "format_quarter_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
         args:
           - named_prop: "ds_fonte"
-            default: "MT - CAGED"
-          - named_prop: "nu_competencia"
-            default: "2018"
+          - named_prop: "calc_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "02_11_10_00"
-      year: "max"
+    api:
+      template: "/thematic/cagedindicadores?categorias=ds_indicador_radical,ds_fonte,nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -39,11 +43,17 @@ principais:
         named_prop: "ds_indicador_radical"
       - prop: 'comment'
         template: "({0}, {1})"
+        api:
+          fixed: "/thematic/cagedindicadores?categorias=ds_fonte,nu_competencia_max&filtros=eq-cd_indicador-'caged_admitidos_parcial'&limit=1"
+          options:
+            calcs:
+              - id: "competencia"
+                function: "format_quarter_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
         args:
           - named_prop: "ds_fonte"
-            default: "MT - CAGED"
-          - named_prop: "nu_competencia"
-            default: "2018"
+          - named_prop: "calc_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -87,6 +97,362 @@ secoes:
   - id: "estabilidade_unica"
     name: ""
     cards:
+# ===============================================
+      - id: "mapa_vinculo_intermitente"
+        title: 
+          fixed: "Vínculos de trabalho intermitente"
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            fixed: "/thematic/cagedindicadores?categorias=nu_competencia_max&filtros=eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max&limit=1"
+            options:
+              calcs:
+                - id: "competencia_max"
+                  function: "format_quarter_ds"
+                  fn_args:
+                    - named_prop: "nu_competencia_max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "calc_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Segundo a CLT, artigo 443, consoante redação da Lei 13.467/2017, considera-se como intermitente o contrato de trabalho no qual a prestação de serviços, com subordinação, não é contínua, ocorrendo com alternância de períodos de prestação de serviços e de inatividade, determinados em horas, dias ou meses, independentemente do tipo de atividade do empregado e do empregador, exceto para os aeronautas, regidos por legislação própria"
+        msgNoData:
+          desc: "A localidade em análise não possui dados registrados de vínculos de trabalho intermitente."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'ADMISSÕES'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/thematic/cagedindicadores?categorias=vl_indicador&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_desligados_intermitente',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'DESLIGAMENTOS'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_uf'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "ADMISSÕES NA UF"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_br'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "ADMISSÕES NO BRASIL"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de vínculos de emprego na modalidade de trabalho intermitente criados e perdidos no {0}. No mapa, {1} está em destaque. A escala de cores varia do menor número (branco) para o maior número de admissões (vermelho escuro)."
+              api:
+                template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
+                options:
+                  calcs:
+                    - id: "competencia"
+                      function: "format_quarter_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia"
+                args:
+                  - named_prop: "idLocalidade"
+              args:
+                - named_prop: "calc_competencia"
+                - named_prop: "nm_municipio_uf"
+                  required: true
+          - type: "ranking"
+            api:
+              template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: 'regional_complementary_text'
+                fixed: ', em admissões'
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_complementary_text'
+                fixed: ', em admissões'
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/thematic/cagedindicadores?categorias=ds_fonte,cd_mun_ibge,nm_municipio,nu_competencia,ds_indicador_radical,vl_indicador,rank_uf,rank_br,media_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_intermitente"
+                function: "get_proportional_indicator_uf"
+              - id: "competencia"
+                function: "format_quarter_ds"
+                fn_args:
+                  - named_prop: "nu_competencia"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Competência'
+            align: 'left'
+            value: 'calc_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_intermitente'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
+# ===============================================
+      - id: "mapa_vinculo_parcial"
+        title: 
+          fixed: "Vínculos de emprego de tempo parcial"
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            fixed: "/thematic/cagedindicadores?categorias=nu_competencia_max&filtros=eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max&limit=1"
+            options:
+              calcs:
+                - id: "competencia_max"
+                  function: "format_quarter_ds"
+                  fn_args:
+                    - named_prop: "nu_competencia_max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "calc_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Segundo a CLT, artigo 443, consoante redação da Lei 13.467/2017, considera-se como intermitente o contrato de trabalho no qual a prestação de serviços, com subordinação, não é contínua, ocorrendo com alternância de períodos de prestação de serviços e de inatividade, determinados em horas, dias ou meses, independentemente do tipo de atividade do empregado e do empregador, exceto para os aeronautas, regidos por legislação própria"
+        msgNoData:
+          desc: "A localidade em análise não possui dados registrados de vínculos de trabalho intermitente."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'ADMISSÕES'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/thematic/cagedindicadores?categorias=vl_indicador&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_desligados_parcial',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'DESLIGAMENTOS'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_uf'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "ADMISSÕES NA UF"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_br'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "ADMISSÕES NO BRASIL"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de vínculos de emprego em regime de tempo parcial criados e perdidos no {0}. No mapa, {1} está em destaque. A escala de cores varia do menor número (branco) para o maior número de admissões (vermelho escuro)."
+              api:
+                template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
+                options:
+                  calcs:
+                    - id: "competencia"
+                      function: "format_quarter_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia"
+                args:
+                  - named_prop: "idLocalidade"
+              args:
+                - named_prop: "calc_competencia"
+                - named_prop: "nm_municipio_uf"
+                  required: true
+          - type: "ranking"
+            api:
+              template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: 'regional_complementary_text'
+                fixed: ', em admissões'
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_complementary_text'
+                fixed: ', em admissões'
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/thematic/cagedindicadores?categorias=ds_fonte,cd_mun_ibge,nm_municipio,nu_competencia,ds_indicador_radical,vl_indicador,rank_uf,rank_br,media_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_parcial"
+                function: "get_proportional_indicator_uf"
+              - id: "competencia"
+                function: "format_quarter_ds"
+                fn_args:
+                  - named_prop: "nu_competencia"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Competência'
+            align: 'left'
+            value: 'calc_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_parcial'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
 # ========================================================
       - id: "proporcao_vinculos_empregaticios"
         type: "multiple-charts"
@@ -471,362 +837,6 @@ secoes:
           colorArray: ["#377EB8","#E41A1C"]  # blue / red
         source:
           desc_field: "ds_fonte" 
-# ===============================================
-      - id: "mapa_vinculo_intermitente"
-        title: 
-          fixed: "Vínculos de trabalho intermitente"
-        title_comment:
-          template: "{0}, {1}"
-          api: 
-            fixed: "/thematic/cagedindicadores?categorias=nu_competencia_max&filtros=eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max&limit=1"
-            options:
-              calcs:
-                - id: "competencia_max"
-                  function: "format_quarter_ds"
-                  fn_args:
-                    - named_prop: "nu_competencia_max"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - named_prop: "calc_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Segundo a CLT, artigo 443, consoante redação da Lei 13.467/2017, considera-se como intermitente o contrato de trabalho no qual a prestação de serviços, com subordinação, não é contínua, ocorrendo com alternância de períodos de prestação de serviços e de inatividade, determinados em horas, dias ou meses, independentemente do tipo de atividade do empregado e do empregador, exceto para os aeronautas, regidos por legislação própria"
-        msgNoData:
-          desc: "A localidade em análise não possui dados registrados de vínculos de trabalho intermitente."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api:
-                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'ADMISSÕES'
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api:
-                  template: "/thematic/cagedindicadores?categorias=vl_indicador&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_desligados_intermitente',and,eq-nu_competencia-nu_competencia_max"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'DESLIGAMENTOS'
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                api:
-                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador_uf'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "ADMISSÕES NA UF"
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                api:
-                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador_br'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "ADMISSÕES NO BRASIL"
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, o número de vínculos de emprego na modalidade de trabalho intermitente criados e perdidos no {0}. No mapa, {1} está em destaque. A escala de cores varia do menor número (branco) para o maior número de admissões (vermelho escuro)."
-              api:
-                template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
-                options:
-                  calcs:
-                    - id: "competencia"
-                      function: "format_quarter_ds"
-                      fn_args:
-                        - named_prop: "nu_competencia"
-                args:
-                  - named_prop: "idLocalidade"
-              args:
-                - named_prop: "calc_competencia"
-                - named_prop: "nm_municipio_uf"
-                  required: true
-          - type: "ranking"
-            api:
-              template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
-              args:
-                - named_prop: "idLocalidade"
-            args:
-              - prop: 'regional_complementary_text'
-                fixed: ', em admissões'
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_complementary_text'
-                fixed: ', em admissões'
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-        chart_type: "MAP_TOPOJSON"
-        api: 
-          template: "/thematic/cagedindicadores?categorias=cd_mun_ibge,nm_municipio,nu_competencia,ds_indicador_radical,vl_indicador,rank_uf,rank_br,media_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'caged_admitidos_intermitente',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation_intermitente"
-                function: "get_proportional_indicator_uf"
-              - id: "competencia"
-                function: "format_quarter_ds"
-                fn_args:
-                  - named_prop: "nu_competencia"
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio'
-          - text: 'Competência'
-            align: 'left'
-            value: 'calc_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Qtde'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_intermitente'
-          colorScale:
-            name: "Reds"
-        source:
-          desc_field: "ds_fonte"
-# ===============================================
-      - id: "mapa_vinculo_parcial"
-        title: 
-          fixed: "Vínculos de emprego de tempo parcial"
-        title_comment:
-          template: "{0}, {1}"
-          api: 
-            fixed: "/thematic/cagedindicadores?categorias=nu_competencia_max&filtros=eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max&limit=1"
-            options:
-              calcs:
-                - id: "competencia_max"
-                  function: "format_quarter_ds"
-                  fn_args:
-                    - named_prop: "nu_competencia_max"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - named_prop: "calc_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Segundo a CLT, artigo 443, consoante redação da Lei 13.467/2017, considera-se como intermitente o contrato de trabalho no qual a prestação de serviços, com subordinação, não é contínua, ocorrendo com alternância de períodos de prestação de serviços e de inatividade, determinados em horas, dias ou meses, independentemente do tipo de atividade do empregado e do empregador, exceto para os aeronautas, regidos por legislação própria"
-        msgNoData:
-          desc: "A localidade em análise não possui dados registrados de vínculos de trabalho intermitente."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api:
-                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'ADMISSÕES'
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api:
-                  template: "/thematic/cagedindicadores?categorias=vl_indicador&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_desligados_parcial',and,eq-nu_competencia-nu_competencia_max"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'DESLIGAMENTOS'
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                api:
-                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador_uf'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "ADMISSÕES NA UF"
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                api:
-                  template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador_br'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "ADMISSÕES NO BRASIL"
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, o número de vínculos de emprego em regime de tempo parcial criados e perdidos no {0}. No mapa, {1} está em destaque. A escala de cores varia do menor número (branco) para o maior número de admissões (vermelho escuro)."
-              api:
-                template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
-                options:
-                  calcs:
-                    - id: "competencia"
-                      function: "format_quarter_ds"
-                      fn_args:
-                        - named_prop: "nu_competencia"
-                args:
-                  - named_prop: "idLocalidade"
-              args:
-                - named_prop: "calc_competencia"
-                - named_prop: "nm_municipio_uf"
-                  required: true
-          - type: "ranking"
-            api:
-              template: "/thematic/cagedindicadores?categorias=nm_municipio_uf,nu_competencia,vl_indicador,vl_indicador_uf,vl_indicador_br,rank_uf,rank_uf_total,rank_br,rank_br_total,media_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
-              args:
-                - named_prop: "idLocalidade"
-            args:
-              - prop: 'regional_complementary_text'
-                fixed: ', em admissões'
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_complementary_text'
-                fixed: ', em admissões'
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-        chart_type: "MAP_TOPOJSON"
-        api: 
-          template: "/thematic/cagedindicadores?categorias=cd_mun_ibge,nm_municipio,nu_competencia,ds_indicador_radical,vl_indicador,rank_uf,rank_br,media_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'caged_admitidos_parcial',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation_parcial"
-                function: "get_proportional_indicator_uf"
-              - id: "competencia"
-                function: "format_quarter_ds"
-                fn_args:
-                  - named_prop: "nu_competencia"
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio'
-          - text: 'Competência'
-            align: 'left'
-            value: 'calc_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Qtde'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_parcial'
-          colorScale:
-            name: "Reds"
-        source:
-          desc_field: "ds_fonte"
 # ===============================================
       # - id: "line_tipo_contrato"
       #   title: 
