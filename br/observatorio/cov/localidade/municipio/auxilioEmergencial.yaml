@@ -1,0 +1,110 @@
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "AUX_20_00001"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Pessoas elegíveis ao Auxílio Emergencial"
+  - relevance: "lead"
+    cls: 'xs12 lg6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-cd_uf-{0}"
+      args:
+        - named_prop: "cd_uf"
+    args:
+      - prop: "value"
+        named_prop: "agr_count"
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Denúncias relacionadas<br/>à COVID-19 na UF"
+# ========================================================
+secoes:
+  - id: 'prevalencia_serie'
+    name: 'Auxílio'
+    cards:
+# ========================================================
+      - id: "bar_elegiveis"
+        title:
+          fixed: "Pessoas elegíveis ao Auxílio Emergencial"
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            template: "/thematic/coviddenunciampt?categorias=data_atualizacao,nm_uf&filtros=eq-cd_uf-{0}&limit=1"
+            args:
+              - named_prop: "cd_uf"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "data_atualizacao"
+              format: "dataDMY"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/coviddenunciampt?categorias=1&agregacao=COUNT&filtros=eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Nenhuma"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'Denúncias relacionadas<br/>à COVID-19 na UF'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de pessoas elegíveis ao Auxílio Emergencial dos públicos Cadastro Único (Não PBF), ExtraCad (não inscritos no Cadastro Único) e Bolsa Família (PBF) e a respectiva distribuição por parcela paga em 2020. O Auxílio Emergencial é um benefício financeiro concedido pelo Governo Federal destinado aos trabalhadores informais, microempreendedores individuais (MEI), autônomos e desempregados, e tem por objetivo fornecer proteção emergencial no período de enfrentamento à crise causada pela pandemia do Coronavírus - COVID 19. Note-se, ainda, o percentual de pessoas elegíveis a receber R$ 600,00 ou R$1.200,00 (no caso de chefe de família monoparental) bem como o quanto representa o conjunto de pessoas elegíveis ao Auxílio Emergencial no total da população."
+                      # É possível selecionar uma Unidade Federativa no filtro acima."
+        chart_type: "BAR"
+        api:
+          template: "/thematic/coviddenunciampt?categorias=ano_denuncia,semana_denuncia,semana_inicio, semana_fim&agregacao=COUNT&ordenacao=ano_denuncia,semana_denuncia&filtros=eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+              - id: "semana_inicio"
+                format: "dataDMY"
+              - id: "semana_fim"
+                format: "dataDMY"
+        headers:
+          - text: 'Ano'
+            align: 'left'
+            value: 'ano_denuncia'
+          - text: 'Semana'
+            align: 'left'
+            value: 'semana_denuncia'
+          - text: 'Início'
+            align: 'left'
+            value: 'fmt_semana_inicio'
+          - text: 'Fim'
+            align: 'left'
+            value: 'fmt_semana_fim'
+          - text: 'Número de denúncias'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "ano_denuncia"
+          x: "semana_denuncia"
+          y: "agr_count"
+          text: "fmt_agr_count"
+          orientation: "vertical"
+          show_x_axis: true
+          show_y_axis: true
+          legend_field: "ano_denuncia"
+          colorArray: ["#377EB8", "red"]
+        source:
+          desc: "MPT Digital"          
+# ========================================================
