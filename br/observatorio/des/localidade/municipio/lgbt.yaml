@@ -25,19 +25,171 @@ secoes:
     name: "Proteção Social e Garantia de Direitos"
     cards:
 # ========================================================
-      - id: "map_conselho_lgbt"
+      - id: "mapa_comite_vio_lgbt"
         title: 
-          fixed: "Conselhos de direitos de LGBTT"
-        card_template: "t5"
-        datasource: "estadicmunic"
-        cd_indicador: "91_08_04_01"
+          fixed: "Comitê gestor de enfrentamento à violência LGBTfóbica"
+        title_comment:
+          template: "{0}, em {1}, na época da pesquisa"
+          api: 
+            fixed: "/estadicmunic?categorias=nu_ano_indicador_max&limit=1&filtros=eq-cd_indicador_spai-'MUNIC_MDHU5410'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_ano_indicador_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              api: 
+                fixed: "/estadicmunic?categorias=tema,sub_tema,ds_indicador,ds_fonte,nu_ano_indicador_max&limit=1&filtros=eq-cd_indicador_spai-'MUNIC_MDHU5410'"
+              template: "Os dados brutos analisados, com base no banco de dados do IBGE, têm as seguintes referências:<br/>Tema: {0}<br/>Subtema: {1}<br/>Nome: {2}<br/>Fonte: {3}<br/>Ano: {4}<br/>Código: {5}"
+              args:
+                - named_prop: "tema"
+                - named_prop: "sub_tema"
+                - named_prop: "ds_indicador"
+                - named_prop: "ds_fonte"
+                - named_prop: "nu_ano_indicador_max"
+                - named_prop: "cd_indicador"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: "high"
+                cls: "xs12 md6"
+                api:
+                  template: "/estadicmunic?categorias=spai_vl_indicador_txt,total_uf,pct_presenca_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador_spai-'MUNIC_MDHU5410',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: "spai_vl_indicador_txt"
+                  - prop: "description"
+                    fixed: "no município"
+                  - prop: "comment"
+                    template: "De um total de {0} municípios"
+                    args:
+                      - named_prop: "total_uf"
+                        format: "inteiro"
+              - relevance: "high"
+                cls: "xs12 md6"
+                api:
+                  template: "/estadicmunic?categorias=spai_vl_indicador_txt,total_uf,pct_presenca_uf&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador_spai-'MUNIC_MDHU5410',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args: 
+                  - prop: "value"
+                    base_object: "desc_data"
+                    named_prop: "pct_presenca_uf"
+                    format: 'porcentagem'
+                    precision: 1
+                  - prop: "description"
+                    fixed: "dos municípios<br/>da UF possuem"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  template: "/estadicmunic?categorias=cd_indicador_spai-cd_indicador,ds_fonte,nu_ano_indicador-nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador_spai-'MUNIC_MDHU54101B',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Ano de criação do comitê'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  template: "/estadicmunic?categorias=cd_indicador_spai-cd_indicador,ds_fonte,nu_ano_indicador-nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador_spai-'MUNIC_MDHU54102',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Quantidade de reuniões em 12 meses'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a situação do município em relação à existência de Comitê gestor de enfrentamento à violência LGBTfóbica. No mapa, a localidade é comparada com distintos municípios da mesma unidade federativa quanto à presença dessa ação do poder público, de forma isolada ou em articulação com instituições. O azul indica a presença e o cinza a ausência.<br/>
+                      As informações são baseadas em dados da época da pesquisa do IBGE. Em algumas unidades geográficas podem ser identificadas modificações posteriores de cenário, a serem captadas globalmente em novo ciclo de pesquisas. Observe-se que, mesmo com diferenças pontuais no cenário representado, pode-se dizer que medidas mais recentes tendem a enfrentar mais desafios quanto à implementação de novas dimensões da rede de proteção social. Por outro lado, a mera existência dessas ações não implica, necessariamente, sua efetividade."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/estadicmunic?categorias=spai_ds,ds_fonte,spai_vl_indicador,spai_vl_indicador_txt,nm_uf,cd_uf,nu_ano_indicador,tema,sub_tema,ds_indicador,cd_indicador,spai_ds_texto,presenca_total_br,pct_presenca_br,presenca_total_uf,pct_presenca_uf,cd_mun_ibge,nm_municipio,nm_municipio_uf,rank_pct_uf,cd_indicador_spai,total_br,sg_uf,total_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador_spai-'MUNIC_MDHU5410',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+          args:
+            - named_prop: "cd_uf"
+        headers:
+          - text: "Município"
+            align: "left"
+            value: "nm_municipio"
+          - text: "Indicador"
+            align: "left"
+            value: "spai_ds"
+          - text: "Existe"
+            value: "spai_vl_indicador_txt"
+        chart_options: 
+          id_field: "cd_mun_ibge"
+          topo_key: "codarea"
+          value_field: "spai_vl_indicador"
+          tiles_url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+          colorScale: 
+            type: "fixed"
+            color_array: 
+              0: "#BCBCBC"
+              1: "#6187c1"
+              4: "transparent"
+              5: "#d3e5f6"
+              99: "transparent"
+        source: 
+          desc_field: "ds_fonte"
 # ========================================================
-      - id: "map_leg_nomesocial_trans"
+      - id: "map_leg_prot_dir_lgbt_novo"
         title: 
-          fixed: "Legislação que reconheça o nome social de travestis e transexuais"
+          fixed: "Legislação que proteja direitos de LGBTQI+"
         card_template: "t5"
         datasource: "estadicmunic"
-        cd_indicador: "91_08_04_02"
+        cd_indicador: "MUNIC_MDHU109"
+# ========================================================
+      - id: "map_leg_prot_dir_lgbt"
+        title: 
+          fixed: "Legislação que proteja direitos de LGBTT"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_09"
+# ========================================================
+      - id: "map_conf_dir_lgbt_mun_novo"
+        title: 
+          fixed: "Conferências sobre direitos ou políticas LGBTQI+ (até 4 anos antes da pesquisa)"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU554"
+# ========================================================
+      - id: "map_conf_dir_lgbt_mun"
+        title: 
+          fixed: "Conferencias sobre direitos ou políticas LGBTT (até 4 anos antes da pesquisa)"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_08_04_05"
+# ========================================================
+      - id: "map_prog_promo_dir_lgbt_mun_novo"
+        title: 
+          fixed: "Ações e Programas para Promoção dos direitos de LGBTQI+"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU576"
+# ========================================================
+      - id: "map_prog_promo_dir_lgbt_mun"
+        title: 
+          fixed: "Ações e Programas para Promoção dos direitos de LGBTT"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_08_04_04"
+# ========================================================
+      - id: "map_prog_dh_lgbt_mun_novo"
+        title: 
+          fixed: "Ações e Programas de Direitos Humanos para LGBTQI+"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU086"
 # ========================================================
       - id: "map_prog_dh_lgbt_mun"
         title: 
@@ -46,23 +198,37 @@ secoes:
         datasource: "estadicmunic"
         cd_indicador: "91_08_04_03"
 # ========================================================
-      - id: "map_prog_promo_dir_lgbt"
+      - id: "map_capacitacao_guarda_lgbtfobia"
         title: 
-          fixed: "Ações e Programas para Promoção dos direitos de LGBTT"
+          fixed: "Capacitação da Guarda Municipal em temas de Enfrentamento à LGBTfobia"
         card_template: "t5"
         datasource: "estadicmunic"
-        cd_indicador: "91_08_04_04"
+        cd_indicador: "MUNIC_MSEG3111"
 # ========================================================
-      - id: "map_conf_dir_lgbt"
+      - id: "map_leg_nomesocial_trans_novo"
         title: 
-          fixed: "Conferencias sobre direitos ou políticas LGBTT (até 4 anos antes da pesquisa)"
+          fixed: "Legislação que reconheça o nome social de travestis e transexuais"
         card_template: "t5"
         datasource: "estadicmunic"
-        cd_indicador: "91_08_04_05"
+        cd_indicador: "MUNIC_MDHU1010"
 # ========================================================
-      - id: "map_leg_prot_dir_lgbt"
+      - id: "map_leg_nomesocial_trans"
         title: 
-          fixed: "Legislação que proteja direitos de LGBTT"
+          fixed: "Legislação que reconheça o nome social de travestis e transexuais"
         card_template: "t5"
         datasource: "estadicmunic"
-        cd_indicador: "91_06_02_09"
+        cd_indicador: "91_08_04_02"
+# ========================================================
+      - id: "map_conselho_lgbt_mun_novo"
+        title: 
+          fixed: "Conselhos de direitos de LGBTQI+"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU36"
+# ========================================================
+      - id: "map_conselho_lgbt_mun"
+        title: 
+          fixed: "Conselhos de direitos de LGBTT"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_08_04_01"
