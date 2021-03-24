@@ -1,0 +1,302 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "JD_RAIS_30_PRETA"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'spai_vl_indicador_txt'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Remuneração média de estrangeiros no município'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+
+# ========================================================
+secoes:
+  - id: "estrangeiros_unico"
+    name: ""
+    cards:
+# ========================================================
+      - id: "treemap_origem_estrangeiros"
+        title:
+          fixed: "Estrangeiros no Mercado de Trabalho Formal por Origem"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "01_13_05_00"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description: 
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_13_05_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Sem instrução ou com <br/>fundamental incompleto"
+              - relevance: 'high'
+                cls: 'xs12 md5'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_13_10_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    precision: 1
+                  - prop: "description"
+                    fixed: "Do total"
+              - relevance: 'low'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_13_02_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Ensino fundamental completo <br/>ou médio incompleto"
+              - relevance: 'low'
+                cls: 'xs12 md5'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_13_03_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Ensino médio completo ou superior incompleto"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a quantidade de pessoas, em {0}, sem instrução ou com ensino fundamental incompleto na localidade, bem como as informações dos níveis de instrução subsequentes. Toda a população de 15 anos ou mais de idade deve ter concluído o ensino fundamental pelo sistema brasileiro."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_13_05_00"
+                year: "max"
+              args:
+                - named_prop: 'nu_competencia'
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "01_13_05_00"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+
+        chart_type: "TREEMAP"
+        preloaded:
+          prop: "centralindicadores"
+          function: "slice"
+          id: ['01_13_05_00','01_13_02_00','01_13_03_00','01_13_06_00']
+          year: "2010"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_agreg_primaria'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          text: "ds_agreg_primaria"
+          size: "vl_indicador"
+          colorScale:
+            name: "BuGn"
+            type: "singleHue"
+            levels: 6
+            order: 'asc'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_continente"
+        title: 
+          fixed: "Remuneração de Trabalhadores Estrangeiros"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_30_BRANCA"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresmunicipais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'JD_RAIS_30_BRANCA'-'JD_RAIS_30_AMARELA'-'JD_RAIS_30_INDIGENA'-'JD_RAIS_30_PARDA'-'JD_RAIS_30_PRETA'&ordenacao=-vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    named_prop: 'ds_agreg_primaria'
+                  - prop: "comment"
+                    fixed: 'Maior remuneração média'
+
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresmunicipais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'JD_RAIS_30_BRANCA'-'JD_RAIS_30_AMARELA'-'JD_RAIS_30_INDIGENA'-'JD_RAIS_30_PARDA'-'JD_RAIS_30_PRETA'&ordenacao=vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    named_prop: 'ds_agreg_primaria'
+                  - prop: "comment"
+                    fixed: 'Menor remuneração média'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o valor médio da remuneração dos trabalhadores, por raça/cor, de maior e menor renda, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os valores para os cinco coortes de raça/cor, conforme definidos pelo IBGE. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+              
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_30_BRANCA','JD_RAIS_30_AMARELA','JD_RAIS_30_INDIGENA','JD_RAIS_30_PARDA','JD_RAIS_30_PRETA']
+            year: "max"
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          y: "ds_agreg_primaria"
+          x: "vl_indicador"
+          # orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          order_field: "vl_indicador"
+          colorScale:
+            name: "BuPu"
+            type: "singleHue"
+            levels: 7
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
