@@ -1,0 +1,216 @@
+# ========================================================
+principais:
+
+# ========================================================
+secoes:
+#==================================================================================================
+  - id: "acoes_municipais_trabalho_infantil"
+    name: ""
+    cards:
+#==================================================================================================
+      - id: "map_conselho_tutelar_mun_novo"
+        title: 
+          fixed: "Conselho tutelar"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU61"
+#==================================================================================================
+      - id: "map_conselho_tutelar_mun"
+        title: 
+          fixed: "Conselho tutelar"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_06"
+#==================================================================================================
+      - id: "map_conselho_direitos_crianca_mun_novo"
+        title: 
+          fixed: "Conselho Municipal de Direitos da Criança e do Adolescente"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU18"
+#==================================================================================================
+      - id: "map_conselho_direitos_crianca_mun"
+        title: 
+          fixed: "Conselho de direitos da criança e do adolescente"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_05"
+# ====================================================          
+      - id: "mapa_atencao_psicossocial"
+        title: 
+          fixed: "Centros de Atenção Psicossocial"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_26"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_convivencia"
+        title: 
+          fixed: "Centros de Convivência"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_10"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_geracao_trabalho"
+        title: 
+          fixed: "Centros de Geração de Trabalho e Renda Profissional"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_13"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_juventude"
+        title: 
+          fixed: "Centros de Juventude"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_11"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_ref_assistencia_social"
+        title: 
+          fixed: "Centros de Referência de Assistência Social"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_08"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_ref__espec_assistencia_social"
+        title: 
+          fixed: "Centros de Referência Especializado de Assistência Social"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_09"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ========================================================
+      - id: "mapa_cras_creas"
+        chart_type: "MAP_CLUSTER"
+        title: 
+          fixed: "Localização Aproximada de CRAS e CREAS"
+        title_comment:
+          template: "{0}, 2017"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+        info:
+          - type: "text"
+            title: "Sobre"
+            content:
+              fixed: ""
+        source:
+          desc: "Censo SUAS, MDS"
+          link: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/orgs/assistenciasocial?categorias=categoria&agregacao=count&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-categoria-'CRAS'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'CENTROS DE REFERÊNCIA DE ASSISTÊNCIA SOCIAL'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/orgs/assistenciasocial?categorias=categoria&agregacao=count&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-categoria-'CREAS'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhuma"
+                  - prop: "description"
+                    fixed: 'CENTROS DE REFERÊNCIA ESPECIALIZADO DE ASSISTÊNCIA SOCIAL'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a perspectiva geográfica selecionada, informações sobre a localização aproximada de Centros de Referência de Assistência Social e Centros de Referência Especializado de Assistência Social, de acordo com os dados coletados pelo Censo do Sistema Único de Assistência Social (SUAS). Ao clicar no ponto no mapa, apresenta-se o endereço informado no Censo. Pode-se, ainda, visualizar a localidade com o uso de ferramenta StreetView."
+          - type: "switch-group"
+            cls: "pt-2 pb-4"
+            switches:
+              - id: "CRAS"
+                default: true
+                label: "CRAS"
+                color: "blue"
+              - id: "CREAS"
+                default: true
+                label: "CREAS"
+                color: "green"
+            event: 'selection'
+        api:
+          template: "/orgs/assistenciasocial?categorias=categoria-cd_indicador,latitude,longitude,nm_municipio,endereco,bairro,nm_municipio_uf,referencia,cep,nome&filtros=eq-cd_municipio_ibge_dv-{0}"
+          # template: "/orgs/assistenciasocial?categorias=categoria-cd_indicador,latitude,longitude,nm_municipio,tipo_logradouro,endereco,numero,complemento,bairro,nm_municipio_uf,referencia,cep,nome&filtros=eq-cd_municipio_ibge_dv-{0}"
+          args:
+            - named_prop: "idLocalidade"
+          # options:
+          #   calcs:
+          #     - id: "endereco_completo"
+          #       function: "concat_values"
+          #       fn_args:
+          #         - named_prop: "tipo_logradouro"
+          #         - named_prop: "endereco"
+          #         - named_prop: "numero"
+          #         - named_prop: "complemento"
+        headers:
+          - text: 'Nome'
+            align: 'left'
+            value: 'nome'
+          - text: 'Endereço'
+            align: 'left'
+            value: 'endereco'
+          - text: 'Bairro'
+            value: 'bairro'
+          - text: 'CEP'
+            value: 'cep'
+            format: 'cep'
+          - text: 'Município'
+            value: 'nm_municipio_uf'
+          - text: 'Referência'
+            value: 'referencia'
+        chart_options:
+          markerIcons: 
+            "CRAS": "blue" 
+            "CREAS": "green"
+          indicadores: ["CRAS","CREAS"]
+          label_field: "cd_indicador"
+          show_all: true
+          lat: 'latitude'
+          long: 'longitude'
+          tooltip_function: 'tooltipLinkGoogleStreetView'
+          hide_place_marker: true
+          clickable: false
