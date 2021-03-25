@@ -1,0 +1,81 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicuf?categorias=cd_uf,cd_indicador_spai,spai_ds,spai_ds_texto,ds_fonte,nu_ano_indicador-nu_competencia,spai_vl_indicador_txt&filtros=eq-cd_uf-{0},and,eq-cd_indicador_spai-'{1}',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+      args:
+        - named_prop: "idLocalidade"
+        - fixed: "90_06_02_08"
+    args:
+      - prop: "value"
+        named_prop: 'spai_vl_indicador_txt'
+        default: "Sem Registros"
+      - prop: "description"
+        template: '{0} nesta UF'
+        args:
+          - named_prop: "spai_ds"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai,spai_ds_texto,ds_fonte,nu_ano_indicador-nu_competencia,total_uf,presenca_total_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador_spai-'{1}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - named_prop: "idLocalidade"
+        - fixed: "MUNIC_MDHU602"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_uf'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com {1}"
+        args:
+          - named_prop: "total_uf"
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+
+# ========================================================
+secoes:
+#==================================================================================================
+  - id: "acoes_estaduais_trabalho_infantil"
+    name: "Ações estaduais"
+    cards:
+#==================================================================================================
+      - id: "map_politica_enfrentameto"
+        title:
+          fixed: "Políticas, Ações e Programas para Enfrentamento e erradicação do Trabalho Infantil"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_06_02_08"
+#==================================================================================================
+#==================================================================================================
+      - id: "acoes_municipais_trabalho_infantil_headline"
+        type: "headline"
+        title:
+          fixed: "Ações municipais"
+#==================================================================================================
+      - id: "map_acoes_enfrentamento_erradicacao_mun_novo"
+        title: 
+          fixed: "Enfrentamento e erradicação do Trabalho Infantil"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU602"
+#==================================================================================================
+      - id: "map_acoes_enfrentamento_erradicacao_mun"
+        title: 
+          fixed: "Ações e Programas de Enfrentamento e erradicação do Trabalho Infantil"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_10"
+#==================================================================================================
