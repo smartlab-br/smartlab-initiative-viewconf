@@ -1,5 +1,49 @@
 # ========================================================
 principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicuf?categorias=cd_uf,cd_indicador_spai,spai_ds,spai_ds_texto,ds_fonte,nu_ano_indicador-nu_competencia,spai_vl_indicador_txt&filtros=eq-cd_uf-{0},and,eq-cd_indicador_spai-'{1}',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+      args:
+        - named_prop: "idLocalidade"
+        - fixed: "90_06_02_10"
+    args:
+      - prop: "value"
+        named_prop: 'spai_vl_indicador_txt'
+        default: "Sem Registros"
+      - prop: "description"
+        template: '{0} nesta UF'
+        args:
+          - named_prop: "spai_ds"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai,spai_ds_texto,ds_fonte,nu_ano_indicador-nu_competencia,total_uf,presenca_total_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador_spai-'{1}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - named_prop: "idLocalidade"
+        - fixed: "91_06_02_12"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_uf'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com {1}"
+        args:
+          - named_prop: "total_uf"
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
 
 # ========================================================
 secoes:
