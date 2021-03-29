@@ -137,9 +137,6 @@ secoes:
           - type: "text"
             title: ""
             content:
-          - type: "text"
-            title: ""
-            content:
               template: "Em destaque, o número de trabalhadores estrangeiro ativos no Mercado de Trabalho Formal na Unidade Federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os totais para os continentes de origem dos trabalhadores. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
                 fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
@@ -241,6 +238,24 @@ secoes:
               args:
                 - named_prop: "nu_competencia_max"
                 - named_prop: "calc_proximo_ano"
+          - id: "select_origem"
+            type: "select"
+            label: "Origem/Continente"
+            api:
+              fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
 
         chart_type: "TREEMAP"
         api:
