@@ -1,0 +1,105 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicuf?categorias=cd_indicador_spai,spai_ds_texto,ds_fonte,presenca_total_br,nu_ano_indicador-nu_competencia&filtros=eq-cd_indicador_spai-'{0}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - fixed: "90_06_02_09"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_br'
+        default: "Sem Registros"
+      - prop: "description"
+        template: 'UFs com {0}'
+        args:
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicuf?categorias=cd_indicador_spai,spai_ds_texto,ds_fonte,presenca_total_br,nu_ano_indicador-nu_competencia&filtros=eq-cd_indicador_spai-'{0}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - fixed: "90_06_02_07"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_br'
+        default: "Sem Registros"
+      - prop: "description"
+        template: 'UFs com {0}'
+        args:
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai,nu_ano_indicador-nu_competencia,ds_fonte,presenca_total_br,total_br,spai_ds_texto&filtros=eq-cd_indicador_spai-'{0}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - fixed: "MUNIC_MDHU606"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_br'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com {1}"
+        args:
+          - named_prop: "total_br"
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+
+# ========================================================
+secoes:
+#==================================================================================================
+  - id: "acoes_estaduais_trabalho_infantil"
+    name: "Ações estaduais"
+    cards:
+#==================================================================================================
+      - id: "map_acoes_atendimento"
+        title:
+          fixed: "Ações e Programas de atendimento à Criança e ao Adolescente em situação de rua"
+        card_template: "t1"
+        datasource: "estadicuf"
+        cd_indicador: "90_06_02_09"
+#==================================================================================================
+      - id: "map_politica_atendimento"
+        title:
+          fixed: "Políticas, Ações e Programas para atendimento à Criança e ao Adolescente em situação de rua"
+        card_template: "t1"
+        datasource: "estadicuf"
+        cd_indicador: "90_06_02_07"
+#==================================================================================================
+#==================================================================================================
+      - id: "acoes_municipais_trabalho_infantil_headline"
+        type: "headline"
+        title:
+          fixed: "Ações municipais"
+#==================================================================================================
+      - id: "map_atendimento_rua_mun"
+        title: 
+          fixed: "Atendimento à criança e ao adolescente em situação de rua "
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU606"
+#==================================================================================================
+      - id: "map_promocao_direito_rua_mun"
+        title: 
+          fixed: "Promoção de direitos da pessoa em situação de rua quanto à proteção de crianças e adolescentes"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU706"

@@ -1,0 +1,44 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai,spai_ds_texto,ds_fonte,nu_ano_indicador-nu_competencia,spai_vl_indicador_txt&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador_spai-'{1}',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+      args:
+        - named_prop: "idLocalidade"
+        - fixed: 'MUNIC_MDHU606'
+    args:
+      - prop: "value"
+        named_prop: 'spai_vl_indicador_txt'
+        default: "Sem Registros"
+      - prop: "description"
+        template: 'Existência de {0}'
+        args:
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+
+# ========================================================
+secoes:
+#==================================================================================================
+  - id: "acoes_municipais_trabalho_infantil"
+    name: ""
+    cards:
+#==================================================================================================
+      - id: "map_atendimento_rua_mun"
+        title: 
+          fixed: "Atendimento à criança e ao adolescente em situação de rua"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU606"
+#==================================================================================================
+      - id: "map_promocao_direito_rua_mun"
+        title: 
+          fixed: "Promoção de direitos da pessoa em situação de rua quanto à proteção de crianças e adolescentes"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU706"

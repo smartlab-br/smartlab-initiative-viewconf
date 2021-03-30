@@ -1,0 +1,79 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai,nu_ano_indicador-nu_competencia,ds_fonte,presenca_total_br,total_br,spai_ds_texto&filtros=eq-cd_indicador_spai-'{0}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - fixed: "MUNIC_MDHU103"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_br'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com {1}"
+        args:
+          - named_prop: "total_br"
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai,nu_ano_indicador-nu_competencia,ds_fonte,presenca_total_br,total_br,spai_ds_texto&filtros=eq-cd_indicador_spai-'{0}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - fixed: "MUNIC_MDHU607"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_br'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com {1}"
+        args:
+          - named_prop: "total_br"
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+
+# ========================================================
+secoes:
+#==================================================================================================
+  - id: "acoes_municipais_trabalho_infantil"
+    name: ""
+    cards:
+#==================================================================================================
+      - id: "map_lei_atendimento_socioeducativo_mun"
+        title: 
+          fixed: "Lei Específica sobre Atendimento socioeducativo"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU103"
+#==================================================================================================
+      - id: "map_atendimento_socioeducativo_mun"
+        title: 
+          fixed: "Atendimento socioeducativo ao adolescente em conflito com a lei"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU607"
+# ====================================================          
+      - id: "mapa_unidades_atendimento_adolescente"
+        title: 
+          fixed: "Unidades de Atendimento ao Adolescente em Conflito"
+        card_template: "tIndicadorTopoJsonBrasil"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_12"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 

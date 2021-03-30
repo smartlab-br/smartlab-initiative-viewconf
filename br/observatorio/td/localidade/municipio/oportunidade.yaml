@@ -20,7 +20,7 @@ principais:
           format: 'real'
           precision: 1
       - prop: "description"
-        template: "Trabalhadores Admitidos<br/>Empregos Celetistas (CLT)<br/>(ME - CAGED, {0})"
+        template: "CONTRATOS INICIADOS<br/>Empregos Celetistas (CLT)<br/>(ME - CAGED, {0})"
         args:
           - named_prop: "calc_competencia"
   - relevance: 'lead' 
@@ -44,7 +44,7 @@ principais:
           format: 'real'
           precision: 1
       - prop: "description"
-        template: "Trabalhadores Desligados<br/>Empregos Celetistas (CLT)<br/>(ME - CAGED, {0})"
+        template: "CONTRATOS ENCERRADOS<br/>Empregos Celetistas (CLT)<br/>(ME - CAGED, {0})"
         args:
           - named_prop: "calc_competencia"
   - relevance: 'lead' 
@@ -495,7 +495,7 @@ secoes:
 #             title: "Atividade Econômica com maior número de postos formais criados"
 #             type: "BAR"
 #             api:
-#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0,and,nl-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0,and,nk-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
 #               args:
 #                 - named_prop: "idLocalidade"
 #               options:
@@ -512,7 +512,7 @@ secoes:
 #                   - id: "saldo"
 #                     format: 'inteiro'
 #             apiBase:
-#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0,and,nl-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0,and,nk-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
 #               args:
 #                 - named_prop: "idLocalidade"
 #             headers:
@@ -542,7 +542,7 @@ secoes:
 #             title: "Atividade Econômica com maior número de postos formais perdidos"
 #             type: "BAR"
 #             api:
-#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,nl-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,nk-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
 #               args:
 #                 - named_prop: "idLocalidade"
 #               options:
@@ -559,7 +559,7 @@ secoes:
 #                   - id: "saldo_absoluto"
 #                     format: 'inteiro'
 #             apiBase:
-#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0},and,nl-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0},and,nk-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
 #               args:
 #                 - named_prop: "idLocalidade"
 #             headers:
@@ -810,6 +810,37 @@ secoes:
                         format: "inteiro"
                       - named_prop: "agr_sum_desligados"
                         format: "inteiro"
+          # - type: "ranking_list"
+          #   title: "Saldos de Ocupações"
+          #   rankings:
+          #     - title: "Saldo Positivo"
+          #       cls: "xs12"
+          #       api: 
+          #         template: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo,admitidos,desligados&ordenacao=-saldo&limit=5&filtros=eq-termometro_grupo-'cbo',and,gt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+          #         args:
+          #           - named_prop: "idLocalidade"
+          #       args:
+          #         - prop: 'localidade'
+          #           named_prop: "termometro_descricao"
+          #         - prop: 'vl_indicador'
+          #           named_prop: "saldo"
+          #           format: "inteiro"
+          #         # - prop: 'rank'
+          #         #   named_prop: "rank_br"
+          #     - title: "Saldo Negativo"
+          #       cls: "xs12"
+          #       api: 
+          #         template: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo,admitidos,desligados&ordenacao=saldo&limit=5&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+          #         args:
+          #           - named_prop: "idLocalidade"
+          #       args:
+          #         - prop: 'localidade'
+          #           named_prop: "termometro_descricao"
+          #         - prop: 'vl_indicador'
+          #           named_prop: "saldo"
+          #           format: "inteiro"
+          #         # - prop: 'rank'
+          #         #   named_prop: "rank_br"
           - type: "text"
             title: ""
             content:
