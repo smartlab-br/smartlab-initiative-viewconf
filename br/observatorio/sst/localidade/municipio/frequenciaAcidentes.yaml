@@ -3,11 +3,10 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "09_01_01_88"
-      year: "max"
+    api:
+      template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -15,7 +14,7 @@ principais:
         collapse:
           format: 'real'
       - prop: "description"
-        named_prop: "ds_indicador_radical"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -24,19 +23,18 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "09_01_06_88"
-      year: "max"
+    api:
+      template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
         format: 'inteiro'
-        collapse:
+        collapse: 
           format: 'real'
       - prop: "description"
-        named_prop: "ds_indicador_radical"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - ACIDENTES COM ÓBITO "
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -53,13 +51,11 @@ secoes:
           fixed: "Distribuição Geográfica dos Acidentes de Trabalho (CAT)"
         title_comment:
           template: "{0}, {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "09_01_01_88"
-            year: "max"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "nm_municipio_uf"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia"
         info:
           - type: "text"
@@ -68,13 +64,10 @@ secoes:
               template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
                           Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
                           Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "09_01_01_88"
-                year: "max"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
                 - named_prop: 'nu_competencia'
         description:
@@ -82,11 +75,10 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_01_88"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -98,14 +90,13 @@ secoes:
                     fixed: 'Acidentes no município'
               - relevance: 'low'
                 cls: 'xs5'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_01_88"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_uf'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -114,66 +105,26 @@ secoes:
                     fixed: "Acidentes na UF"
               - relevance: 'low'
                 cls: 'xs5'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_01_88"
-                  year: "max"
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_br'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Acidentes no país"
-          # - type: "ranking_list"
-          #   title: "Maiores Frequências"
-          #   rankings:
-          #     - title: "Municípios da UF"
-          #       cls: "xs12 md6"
-          #       api: 
-          #         template: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_uf&agregacao=DISTINCT&filtros=in-rank_uf-1-2-3,and,eq-cd_indicador-'09_01_01_88',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=rank_uf"
-          #         args:
-          #           - named_prop: "cd_uf"
-          #       args:
-          #         - prop: 'localidade'
-          #           named_prop: "nm_municipio_uf"
-          #         - prop: 'vl_indicador'
-          #           named_prop: "vl_indicador"
-          #           format: "inteiro"
-          #         - prop: 'rank'
-          #           named_prop: "rank_uf"
-          #     - title: "Municípios do Brasil"
-          #       cls: "xs12 md6"
-          #       api: 
-          #         fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_br&agregacao=DISTINCT&filtros=in-rank_br-1-2-3,and,eq-cd_indicador-'09_01_01_88',and,eq-nu_competencia-nu_competencia_max&ordenacao=rank_br"
-          #       args:
-          #         - prop: 'localidade'
-          #           named_prop: "nm_municipio_uf"
-          #         - prop: 'vl_indicador'
-          #           named_prop: "vl_indicador"
-          #           format: "inteiro"
-          #         - prop: 'rank'
-          #           named_prop: "rank_br"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de acidentes de trabalho notificados no município para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. {0} está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['09_01_01_88']
-                year: "max"
-              args:
-                - named_prop: "nm_municipio_uf"
+              fixed: "Em destaque, o número de acidentes de trabalho notificados no município para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. O município está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
           - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "09_01_01_88"
-              year: "max"
+            api:
+              template: "/sst/indicadoresmunicipais?categorias=rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
             args:
               - prop: 'regional_rank'
                 named_prop: "rank_uf"
@@ -197,7 +148,7 @@ secoes:
                 default: 0
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_01_88',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "cd_uf"
           options:
@@ -216,9 +167,6 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Qtde de Cats'
             value: 'fmt_vl_indicador'
           - text: 'Rank UF'
@@ -226,7 +174,7 @@ secoes:
           - text: 'Rank Brasil'
             value: 'fmt_rank_br'
         chart_options:
-          id_field: 'cd_mun_ibge'
+          id_field: 'cd_mun_ibge_dv'
           topo_key: "codarea"
           value_field: 'calc_deviation_cat'
           colorScale:
@@ -239,17 +187,15 @@ secoes:
           fixed: "Série Histórica dos Acidentes de Trabalho (CAT)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ["09_01_01_00","09_01_01_88"]
-            year: "max"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
           args:
-            - id: "09_01_01_00"
-              named_prop: "nm_municipio_uf"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - id: "09_01_01_00"
               named_prop: "nu_competencia_min"
-            - id: "09_01_01_88"
+            - id: "sst_cat_total"
               named_prop: "nu_competencia_max"
         info:
           - type: "text"
@@ -259,37 +205,34 @@ secoes:
                           Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
                           Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
                           Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}<br/>
-                          Nome: {4}<br/>Fonte: {5}<br/>Ano: {6}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ["09_01_01_00","09_01_01_88"]
-                year: "max"
+                          Nome: {4}<br/>Fonte: {5}<br/>Ano: 2018 a {6}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
               args:
                 - id: "09_01_01_00"
-                  named_prop: 'ds_indicador_radical'
+                  named_prop: 'cd_indicador'
                 - id: "09_01_01_00"
                   named_prop: 'ds_fonte'
                 - id: "09_01_01_00"
                   named_prop: 'nu_competencia_min'
                 - id: "09_01_01_00"
                   named_prop: 'nu_competencia_max'
-                - id: "09_01_01_88"
-                  named_prop: 'ds_indicador_radical'
-                - id: "09_01_01_88"
+                - id: "sst_cat_total"
+                  named_prop: 'cd_indicador'
+                - id: "sst_cat_total"
                   named_prop: 'ds_fonte'
-                - id: "09_01_01_88"
+                - id: "sst_cat_total"
                   named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_01_88"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -298,59 +241,55 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'ACIDENTES no município'
+                    fixed: 'Acidentes no município'
                   - prop: "comment"
-                    named_prop: 'nu_competencia'
+                    named_prop: "nu_competencia"
               - relevance: 'low'
-                cls: 'xs6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_01_88"
-                  year: "max"
+                cls: 'xs5'
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_uf'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "ACIDENTES NA UF"
+                    fixed: "Acidentes na UF"
                   - prop: "comment"
-                    named_prop: 'nu_competencia'
+                    named_prop: "nu_competencia"
               - relevance: 'low'
-                cls: 'xs6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_01_88"
-                  year: "max"
+                cls: 'xs5'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_br'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "ACIDENTES NO PAÍS"
+                    fixed: "Acidentes no país"
                   - prop: "comment"
-                    named_prop: 'nu_competencia'
+                    named_prop: "nu_competencia"
           - type: "text"
             title: ""
             content:
               fixed: "Em destaque, o número de acidentes de trabalho notificados no município para a população com vínculo de emprego regular. No gráfico, apresenta-se a evolução histórica do número de notificações no período."
         chart_type: "BAR"
         api: 
-          - template: "/indicadoresmunicipais?categorias=cd_mun_ibge,ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'09_01_01_00'"
+          - template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'09_01_01_00'"
             args:
               - named_prop: "idLocalidade"
             options:
               formatters:
                 - id: "vl_indicador"
                   format: 'inteiro'
-          - template: "/indicadoresmunicipais?categorias=cd_mun_ibge,ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'09_01_01_88',and,eq-nu_competencia-nu_competencia_max"
+          - template: "/sst/indicadoresmunicipais?categorias=cd_mun_ibge,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
             args:
               - named_prop: "idLocalidade"
             options:
@@ -358,16 +297,13 @@ secoes:
                 - id: "vl_indicador"
                   format: 'inteiro'
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Qtde'
+          - text: 'Nº de Notificações de Acidente de Trabalho'
             value: 'fmt_vl_indicador'
         chart_options:
-          id: "ds_agreg_primaria"
+          id: "cd_mun_ibge"
           x: "nu_competencia"
           y: "vl_indicador"
           orientation: "vertical"
@@ -385,17 +321,15 @@ secoes:
           fixed: "Série Histórica de Acidentes de Trabalho com Óbito (CAT)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ["09_01_06_00","09_01_06_88"]
-            year: "max"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
           args:
-            - id: "09_01_06_00"
-              named_prop: "nm_municipio_uf"
-            - id: "09_01_06_00"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - id: "09_01_01_00"
               named_prop: "nu_competencia_min"
-            - id: "09_01_06_88"
+            - id: "sst_cat_total"
               named_prop: "nu_competencia_max"
         info:
           - type: "text"
@@ -405,37 +339,34 @@ secoes:
                           Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
                           Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
                           Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}<br/>
-                          Nome: {4}<br/>Fonte: {5}<br/>Ano: {6}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ["09_01_06_00","09_01_06_88"]
-                year: "max"
+                          Nome: {4}<br/>Fonte: {5}<br/>Ano: 2018 a {6}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
               args:
-                - id: "09_01_06_00"
-                  named_prop: 'ds_indicador_radical'
-                - id: "09_01_06_00"
+                - id: "09_01_01_00"
+                  named_prop: 'cd_indicador'
+                - id: "09_01_01_00"
                   named_prop: 'ds_fonte'
-                - id: "09_01_06_00"
+                - id: "09_01_01_00"
                   named_prop: 'nu_competencia_min'
-                - id: "09_01_06_00"
+                - id: "09_01_01_00"
                   named_prop: 'nu_competencia_max'
-                - id: "09_01_06_88"
-                  named_prop: 'ds_indicador_radical'
-                - id: "09_01_06_88"
+                - id: "sst_cat_total"
+                  named_prop: 'cd_indicador'
+                - id: "sst_cat_total"
                   named_prop: 'ds_fonte'
-                - id: "09_01_06_88"
+                - id: "sst_cat_total"
                   named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_06_88"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -446,17 +377,16 @@ secoes:
                   - prop: "description"
                     fixed: 'ACIDENTES COM ÓBITO NO MUNICÍPIO'
                   - prop: "comment"
-                    named_prop: 'nu_competencia'
+                    named_prop: "nu_competencia"
               - relevance: 'low'
-                cls: 'xs6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_06_88"
-                  year: "max"
+                cls: 'xs5'
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_uf'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -464,17 +394,14 @@ secoes:
                   - prop: "description"
                     fixed: "ACIDENTES COM ÓBITO NA UF"
                   - prop: "comment"
-                    named_prop: 'nu_competencia'
+                    named_prop: "nu_competencia"
               - relevance: 'low'
-                cls: 'xs6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_06_88"
-                  year: "max"
+                cls: 'xs5'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_br'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -482,21 +409,21 @@ secoes:
                   - prop: "description"
                     fixed: "ACIDENTES COM ÓBITO NO PAÍS"      
                   - prop: "comment"
-                    named_prop: 'nu_competencia'
+                    named_prop: "nu_competencia"
           - type: "text"
             title: ""
             content:
               fixed: "Em destaque, o número de acidentes de trabalho com morte notificados no município para a população com vínculo de emprego regular. No gráfico, apresenta-se a evolução histórica do número de notificações sobre óbitos derivados de acidentes do trabalho no período."
         chart_type: "BAR"
         api: 
-          - template: "/indicadoresmunicipais?categorias=cd_mun_ibge,ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'09_01_06_00'"
+          - template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'09_01_06_00'"
             args:
               - named_prop: "idLocalidade"
             options:
               formatters:
                 - id: "vl_indicador"
                   format: 'inteiro'
-          - template: "/indicadoresmunicipais?categorias=cd_mun_ibge,ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'09_01_06_88',and,eq-nu_competencia-nu_competencia_max"
+          - template: "/sst/indicadoresmunicipais?categorias=cd_mun_ibge,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_mun_ibge_dv-{0},and,eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2017"
             args:
               - named_prop: "idLocalidade"
             options:
@@ -504,13 +431,10 @@ secoes:
                 - id: "vl_indicador"
                   format: 'inteiro'
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Qtde'
+          - text: 'Nº de Notificações de Acidente de Trabalho com Óbito'
             value: 'fmt_vl_indicador'
         chart_options:
           id: "ds_agreg_primaria"
