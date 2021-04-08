@@ -55,14 +55,13 @@ secoes:
           fixed: "Setores Econômicos com Mais Notificações"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            template: "/sst/cats?categorias=nm_municipio_uf&valor=ano_cat&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
-            args:
-              - named_prop: "idLocalidade"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "agr_min_ano_cat"
-            - named_prop: "agr_max_ano_cat"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -74,11 +73,11 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/sst/cats?categorias=ano_cat,ds_cnae_classe_cat&agregacao=COUNT&filtros=ne-ds_cnae_classe_cat-'null',and,ne-ds_cnae_classe_cat-'Indefinido',and,eq-ano_cat-{1},and,eq-cd_municipio_ibge_dv-{0}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_cnae_classe_cat&agregacao=COUNT&filtros=ne-ds_cnae_classe_cat-'',and,ne-ds_cnae_classe_cat-'Indefinido',and,eq-cd_municipio_ibge_dv-{0},and,eq-ano_cat-{1}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "sst_cat"
-                      named_prop: "nu_competencia_max"
+                      named_prop: "agr_max_ano_cat"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -202,18 +201,16 @@ secoes:
           #     rules:
           #       filter: ",and,lt-idade_cat-18,and,ne-idade_cat-0"
           #       filter_text: "Acidentes com Trabalhadores Adolescentes"
-        # footnote:
-        #   template: "Setores Econômicos com Mais Notificações ({0} a {1})"
-        #   api: 
-        #     template: "/sst/cats?categorias=nm_municipio_uf&valor=ano_cat&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
-        #     args:
-        #       - named_prop: "idLocalidade"
-        #   args:
-        #     - named_prop: "agr_min_ano_cat"
-        #     - named_prop: "agr_max_ano_cat"
+        footnote: 
+          template: "Setores Econômicos com Mais Notificações ({0}-{1})"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         chart_type: "TREEMAP"
         api: 
-          template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=COUNT&filtros=eq-cd_municipio_ibge_dv-{0},and,ne-ds_cnae_classe_cat-'null',and,ne-ds_cnae_classe_cat-'Indefinido'"
+          template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=COUNT&filtros=eq-cd_municipio_ibge_dv-{0},and,ne-ds_cnae_classe_cat-'',and,ne-ds_cnae_classe_cat-'Indefinido'"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -240,14 +237,13 @@ secoes:
           fixed: "Lesões mais frequentes"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            template: "/sst/cats?categorias=nm_municipio_uf&valor=ano_cat&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
-            args:
-              - named_prop: "idLocalidade"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "agr_min_ano_cat"
-            - named_prop: "agr_max_ano_cat"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -259,11 +255,11 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/sst/cats?categorias=ano_cat,ds_natureza_lesao&agregacao=COUNT&filtros=ne-ds_natureza_lesao-'null',and,eq-cd_municipio_ibge_dv-{0},and,eq-ano_cat-{1}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_natureza_lesao&agregacao=COUNT&filtros=ne-ds_natureza_lesao-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-ano_cat-{1}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "sst_cat"
-                      named_prop: "nu_competencia_max"
+                      named_prop: "agr_max_ano_cat"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -376,10 +372,16 @@ secoes:
               rules:
                 filter: ",and,eq-cd_indica_obito-'S'"
                 filter_text: "Acidentes com Mortes"
-        # footnote: "Lesões mais frequentes (2012-2018)"
+        footnote: 
+          template: "Lesões mais frequentes ({0}-{1})"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         chart_type: "TREEMAP"
         api: 
-          template: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT&filtros=ne-ds_natureza_lesao-'null',and,eq-cd_municipio_ibge_dv-{0}"
+          template: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT&filtros=ne-ds_natureza_lesao-'',and,eq-cd_municipio_ibge_dv-{0}"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -406,14 +408,13 @@ secoes:
           fixed: "Partes do corpo mais frequentemente atingidas"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            template: "/sst/cats?categorias=nm_municipio_uf&valor=ano_cat&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
-            args:
-              - named_prop: "idLocalidade"
           args:
-            - named_prop: nm_municipio_uf
-            - named_prop: "agr_min_ano_cat"
-            - named_prop: "agr_max_ano_cat"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -425,11 +426,11 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/sst/cats?categorias=ano_cat,ds_parte_corpo_atingida&agregacao=COUNT&filtros=ne-ds_parte_corpo_atingida-'null',and,eq-cd_municipio_ibge_dv-{0},and,eq-ano_cat-{1}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_parte_corpo_atingida&agregacao=COUNT&filtros=ne-ds_parte_corpo_atingida-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-ano_cat-{1}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "sst_cat"
-                      named_prop: "nu_competencia_max"
+                      named_prop: "agr_max_ano_cat"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -542,10 +543,16 @@ secoes:
               rules:
                 filter: ",and,eq-cd_indica_obito-'S'"
                 filter_text: "Acidentes com Mortes"
-        # footnote: "Partes do corpo mais frequentemente atingidas (2012-2018)"
+        footnote: 
+          template: "Partes do corpo mais frequentemente atingidas ({0}-{1})"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         chart_type: "TREEMAP"
         api: 
-          template: "/sst/cats?categorias=ds_parte_corpo_atingida&agregacao=COUNT&filtros=ne-ds_parte_corpo_atingida-'null',and,eq-cd_municipio_ibge_dv-{0}"
+          template: "/sst/cats?categorias=ds_parte_corpo_atingida&agregacao=COUNT&filtros=ne-ds_parte_corpo_atingida-'',and,eq-cd_municipio_ibge_dv-{0}"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -569,15 +576,13 @@ secoes:
         title: 
           fixed: "Grupos de Agentes Causadores"
         title_comment:
-          template: "{0}, de {1} a {2}"
-          api: 
-            template: "/sst/cats?categorias=nm_municipio_uf&valor=ano_cat&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
-            args:
-              - named_prop: "idLocalidade"
           args:
-            - named_prop: nm_municipio_uf
-            - named_prop: "agr_min_ano_cat"
-            - named_prop: "agr_max_ano_cat"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -589,11 +594,11 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/sst/cats?categorias=ano_cat,ds_grupo_agcausadores_cat&agregacao=COUNT&filtros=ne-ds_grupo_agcausadores_cat-'null',and,eq-ano_cat-{1},and,eq-cd_municipio_ibge_dv-{0}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_grupo_agcausadores_cat&agregacao=COUNT&filtros=ne-ds_grupo_agcausadores_cat-'',and,eq-ano_cat-{1},and,eq-cd_municipio_ibge_dv-{0}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "sst_cat"
-                      named_prop: "nu_competencia_max"
+                      named_prop: "agr_max_ano_cat"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -706,10 +711,16 @@ secoes:
               rules:
                 filter: ",and,eq-cd_indica_obito-'S'"
                 filter_text: "Acidentes com Mortes"
-        # footnote: "Grupos de Agentes Causadores (2012-2018)"
+        footnote: 
+          template: "Grupos de Agentes Causadores ({0}-{1})"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         chart_type: "TREEMAP"
         api: 
-          template: "/sst/cats?categorias=ds_grupo_agcausadores_cat&agregacao=COUNT&filtros=eq-cd_municipio_ibge_dv-{0},and,ne-ds_grupo_agcausadores_cat-'null'"
+          template: "/sst/cats?categorias=ds_grupo_agcausadores_cat&agregacao=COUNT&filtros=eq-cd_municipio_ibge_dv-{0},and,ne-ds_grupo_agcausadores_cat-''"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -733,15 +744,13 @@ secoes:
         title: 
           fixed: "Agentes Causadores"
         title_comment:
-          template: "{0}, de {1} a {2}"
-          api: 
-            template: "/sst/cats?categorias=nm_municipio_uf&valor=ano_cat&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
-            args:
-              - named_prop: "idLocalidade"
           args:
-            - named_prop: nm_municipio_uf
-            - named_prop: "agr_min_ano_cat"
-            - named_prop: "agr_max_ano_cat"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -753,11 +762,11 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/sst/cats?categorias=ano_cat,ds_agente_causador&agregacao=COUNT&filtros=ne-ds_agente_causador-'null',and,eq-cd_municipio_ibge_dv-{0},and,eq-ano_cat-{1}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_agente_causador&agregacao=COUNT&filtros=ne-ds_agente_causador-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-ano_cat-{1}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "sst_cat"
-                      named_prop: "nu_competencia_max"
+                      named_prop: "agr_max_ano_cat"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -870,10 +879,16 @@ secoes:
               rules:
                 filter: ",and,eq-cd_indica_obito-'S'"
                 filter_text: "Acidentes com Mortes"
-        # footnote: "Agentes Causadores (2012-2018)"
+        footnote: 
+          template: "Agentes Causadores ({0}-{1})"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         chart_type: "TREEMAP"
         api: 
-          template: "/sst/cats?categorias=ds_agente_causador&agregacao=COUNT&filtros=eq-cd_municipio_ibge_dv-{0},and,ne-ds_agente_causador-'null'"
+          template: "/sst/cats?categorias=ds_agente_causador&agregacao=COUNT&filtros=eq-cd_municipio_ibge_dv-{0},and,ne-ds_agente_causador-''"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -898,14 +913,13 @@ secoes:
           fixed: "Ocupações"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            template: "/sst/cats?categorias=nm_municipio_uf&valor=ano_cat&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
-            args:
-              - named_prop: "idLocalidade"
           args:
-            - named_prop: nm_municipio_uf
-            - named_prop: "agr_min_ano_cat"
-            - named_prop: "agr_max_ano_cat"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -917,11 +931,11 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/sst/cats?categorias=ano_catds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-'null',and,eq-cd_municipio_ibge_dv-{0},and,eq-ano_cat-{1}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-ano_cat-{1}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "sst_cat"
-                      named_prop: "nu_competencia_max"
+                      named_prop: "agr_max_ano_cat"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -1055,10 +1069,16 @@ secoes:
               rules:
                 filter: ",and,eq-cd_indica_obito-'S'"
                 filter_text: "Acidentes com Mortes"
-        # footnote: "Ocupações (2012-2018)"
+        footnote: 
+          template: "Ocupações ({0}-{1})"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         chart_type: "TREEMAP"
         api: 
-          template: "/sst/cats?categorias=ds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-'null',and,eq-cd_municipio_ibge_dv-{0}"
+          template: "/sst/cats?categorias=ds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-'',and,eq-cd_municipio_ibge_dv-{0}"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -1237,14 +1257,13 @@ secoes:
           fixed: "Notificações de Acidentes de Trabalhadores Adolescentes"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            template: "/sst/cats?categorias=nm_municipio_uf&valor=ano_cat&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
-            args:
-              - named_prop: "idLocalidade"
           args:
-            - named_prop: nm_municipio_uf
-            - named_prop: "agr_min_ano_cat"
-            - named_prop: "agr_max_ano_cat"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1391,12 +1410,13 @@ secoes:
           fixed: "Temporalidade de Acidentes"
         title_comment:
           template: "{0}, de {1} a {2}"
+          api:
             template: "/sst/cats?categorias=1&valor=ano_cat&agregacao=MIN,MAX&filtros=ge-ano_cat-{0}"
             args:
               - function: "calc_subtraction"
                 fn_args:
                   - base_object: "sst_cat"
-                    named_prop: "nu_competencia_max"
+                    named_prop: "agr_max_ano_cat"
                   - fixed: 2
           args:
             - base_object: "localidade"
@@ -1420,10 +1440,10 @@ secoes:
                     - function: "calc_subtraction"
                       fn_args:
                         - base_object: "sst_cat"
-                          named_prop: "nu_competencia_max"
+                          named_prop: "agr_max_ano_cat"
                         - fixed: 2
                     - base_object: "sst_cat"
-                      named_prop: "nu_competencia_max"
+                      named_prop: "agr_max_ano_cat"
                 args:
                   - prop: "value"
                     function: "getWeekDay"
@@ -1446,10 +1466,10 @@ secoes:
                     - function: "calc_subtraction"
                       fn_args:
                         - base_object: "sst_cat"
-                          named_prop: "nu_competencia_max"
+                          named_prop: "agr_max_ano_cat"
                         - fixed: 2
                     - base_object: "sst_cat"
-                      named_prop: "nu_competencia_max"
+                      named_prop: "agr_max_ano_cat"
                 args:
                   - prop: "value"
                     function: "getWeekDay"
@@ -1466,16 +1486,16 @@ secoes:
               - relevance: 'low'
                 cls: 'xs12'
                 api:
-                  template: "/sst/cats?categorias=st_acidente_feriado&agregacao=COUNT&filtros=ne-st_acidente_feriado-'null',and,eq-cd_municipio_ibge_dv-{0},and,ge-ano_cat-{1},and,le-ano_cat-{2}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=st_acidente_feriado&agregacao=COUNT&filtros=ne-st_acidente_feriado-'',and,eq-cd_municipio_ibge_dv-{0},and,ge-ano_cat-{1},and,le-ano_cat-{2}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - function: "calc_subtraction"
                       fn_args:
                         - base_object: "sst_cat"
-                          named_prop: "nu_competencia_max"
+                          named_prop: "agr_max_ano_cat"
                         - fixed: 2
                     - base_object: "sst_cat"
-                      named_prop: "nu_competencia_max"
+                      named_prop: "agr_max_ano_cat"
                 args:
                   - prop: "value"
                     named_prop: "st_acidente_feriado"
@@ -1499,10 +1519,10 @@ secoes:
             - function: "calc_subtraction"
               fn_args:
                 - base_object: "sst_cat"
-                  named_prop: "nu_competencia_max"
+                  named_prop: "agr_max_ano_cat"
                 - fixed: 2
             - base_object: "sst_cat"
-              named_prop: "nu_competencia_max"
+              named_prop: "agr_max_ano_cat"
           options:
             recalc_min_max: true
             minmax_field: "agr_count"
@@ -1532,14 +1552,13 @@ secoes:
           fixed: "Acidentes de trabalho por idade e sexo"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            template: "/sst/cats?categorias=nm_municipio_uf&valor=ano_cat&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
-            args:
-              - named_prop: "idLocalidade"
           args:
-            - named_prop: nm_municipio_uf
-            - named_prop: "agr_min_ano_cat"
-            - named_prop: "agr_max_ano_cat"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1604,6 +1623,13 @@ secoes:
                   args:
                     - named_prop: "value_min"
                     - named_prop: "value_max"
+        footnote: 
+          template: "Acidentes de trabalho por idade e sexo ({0}-{1})"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         chart_type: "BAR"
         api: 
           template: "/sst/cats?categorias=idade_cat,cd_tipo_sexo_empregado_cat&agregacao=count&filtros=eq-cd_municipio_ibge_dv-{0},and,ne-cd_tipo_sexo_empregado_cat-'Não informado',and,ne-idade_cat-0"
