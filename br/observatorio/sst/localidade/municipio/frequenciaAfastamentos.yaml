@@ -3,11 +3,10 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "10_10_01_91"
-      year: "max"
+    api:
+      template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -15,23 +14,19 @@ principais:
         collapse:
           format: 'real'
       - prop: "description"
-        named_prop: "ds_indicador_radical"
-        default: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - AUXÍLIO-DOENÇA POR ACIDENTE DO TRABALHO (B91)"
+        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - AUXÍLIO-DOENÇA POR ACIDENTE DO TRABALHO (B91)"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
-            default: "INSS - SUB/Concessão"
           - named_prop: "nu_competencia"
-            default: ""
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "10_10_01_92"
-      year: "max"
+    api:
+      template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -39,15 +34,12 @@ principais:
         collapse:
           format: 'real'
       - prop: "description"
-        named_prop: "ds_indicador_radical"
-        default: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - APOSENTADORIA POR INVALIDEZ POR ACIDENTE DO TRABALHO (B92)"
+        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - APOSENTADORIA POR INVALIDEZ POR ACIDENTE DO TRABALHO (B92)"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
-            default: "INSS - SUB/Concessão"
           - named_prop: "nu_competencia"
-            default: ""
 # ====================================================          
 secoes:
   - id: "frequencia_beneficios"
@@ -59,38 +51,32 @@ secoes:
           fixed: "Concessão de Benefícios Previdenciários Acidentários (B91)"
         title_comment:
           template: "{0}, {1}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_91'&limit=1"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "nu_competencia"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_91"
-                year: "max"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
                 - named_prop: 'nu_competencia'
-        msgNoData:
-          desc: "A localidade em análise não possui dados registrados de Concessão de Benefícios Previdenciários Acidentários (B91)."
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_91"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -99,95 +85,44 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Concessões no município'
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
+                    fixed: 'B91 no município'
               - relevance: 'low'
-                cls: 'xs5'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_91"
-                  year: "max"
+                cls: 'xs12 md6'
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_uf'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NA UF"
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
+                    fixed: 'B91 na UF'
               - relevance: 'low'
-                cls: 'xs5'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_91"
-                  year: "max"
+                cls: 'xs5 md6'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_br'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NO PAÍS"
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
-          # - type: "ranking_list"
-          #   title: "Maiores Frequências"
-          #   rankings:
-          #     - title: "Municípios da UF"
-          #       cls: "xs12 md6"
-          #       api: 
-          #         template: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_uf&agregacao=DISTINCT&filtros=in-rank_uf-1-2-3,and,eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=rank_uf"
-          #         args:
-          #           - named_prop: "cd_uf"
-          #       args:
-          #         - prop: 'localidade'
-          #           named_prop: "nm_municipio_uf"
-          #         - prop: 'vl_indicador'
-          #           named_prop: "vl_indicador"
-          #           format: "inteiro"
-          #         - prop: 'rank'
-          #           named_prop: "rank_uf"
-          #     - title: "Municípios do Brasil"
-          #       cls: "xs12 md6"
-          #       api: 
-          #         fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_br&agregacao=DISTINCT&filtros=in-rank_br-1-2-3,and,eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max&ordenacao=rank_br"
-          #       args:
-          #         - prop: 'localidade'
-          #           named_prop: "nm_municipio_uf"
-          #         - prop: 'vl_indicador'
-          #           named_prop: "vl_indicador"
-          #           format: "inteiro"
-          #         - prop: 'rank'
-          #           named_prop: "rank_br"
+                    fixed: "B91 NO PAÍS"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de concessões de benefícios previdenciários no município para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. {0} está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['10_10_01_91']
-                year: "max"
-              args:
-                - named_prop: "nm_municipio_uf"
-                  required: true
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) no município, na unidade federativa e no país para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
           - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_10_01_91"
-              year: "max"
+            api:
+              template: "/sst/indicadoresmunicipais?categorias=rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
             args:
               - prop: 'regional_rank'
                 named_prop: "rank_uf"
@@ -214,9 +149,11 @@ secoes:
             multiple: true
             label: "Categoria CID"
             api:
-              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-2018"
+              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
               args:
                 - named_prop: "cd_uf"
+                - base_object: "sst_beneficio"
+                  named_prop: "nu_competencia_max"
             args:
               - prop: "id"
                 named_prop: "cd_agrupamento_categoria_cid"
@@ -232,10 +169,11 @@ secoes:
                     - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-2018"
-          # template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
           args:
             - named_prop: "cd_uf"
+            - base_object: "sst_beneficio"
+              named_prop: "nu_competencia_max"
           options:
             calcs:
               - id: "deviation_b91"
@@ -268,100 +206,160 @@ secoes:
           fixed: "Concessão de Benefícios Previdenciários Acidentários (B91) – Série Histórica"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_91'&limit=1"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
+            - id: "10_10_01_91"
+              named_prop: "nu_competencia_min"
+            - id: "sst_bene_qtd_especie"
+              named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_91"
-                year: "max"
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a 2017<br/>
+                          Nome: {3}<br/>Fonte: {4}<br/>Ano: 2018 a {5}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_91"
+                  named_prop: 'cd_indicador'
+                - id: "10_10_01_91"
+                  named_prop: 'ds_fonte'
+                - id: "10_10_01_91"
+                  named_prop: 'nu_competencia_min'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'cd_indicador'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'ds_fonte'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api: 
-                  template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'10_10_01_91'"
-                  args:
-                    - named_prop: "idLocalidade"
+                api:
+                  - template: "/sst/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,gt-nu_competencia-2017,and,eq-cd_mun_ibge_dv-{0}"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,le-nu_competencia-'2017',and,eq-cd_municipio_ibge_dv-{0}"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_91"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Acumulado no município'
+                    fixed: 'B91 acumulado no município'
               - relevance: 'low'
                 cls: 'xs12 md6'
-                api: 
-                  template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_10_01_91'"
-                  args:
-                    - named_prop: "cd_uf"
+                api:
+                  - template: "/sst/indicadoresestaduais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,gt-nu_competencia-2017,and,eq-cd_uf-{0}"
+                    args:
+                      - named_prop: "cd_uf"
+                  - template: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,le-nu_competencia-'2017',and,eq-cd_uf-{0}"
+                    args:
+                      - named_prop: "cd_uf"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_91"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NA UF"
+                    fixed: 'B91 acumulado na UF'
               - relevance: 'low'
                 cls: 'xs12 md6'
-                api: 
-                  fixed: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91'"
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,gt-nu_competencia-2017"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,le-nu_competencia-'2017'"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_91"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NO PAÍS"      
+                    fixed: "B91 acumulado NO PAÍS"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) no município de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
-              api: 
-                fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_91'&limit=1"
+              template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) no município, na unidade federativa de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['10_10_01_91']
+                year: "min"
               args:
                 - named_prop: 'nu_competencia_min'
                 - named_prop: 'nu_competencia_max'
         chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['10_10_01_91']
-            options:
-              formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
+        api:
+          - template: "/sst/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,gt-nu_competencia-2017,and,eq-cd_mun_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          - template: "/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'10_10_01_91',and,le-nu_competencia-'2017',and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+        api_options:
+          formatters:
+            - id: "vl_indicador"
+              format: "inteiro"
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Qtde'
+          - text: 'Qtde de Benefícios B91 - Auxílio-doença por acidente de trabalho'
             value: 'fmt_vl_indicador'
         chart_options:
           id: "nu_competencia"
@@ -381,38 +379,32 @@ secoes:
           fixed: "Concessão de Aposentadorias por Invalidez Acidentária (B92)"
         title_comment:
           template: "{0}, {1}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_92'&limit=1"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "nu_competencia"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_92"
-                year: "max"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
                 - named_prop: 'nu_competencia'
-        msgNoData:
-          desc: "A localidade em análise não possui dados registrados de Concessão de Aposentadorias por Invalidez Acidentária (B92)."
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_92"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -421,95 +413,44 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'CONCESSÕES NO MUNICÍPIO'
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
+                    fixed: 'B92 no município'
               - relevance: 'low'
-                cls: 'xs5'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_92"
-                  year: "max"
+                cls: 'xs12 md6'
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_uf'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NA UF"
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
+                    fixed: 'B92 na UF'
               - relevance: 'low'
-                cls: 'xs5'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_92"
-                  year: "max"
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_br'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NO PAÍS"
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
-          # - type: "ranking_list"
-          #   title: "Maiores Frequências"
-          #   rankings:
-          #     - title: "Municípios da UF"
-          #       cls: "xs12 md6"
-          #       api: 
-          #         template: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_uf&agregacao=DISTINCT&filtros=in-rank_uf-1-2-3,and,eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=rank_uf"
-          #         args:
-          #           - named_prop: "cd_uf"
-          #       args:
-          #         - prop: 'localidade'
-          #           named_prop: "nm_municipio_uf"
-          #         - prop: 'vl_indicador'
-          #           named_prop: "vl_indicador"
-          #           format: "inteiro"
-          #         - prop: 'rank'
-          #           named_prop: "rank_uf"
-          #     - title: "Municípios do Brasil"
-          #       cls: "xs12 md6"
-          #       api: 
-          #         fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_br&agregacao=DISTINCT&filtros=in-rank_br-1-2-3,and,eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max&ordenacao=rank_br"
-          #       args:
-          #         - prop: 'localidade'
-          #           named_prop: "nm_municipio_uf"
-          #         - prop: 'vl_indicador'
-          #           named_prop: "vl_indicador"
-          #           format: "inteiro"
-          #         - prop: 'rank'
-          #           named_prop: "rank_br"
+                    fixed: "B92 NO PAÍS"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de concessões de benefícios previdenciários no município para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. {0} está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['10_10_01_92']
-                year: "max"
-              args:
-                - named_prop: "nm_municipio_uf"
-                  required: true
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Aposentadoria por Invalidez Acidentária (B92) no município, na unidade federativa e no país para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
           - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_10_01_92"
-              year: "max"
+            api:
+              template: "/sst/indicadoresmunicipais?categorias=rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
             args:
               - prop: 'regional_rank'
                 named_prop: "rank_uf"
@@ -531,19 +472,44 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
+          - id: "select_cid_b92"
+            type: "select"
+            multiple: true
+            label: "Categoria CID"
+            api:
+              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{1}"
+              args:
+                - named_prop: "cd_uf"
+                - base_object: "sst_beneficio"
+                  named_prop: "nu_competencia_max"
+            args:
+              - prop: "id"
+                named_prop: "cd_agrupamento_categoria_cid"
+              - prop: "label"
+                named_prop: "cd_agrupamento_categoria_cid"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+                api:
+                  args:
+                    - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{1}"
           args:
             - named_prop: "cd_uf"
+            - base_object: "sst_beneficio"
+              named_prop: "nu_competencia_max"
           options:
             calcs:
               - id: "deviation_b92"
-                function: "get_proportional_indicator_uf"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
             formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
+              - id: "agr_count"
                 format: 'inteiro'
         headers:
           - text: 'Município'
@@ -551,124 +517,177 @@ secoes:
             value: 'nm_municipio'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Qtde de Benefícios'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
+            value: 'ano_beneficio'
+          - text: 'Qtde de Benefícios B92 - Aposentadorias por Invalidez Acidentária'
+            value: 'fmt_agr_count'
         chart_options:
-          id_field: 'cd_mun_ibge'
+          id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
           value_field: 'calc_deviation_b92'
           colorScale:
             name: "Reds"
-        source:
-          desc_field: "ds_fonte"
+        # source:
+        #   desc_field: "ds_fonte"
 # ==============================================
       - id: "bar_ben_b92"
         title: 
           fixed: "Concessão de Aposentadorias por Invalidez Acidentária (B92) – Série Histórica"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_92'&limit=1"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
+            - id: "10_10_01_91"
+              named_prop: "nu_competencia_min"
+            - id: "sst_bene_qtd_especie"
+              named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_92"
-                year: "max"
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a 2017<br/>
+                          Nome: {3}<br/>Fonte: {4}<br/>Ano: 2018 a {5}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_92"
+                  named_prop: 'cd_indicador'
+                - id: "10_10_01_92"
+                  named_prop: 'ds_fonte'
+                - id: "10_10_01_92"
+                  named_prop: 'nu_competencia_min'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'cd_indicador'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'ds_fonte'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api: 
-                  template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'10_10_01_92'"
-                  args:
-                    - named_prop: "idLocalidade"
+                api:
+                  - template: "/sst/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,gt-nu_competencia-2017,and,eq-cd_mun_ibge_dv-{0}"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,le-nu_competencia-'2017',and,eq-cd_municipio_ibge_dv-{0}"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_92"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'ACUMULADO NO MUNICÍPIO'
+                    fixed: 'B92 acumulado no município'
               - relevance: 'low'
                 cls: 'xs12 md6'
-                api: 
-                  template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_10_01_92'"
-                  args:
-                    - named_prop: "cd_uf"
+                api:
+                  - template: "/sst/indicadoresestaduais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,gt-nu_competencia-2017,and,eq-cd_uf-{0}"
+                    args:
+                      - named_prop: "cd_uf"
+                  - template: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,le-nu_competencia-'2017',and,eq-cd_uf-{0}"
+                    args:
+                      - named_prop: "cd_uf"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_92"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NA UF"
+                    fixed: 'B92 acumulado na UF'
               - relevance: 'low'
                 cls: 'xs12 md6'
-                api: 
-                  fixed: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92'"
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,gt-nu_competencia-2017"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,le-nu_competencia-'2017'"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_92"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NO PAÍS"      
+                    fixed: "B92 acumulado NO PAÍS"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Aposentadorias por Invalidez Acidentária (B92) no município de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
-              api: 
-                fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_92'&limit=1"
+              template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Aposentadorias por Invalidez Acidentária (B92) no município, na unidade federativade {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['10_10_01_92']
+                year: "min"
               args:
                 - named_prop: 'nu_competencia_min'
                 - named_prop: 'nu_competencia_max'
         chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['10_10_01_92']
-            options:
-              formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
+        api:
+          - template: "/sst/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,gt-nu_competencia-2017,and,eq-cd_mun_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          - template: "/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'10_10_01_92',and,le-nu_competencia-'2017',and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+        api_options:
+          formatters:
+            - id: "vl_indicador"
+              format: "inteiro"
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Qtde'
+          - text: 'Qtde de Benefícios B92 - Aposentadorias por Invalidez Acidentária'
             value: 'fmt_vl_indicador'
         chart_options:
           id: "nu_competencia"
@@ -688,38 +707,32 @@ secoes:
           fixed: "Pensão por morte por acidente do trabalho (B93)"
         title_comment:
           template: "{0}, {1}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_93'&limit=1"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "nu_competencia"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_93"
-                year: "max"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
                 - named_prop: 'nu_competencia'
-        msgNoData:
-          desc: "A localidade em análise não possui dados registrados de Pensão por morte por acidente do trabalho (B93)."
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_93"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -728,95 +741,44 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Pensões no município'
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
+                    fixed: 'B93 no município'
               - relevance: 'low'
-                cls: 'xs5'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_93"
-                  year: "max"
+                cls: 'xs12 md6'
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_uf'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NA UF"
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
+                    fixed: 'B93 na UF'
               - relevance: 'low'
-                cls: 'xs5'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_93"
-                  year: "max"
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_br'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NO PAÍS"
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
-          # - type: "ranking_list"
-          #   title: "Maiores Frequências"
-          #   rankings:
-          #     - title: "Municípios da UF"
-          #       cls: "xs12 md6"
-          #       api: 
-          #         template: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_uf&agregacao=DISTINCT&filtros=in-rank_uf-1-2-3,and,eq-cd_indicador-'10_10_01_93',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=rank_uf"
-          #         args:
-          #           - named_prop: "cd_uf"
-          #       args:
-          #         - prop: 'localidade'
-          #           named_prop: "nm_municipio_uf"
-          #         - prop: 'vl_indicador'
-          #           named_prop: "vl_indicador"
-          #           format: "inteiro"
-          #         - prop: 'rank'
-          #           named_prop: "rank_uf"
-          #     - title: "Municípios do Brasil"
-          #       cls: "xs12 md6"
-          #       api: 
-          #         fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_br&agregacao=DISTINCT&filtros=in-rank_br-1-2-3,and,eq-cd_indicador-'10_10_01_93',and,eq-nu_competencia-nu_competencia_max&ordenacao=rank_br"
-          #       args:
-          #         - prop: 'localidade'
-          #           named_prop: "nm_municipio_uf"
-          #         - prop: 'vl_indicador'
-          #           named_prop: "vl_indicador"
-          #           format: "inteiro"
-          #         - prop: 'rank'
-          #           named_prop: "rank_br"
+                    fixed: "B93 NO PAÍS"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de concessões de benefícios previdenciários no município para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. {0} está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['10_10_01_93']
-                year: "max"
-              args:
-                - named_prop: "nm_municipio_uf"
-                  required: true
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Pensão por morte por acidente do trabalho (B93) no município, na unidade federativa e no país para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
           - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_10_01_93"
-              year: "max"
+            api:
+              template: "/sst/indicadoresmunicipais?categorias=rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
             args:
               - prop: 'regional_rank'
                 named_prop: "rank_uf"
@@ -838,19 +800,44 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
+          - id: "select_cid_b93"
+            type: "select"
+            multiple: true
+            label: "Categoria CID"
+            api:
+              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{1}"
+              args:
+                - named_prop: "cd_uf"
+                - base_object: "sst_beneficio"
+                  named_prop: "nu_competencia_max"
+            args:
+              - prop: "id"
+                named_prop: "cd_agrupamento_categoria_cid"
+              - prop: "label"
+                named_prop: "cd_agrupamento_categoria_cid"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+                api:
+                  args:
+                    - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_10_01_93',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{1}"
           args:
             - named_prop: "cd_uf"
+            - base_object: "sst_beneficio"
+              named_prop: "nu_competencia_max"
           options:
             calcs:
               - id: "deviation_b93"
-                function: "get_proportional_indicator_uf"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
             formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
+              - id: "agr_count"
                 format: 'inteiro'
         headers:
           - text: 'Município'
@@ -858,124 +845,177 @@ secoes:
             value: 'nm_municipio'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Qtde de Benefícios'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
+            value: 'ano_beneficio'
+          - text: 'Qtde de Benefícios B93 - Pensão por morte por acidente do trabalho'
+            value: 'fmt_agr_count'
         chart_options:
-          id_field: 'cd_mun_ibge'
+          id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
           value_field: 'calc_deviation_b93'
           colorScale:
             name: "Reds"
-        source:
-          desc_field: "ds_fonte"
+        # source:
+        #   desc_field: "ds_fonte"
 # ===============================================
       - id: "bar_ben_b93"
         title: 
           fixed: "Pensão por morte por acidente do trabalho (B93) – Série Histórica"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_93'&limit=1"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
+            - id: "10_10_01_91"
+              named_prop: "nu_competencia_min"
+            - id: "sst_bene_qtd_especie"
+              named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_93"
-                year: "max"
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a 2017<br/>
+                          Nome: {3}<br/>Fonte: {4}<br/>Ano: 2018 a {5}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_93',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_93"
+                  named_prop: 'cd_indicador'
+                - id: "10_10_01_93"
+                  named_prop: 'ds_fonte'
+                - id: "10_10_01_93"
+                  named_prop: 'nu_competencia_min'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'cd_indicador'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'ds_fonte'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api: 
-                  template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'10_10_01_93'"
-                  args:
-                    - named_prop: "idLocalidade"
+                api:
+                  - template: "/sst/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,gt-nu_competencia-2017,and,eq-cd_mun_ibge_dv-{0}"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_93',and,le-nu_competencia-'2017',and,eq-cd_municipio_ibge_dv-{0}"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_93"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'ACUMULADO NO MUNICÍPIO'
+                    fixed: 'B93 acumulado no município'
               - relevance: 'low'
                 cls: 'xs12 md6'
-                api: 
-                  template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_10_01_93'"
-                  args:
-                    - named_prop: "cd_uf"
+                api:
+                  - template: "/sst/indicadoresestaduais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,gt-nu_competencia-2017,and,eq-cd_uf-{0}"
+                    args:
+                      - named_prop: "cd_uf"
+                  - template: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_93',and,le-nu_competencia-'2017',and,eq-cd_uf-{0}"
+                    args:
+                      - named_prop: "cd_uf"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_93"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "B93 NA UF"
+                    fixed: 'B93 acumulado na UF'
               - relevance: 'low'
                 cls: 'xs12 md6'
-                api: 
-                  fixed: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_93'"
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,gt-nu_competencia-2017"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_93',and,le-nu_competencia-'2017'"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_93"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "B93 NO PAÍS"      
+                    fixed: "B93 acumulado NO PAÍS"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Pensão por morte por acidente do trabalho (B93) no município de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
-              api: 
-                fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_93'&limit=1"
+              template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Pensão por morte por acidente do trabalho (B93) no município, na unidade federativade {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['10_10_01_93']
+                year: "min"
               args:
                 - named_prop: 'nu_competencia_min'
                 - named_prop: 'nu_competencia_max'
         chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['10_10_01_93']
-            options:
-              formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
+        api:
+          - template: "/sst/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,gt-nu_competencia-2017,and,eq-cd_mun_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          - template: "/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'10_10_01_93',and,le-nu_competencia-'2017',and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+        api_options:
+          formatters:
+            - id: "vl_indicador"
+              format: "inteiro"
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Qtde'
+          - text: 'Qtde de Benefícios B93 - Pensão por morte por acidente do trabalho'
             value: 'fmt_vl_indicador'
         chart_options:
           id: "nu_competencia"
@@ -995,38 +1035,32 @@ secoes:
           fixed: "Auxílio-acidente por acidente do trabalho (B94)"
         title_comment:
           template: "{0}, {1}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_94'&limit=1"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "nu_competencia"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_94"
-                year: "max"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
                 - named_prop: 'nu_competencia'
-        msgNoData:
-          desc: "A localidade em análise não possui dados registrados de Auxílio-acidente por acidente do trabalho (B94)."
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_94"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresmunicipais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -1035,95 +1069,44 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Auxílios no município"
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
+                    fixed: 'B94 no município'
               - relevance: 'low'
-                cls: 'xs5'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_94"
-                  year: "max"
+                cls: 'xs12 md6'
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_uf'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NA UF"
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
+                    fixed: "B94 na UF"
               - relevance: 'low'
-                cls: 'xs5'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_94"
-                  year: "max"
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_br'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NO PAÍS"
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-                    default: ""
-          # - type: "ranking_list"
-          #   title: "Maiores Frequências"
-          #   rankings:
-          #     - title: "Municípios da UF"
-          #       cls: "xs12 md6"
-          #       api: 
-          #         template: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_uf&agregacao=DISTINCT&filtros=in-rank_uf-1-2-3,and,eq-cd_indicador-'10_10_01_94',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=rank_uf"
-          #         args:
-          #           - named_prop: "cd_uf"
-          #       args:
-          #         - prop: 'localidade'
-          #           named_prop: "nm_municipio_uf"
-          #         - prop: 'vl_indicador'
-          #           named_prop: "vl_indicador"
-          #           format: "inteiro"
-          #         - prop: 'rank'
-          #           named_prop: "rank_uf"
-          #     - title: "Municípios do Brasil"
-          #       cls: "xs12 md6"
-          #       api: 
-          #         fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_br&agregacao=DISTINCT&filtros=in-rank_br-1-2-3,and,eq-cd_indicador-'10_10_01_94',and,eq-nu_competencia-nu_competencia_max&ordenacao=rank_br"
-          #       args:
-          #         - prop: 'localidade'
-          #           named_prop: "nm_municipio_uf"
-          #         - prop: 'vl_indicador'
-          #           named_prop: "vl_indicador"
-          #           format: "inteiro"
-          #         - prop: 'rank'
-          #           named_prop: "rank_br"
+                    fixed: "B94 NO PAÍS"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de concessões de benefícios previdenciários no município para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. {0} está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['10_10_01_94']
-                year: "max"
-              args:
-                - named_prop: "nm_municipio_uf"
-                  required: true
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Auxílio-acidente por acidente do trabalho (B94) no município, na unidade federativa e no país para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
           - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_10_01_94"
-              year: "max"
+            api:
+              template: "/sst/indicadoresmunicipais?categorias=rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
             args:
               - prop: 'regional_rank'
                 named_prop: "rank_uf"
@@ -1145,19 +1128,44 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
+          - id: "select_cid_b94"
+            type: "select"
+            multiple: true
+            label: "Categoria CID"
+            api:
+              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{1}"
+              args:
+                - named_prop: "cd_uf"
+                - base_object: "sst_beneficio"
+                  named_prop: "nu_competencia_max"
+            args:
+              - prop: "id"
+                named_prop: "cd_agrupamento_categoria_cid"
+              - prop: "label"
+                named_prop: "cd_agrupamento_categoria_cid"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+                api:
+                  args:
+                    - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_10_01_94',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{1}"
           args:
             - named_prop: "cd_uf"
+            - base_object: "sst_beneficio"
+              named_prop: "nu_competencia_max"
           options:
             calcs:
               - id: "deviation_b94"
-                function: "get_proportional_indicator_uf"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
             formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
+              - id: "agr_count"
                 format: 'inteiro'
         headers:
           - text: 'Município'
@@ -1165,124 +1173,177 @@ secoes:
             value: 'nm_municipio'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Qtde de Benefícios'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
+            value: 'ano_beneficio'
+          - text: 'Qtde de Benefícios B94 - Auxílio-acidente por acidente do trabalho'
+            value: 'fmt_agr_count'
         chart_options:
-          id_field: 'cd_mun_ibge'
+          id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
           value_field: 'calc_deviation_b94'
           colorScale:
             name: "Reds"
-        source:
-          desc_field: "ds_fonte"
+        # source:
+        #   desc_field: "ds_fonte"
 # =================================================================
       - id: "bar_ben_b94"
         title: 
           fixed: "Auxílio-acidente por acidente do trabalho (B94) – Série Histórica"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_94'&limit=1"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
+            - id: "10_10_01_91"
+              named_prop: "nu_competencia_min"
+            - id: "sst_bene_qtd_especie"
+              named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_94"
-                year: "max"
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a 2017<br/>
+                          Nome: {3}<br/>Fonte: {4}<br/>Ano: 2018 a {5}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_94',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_94"
+                  named_prop: 'cd_indicador'
+                - id: "10_10_01_94"
+                  named_prop: 'ds_fonte'
+                - id: "10_10_01_94"
+                  named_prop: 'nu_competencia_min'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'cd_indicador'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'ds_fonte'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api: 
-                  template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'10_10_01_94'"
-                  args:
-                    - named_prop: "idLocalidade"
+                api:
+                  - template: "/sst/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,gt-nu_competencia-2017,and,eq-cd_mun_ibge_dv-{0}"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_94',and,le-nu_competencia-'2017',and,eq-cd_municipio_ibge_dv-{0}"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_94"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Acumulado no município'
+                    fixed: 'B94 acumulado no município'
               - relevance: 'low'
                 cls: 'xs12 md6'
-                api: 
-                  template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'10_10_01_94'"
-                  args:
-                    - named_prop: "cd_uf"
+                api:
+                  - template: "/sst/indicadoresestaduais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,gt-nu_competencia-2017,and,eq-cd_uf-{0}"
+                    args:
+                      - named_prop: "cd_uf"
+                  - template: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_94',and,le-nu_competencia-'2017',and,eq-cd_uf-{0}"
+                    args:
+                      - named_prop: "cd_uf"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_94"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NA UF"
+                    fixed: 'B94 acumulado na UF'
               - relevance: 'low'
                 cls: 'xs12 md6'
-                api: 
-                  fixed: "/indicadoresnacionais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_94'"
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,gt-nu_competencia-2017"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_94',and,le-nu_competencia-'2017'"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_94"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "TOTAL NO PAÍS"      
+                    fixed: "B94 acumulado NO PAÍS"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Auxílio-acidente por acidente do trabalho (B94) no município de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
-              api: 
-                fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_10_01_94'&limit=1"
+              template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Auxílio-acidente por acidente do trabalho (B94) no município, na unidade federativade {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['10_10_01_94']
+                year: "min"
               args:
                 - named_prop: 'nu_competencia_min'
                 - named_prop: 'nu_competencia_max'
         chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['10_10_01_94']
-            options:
-              formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
+        api:
+          - template: "/sst/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,gt-nu_competencia-2017,and,eq-cd_mun_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          - template: "/indicadoresmunicipais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'10_10_01_94',and,le-nu_competencia-'2017',and,eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+        api_options:
+          formatters:
+            - id: "vl_indicador"
+              format: "inteiro"
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Qtde'
+          - text: 'Qtde de Benefícios B94 - Auxílio-acidente por acidente do trabalho'
             value: 'fmt_vl_indicador'
         chart_options:
           id: "nu_competencia"

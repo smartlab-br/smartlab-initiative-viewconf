@@ -3,11 +3,8 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "09_01_01_88"
-      year: "max"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -15,34 +12,29 @@ principais:
         collapse:
           format: 'real'
       - prop: "description"
-        named_prop: "ds_indicador_radical"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES"
       - prop: 'comment'
-        # template: "({0}, {1})"
-        template: "(CATWEB, {0})"
+        template: "({0}, {1})"
         args:
-          # - named_prop: "ds_fonte"
+          - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "09_01_06_88"
-      year: "max"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
         format: 'inteiro'
-        collapse:
+        collapse: 
           format: 'real'
       - prop: "description"
-        named_prop: "ds_indicador_radical"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - ACIDENTES COM ÓBITO "
       - prop: 'comment'
-        # template: "({0}, {1})"
-        template: "(CATWEB, {0})"
+        template: "({0}, {1})"
         args:
-          # - named_prop: "ds_fonte"
+          - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
 # ===================================================
 secoes:
@@ -71,7 +63,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=COUNT&filtros=ne-ds_cnae_classe_cat-'null',and,ne-ds_cnae_classe_cat-'Indefinido',and,eq-ano_cat-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_cnae_classe_cat&agregacao=COUNT&filtros=ne-ds_cnae_classe_cat-'null',and,ne-ds_cnae_classe_cat-'Indefinido',and,eq-ano_cat-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -82,7 +77,7 @@ secoes:
                   - prop: "description"
                     named_prop: "ds_cnae_classe_cat"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_cat'
           - type: "text"
             title: ""
             content:
@@ -96,7 +91,7 @@ secoes:
             type: "slider"
             range: true
             api: 
-              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'"
+              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
             args:
               - prop: "min"
                 named_prop: "agr_min_nu_competencia"
@@ -222,7 +217,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT&filtros=ne-ds_natureza_lesao-'null',and,eq-ano_cat-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_natureza_lesao&agregacao=COUNT&filtros=ne-ds_natureza_lesao-'null',and,eq-ano_cat-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -233,7 +231,7 @@ secoes:
                   - prop: "description"
                     named_prop: "ds_natureza_lesao"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_cat'
           - type: "text"
             title: ""
             content:
@@ -247,7 +245,7 @@ secoes:
             type: "slider"
             range: true
             api: 
-              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'"
+              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
             args:
               - prop: "min"
                 named_prop: "agr_min_nu_competencia"
@@ -375,7 +373,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  fixed: "/sst/cats?categorias=ds_parte_corpo_atingida&agregacao=COUNT&filtros=ne-ds_parte_corpo_atingida-'null',and,eq-ano_cat-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_parte_corpo_atingida&agregacao=COUNT&filtros=ne-ds_parte_corpo_atingida-'null',and,eq-ano_cat-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -386,7 +387,7 @@ secoes:
                   - prop: "description"
                     named_prop: "ds_parte_corpo_atingida"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_cat'
           - type: "text"
             title: ""
             content:
@@ -400,7 +401,7 @@ secoes:
             type: "slider"
             range: true
             api: 
-              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'"
+              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
             args:
               - prop: "min"
                 named_prop: "agr_min_nu_competencia"
@@ -524,7 +525,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  fixed: "/sst/cats?categorias=ds_grupo_agcausadores_cat&agregacao=COUNT&filtros=ne-ds_grupo_agcausadores_cat-'null',and,eq-ano_cat-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_grupo_agcausadores_cat&agregacao=COUNT&filtros=ne-ds_grupo_agcausadores_cat-'null',and,eq-ano_cat-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -535,7 +539,7 @@ secoes:
                   - prop: "description"
                     named_prop: "ds_grupo_agcausadores_cat"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_cat'
           - type: "text"
             title: ""
             content:
@@ -549,7 +553,7 @@ secoes:
             type: "slider"
             range: true
             api: 
-              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'"
+              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
             args:
               - prop: "min"
                 named_prop: "agr_min_nu_competencia"
@@ -673,7 +677,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  fixed: "/sst/cats?categorias=ds_agente_causador&agregacao=COUNT&filtros=ne-ds_agente_causador-'null',and,eq-ano_cat-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_agente_causador&agregacao=COUNT&filtros=ne-ds_agente_causador-'null',and,eq-ano_cat-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -684,7 +691,7 @@ secoes:
                   - prop: "description"
                     named_prop: "ds_agente_causador"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_cat'
           - type: "text"
             title: ""
             content:
@@ -698,7 +705,7 @@ secoes:
             type: "slider"
             range: true
             api: 
-              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'"
+              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
             args:
               - prop: "min"
                 named_prop: "agr_min_nu_competencia"
@@ -822,7 +829,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  fixed: "/sst/cats?categorias=ds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-'null',and,eq-ano_cat-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-'null',and,eq-ano_cat-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -833,7 +843,7 @@ secoes:
                   - prop: "description"
                     named_prop: "ds_cbo"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_cat'
           - type: "text"
             title: ""
             content:
@@ -847,7 +857,7 @@ secoes:
             type: "slider"
             range: true
             api: 
-              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'"
+              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
             args:
               - prop: "min"
                 named_prop: "agr_min_nu_competencia"
@@ -1251,7 +1261,18 @@ secoes:
         title: 
           fixed: "Temporalidade de Acidentes"
         title_comment:
-          fixed: "Brasil, de 2016 a 2018"
+          template: "Brasil, de {0} a {1}"
+          api: 
+            template: "/sst/cats?categorias=1&valor=ano_cat&agregacao=MIN,MAX&filtros=ge-ano_cat-{0}"
+            args:
+              - function: "calc_subtraction"
+                fn_args:
+                  - base_object: "sst_cat"
+                    named_prop: "nu_competencia_max"
+                  - fixed: 2
+          args:
+            - named_prop: "agr_min_ano_cat"
+            - named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1263,7 +1284,15 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  fixed: "/sst/cats?categorias=st_dia_semana_acidente&agregacao=COUNT&filtros=ne-st_dia_semana_acidente-'sáb',and,ne-st_dia_semana_acidente-'dom',and,in-ano_cat-2016-2017-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=st_dia_semana_acidente&agregacao=COUNT&filtros=ne-st_dia_semana_acidente-'sáb',and,ne-st_dia_semana_acidente-'dom',and,ge-ano_cat-{0},and,le-ano_cat-{1}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - function: "calc_subtraction"
+                      fn_args:
+                        - base_object: "sst_cat"
+                          named_prop: "nu_competencia_max"
+                        - fixed: 2
+                    - base_object: "sst_cat"
+                      named_prop: "nu_competencia_max"
                 args:
                   - prop: "value"
                     function: "getWeekDay"
@@ -1280,7 +1309,15 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  fixed: "/sst/cats?categorias=st_dia_semana_acidente&agregacao=COUNT&filtros=in-st_dia_semana_acidente-'sáb'-'dom',and,in-ano_cat-2016-2017-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=st_dia_semana_acidente&agregacao=COUNT&filtros=in-st_dia_semana_acidente-'sáb'-'dom',and,ge-ano_cat-{0},and,le-ano_cat-{1}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - function: "calc_subtraction"
+                      fn_args:
+                        - base_object: "sst_cat"
+                          named_prop: "nu_competencia_max"
+                        - fixed: 2
+                    - base_object: "sst_cat"
+                      named_prop: "nu_competencia_max"
                 args:
                   - prop: "value"
                     function: "getWeekDay"
@@ -1297,7 +1334,15 @@ secoes:
               - relevance: 'low'
                 cls: 'xs12'
                 api:
-                  fixed: "/sst/cats?categorias=st_acidente_feriado&agregacao=COUNT&filtros=ne-st_acidente_feriado-'null',and,in-ano_cat-2016-2017-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=st_acidente_feriado&agregacao=COUNT&filtros=ne-st_acidente_feriado-'null',and,ge-ano_cat-{0},and,le-ano_cat-{1}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - function: "calc_subtraction"
+                      fn_args:
+                        - base_object: "sst_cat"
+                          named_prop: "nu_competencia_max"
+                        - fixed: 2
+                    - base_object: "sst_cat"
+                      named_prop: "nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: "st_acidente_feriado"
@@ -1315,9 +1360,15 @@ secoes:
               fixed: "Em destaque, os dias da semana e do fim de semana com mais notificações de acidentes de trabalho no último ano apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. Apesar de o sábado ser tecnicamente dia útil não trabalhado, ele é considerado, aqui, como parte do fim de semana, para fins analíticos. No gráfico, para os últimos três anos, o calendário anual respectivo é apresentado. As cores variam do amarelo (menor frequência) para o vermelho (maior frequência)."
         chart_type: "CALENDAR"
         api: 
-          template: "/sst/cats?categorias=dt_acidente&agregacao=COUNT&filtros=in-ano_cat-2016-2017-2018"
+          template: "/sst/cats?categorias=dt_acidente&agregacao=COUNT&filtros=ge-ano_cat-{0},and,le-ano_cat-{1}"
           args:
-            - named_prop: "idLocalidade"
+            - function: "calc_subtraction"
+              fn_args:
+                - base_object: "sst_cat"
+                  named_prop: "nu_competencia_max"
+                - fixed: 2
+            - base_object: "sst_cat"
+              named_prop: "nu_competencia_max"
           options:
             recalc_min_max: true
             minmax_field: "agr_count"
@@ -1398,7 +1449,7 @@ secoes:
             type: "slider"
             range: true
             api: 
-              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'"
+              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
             args:
               - prop: "min"
                 named_prop: "agr_min_nu_competencia"
