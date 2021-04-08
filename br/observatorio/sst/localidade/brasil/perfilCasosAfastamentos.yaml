@@ -48,11 +48,11 @@ secoes:
           fixed: "Afastamentos por Agravo"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          api: 
-            fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
           args:
-            - named_prop: "agr_min_ano_beneficio"
-            - named_prop: "agr_max_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -64,7 +64,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'null',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -77,11 +80,14 @@ secoes:
                     args:
                       - named_prop: "cd_agrup_categoria_cid_agravo"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'null',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -94,7 +100,7 @@ secoes:
                     args:
                       - named_prop: "cd_agrup_categoria_cid_agravo"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
           - type: "text"
             title: ""
             content:
@@ -126,10 +132,16 @@ secoes:
 # =====================================================
           - id: "treemap_agravo_b91"
             cls: "xs12 md6"
-            title: "Afastamentos por Agravo - B91 (2012-2018)"
+            footnote: 
+              template: "Afastamentos por Agravo - B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'null',and,eq-cd_especie_beneficio-91"
+              fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91"
               options:
                   formatters:
                     - id: "agr_count"
@@ -151,10 +163,16 @@ secoes:
 # =====================================================
           - id: "treemap_agravo_b31"
             cls: "xs12 md6"
-            title: "Afastamentos por Agravo - B31 (2012-2018)"
+            footnote: 
+              template: "Afastamentos por Agravo - B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'null',and,eq-cd_especie_beneficio-31"
+              fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-31"
               options:
                   formatters:
                     - id: "agr_count"
@@ -180,11 +198,11 @@ secoes:
           fixed: "Afastamentos por Causas Externas"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          api: 
-            fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
           args:
-            - named_prop: "agr_min_ano_beneficio"
-            - named_prop: "agr_max_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -196,7 +214,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -209,11 +230,14 @@ secoes:
                     args:
                       - named_prop: "cd_agrupamento_categoria_cid"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -226,7 +250,7 @@ secoes:
                     args:
                       - named_prop: "cd_agrupamento_categoria_cid"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
           - type: "text"
             title: ""
             content:
@@ -258,7 +282,13 @@ secoes:
 # =====================================================
           - id: "treemap_graves_b91"
             cls: "xs12 md6"
-            title: "Afastamentos por Causas Externas - B91 (2012-2018)"
+            footnote: 
+              template: "Afastamentos por Causas Externas - B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
               fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-91"
@@ -283,7 +313,13 @@ secoes:
 # =====================================================
           - id: "treemap_graves_b31"
             cls: "xs12 md6"
-            title: "Afastamentos por Causas Externas - B31 (2012-2018)"
+            footnote: 
+              template: "Afastamentos por Causas Externas - B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
               fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-31"
@@ -312,11 +348,11 @@ secoes:
           fixed: "Afastamentos Conforme os Tipos de Doenças"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          api: 
-            fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
           args:
-            - named_prop: "agr_min_ano_beneficio"
-            - named_prop: "agr_max_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -328,7 +364,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'null',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -341,11 +380,14 @@ secoes:
                     args:
                       - named_prop: "cd_agp_cat_cid_agrv_det_doenca"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'null',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -358,7 +400,7 @@ secoes:
                     args:
                       - named_prop: "cd_agp_cat_cid_agrv_det_doenca"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
           - type: "text"
             title: ""
             content:
@@ -390,10 +432,16 @@ secoes:
 # =====================================================
           - id: "treemap_doencas_b91"
             cls: "xs12 md6"
-            title: "Tipos de Doenças - B91 (2012-2018)"
+            footnote: 
+              template: "Tipos de Doenças - B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'null',and,eq-cd_especie_beneficio-91"
+              fixed: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_especie_beneficio-91"
               options:
                   formatters:
                     - id: "agr_count"
@@ -415,10 +463,16 @@ secoes:
 # =====================================================
           - id: "treemap_doencas_b31"
             cls: "xs12 md6"
-            title: "Tipos de Doenças - B31 (2012-2018)"
+            footnote: 
+              template: "Tipos de Doenças - B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'null',and,eq-cd_especie_beneficio-31"
+              fixed: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_especie_beneficio-31"
               options:
                   formatters:
                     - id: "agr_count"
@@ -444,11 +498,11 @@ secoes:
           fixed: "Afastamentos conforme a Classificação Internacional de Doenças"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          api: 
-            fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
           args:
-            - named_prop: "agr_min_ano_beneficio"
-            - named_prop: "agr_max_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -460,7 +514,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=ne-cd_agrupamento_categoria_cid-'null',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -473,11 +530,14 @@ secoes:
                     args:
                       - named_prop: "cd_agrupamento_categoria_cid"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=ne-cd_agrupamento_categoria_cid-'null',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -490,7 +550,7 @@ secoes:
                     args:
                       - named_prop: "cd_agrupamento_categoria_cid"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
           - type: "text"
             title: ""
             content:
@@ -564,10 +624,16 @@ secoes:
 # =====================================================
           - id: "treemap_afast_doencas_b91"
             cls: "xs12 md6"
-            title: "Afastamentos por CID - B91 (2012-2018)"
+            footnote: 
+              template: "Afastamentos por CID - B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=ne-cd_agrupamento_categoria_cid-'null',and,eq-cd_especie_beneficio-91"
+              fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-91"
               options:
                   formatters:
                     - id: "agr_count"
@@ -589,10 +655,16 @@ secoes:
 # =====================================================
           - id: "treemap_afast_doencas_b31"
             cls: "xs12 md6"
-            title: "Afastamentos por CID - B31 (2012-2018)"
+            footnote: 
+              template: "Afastamentos por CID - B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=ne-cd_agrupamento_categoria_cid-'null',and,eq-cd_especie_beneficio-31"
+              fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-31"
               options:
                   formatters:
                     - id: "agr_count"
@@ -618,11 +690,11 @@ secoes:
           fixed: "Afastamentos conforme a Classificação Internacional de Doenças - Código"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          api: 
-            fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
           args:
-            - named_prop: "agr_min_ano_beneficio"
-            - named_prop: "agr_max_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -634,7 +706,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'null',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -648,11 +723,14 @@ secoes:
                       - named_prop: "cd_categoria_cid_beneficio"
                       - named_prop: "ds_categoria_cid_beneficio"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'null',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -666,7 +744,7 @@ secoes:
                       - named_prop: "cd_categoria_cid_beneficio"
                       - named_prop: "ds_categoria_cid_beneficio"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
           - type: "text"
             title: ""
             content:
@@ -740,10 +818,16 @@ secoes:
 # =====================================================
           - id: "treemap_afast_cod_cid_b91"
             cls: "xs12 md6"
-            title: "Afastamentos por Código CID - B91 (2012-2018)"
+            footnote: 
+              template: "Afastamentos por Código CID - B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'null',and,eq-cd_especie_beneficio-91"
+              fixed: "/sst/beneficios?categorias=cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'',and,eq-cd_especie_beneficio-91"
               options:
                 calcs:
                   - id: "bar_description"
@@ -776,10 +860,16 @@ secoes:
 # =====================================================
           - id: "treemap_afast_cod_cid_b31"
             cls: "xs12 md6"
-            title: "Afastamentos por Código CID - B31 (2012-2018)"
+            footnote: 
+              template: "Afastamentos por Código CID - B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'null',and,eq-cd_especie_beneficio-31"
+              fixed: "/sst/beneficios?categorias=cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'',and,eq-cd_especie_beneficio-31"
               options:
                 calcs:
                   - id: "bar_description"
@@ -816,11 +906,11 @@ secoes:
           fixed: "Atividades Econômicas"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          api: 
-            fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
           args:
-            - named_prop: "agr_min_ano_beneficio"
-            - named_prop: "agr_max_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -832,7 +922,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'null',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -845,11 +938,14 @@ secoes:
                     args:
                       - named_prop: "ds_cnae_classe"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'null',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-2018&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -862,7 +958,7 @@ secoes:
                     args:
                       - named_prop: "ds_cnae_classe"
                   - prop: "comment"
-                    fixed: '2018'
+                    named_prop: 'ano_beneficio'
           - type: "text"
             title: ""
             content:
@@ -935,10 +1031,16 @@ secoes:
         charts:
           - id: "treemap_benef_setores_b91"
             cls: "xs12 md6"
-            title: "Atividades Econômicas - B91 (2012-2018)"
+            footnote: 
+              template: "Atividades Econômicas- B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'null',and,eq-cd_especie_beneficio-91"
+              fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91"
               options:
                   formatters:
                     - id: "agr_count"
@@ -960,10 +1062,16 @@ secoes:
             #   desc_field: "ds_fonte"                    
           - id: "treemap_benef_setores_b31"
             cls: "xs12 md6"
-            title: "Atividades Econômicas - B31 (2012-2018)"
+            footnote: 
+              template: "Atividades Econômicas- B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'null',and,eq-cd_especie_beneficio-31"
+              fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-31"
               options:
                   formatters:
                     - id: "agr_count"
@@ -990,11 +1098,11 @@ secoes:
           fixed: "Ocupações (CBO)"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          api: 
-            fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
           args:
-            - named_prop: "agr_min_ano_beneficio"
-            - named_prop: "agr_max_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1006,7 +1114,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'null',and,eq-cd_especie_beneficio-91&ordenacao=-agr_count&limit=1"
+                  fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,eq-cd_especie_beneficio-91&ordenacao=-agr_count&limit=1"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -1021,7 +1129,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'null',and,eq-cd_especie_beneficio-31&ordenacao=-agr_count&limit=1"
+                  fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,eq-cd_especie_beneficio-31&ordenacao=-agr_count&limit=1"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -1087,10 +1195,16 @@ secoes:
         charts:
           - id: "treemap_benef_cbo_b91"
             cls: "xs12 md6"
-            title: "Ocupações - B91 (2012-2018)"
+            footnote: 
+              template: "Ocupações- B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'null',and,eq-cd_especie_beneficio-91"
+              fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,eq-cd_especie_beneficio-91"
               options:
                   formatters:
                     - id: "agr_count"
@@ -1112,10 +1226,16 @@ secoes:
             #   desc_field: "ds_fonte"                    
           - id: "treemap_benef_cbo_b31"
             cls: "xs12 md6"
-            title: "Ocupações - B31 (2012-2018)"
+            footnote: 
+              template: "Ocupações- B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'null',and,eq-cd_especie_beneficio-31"
+              fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,eq-cd_especie_beneficio-31"
               options:
                   formatters:
                     - id: "agr_count"
