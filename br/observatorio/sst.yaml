@@ -12,7 +12,7 @@ ranking_cards:
   - title: "Lesões mais frequentes"
     cls: "sm12 md6 pa-3"
     api: 
-      fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-ds_natureza_lesao-'null'&limit=5"
+      fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-ds_natureza_lesao-''&limit=5"
     args:
       - prop: 'localidade'
         named_prop: "ds_natureza_lesao"
@@ -36,7 +36,7 @@ ranking_cards:
   - title: "Afastamentos Acidentários por Agravo"
     cls: "sm12 md6 pa-3"
     api:
-      fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'null',and,eq-cd_especie_beneficio-91"
+      fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91"
     args:
       - prop: 'localidade'
         named_prop: "cd_agrup_categoria_cid_agravo"
@@ -70,7 +70,7 @@ prevalencia:
       - named_prop: "agr_min_nu_competencia"
       - named_prop: "agr_max_nu_competencia"
   api:
-    fixed: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-1-1"
+    fixed: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&agregacao=COUNT&ordenacao=-agr_count_cd_municipio_ibge&filtros=eq-1-1"
     #&calcs=ln_norm_pos_part
     # fixed: "/sst/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'"
   chart_options:
@@ -117,7 +117,7 @@ prevalencia:
               default: "Sem Registros"
             - prop: "description"
               fixed: "Notificações de Acidentes<br/>de Trabalho (AEAT/CAT - INSS)"
-        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-1-1"
+        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-1-1"
       - id: "mortes"
         value: "mortes"
         cls: "xs12"
@@ -133,7 +133,7 @@ prevalencia:
               default: "Sem Registros"
             - prop: "description"
               fixed: "Notificações de Acidentes<br/>com mortes (AEAT/CAT - INSS)"
-        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'mortes'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_indica_obito-'S'"
+        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'mortes'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_indica_obito-'S'"
       - id: "beneficio"
         value: "beneficio"
         cls: "xs12"
@@ -149,7 +149,7 @@ prevalencia:
               default: "Sem Registros"
             - prop: "description"
               fixed: "Afastamentos Acidentários<br/>(AEAT/SUB - INSS)"
-        api: "/sst/beneficios?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'beneficio'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_especie_beneficio-91"
+        api: "/sst/beneficios?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'beneficio'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_especie_beneficio-91"
       - id: "sinan"
         value: "sinan"
         cls: "xs12"
@@ -165,7 +165,7 @@ prevalencia:
               default: "Sem Registros"
             - prop: "description"
               fixed: "Notificações SINAN<br/>(MS - SUS)"
-        api: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,'sinan'-codigo&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_05_10_00',and,ge-nu_competencia-'2012'"
+        api: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,'sinan'-codigo&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_05_10_00',and,ge-nu_competencia-'2012'"
       event: 'selection'
     # - id: "selectlayer"
     #   type: "switch-group"
@@ -490,25 +490,25 @@ prevalencia:
         default: true
         color: "red darken-4"
         label: "Notificações de Acidentes<br/>de Trabalho (AEAT/CAT - INSS)"
-        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-1-1"
+        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-1-1"
       - id: "mortes"
         value: "mortes"
         cls: "xs12"
         color: "black"
         label: "Notificações de Acidentes<br/>com mortes (AEAT/CAT - INSS)"
-        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'mortes'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_indica_obito-'S'"
+        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'mortes'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_indica_obito-'S'"
       - id: "beneficio"
         value: "beneficio"
         cls: "xs12"
         color: "light-blue"
         label: "Afastamentos Acidentários<br/>(AEAT/SUB - INSS)"
-        api: "/sst/beneficios?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'beneficio'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_especie_beneficio-91"
+        api: "/sst/beneficios?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'beneficio'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_especie_beneficio-91"
       - id: "sinan"
         value: "sinan"
         cls: "xs12"
         color: "#c800c8"
         label: "Notificações SINAN<br/>(MS - SUS)"
-        api: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,'sinan'-codigo&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_05_10_00',and,ge-nu_competencia-'2012'"
+        api: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,'sinan'-codigo&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_05_10_00',and,ge-nu_competencia-'2012'"
       event: 'selection'            
 ############# Filtros CAT ##############
     - id: "select_uf"
@@ -1157,7 +1157,7 @@ prevalencia:
           group: "cat"
           reactive: true
           api: 
-            fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&limit=5&filtros=ne-ds_natureza_lesao-'null'"
+            fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&limit=5&filtros=ne-ds_natureza_lesao-''"
           args:
             - prop: 'localidade'
               named_prop: "ds_natureza_lesao"
@@ -1185,7 +1185,7 @@ prevalencia:
           group: "mortes"
           reactive: true
           api: 
-            fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&limit=5&filtros=ne-ds_natureza_lesao-'null',and,eq-cd_indica_obito-'S'"
+            fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&limit=5&filtros=ne-ds_natureza_lesao-'',and,eq-cd_indica_obito-'S'"
           args:
             - prop: 'localidade'
               named_prop: "ds_natureza_lesao"
@@ -1213,7 +1213,7 @@ prevalencia:
           group: "beneficio"
           reactive: true
           api:
-            fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'null',and,eq-cd_especie_beneficio-91"
+            fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91"
           args:
             - prop: 'localidade'
               named_prop: "cd_agrup_categoria_cid_agravo"
@@ -1445,7 +1445,7 @@ sparklines:
       series_field: "codigo"
       category_field: "ano_cat"
       api:
-        fixed: "/sst/cats?categorias=ds_cbo,'cat'-codigo,ano_cat&agregacao=COUNT&valor=ds_cbo&filtros=ne-ds_cbo-'null'"
+        fixed: "/sst/cats?categorias=ds_cbo,'cat'-codigo,ano_cat&agregacao=COUNT&valor=ds_cbo&filtros=ne-ds_cbo-''"
       headers:
         - text: 'Ocupação'
           align: 'center'
