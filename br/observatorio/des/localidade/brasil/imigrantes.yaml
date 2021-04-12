@@ -380,14 +380,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  fixed: "/indicadoresnacionais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador&limit=1"
-                  options:
-                    calcs:
-                      - id: "salary_description"
-                        function: "get_salary_label"
+                  fixed: "/indicadoresnacionais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador&limit=1"
                 args:
                   - prop: "value"
-                    named_prop: 'calc_salary_description'
+                    named_prop: 'vl_indicador_txt'
                     default: "Nenhum"
                   - prop: "description"
                     template: "Trabalhadores com maior remuneração média<br/>Origem: {0}"
@@ -398,14 +394,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  fixed: "/indicadoresnacionais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=vl_indicador&limit=1"
-                  options:
-                    calcs:
-                      - id: "salary_description"
-                        function: "get_salary_label"
+                  fixed: "/indicadoresnacionais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=vl_indicador&limit=1"
                 args:
                   - prop: "value"
-                    named_prop: 'calc_salary_description'
+                    named_prop: 'vl_indicador_txt'
                     default: "Nenhum"
                   - prop: "description"
                     template: "Trabalhadores com menor remuneração média<br/>Origem: {0}"
@@ -433,11 +425,9 @@ secoes:
               
         chart_type: "BAR"
         api:
-          fixed: "/indicadoresnacionais?categorias=vl_indicador,ds_agreg_primaria,ds_indicador_radical,nu_competencia,ds_fonte&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador"
+          fixed: "/indicadoresnacionais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria,ds_indicador_radical,nu_competencia,ds_fonte&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador"
           options:
             calcs:
-              - id: "salary_description"
-                function: "get_salary_label"
               - id: "bar_description"
                 function: "applyInterpolReplaceDatasetParam"
                 fn_args:
@@ -445,7 +435,7 @@ secoes:
                       template: "{0} - {1}"
                       args:
                         - named_prop: "ds_agreg_primaria"
-                        - named_prop: "calc_salary_description"
+                        - named_prop: "vl_indicador_txt"
         headers:
           - text: 'Origem'
             align: 'left'
@@ -456,8 +446,11 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'calc_salary_description'
+          - text: 'Remuneração Média por Salário Mínimo'
+            value: 'vl_indicador_txt'
+          - text: 'Remuneração Média'
+            value: 'vl_indicador'
+            format: "monetario"
         chart_options:
           id: "ds_agreg_primaria"
           y: "ds_agreg_primaria"
