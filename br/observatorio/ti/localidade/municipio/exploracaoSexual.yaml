@@ -135,6 +135,51 @@ secoes:
                 api:
                   args:
                     - named_prop: "spai_ds_risco_nivel"
+          - id: "check_drogas"
+            title: "Características Confirmadas:"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Consumo de drogas"
+            value: false
+            color: "black"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_reg_traf_consumo_droga-'Sim'"
+                filter_text: "com consumo de drogas"
+          - id: "check_prostituicao"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Prostituição"
+            value: false
+            color: "black"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_prostituicao_adulto-'Sim'"
+                filter_text: "com prostituição"
+          - id: "check_alcool"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Consumo de bebida alcóolica"
+            value: false
+            color: "black"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_ponto_consumo_alcool -'Sim'"
+                filter_text: "com consumo de bebida alcóolica"
+          - id: "check_penumbra"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Penumbra"
+            value: false
+            color: "black"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
+                filter_text: "com pouca iluminação(Penumbra)"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/ti/mapear?categorias=cd_municipio_ibge_dv,nm_municipio_uf&agregacao=count&ordenacao=-agr_count&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max"
@@ -235,27 +280,71 @@ secoes:
             content:
               fixed: "Em destaque, de acordo com a perspectiva geográfica selecionada, o total de pontos de vulnerabilidade à exploração sexual comercial de crianças e adolescentes, mapeados em rodovias e estradas federais brasileiras. O mapa ao lado agrupa municípios com essa característica e permite identificar regiões de concentração de riscos. No caso, esse agrupamento se explica pela localização dos municípios ao longo de rodovias e estradas federais, em que lógica econômica da oferta e da demanda favorece a vulnerabiliadade. A marcação dos pontos no mapa permite identificar mais claramente, nas rotas de rodovias e estradas federais, os trechos de maior risco. Note-se que o levantamento atinge apenas os municípios pelos quais passam rodovias e estradas federais. Desse modo, a inexistência de pontos mapeados não significa que não haja riscos ainda não identificados.No mapa, a localidade selecionada está em destaque."
 
-          # - id: "select_risco_cluster"
-          #   type: "select"
-          #   label: "Grau de Risco"
-          #   api:
-          #     fixed: "/ti/mapear?categorias=spai_ds_risco_nivel&agregacao=distinct"
-          #   args:
-          #     - prop: "id"
-          #       named_prop: "spai_ds_risco_nivel"
-          #     - prop: "label"
-          #       named_prop: "spai_ds_risco_nivel"
-          #   selection:
-          #     event: "selection"
-          #     rules:
-          #       api:
-          #         template: "/ti/mapear?categorias='cd_indicador',cd_municipio_ibge_dv,latitude,longitude&filtros=eq-spai_id_crianca_adolec_local-'Sim',and,eq-spai_ds_risco_nivel-'{0}',and,eq-cd_uf-{1}&agregacao=count"
-          #         args:
-          #           - named_prop: "spai_ds_risco_nivel"
-          #           - named_prop: "cd_uf"
+          - id: "select_risco"
+            type: "select"
+            label: "Grau de Risco de Exploração"
+            api:
+              fixed: "/ti/mapear?categorias=spai_ds_risco_nivel&agregacao=distinct&filtros=eq-nu_competencia-nu_competencia_max"
+            args:
+              - prop: "id"
+                named_prop: "spai_ds_risco_nivel"
+              - prop: "label"
+                named_prop: "spai_ds_risco_nivel"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_ds_risco_nivel-'{0}'"
+                api:
+                  args:
+                    - named_prop: "spai_ds_risco_nivel"
+          - id: "check_drogas"
+            title: "Características Confirmadas:"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Consumo de drogas"
+            value: false
+            color: "black"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_reg_traf_consumo_droga-'Sim'"
+                filter_text: "com consumo de drogas"
+          - id: "check_prostituicao"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Prostituição"
+            value: false
+            color: "black"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_prostituicao_adulto-'Sim'"
+                filter_text: "com prostituição"
+          - id: "check_alcool"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Consumo de bebida alcóolica"
+            value: false
+            color: "black"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_ponto_consumo_alcool -'Sim'"
+                filter_text: "com consumo de bebida alcóolica"
+          - id: "check_penumbra"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Penumbra"
+            value: false
+            color: "black"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
+                filter_text: "com pouca iluminação(Penumbra)"
         chart_type: "MAP_CLUSTER"
         api:
-          template: "/ti/mapear?categorias='cd_indicador',cd_municipio_ibge_dv,nm_municipio_uf,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max&agregacao=count"
+          template: "/ti/mapear?categorias='cd_indicador',cd_municipio_ibge_dv,nm_municipio_uf,latitude,longitude&agregacao=count&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "cd_uf"
         headers:
