@@ -23,6 +23,29 @@ principais:
         args:
           - named_prop: "ds_fonte"
           - named_prop: "nu_competencia_max"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'monetario'
+        collapse:
+          format: 'monetario'
+        default: "Nenhum"
+      - prop: "description"
+        fixed: "Remuneração Média dos trabalhadores migrantes de outras nacionalidades na UF"
+      - prop: 'comment'
+        api:
+          fixed: "/indicadoresnacionais?categorias=nu_competencia_max,ds_fonte&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG'"
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia_max"
 
 # ========================================================
 secoes:
@@ -326,13 +349,13 @@ secoes:
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_txt'
+                    named_prop: 'ds_agreg_primaria'
                     default: "Nenhum"
                   - prop: "description"
-                    template: "Trabalhadores com maior remuneração média<br/>Origem: {0}"
-                    args:
-                      - named_prop: 'ds_agreg_primaria'
-                        default: "-"
+                    fixed: "Origem dos Trabalhadores com maior remuneração média"
+                  - prop: "comment"
+                    named_prop: 'vl_indicador_txt'
+                    default: "-"
 
               - relevance: 'high'
                 cls: 'xs12'
@@ -342,18 +365,18 @@ secoes:
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_txt'
+                    named_prop: 'ds_agreg_primaria'
                     default: "Nenhum"
                   - prop: "description"
-                    template: "Trabalhadores com menor remuneração média<br/>Origem: {0}"
-                    args:
-                      - named_prop: 'ds_agreg_primaria'
-                        default: "-"
+                    fixed: "Origem dos Trabalhadores com menor remuneração média"
+                  - prop: "comment"
+                    named_prop: 'vl_indicador_txt'
+                    default: "-"
 
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o valor médio da remuneração dos trabalhadores, por origem, de maior e menor renda, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os valores para as origens dos trabalhadores. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              template: "Em destaque, a origem dos trabalhadores de maior e menor remuneração média na unidade federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os valores para as origens dos trabalhadores. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
                 fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
                 options:
@@ -393,9 +416,9 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Remuneração Média por Salário Mínimo'
-            value: 'vl_indicador_txt'
           - text: 'Remuneração Média'
+            value: 'vl_indicador_txt'
+          - text: 'Remuneração Média (R$)'
             value: 'vl_indicador'
             format: "monetario"
         chart_options:
@@ -416,6 +439,111 @@ secoes:
         source:
           desc_field: "ds_fonte"
 
+# ========================================================
+      - id: "mapa_imigrantes_remuneracao"
+        title: 
+          fixed: "Distribuição Geográfica das Remunerações Médias de Trabalhadores migrantes de outras nacionalidades"
+        title_comment:
+          template: "{0}, {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_max,nu_competencia_min&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+        msgNoData:
+          desc: "No período, não houve trabalhadores migrantes de outras nacionalidades admitidos no mercado de trabalho formal nessa Unidade Federativa."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Nenhum"
+                  - prop: "description"
+                    fixed: "Remuneração Média na UF"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a remuneração média dos trabalhadores migrantes de outras nacionalidades na unidade federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No mapa, comparam-se os diferentes municípios da unidade federativa quanto à remuneração média dos trabalhadores migrantes de outras nacionalidades. A escala de cores varia do branco (menor quantidade) para o azul escuro (maior quantidade). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                  required: true
+                - named_prop: "calc_proximo_ano"
+          - id: "select_origem"
+            type: "select"
+            label: "Origem/Continente"
+            api:
+              fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                api:
+                  template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_agreg_primaria,ds_fonte,vl_indicador,vl_indicador_txt&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'{0}',and,nn-cd_uf,and,eq-cd_uf-{1}"
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+                    - named_prop: "idLocalidade"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,'Todas'-ds_agreg_primaria,ds_fonte,vl_indicador,vl_indicador_txt&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max,and,nn-cd_uf,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_log"
+            formatters:
+              - id: "vl_indicador"
+                format: 'monetario'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Origem'
+            align: 'left'
+            value: 'ds_agreg_primaria'
+          - text: 'Remuneração Média'
+            value: 'vl_indicador_txt'
+          - text: 'Remuneração Média (R$)'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+          colorScale:
+            name: 'Blues'
+        source:
+          desc_field: "ds_fonte"
 # ========================================================
       - id: "mapa_imigrantes_admitidos"
         title: 
