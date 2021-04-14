@@ -23,6 +23,29 @@ principais:
         args:
           - named_prop: "ds_fonte"
           - named_prop: "nu_competencia_max"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'monetario'
+        collapse:
+          format: 'monetario'
+        default: "Nenhum"
+      - prop: "description"
+        fixed: "Remuneração Média dos trabalhadores migrantes de outras nacionalidades na UF"
+      - prop: 'comment'
+        api:
+          fixed: "/indicadoresnacionais?categorias=nu_competencia_max,ds_fonte&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG'"
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia_max"
 
 # ========================================================
 secoes:
@@ -456,7 +479,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, a origem dos trabalhadores de maior e menor remuneração média na unidade federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No mapa, comparam-se os diferentes municípios da unidade federativa quanto à remuneração média dos trabalhadores migrantes de outras nacionalidades. A escala de cores varia do branco (menor quantidade) para o azul escuro (maior quantidade). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              template: "Em destaque, a remuneração média dos trabalhadores migrantes de outras nacionalidades na unidade federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No mapa, comparam-se os diferentes municípios da unidade federativa quanto à remuneração média dos trabalhadores migrantes de outras nacionalidades. A escala de cores varia do branco (menor quantidade) para o azul escuro (maior quantidade). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
                 fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
                 options:
