@@ -7,12 +7,15 @@ principais:
       template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
       args:
         - named_prop: "idLocalidade"
+      options:
+        calcs:
+          - id: "faixa"
+            function: "get_bin"
+            fn_args:
+              - named_prop: "agr_sum_vl_indicador"
     args:
       - prop: "value"
-        named_prop: 'agr_sum_vl_indicador'
-        format: 'inteiro'
-        collapse:
-          format: 'real'
+        named_prop: 'calc_faixa'
         default: "Nenhum"
       - prop: "description"
         fixed: "Trabalhadores migrantes de outras nacionalidades Ativos no Mercado de Trabalho Formal"
@@ -27,16 +30,13 @@ principais:
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
+      template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador_txt&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
       args:
         - named_prop: "idLocalidade"
     args:
       - prop: "value"
-        named_prop: 'vl_indicador'
-        format: 'monetario'
-        collapse:
-          format: 'monetario'
-        default: "Nenhum"
+        named_prop: 'vl_indicador_txt'
+        default: "-"
       - prop: "description"
         fixed: "Remuneração Média dos trabalhadores migrantes de outras nacionalidades na UF"
       - prop: 'comment'
@@ -60,7 +60,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high' 
-                cls: 'xs12 sm6'
+                cls: 'xs12'
                 rowClass: "pt-0 px-3 pb-5"
                 api:
                   template: "/indicadoresestaduais?categorias=ds_agreg_secundaria,nu_competencia&valor=vl_indicador&agregacao=SUM&ordenacao=-agr_sum_vl_indicador&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC',and,ge-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&limit=1"
@@ -167,17 +167,20 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api:
                   template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
                   args:
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "agr_sum_vl_indicador"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
+                    named_prop: 'calc_faixa'
                     default: "Nenhum"
                   - prop: "description"
                     fixed: "Trabalhadores migrantes de outras nacionalidades Admitidos no Mercado de Trabalho Formal"
@@ -249,17 +252,20 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md7'
+                cls: 'xs12'
                 api:
                   template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
                   args:
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "agr_sum_vl_indicador"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
+                    named_prop: 'calc_faixa'
                     default: "Nenhum"
                   - prop: "description"
                     fixed: "Trabalhadores migrantes de outras nacionalidades Ativos no Mercado de Trabalho Formal"
@@ -289,6 +295,11 @@ secoes:
           id: ['MIGRA_ATIVOS']
           year: "max"
           options:
+            calcs:
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "vl_indicador"
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
@@ -305,7 +316,7 @@ secoes:
           # - text: 'Qtde'
           #   value: 'fmt_vl_indicador'
           - text: 'Qtde'
-            value: 'vl_indicador_txt'
+            value: 'calc_faixa'
         chart_options:
           id: "ds_agreg_primaria"
           text: "ds_agreg_primaria"
@@ -338,17 +349,20 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md7'
+                cls: 'xs12'
                 api:
                   template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
                   args:
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "agr_sum_vl_indicador"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
+                    named_prop: 'calc_faixa'
                     default: "Nenhum"
                   - prop: "description"
                     fixed: "Trabalhadores migrantes de outras nacionalidades Ativos no Mercado de Trabalho Formal"
@@ -400,7 +414,6 @@ secoes:
                 function: "get_bin"
                 fn_args:
                   - named_prop: "agr_sum_vl_indicador"
-                  - fixed: [10,50,100,500,1000,2000,5000,10000,20000,40000]
             formatters:
               - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
@@ -572,15 +585,12 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
+                  template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador_txt&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
                   args:
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
+                    named_prop: 'vl_indicador_txt'
                     default: "Nenhum"
                   - prop: "description"
                     fixed: "Remuneração Média na UF"
@@ -677,17 +687,20 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api:
                   template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS',and,ge-nu_competencia-'2015'"
                   args:
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "agr_sum_vl_indicador"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
+                    named_prop: 'calc_faixa'
                     default: "Nenhum"
                   - prop: "description"
                     fixed: "Trabalhadores migrantes de outras nacionalidades Admitidos no Mercado de Trabalho Formal"
@@ -751,7 +764,6 @@ secoes:
                 function: "get_bin"
                 fn_args:
                   - named_prop: "agr_sum_vl_indicador"
-                  - fixed: [10,50,100,500,1000,2000,5000,10000,20000,40000]
               - id: "deviation"
                 function: "get_log"
                 fn_args:
@@ -847,7 +859,6 @@ secoes:
                 function: "get_bin"
                 fn_args:
                   - named_prop: "agr_sum_vl_indicador"
-                  - fixed: [10,50,100,500,1000,2000,5000,10000,20000,40000]
         headers:
           - text: 'Município'
             align: 'left'
