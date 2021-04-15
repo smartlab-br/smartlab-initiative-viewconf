@@ -7,12 +7,15 @@ principais:
       template: "/indicadoresmunicipais?categorias=cd_indicador,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
       args:
         - named_prop: "idLocalidade"
+      options:
+        calcs:
+          - id: "faixa"
+            function: "get_bin"
+            fn_args:
+              - named_prop: "agr_sum_vl_indicador"
     args:
       - prop: "value"
-        named_prop: 'agr_sum_vl_indicador'
-        format: 'inteiro'
-        collapse:
-          format: 'real'
+        named_prop: 'calc_faixa'
         default: "Nenhum"
       - prop: "description"
         fixed: "Trabalhadores migrantes de outras nacionalidades Ativos no Mercado de Trabalho Formal"
@@ -27,16 +30,13 @@ principais:
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresmunicipais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
+      template: "/indicadoresmunicipais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador_txt&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
       args:
         - named_prop: "idLocalidade"
     args:
       - prop: "value"
-        named_prop: 'vl_indicador'
-        format: 'monetario'
-        collapse:
-          format: 'monetario'
-        default: "Nenhum"
+        named_prop: 'vl_indicador_txt'
+        default: "-"
       - prop: "description"
         fixed: "Remuneração Média dos trabalhadores migrantes de outras nacionalidades no município"
       - prop: 'comment'
@@ -73,17 +73,20 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md7'
+                cls: 'xs12'
                 api:
                   template: "/indicadoresmunicipais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
                   args:
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "agr_sum_vl_indicador"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
+                    named_prop: 'calc_faixa'
                     default: "Nenhum"
                   - prop: "description"
                     fixed: "Trabalhadores migrantes de outras nacionalidades Ativos no Mercado de Trabalho Formal"
@@ -116,18 +119,25 @@ secoes:
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
+            calcs:
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "vl_indicador"
         headers:
           - text: 'Origem'
             align: 'left'
             value: 'ds_agreg_primaria'
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'ds_indicador_completo'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
+          # - text: 'Qtde'
+          #   value: 'fmt_vl_indicador'
           - text: 'Qtde'
-            value: 'fmt_vl_indicador'
+            value: 'calc_faixa'
         chart_options:
           id: "ds_agreg_primaria"
           text: "ds_agreg_primaria"
@@ -160,17 +170,20 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md7'
+                cls: 'xs12'
                 api:
                   template: "/indicadoresmunicipais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
                   args:
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "agr_sum_vl_indicador"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
+                    named_prop: 'calc_faixa'
                     default: "Nenhum"
                   - prop: "description"
                     fixed: "Trabalhadores migrantes de outras nacionalidades Ativos no Mercado de Trabalho Formal"
@@ -213,10 +226,15 @@ secoes:
 
         chart_type: "TREEMAP"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_indicador,cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
+          template: "/indicadoresmunicipais?categorias=cd_indicador,cd_municipio_ibge_dv,nm_municipio,ds_indicador_completo,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "cd_uf"
           options:
+            calcs:
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "agr_sum_vl_indicador"
             formatters:
               - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
@@ -226,12 +244,14 @@ secoes:
             value: 'nm_municipio'
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'ds_indicador_completo'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
+          # - text: 'Qtde'
+          #   value: 'fmt_agr_sum_vl_indicador'
           - text: 'Qtde'
-            value: 'fmt_agr_sum_vl_indicador'
+            value: 'calc_faixa'
         chart_options:
           id: "cd_municipio_ibge_dv"
           text: "nm_municipio"
@@ -315,7 +335,7 @@ secoes:
               
         chart_type: "BAR"
         api:
-          template: "/indicadoresmunicipais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria,ds_indicador_radical,nu_competencia,ds_fonte&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador"
+          template: "/indicadoresmunicipais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria,ds_indicador_completo,nu_competencia,ds_fonte&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -334,15 +354,15 @@ secoes:
             value: 'ds_agreg_primaria'
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'ds_indicador_completo'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
           - text: 'Remuneração Média'
             value: 'vl_indicador_txt'
-          - text: 'Remuneração Média (R$)'
-            value: 'vl_indicador'
-            format: "monetario"
+          # - text: 'Remuneração Média (R$)'
+          #   value: 'vl_indicador'
+          #   format: "monetario"
         chart_options:
           id: "ds_agreg_primaria"
           y: "ds_agreg_primaria"
@@ -385,16 +405,13 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresmunicipais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
+                  template: "/indicadoresmunicipais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador_txt&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
                   args:
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Nenhum"
+                    named_prop: 'vl_indicador_txt'
+                    default: "-"
                   - prop: "description"
                     fixed: "Remuneração Média no município"
 
@@ -456,14 +473,15 @@ secoes:
             value: 'ds_agreg_primaria'
           - text: 'Remuneração Média'
             value: 'vl_indicador_txt'
-          - text: 'Remuneração Média (R$)'
-            value: 'fmt_vl_indicador'
+          # - text: 'Remuneração Média (R$)'
+          #   value: 'fmt_vl_indicador'
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
           value_field: 'calc_deviation'
           colorScale:
-            name: 'Blues'
+            name: 'Reds'
+            order: 'desc'
         source:
           desc_field: "ds_fonte"
 
@@ -491,17 +509,20 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api:
                   template: "/indicadoresmunicipais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS',and,ge-nu_competencia-'2015'"
                   args:
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "agr_sum_vl_indicador"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
+                    named_prop: 'calc_faixa'
                     default: "Nenhum"
                   - prop: "description"
                     fixed: "Trabalhadores migrantes de outras nacionalidades Admitidos no Mercado de Trabalho Formal"
@@ -561,6 +582,10 @@ secoes:
             - named_prop: "cd_uf"
           options:
             calcs:
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "agr_sum_vl_indicador"
               - id: "deviation"
                 function: "get_log"
                 fn_args:
@@ -572,8 +597,10 @@ secoes:
           - text: 'Município'
             align: 'left'
             value: 'nm_municipio'
+          # - text: 'Nº de migrantes de outras nacionalidades admitidos'
+          #   value: 'fmt_agr_sum_vl_indicador'
           - text: 'Nº de migrantes de outras nacionalidades admitidos'
-            value: 'fmt_agr_sum_vl_indicador'
+            value: 'calc_faixa'
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
@@ -648,6 +675,20 @@ secoes:
           template: "/indicadoresmunicipais?categorias=cd_indicador,cd_municipio_ibge_dv,nm_municipio,ds_fonte,latitude,longitude&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS',and,ge-nu_competencia-'2015'"
           args:
             - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "agr_sum_vl_indicador"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          # - text: 'Nº de trabalhadores migrantes de outras nacionalidades admitidos'
+          #   value: 'fmt_agr_sum_vl_indicador'
+          - text: 'Nº de trabalhadores migrantes de outras nacionalidades admitidos'
+            value: 'calc_faixa'
         chart_options:
           height_proportion: 1.77
           type: 'heat'
