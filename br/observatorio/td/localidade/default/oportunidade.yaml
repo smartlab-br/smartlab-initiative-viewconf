@@ -2,22 +2,80 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "02_11_03_00"
-      year: "max"
+    api: 
+      template: "/thematic/cagedtermometro?categorias=competencia_mov&valor=admitidos&agregacao=sum&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+      args:
+        - named_prop: "idLocalidade"
+      options:
+        calcs:
+          - id: "competencia"
+            function: "format_quarter_ds"
+            fn_args:
+              - named_prop: "competencia_mov"
     args:
       - prop: "value"
-        named_prop: 'vl_indicador'
-        format: 'inteiro'
+        named_prop: "agr_sum_admitidos"
+        format: "inteiro"
+        collapse:
+          format: 'real'
+          precision: 1
       - prop: "description"
-        named_prop: "ds_indicador_radical"
-      - prop: 'comment'
-        template: "({0}, {1})"
+        template: "CONTRATOS INICIADOS<br/>Empregos Celetistas (CLT)<br/>(ME - CAGED, {0})"
         args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - named_prop: "calc_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/cagedtermometro?categorias=competencia_mov&valor=desligados&agregacao=sum&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+      args:
+        - named_prop: "idLocalidade"
+      options:
+        calcs:
+          - id: "competencia"
+            function: "format_quarter_ds"
+            fn_args:
+              - named_prop: "competencia_mov"
+    args:
+      - prop: "value"
+        named_prop: "agr_sum_desligados"
+        format: "inteiro"
+        collapse:
+          format: 'real'
+          precision: 1
+      - prop: "description"
+        template: "CONTRATOS ENCERRADOS<br/>Empregos Celetistas (CLT)<br/>(ME - CAGED, {0})"
+        args:
+          - named_prop: "calc_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/thematic/cagedtermometro?categorias=competencia_mov&valor=admitidos,desligados&agregacao=sum,sum&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+      args:
+        - named_prop: "idLocalidade"
+      options:
+        calcs:
+          - id: "competencia"
+            function: "format_quarter_ds"
+            fn_args:
+              - named_prop: "competencia_mov"
+          - id: "saldo"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - named_prop: "agr_sum_admitidos"
+              - named_prop: "agr_sum_desligados"
+    args:
+      - prop: "value"
+        named_prop: "calc_saldo"
+        format: "inteiro"
+        collapse:
+          format: 'real'
+          precision: 1
+      - prop: "description"
+        template: "Saldo de Empregos Celetistas (CLT)<br/>(ME - CAGED, {0})"
+        args:
+          - named_prop: "calc_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -68,15 +126,1478 @@ principais:
       - prop: "description"
         fixed: "Número de microempreendedores individuais"
       - prop: 'comment'
-        template: "({0}, {1})"
+        # template: "({0}, {1})"
+        template: "(Portal do Empreendedor-MEI, {0})"
         args:
-          - named_prop: "ds_fonte"
+          # - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
 # ===============================================
 secoes:
   - id: "oportunidade_unico"
     name: ""
     cards:
+# ===============================================
+      - id: "mapa_empregos_formais"
+        title:
+          fixed: "Contratos Celetistas (CLT)"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+        title_comment:
+          template: "{0}"
+          # api:
+          #   fixed: "/thematic/cagedtermometro?categorias=1&valor=max_competencia&limit=1"
+          #   options:
+          #     calcs:
+          #       - id: "competencia_max"
+          #         function: "format_quarter_ds"
+          #         fn_args:
+          #           - named_prop: "max_competencia"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            # - named_prop: "calc_competencia_max"
+        description:
+          - id: "select_competencia"
+            type: "select"
+            clearable: false
+            label: "Competência"
+            api:
+              fixed: "/thematic/cagedtermometro?categorias=competencia_mov&agregacao=DISTINCT&ordenacao=-competencia_mov&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
+              options:
+                calcs:
+                  - id: "mes_formatado"
+                    function: "format_quarter_ds"
+                    fn_args:
+                      - named_prop: "competencia_mov"
+            args:
+              - prop: "id"
+                named_prop: "competencia_mov"
+              - prop: "label"
+                named_prop: "calc_mes_formatado"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-competencia_mov-{0}"
+                api:
+                  args:
+                    - named_prop: "competencia_mov"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                reactive: true
+                cls: 'xs12'
+                api:
+                  template: "/thematic/cagedtermometro?categorias=competencia_mov&valor=admitidos,desligados&agregacao=sum,sum&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "competencia"
+                        function: "format_quarter_ds"
+                        fn_args:
+                          - named_prop: "competencia_mov"
+                      - id: "saldo"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "agr_sum_admitidos"
+                          - named_prop: "agr_sum_desligados"
+                apiBase:
+                  template: "/thematic/cagedtermometro?categorias=competencia_mov&valor=admitidos,desligados&agregacao=sum,sum&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'calc_saldo'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "SALDO NO PERÍODO"
+                  - prop: "comment"
+                    template: "{0} admitidos, {1} desligados"
+                    args:
+                      - named_prop: "agr_sum_admitidos"
+                        format: "inteiro"
+                      - named_prop: "agr_sum_desligados"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o saldo do número de empregos celetistas criados e perdidos conforme competência selecionada acima. No mapa, o município selecionado está em destaque. A escala de cores varia do saldo negativo (vermelho) para o saldo positivo de criação de empregos (azul)."
+              # api:
+              #   fixed: "/thematic/cagedtermometro?categorias=1&valor=max_competencia&limit=1"
+              #   options:
+              #     calcs:
+              #       - id: "competencia_max"
+              #         function: "format_quarter_ds"
+              #         fn_args:
+              #           - named_prop: "max_competencia"
+              # args:
+              #   - named_prop: "calc_competencia_max"            
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/thematic/cagedtermometro?categorias=cd_municipio_ibge_dv,nm_municipio,competencia_mov&valor=admitidos,desligados&agregacao=sum,sum&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "competencia"
+                function: "format_quarter_ds"
+                fn_args:
+                  - named_prop: "competencia_mov"
+              - id: "saldo"
+                function: "calc_subtraction_ds"
+                fn_args:
+                  - named_prop: "agr_sum_admitidos"
+                  - named_prop: "agr_sum_desligados"
+            formatters:
+              - id: "calc_saldo"
+                format: 'inteiro'
+        apiBase:
+          template: "/thematic/cagedtermometro?categorias=cd_municipio_ibge_dv,nm_municipio,competencia_mov&valor=admitidos,desligados&agregacao=sum,sum&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Competência'
+            align: 'left'
+            value: 'calc_competencia'
+          - text: 'Vínculos de Emprego Celetista (CLT) - Saldo'
+            value: 'fmt_calc_saldo'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_saldo'
+          colorScale:
+            type: "bipolar"
+            color_array: 
+              positive: "#6CB1D9"
+              negative: "#DB6565"
+              zero: "#ffffff"
+        source:
+          desc: "ME - CAGED"
+# # ===============================================
+#       - id: "bar_termometro_cbo"
+#         type: "multiple-charts"
+#         title: 
+#           fixed: "Empregos Celetistas (CLT) por ocupação"
+#         title_comment:
+#           template: "{0}"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#         description:
+#           - id: "select_competencia"
+#             type: "select"
+#             clearable: false
+#             label: "Competência"
+#             api:
+#               fixed: "/thematic/cagedtermometro?categorias=competencia_mov&agregacao=DISTINCT&ordenacao=-competencia_mov&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
+#               options:
+#                 calcs:
+#                   - id: "mes_formatado"
+#                     function: "format_quarter_ds"
+#                     fn_args:
+#                       - named_prop: "competencia_mov"
+#             args:
+#               - prop: "id"
+#                 named_prop: "competencia_mov"
+#               - prop: "label"
+#                 named_prop: "calc_mes_formatado"
+#                 # null_value: "(Não informado)"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-competencia_mov-{0}"
+#                 api:
+#                   args:
+#                     - named_prop: "competencia_mov"
+
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: ""
+#         charts:
+#           - id: "bar_cbo_ganho"
+#             cls: "xs12 md6"
+#             title: "Ocupações com maior número de postos formais criados"
+#             type: "BAR"
+#             api:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+#               args:
+#                 - named_prop: "idLocalidade"
+#               options:
+#                 calcs:
+#                   - id: "competencia"
+#                     function: "format_quarter_ds"
+#                     fn_args:
+#                       - named_prop: "competencia_mov"
+#                   - id: "desc_cbo"
+#                     function: "to_upper_ds"
+#                     fn_args:
+#                       - fixed: "termometro_descricao"
+#                 formatters:
+#                   - id: "admitidos"
+#                     format: 'inteiro'
+#                   - id: "desligados"
+#                     format: 'inteiro'
+#                   - id: "saldo"
+#                     format: 'inteiro'
+#             apiBase:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+#               args:
+#                 - named_prop: "idLocalidade"
+#             headers:
+#               - text: 'Ocupação'
+#                 align: 'left'
+#                 value: 'termometro_descricao'
+#               - text: 'Competencia declarada'
+#                 align: 'left'
+#                 value: 'calc_competencia'
+#               - text: 'Admitidos'
+#                 value: 'fmt_admitidos'
+#               - text: 'Desligados'
+#                 value: 'fmt_desligados'
+#               - text: 'Vagas criadas'
+#                 value: 'fmt_saldo'
+#             options:
+#               id: "termometro_codigo"
+#               x: "saldo"
+#               y: "calc_desc_cbo"
+#               show_y_axis: true
+#               order_field: "saldo"
+#               # text: "termometro_descricao"
+#               color: "#084594"
+#               hide_legend: true
+#           - id: "bar_cbo_perda"
+#             cls: "xs12 md6"
+#             title: "Ocupações com maior número de postos formais perdidos"
+#             type: "BAR"
+#             api:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+#               args:
+#                 - named_prop: "idLocalidade"
+#               options:
+#                 calcs:
+#                   - id: "competencia"
+#                     function: "format_quarter_ds"
+#                     fn_args:
+#                       - named_prop: "competencia_mov"
+#                   - id: "desc_cbo"
+#                     function: "to_upper_ds"
+#                     fn_args:
+#                       - fixed: "termometro_descricao"
+#                 formatters:
+#                   - id: "admitidos"
+#                     format: 'inteiro'
+#                   - id: "desligados"
+#                     format: 'inteiro'
+#                   - id: "saldo_absoluto"
+#                     format: 'inteiro'
+#             apiBase:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0}"
+#               args:
+#                 - named_prop: "idLocalidade"
+#             headers:
+#               - text: 'Ocupação'
+#                 align: 'left'
+#                 value: 'termometro_descricao'
+#               - text: 'Competencia declarada'
+#                 align: 'left'
+#                 value: 'calc_competencia'
+#               - text: 'Admitidos'
+#                 value: 'fmt_admitidos'
+#               - text: 'Desligados'
+#                 value: 'fmt_desligados'
+#               - text: 'Vagas perdidas'
+#                 value: 'fmt_saldo_absoluto'
+#             options:
+#               id: "termometro_codigo"
+#               x: "saldo_absoluto"
+#               y: "calc_desc_cbo"
+#               show_y_axis: true
+#               order_field: "saldo_absoluto"
+#               # text: "termometro_descricao"
+#               color: "#cb181d"
+#               hide_legend: true
+#         source:
+#           desc: "ME - CAGED"
+# # ===============================================
+#       - id: "bar_termometro_cnae"
+#         type: "multiple-charts"
+#         title: 
+#           fixed: "Empregos Celetistas (CLT) por Atividade Econômica"
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       fixed: "A Taxa de Participação é medida dividindo a População Economicamente Ativa (PEA) de 16 a 64 anos pela População em Idade Ativa (PIA) da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está participando no mercado de trabalho em relação ao potencial ativo dessa população. Por exemplo, essa métrica demonstra que um significativo aporte laboral e produtivo das mulheres é subestimado e não se reflete na taxa de participação."
+#         #   - type: "text"
+#         #     title: "Observação:"
+#         #     content:
+#         #       fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
+#         title_comment:
+#           template: "{0}"
+#           # api:
+#           #   fixed: "/thematic/cagedtermometro?categorias=competencia_max&limit=1"
+#           #   options:
+#           #     calcs:
+#           #       - id: "competencia"
+#           #         function: "format_quarter_ds"
+#           #         fn_args:
+#           #           - named_prop: "competencia_max"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             # - named_prop: "calc_competencia"
+#         description:
+#           - id: "select_competencia"
+#             type: "select"
+#             clearable: false
+#             label: "Competência"
+#             api:
+#               fixed: "/thematic/cagedtermometro?categorias=competencia_mov&agregacao=DISTINCT&ordenacao=-competencia_mov&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
+#               options:
+#                 calcs:
+#                   - id: "mes_formatado"
+#                     function: "format_quarter_ds"
+#                     fn_args:
+#                       - named_prop: "competencia_mov"
+#             args:
+#               - prop: "id"
+#                 named_prop: "competencia_mov"
+#               - prop: "label"
+#                 named_prop: "calc_mes_formatado"
+#                 # null_value: "(Não informado)"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-competencia_mov-{0}"
+#                 api:
+#                   args:
+#                     - named_prop: "competencia_mov"
+
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: ""
+#         charts:
+#           - id: "bar_cnae_ganho"
+#             cls: "xs12 md6"
+#             title: "Atividade Econômica com maior número de postos formais criados"
+#             type: "BAR"
+#             api:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0,and,nk-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
+#               args:
+#                 - named_prop: "idLocalidade"
+#               options:
+#                 calcs:
+#                   - id: "competencia"
+#                     function: "format_quarter_ds"
+#                     fn_args:
+#                       - named_prop: "competencia_mov"
+#                 formatters:
+#                   - id: "admitidos"
+#                     format: 'inteiro'
+#                   - id: "desligados"
+#                     format: 'inteiro'
+#                   - id: "saldo"
+#                     format: 'inteiro'
+#             apiBase:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0,and,nk-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
+#               args:
+#                 - named_prop: "idLocalidade"
+#             headers:
+#               - text: 'Atividade Econômica'
+#                 align: 'left'
+#                 value: 'termometro_descricao'
+#               - text: 'Competencia declarada'
+#                 align: 'left'
+#                 value: 'calc_competencia'
+#               - text: 'Admitidos'
+#                 value: 'fmt_admitidos'
+#               - text: 'Desligados'
+#                 value: 'fmt_desligados'
+#               - text: 'Vagas criadas'
+#                 value: 'fmt_saldo'
+#             options:
+#               id: "termometro_codigo"
+#               x: "saldo"
+#               y: "termometro_descricao"
+#               show_y_axis: true
+#               # text: "termometro_descricao"
+#               order_field: "saldo"
+#               color: "#084594"
+#               hide_legend: true
+#           - id: "bar_cnae_perda"
+#             cls: "xs12 md6"
+#             title: "Atividade Econômica com maior número de postos formais perdidos"
+#             type: "BAR"
+#             api:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,nk-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
+#               args:
+#                 - named_prop: "idLocalidade"
+#               options:
+#                 calcs:
+#                   - id: "competencia"
+#                     function: "format_quarter_ds"
+#                     fn_args:
+#                       - named_prop: "competencia_mov"
+#                 formatters:
+#                   - id: "admitidos"
+#                     format: 'inteiro'
+#                   - id: "desligados"
+#                     format: 'inteiro'
+#                   - id: "saldo_absoluto"
+#                     format: 'inteiro'
+#             apiBase:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cnae_classe',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0},and,nk-termometro_descricao-'CNAE NÃO IDENTIFICADO%25'"
+#               args:
+#                 - named_prop: "idLocalidade"
+#             headers:
+#               - text: 'Atividade Econômica'
+#                 align: 'left'
+#                 value: 'termometro_descricao'
+#               - text: 'Competencia declarada'
+#                 align: 'left'
+#                 value: 'calc_competencia'
+#               - text: 'Admitidos'
+#                 value: 'fmt_admitidos'
+#               - text: 'Desligados'
+#                 value: 'fmt_desligados'
+#               - text: 'Vagas perdidas'
+#                 value: 'fmt_saldo_absoluto'
+#             options:
+#               id: "termometro_codigo"
+#               x: "saldo_absoluto"
+#               y: "termometro_descricao"
+#               show_y_axis: true
+#               order_field: "saldo_absoluto"
+#               # text: "termometro_descricao"
+#               color: "#cb181d"
+#               hide_legend: true
+#         source:
+#           desc: "ME - CAGED"
+# # ===============================================
+#       - id: "treemap_termometro_cnae"
+#         type: "multiple-charts"
+#         title: 
+#           fixed: "Empregos Celetistas (CLT) por Setor Econômico"
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       fixed: "A Taxa de Participação é medida dividindo a População Economicamente Ativa (PEA) de 16 a 64 anos pela População em Idade Ativa (PIA) da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está participando no mercado de trabalho em relação ao potencial ativo dessa população. Por exemplo, essa métrica demonstra que um significativo aporte laboral e produtivo das mulheres é subestimado e não se reflete na taxa de participação."
+#         #   - type: "text"
+#         #     title: "Observação:"
+#         #     content:
+#         #       fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
+#         title_comment:
+#           template: "{0}"
+#           # api:
+#           #   fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MAX"
+#           #   options:
+#           #     calcs:
+#           #       - id: "competencia"
+#           #         function: "format_quarter_ds"
+#           #         fn_args:
+#           #           - named_prop: "agr_max_competencia_mov"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             # - named_prop: "calc_competencia"
+#         description:
+#           - id: "select_competencia"
+#             type: "select"
+#             clearable: false
+#             label: "Competência"
+#             api:
+#               fixed: "/thematic/cagedtermometro?categorias=competencia_mov&agregacao=DISTINCT&ordenacao=-competencia_mov&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
+#               options:
+#                 calcs:
+#                   - id: "mes_formatado"
+#                     function: "format_quarter_ds"
+#                     fn_args:
+#                       - named_prop: "competencia_mov"
+#             args:
+#               - prop: "id"
+#                 named_prop: "competencia_mov"
+#               - prop: "label"
+#                 named_prop: "calc_mes_formatado"
+#                 # null_value: "(Não informado)"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-competencia_mov-{0}"
+#                 api:
+#                   args:
+#                     - named_prop: "competencia_mov"
+
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: ""
+#         charts:
+#           - id: "treemap_cnae_secao_criados"
+#             title: "Empregos Celetistas (CLT) criados por setores econômicos"
+#             cls: "xs12 md6"
+#             type: "TREEMAP"
+#             api:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0,and,ne-termometro_descricao-'CNAE NÃO IDENTIFICADO'"
+#               args:
+#                 - named_prop: "idLocalidade"
+#               options:
+#                 calcs:
+#                   - id: "competencia"
+#                     function: "format_quarter_ds"
+#                     fn_args:
+#                       - named_prop: "competencia_mov"
+#                 formatters:
+#                   - id: "admitidos"
+#                     format: 'inteiro'
+#                   - id: "desligados"
+#                     format: 'inteiro'
+#                   - id: "saldo"
+#                     format: 'inteiro'
+#             apiBase:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0,and,ne-termometro_descricao-'CNAE NÃO IDENTIFICADO'"
+#               args:
+#                 - named_prop: "idLocalidade"
+#             headers:
+#               - text: 'Setor Econômico'
+#                 align: 'left'
+#                 value: 'termometro_descricao'
+#               - text: 'Competencia declarada'
+#                 align: 'left'
+#                 value: 'calc_competencia'
+#               - text: 'Admitidos'
+#                 value: 'fmt_admitidos'
+#               - text: 'Desligados'
+#                 value: 'fmt_desligados'
+#               - text: 'Vagas criadas'
+#                 value: 'fmt_saldo'
+#             options:
+#               id: "termometro_codigo"
+#               text: "termometro_descricao"
+#               size: "saldo"
+#               colorScale:
+#                 name: "Blues"
+#                 type: "singleHue"
+#                 levels: 6
+#                 order: 'asc'
+#           - id: "treemap_cnae_secao_perdidos"
+#             title: "Empregos Celetistas (CLT) perdidos por setores econômicos"
+#             cls: "xs12 md6"
+#             type: "TREEMAP"
+#             api:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,lt-saldo-0,and,ne-termometro_descricao-'CNAE NÃO IDENTIFICADO'"
+#               args:
+#                 - named_prop: "idLocalidade"
+#               options:
+#                 calcs:
+#                   - id: "competencia"
+#                     function: "format_quarter_ds"
+#                     fn_args:
+#                       - named_prop: "competencia_mov"
+#                 formatters:
+#                   - id: "admitidos"
+#                     format: 'inteiro'
+#                   - id: "desligados"
+#                     format: 'inteiro'
+#                   - id: "saldo_absoluto"
+#                     format: 'inteiro'
+#             apiBase:
+#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,lt-saldo-0,and,ne-termometro_descricao-'CNAE NÃO IDENTIFICADO'"
+#               args:
+#                 - named_prop: "idLocalidade"
+#             headers:
+#               - text: 'Setor Econômico'
+#                 align: 'left'
+#                 value: 'termometro_descricao'
+#               - text: 'Competencia declarada'
+#                 align: 'left'
+#                 value: 'calc_competencia'
+#               - text: 'Admitidos'
+#                 value: 'fmt_admitidos'
+#               - text: 'Desligados'
+#                 value: 'fmt_desligados'
+#               - text: 'Vagas perdidas'
+#                 value: 'fmt_saldo_absoluto'
+#             options:
+#               id: "termometro_codigo"
+#               text: "termometro_descricao"
+#               size: "saldo_absoluto"
+#               colorScale:
+#                 name: "Reds"
+#                 type: "singleHue"
+#                 levels: 6
+#                 order: 'asc'
+#         source:
+#           desc: "ME - CAGED"
+# ===============================================
+      - id: "bar_saldo_emprego_mes"
+        chart_type: "BAR"
+        title:
+          fixed: "Saldo de Empregos Celetistas (CLT)"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+        title_comment:
+          template: "{0}, do {1} ao {2}"
+          api:
+            fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MIN,MAX&filtros=ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
+            options:
+              calcs:
+                - id: "competencia_min"
+                  function: "format_quarter_ds"
+                  fn_args:
+                    - named_prop: "agr_min_competencia_mov"
+                - id: "competencia_max"
+                  function: "format_quarter_ds"
+                  fn_args:
+                    - named_prop: "agr_max_competencia_mov"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "calc_competencia_min"
+            - named_prop: "calc_competencia_max"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                reactive: true
+                cls: 'xs12'
+                api:
+                  template: "/thematic/cagedtermometro?categorias=competencia_mov&valor=admitidos,desligados&agregacao=sum,sum&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "competencia"
+                        function: "format_quarter_ds"
+                        fn_args:
+                          - named_prop: "competencia_mov"
+                      - id: "saldo"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "agr_sum_admitidos"
+                          - named_prop: "agr_sum_desligados"
+                args:
+                  - prop: "value"
+                    named_prop: 'calc_saldo'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: "SALDO NO {0}"
+                    args:
+                      - named_prop: "calc_competencia"
+                  - prop: "comment"
+                    template: "{0} admitidos, {1} desligados"
+                    args:
+                      - named_prop: "agr_sum_admitidos"
+                        format: "inteiro"
+                      - named_prop: "agr_sum_desligados"
+                        format: "inteiro"
+          # - type: "ranking_list"
+          #   title: "Saldos de Ocupações"
+          #   rankings:
+          #     - title: "Saldo Positivo"
+          #       cls: "xs12"
+          #       api: 
+          #         template: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo,admitidos,desligados&ordenacao=-saldo&limit=5&filtros=eq-termometro_grupo-'cbo',and,gt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+          #         args:
+          #           - named_prop: "idLocalidade"
+          #       args:
+          #         - prop: 'localidade'
+          #           named_prop: "termometro_descricao"
+          #         - prop: 'vl_indicador'
+          #           named_prop: "saldo"
+          #           format: "inteiro"
+          #         # - prop: 'rank'
+          #         #   named_prop: "rank_br"
+          #     - title: "Saldo Negativo"
+          #       cls: "xs12"
+          #       api: 
+          #         template: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao,saldo,admitidos,desligados&ordenacao=saldo&limit=5&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+          #         args:
+          #           - named_prop: "idLocalidade"
+          #       args:
+          #         - prop: 'localidade'
+          #           named_prop: "termometro_descricao"
+          #         - prop: 'vl_indicador'
+          #           named_prop: "saldo"
+          #           format: "inteiro"
+          #         # - prop: 'rank'
+          #         #   named_prop: "rank_br"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o saldo do número de empregos celetistas criados e perdidos no {0}. No gráfico, os dados do Cadastro Geral de Empregados e Desempregados (CAGED) indicam, no município de referência, o comportamento do saldo, a diferença entre o número de admissões e desligamentos de empregos celetistas (CLT). Utilize o filtro abaixo para visualizar os saldos por setor econômico."
+              api:
+                fixed: "/thematic/cagedtermometro?categorias=max_competencia&limit=1"
+                options:
+                  calcs:
+                    - id: "competencia_max"
+                      function: "format_quarter_ds"
+                      fn_args:
+                        - named_prop: "max_competencia"
+              args:
+                - named_prop: "calc_competencia_max"
+          - id: "select_cnae_secao"
+            type: "select"
+            label: "Setor Econômico"
+            api:
+              template: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cnae_secao',and,ge-competencia_mov-201901,and,eq-cd_municipio_ibge_dv-{0},and,ne-termometro_descricao-'CNAE NÃO IDENTIFICADO'"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "termometro_descricao"
+              - prop: "label"
+                named_prop: "termometro_descricao"
+                null_value: "(Não identificado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-termometro_descricao-'{0}'"
+                api:
+                  args:
+                    - named_prop: "termometro_descricao"
+        api:
+          template: "/thematic/cagedtermometro?categorias=competencia_mov&valor=admitidos,desligados&agregacao=SUM,SUM&ordenacao=competencia_mov&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "saldo"
+                function: "calc_subtraction_ds"
+                fn_args:
+                  - named_prop: "agr_sum_admitidos"
+                  - named_prop: "agr_sum_desligados"
+              - id: "flag_number"
+                function: "get_flag_number"
+                fn_args:
+                  - named_prop: "calc_saldo"
+              - id: "competencia"
+                function: "format_quarter_ds"
+                fn_args:
+                  - named_prop: "competencia_mov"
+              - id: "competencia_curto"
+                function: "format_quarter_ds_short"
+                fn_args:
+                  - named_prop: "competencia_mov"
+            formatters:
+              - id: "calc_saldo"
+                format: 'inteiro'
+              - id: "agr_sum_admitidos"
+                format: 'inteiro'
+              - id: "agr_sum_desligados"
+                format: 'inteiro'
+        headers:
+          - text: 'Competência'
+            align: 'left'
+            value: 'calc_competencia'
+          - text: 'Admitidos'
+            value: 'fmt_agr_sum_admitidos'
+          - text: 'Desligados'
+            value: 'fmt_agr_sum_desligados'
+          - text: 'Saldo'
+            value: 'fmt_calc_saldo'
+        chart_options:
+          id: "calc_flag_number"
+          x: "calc_competencia_curto"
+          y: "calc_saldo"
+          orientation: "vertical"
+          show_x_axis: true
+          show_y_axis: false
+          text: "fmt_calc_saldo"
+          hide_legend: true
+          sort_field: "competencia_mov"
+          colorScale:
+            type: "fixed"
+            color_array:
+              "Positivo": "#377EB8"
+              "Negativo": "#E41A1C"
+          # colorArray: ["#377EB8","#E41A1C"]  # blue / red
+        source:
+          desc: "ME - CAGED"
+# ===============================================
+      - id: "line_dinamica_emprego_mes"
+        chart_type: "LINE"
+        title:
+          fixed: "Dinâmica recente do Empregos Celetistas (CLT)"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+        title_comment:
+          template: "{0}, do {1} ao {2}"
+          api:
+            fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MIN,MAX&filtros=ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
+            options:
+              calcs:
+                - id: "competencia_min"
+                  function: "format_quarter_ds"
+                  fn_args:
+                    - named_prop: "agr_min_competencia_mov"
+                - id: "competencia_max"
+                  function: "format_quarter_ds"
+                  fn_args:
+                    - named_prop: "agr_max_competencia_mov"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "calc_competencia_min"
+            - named_prop: "calc_competencia_max"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                reactive: true
+                cls: 'xs12'
+                api:
+                  template: "/thematic/cagedtermometro?categorias=competencia_mov&valor=admitidos,desligados&agregacao=sum,sum&filtros=eq-termometro_grupo-'cnae_secao',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "competencia"
+                        function: "format_quarter_ds"
+                        fn_args:
+                          - named_prop: "competencia_mov"
+                      - id: "saldo"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "agr_sum_admitidos"
+                          - named_prop: "agr_sum_desligados"
+                args:
+                  - prop: "value"
+                    named_prop: 'calc_saldo'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: "SALDO NO {0}"
+                    args:
+                      - named_prop: "calc_competencia"
+                  - prop: "comment"
+                    template: "{0} admitidos, {1} desligados"
+                    args:
+                      - named_prop: "agr_sum_admitidos"
+                        format: "inteiro"
+                      - named_prop: "agr_sum_desligados"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o saldo do número de empregos celetistas criados e perdidos no {0}. No gráfico, os dados do Cadastro Geral de Empregados e Desempregados (CAGED) indicam, no município de referência, o comportamento do saldo, a diferença entre o número de admissões (em azul) e desligamentos (em vermelho) de empregos celetistas (CLT), nos últimos trimestres. Utilize o filtro abaixo para visualizar a dinâmica por ocupação."
+              api:
+                fixed: "/thematic/cagedtermometro?categorias=max_competencia&limit=1"
+                options:
+                  calcs:
+                    - id: "competencia_max"
+                      function: "format_quarter_ds"
+                      fn_args:
+                        - named_prop: "max_competencia"
+              args:
+                - named_prop: "calc_competencia_max"
+          - id: "select_cbo"
+            type: "select"
+            label: "Ocupação"
+            multiple: true
+            api:
+              template: "/thematic/cagedtermometro?categorias=termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901,and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "termometro_descricao"
+              - prop: "label"
+                named_prop: "termometro_descricao"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-termometro_descricao-{0}"
+                api:
+                  args:
+                    - named_prop: "termometro_descricao"
+        api:
+          - template: "/thematic/cagedtermometro?categorias='Admitidos'-cd_indicador,competencia_mov&valor=admitidos&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
+            args:
+              - named_prop: "idLocalidade"
+            options:
+              calcs:
+                - id: "vl_indicador"
+                  function: "calc_subtraction_ds"
+                  fn_args:
+                    - named_prop: "agr_sum_admitidos"
+                    - fixed: 0
+          - template: "/thematic/cagedtermometro?categorias='Desligados'-cd_indicador,competencia_mov&valor=desligados&agregacao=SUM&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
+            args:
+              - named_prop: "idLocalidade"
+            options:
+              calcs:
+                - id: "vl_indicador"
+                  function: "calc_subtraction_ds"
+                  fn_args:
+                    - named_prop: "agr_sum_desligados"
+                    - fixed: 0
+        api_options:
+            calcs:
+              - id: "competencia"
+                function: "format_quarter_ds"
+                fn_args:
+                  - named_prop: "competencia_mov"
+              - id: "competencia_curto"
+                function: "format_quarter_ds_short"
+                fn_args:
+                  - named_prop: "competencia_mov"
+            formatters:
+              - id: "calc_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'cd_indicador'
+          - text: 'Competência'
+            align: 'left'
+            value: 'calc_competencia'
+          - text: 'Total'
+            value: 'fmt_calc_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "calc_competencia_curto"
+          y: "calc_vl_indicador"
+          hide_legend: false
+          order_field: "competencia_mov"
+          legend_field: "cd_indicador"
+          colorArray: ["#377EB8","#E41A1C"]  # blue / red
+        source:
+          desc: "ME - CAGED"
+# # ===============================================
+#       - id: "line_saldo_emprego_mes_setor"
+#         chart_type: "LINE"
+#         title:
+#           fixed: "Saldo do Empregos Celetistas (CLT) por Setor Econômico(série histórica CAGED)"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           api:
+#             fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MIN,MAX&filtros=ge-competencia_mov-201901"
+#             options:
+#               calcs:
+#                 - id: "competencia_min"
+#                   function: "format_quarter_ds"
+#                   fn_args:
+#                     - named_prop: "agr_min_competencia_mov"
+#                 - id: "competencia_max"
+#                   function: "format_quarter_ds"
+#                   fn_args:
+#                     - named_prop: "agr_max_competencia_mov"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - named_prop: "calc_competencia_min"
+#             - named_prop: "calc_competencia_max"
+#         description:
+#           - id: "select_cnae_secao"
+#             type: "select"
+#             label: "Setor Econômico"
+#             api:
+#               template: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cnae_secao',and,ge-competencia_mov-201901,and,eq-cd_municipio_ibge_dv-{0}"
+#               args:
+#                 - named_prop: "idLocalidade"
+#             args:
+#               - prop: "id"
+#                 named_prop: "termometro_codigo"
+#               - prop: "label"
+#                 named_prop: "termometro_descricao"
+#                 null_value: "(Não identificado)"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-termometro_codigo-'{0}'"
+#                 api:
+#                   args:
+#                     - named_prop: "termometro_codigo"
+
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: ""
+#         api:
+#           template: "/thematic/cagedtermometro?categorias=ano_declarado,competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=competencia_mov&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
+#           args:
+#             - named_prop: "idLocalidade"
+#           options:
+#             calcs:
+#               - id: "flag_number"
+#                 function: "get_flag_number"
+#                 fn_args:
+#                   - named_prop: "saldo"
+#               - id: "competencia"
+#                 function: "format_quarter_ds"
+#                 fn_args:
+#                   - named_prop: "competencia_mov"
+#             formatters:
+#               - id: "saldo"
+#                 format: 'inteiro'
+#               - id: "admitidos"
+#                 format: 'inteiro'
+#               - id: "desligados"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Setor Econômico'
+#             align: 'left'
+#             value: 'termometro_descricao'
+#           - text: 'Competência'
+#             align: 'left'
+#             value: 'calc_competencia'
+#           - text: 'Admitidos'
+#             value: 'fmt_admitidos'
+#           - text: 'Desligados'
+#             value: 'fmt_desligados'
+#           - text: 'Saldo'
+#             value: 'fmt_saldo'
+#         chart_options:
+#           id: "termometro_codigo"
+#           x: "competencia_mov"
+#           y: "saldo"
+#           orientation: "vertical"
+#           show_x_axis: true
+#           show_y_axis: false
+#           text: "fmt_saldo"
+#           hide_legend: false
+#           legend_field: "termometro_codigo"
+#           order_field: "competencia_mov"
+#           # colorScale:
+#           #   type: "fixed"
+#           #   color_array:
+#           #     "Positivo": "#377EB8"
+#           #     "Negativo": "#E41A1C"
+#           # colorArray: ["#377EB8","#E41A1C"]  # blue / red
+#         source:
+#           desc: "ME - CAGED"
+# # ===============================================
+#       - id: "stacked_desligados_emprego_mes_setor"
+#         chart_type: "STACKED"
+#         title:
+#           fixed: "Desligados do Empregos Celetistas (CLT) por Setor Econômico(série histórica CAGED)"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           api:
+#             fixed: "/thematic/cagedtermometro?categorias=1&valor=competencia_mov&agregacao=MIN,MAX&filtros=ge-competencia_mov-201901"
+#             options:
+#               calcs:
+#                 - id: "competencia_min"
+#                   function: "format_quarter_ds"
+#                   fn_args:
+#                     - named_prop: "agr_min_competencia_mov"
+#                 - id: "competencia_max"
+#                   function: "format_quarter_ds"
+#                   fn_args:
+#                     - named_prop: "agr_max_competencia_mov"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - named_prop: "calc_competencia_min"
+#             - named_prop: "calc_competencia_max"
+#         description:
+#           - id: "select_cnae_secao"
+#             type: "select"
+#             label: "Setor Econômico"
+#             api:
+#               template: "/thematic/cagedtermometro?categorias=termometro_codigo,termometro_descricao&agregacao=DISTINCT&ordenacao=termometro_descricao&filtros=eq-termometro_grupo-'cnae_secao',and,ge-competencia_mov-201901,and,eq-cd_municipio_ibge_dv-{0}"
+#               args:
+#                 - named_prop: "idLocalidade"
+#             args:
+#               - prop: "id"
+#                 named_prop: "termometro_codigo"
+#               - prop: "label"
+#                 named_prop: "termometro_descricao"
+#                 null_value: "(Não identificado)"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-termometro_codigo-'{0}'"
+#                 api:
+#                   args:
+#                     - named_prop: "termometro_codigo"
+
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: ""
+#         api:
+#           template: "/thematic/cagedtermometro?categorias=ano_declarado,competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=competencia_mov&filtros=eq-termometro_grupo-'cnae_secao',and,eq-cd_municipio_ibge_dv-{0},and,ge-competencia_mov-201901"
+#           args:
+#             - named_prop: "idLocalidade"
+#           options:
+#             calcs:
+#               - id: "competencia"
+#                 function: "format_quarter_ds"
+#                 fn_args:
+#                   - named_prop: "competencia_mov"
+#             formatters:
+#               - id: "saldo"
+#                 format: 'inteiro'
+#               - id: "admitidos"
+#                 format: 'inteiro'
+#               - id: "desligados"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Setor Econômico'
+#             align: 'left'
+#             value: 'termometro_descricao'
+#           - text: 'Competência'
+#             align: 'left'
+#             value: 'calc_competencia'
+#           - text: 'Admitidos'
+#             value: 'fmt_admitidos'
+#           - text: 'Desligados'
+#             value: 'fmt_desligados'
+#           - text: 'Saldo'
+#             value: 'fmt_saldo'
+#         chart_options:
+#           id: "termometro_codigo"
+#           x: "competencia_mov"
+#           y: "desligados"
+#           # orientation: "vertical"
+#           # show_x_axis: true
+#           # show_y_axis: false
+#           # text: "fmt_saldo"
+#           hide_legend: false
+#           legend_field: "termometro_codigo"
+#           order_field: "competencia_mov"
+#           # colorScale:
+#           #   type: "fixed"
+#           #   color_array:
+#           #     "Positivo": "#377EB8"
+#           #     "Negativo": "#E41A1C"
+#           # colorArray: ["#377EB8","#E41A1C"]  # blue / red
+#         source:
+#           desc: "ME - CAGED"
+# ===============================================
+      - id: "line_dinamica_emprego"
+        chart_type: "LINE"
+        title:
+          fixed: "Dinâmica do Empregos Celetistas (série histórica CAGED)"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api:
+            - fixed: "/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min&filtros=eq-cd_indicador-'02_11_01_00'&limit=1"
+            - fixed: "/thematic/cagedindicadores?categorias=cd_indicador,nu_competencia_max&filtros=eq-cd_indicador-'caged_saldo'&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - id: "02_11_01_00"
+              named_prop: "nu_competencia_min"
+            - id: "caged_saldo"
+              named_prop: "nu_competencia_max"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/thematic/cagedindicadores?categorias=ds_indicador_radical,ds_agreg_primaria,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'caged_admitidos'-'caged_desligados'-'caged_saldo',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    id: "caged_saldo"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: "SALDO EM {0}"
+                    args:
+                      - id: "caged_saldo"
+                        named_prop: "nu_competencia"
+                  - prop: "comment"
+                    template: "{0} admitidos, {1} desligados"
+                    args:
+                      - id: "caged_admitidos"
+                        named_prop: "vl_indicador"
+                        format: "inteiro"
+                      - id: "caged_desligados"
+                        named_prop: "vl_indicador"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o saldo do número de empregos celetistas criados e perdidos em {0}. No gráfico, os dados do Cadastro Geral de Empregados e Desempregados (CAGED) indicam, no município de referência, o comportamento do saldo, a diferença entre o número de admissões (em azul) e desligamentos (em vermelho) de empregos celetistas (CLT), anualmente, desde {1}."
+              api:
+                - fixed: "/indicadoresmunicipais?categorias=cd_indicador,nu_competencia_min&filtros=eq-cd_indicador-'02_11_01_00'&limit=1"
+                - fixed: "/thematic/cagedindicadores?categorias=cd_indicador,nu_competencia_max&filtros=eq-cd_indicador-'caged_saldo'&limit=1"
+              args:
+                - id: "caged_saldo"
+                  named_prop: "nu_competencia_max"
+                - id: "02_11_01_00"
+                  named_prop: "nu_competencia_min"
+        api:
+          - template: "/indicadoresmunicipais?categorias=ds_indicador_radical,ds_agreg_primaria,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'02_11_01_00'-'02_11_02_00',and,le-nu_competencia-nu_competencia_max"
+            args:
+              - named_prop: "idLocalidade"
+            options:
+              formatters:
+                - id: "vl_indicador"
+                  format: 'inteiro'
+          - template: "/thematic/cagedindicadores?categorias=ds_indicador_radical,ds_agreg_primaria,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'caged_admitidos'-'caged_desligados',and,le-nu_competencia-nu_competencia_max"
+            args:
+              - named_prop: "idLocalidade"
+            options:
+              formatters:
+                - id: "vl_indicador"
+                  format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Quantidade'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "ds_indicador_radical"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          hide_legend: false
+          legend_field: "ds_agreg_primaria"
+          colorArray: ["#377EB8","#E41A1C"]  # blue / red
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "bar_serie_empregos_formais"
+        title: 
+          fixed: "Número de Empregos Celetistas – CLT"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "02_04_02_00"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "02_04_02_00"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_04_02_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'EMPREGOS'
+                  - prop: "comment"
+                    named_prop: 'nu_competencia'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de vínculos de emprego em 31 de dezembro de {0} e, ao lado, a evolução da série histórica desses dados."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['02_04_02_00']
+                year: "max"
+              args:
+                - named_prop: 'nu_competencia'
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "02_04_02_00"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                default: 0
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['02_04_02_00']
+            options:
+              formatters:
+                - id: "vl_indicador"
+                  format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "fmt_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          hide_legend: true
+          color: "#238B45"
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "bar_aprendizes"
+        title: 
+          fixed: "Aprendizes"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_01_03_10'&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          # - type: "text"
+          #   title: "Sobre a métrica"
+          #   content:
+          #     fixed: "Com o intuito de mensurar a parcela de crianças e adolescentes com 14 a 17 anos de idade que correspondia à condição de aprendiz, são utilizados os microdados da RAIS para a construção da série temporal."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "No mês de junho de 1999, a 87ª Reunião da Conferência Internacional do Trabalho (CIT) aprovou por unanimidade a Convenção sobre a Proibição das Piores Formas de Trabalho Infantil e a Ação Imediata para a sua Eliminação, 1999 (nº 182), da Organização Internacional do Trabalho (OIT). Até agosto de 2018, um expressivo contingente de 181 países (cerca de 98,0% dos 185 Estados-Membros da OIT) tinha ratificado a referida Convenção, proporção sem precedentes em quase um século de história da Organização. O Brasil ratificou a Convenção nº 182 em 2 de fevereiro de 2000.<br/>
+                      <b>Vale destacar que o Brasil também ratificou, em 28 de junho de 2001, a Convenção sobre a Idade Mínima para Admissão a Emprego, 1973 (nº 138) e estabeleceu na legislação nacional a proibição do trabalho infantil até os 16 anos, exceto na condição de aprendiz a partir dos 14 anos.</b> Esta Convenção, adotada pela OIT em 28 de junho de 1973, foi ratificada por 171 dos seus 185 Estados-Membros, o correspondente a 92,4% do total.<br/>
+                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "06_01_03_10"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Total no município'
+                  - prop: "comment"
+                    named_prop: 'nu_competencia'
+          - type: "text"
+            title: ""
+            content:
+              api: 
+                fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_01_03_10'&limit=1"
+              template: "Em destaque, de acordo com a Relação Anual de Informações Sociais, a quantidade de aprendizes em {0}. No gráfico, a evolução do número de contratos de aprendizagem existentes na série histórica da RAIS, de {1} a {0}. A aprendizagem é uma importante oportunidade de formação profissional em atividades formais e mais seguras."
+              args:
+                - named_prop: 'nu_competencia_max'
+                - named_prop: 'nu_competencia_min'
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['06_01_03_10']
+            options:
+              formatters:
+                - id: "vl_indicador"
+                  format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "fmt_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          color: "#238B45"
+          hide_legend: true
+        source:
+          desc_field: "ds_fonte"
+                    
 # ===============================================
       - id: "bar_taxa_participacao"
         type: "multiple-charts"
@@ -87,6 +1608,10 @@ secoes:
             title: "Sobre a métrica"
             content:
               fixed: "A Taxa de Participação é medida dividindo a População Economicamente Ativa (PEA) de 16 a 64 anos pela População em Idade Ativa (PIA) da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está participando no mercado de trabalho em relação ao potencial ativo dessa população. Por exemplo, essa métrica demonstra que um significativo aporte laboral e produtivo das mulheres é subestimado e não se reflete na taxa de participação."
+          - type: "text"
+            title: "Observação:"
+            content:
+              fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
         title_comment:
           template: "{0}, {1}"
           preloaded:
@@ -94,9 +1619,8 @@ secoes:
             function: "slice"
             id: "02_01_06_00"
           args:
-            - named_prop: "nm_uf"
+            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
-              format: "inteiro"
             
         description:
           - type: "minicards"
@@ -119,7 +1643,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, a taxa de participação no mercado de trabalho estadual da população de 16 a 64 anos de idade em {0}. Nos gráficos, comparam-se as taxas em diferentes grupos: rural/urbano e mulheres/homens."
+              template: "Em destaque, a taxa de participação no mercado de trabalho municipal da população de 16 a 64 anos de idade em {0}. Nos gráficos, comparam-se as taxas em diferentes grupos: rural/urbano e mulheres/homens."
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
@@ -133,6 +1657,16 @@ secoes:
               function: "slice"
               id: "02_01_06_00"
             args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -146,7 +1680,7 @@ secoes:
         charts:
           - id: "bar_rural_urbano"
             cls: "xs12 md6"
-            title: "Participação no mercado de trabalho - Rural/Urbano"
+            title: "Taxa de participação no mercado de trabalho - Rural/Urbano"
             type: "BAR"
             preloaded:
               prop: "centralindicadores"
@@ -154,13 +1688,22 @@ secoes:
               id: ['02_01_07_00', '02_01_08_00']
               options:
                 calcs:
+                  # - id: "bar_description"
+                  #   function: "concat_values"
+                  #   fn_args:
+                  #     - named_prop: 'ds_agreg_primaria' 
+                  #     - fixed: '-'
+                  #     - named_prop: 'vl_indicador'
+                  #     - fixed: '%'
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_primaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -190,7 +1733,7 @@ secoes:
               desc_field: "ds_fonte"
           - id: "bar_homens_mulheres"
             cls: "xs12 md6"
-            title: "Participação no mercado de trabalho - Homens/Mulheres"
+            title: "Taxa de participação no mercado de trabalho - Homens/Mulheres"
             type: "BAR"
             preloaded:
               prop: "centralindicadores"
@@ -199,12 +1742,21 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_primaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
+                  # - id: "bar_description"
+                  #   function: "concat_values"
+                  #   fn_args:
+                  #     - named_prop: 'ds_agreg_primaria' 
+                  #     - fixed: '-'
+                  #     - named_prop: 'vl_indicador'
+                  #     - fixed: '%'
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -230,7 +1782,6 @@ secoes:
               show_y_axis: false
             source:
               desc_field: "ds_fonte"
-
 # ===============================================
       - id: "bar_nivel_ocupacao"
         type: "multiple-charts"
@@ -241,6 +1792,10 @@ secoes:
             title: "Sobre a métrica"
             content:
               fixed: "O Nível de Ocupação é medido dividindo a População Ocupada de 16 a 64 anos pela População em Idade Ativa (PIA) de 16 a 64 anos da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está ocupada no mercado de trabalho em relação ao potencial ativo dessa população."
+          - type: "text"
+            title: "Observação:"
+            content:
+              fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
         title_comment:
           template: "{0}, {1}"
           preloaded:
@@ -248,9 +1803,8 @@ secoes:
             function: "slice"
             id: "02_02_08_00"
           args:
-            - named_prop: "nm_uf"
+            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
-              format: "inteiro"
         description:
           - type: "minicards"
             cards:
@@ -284,6 +1838,16 @@ secoes:
               function: "slice"
               id: "02_02_08_00"
             args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -306,12 +1870,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_primaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -348,12 +1914,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_primaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -390,12 +1958,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_primaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -421,7 +1991,6 @@ secoes:
               show_y_axis: false
             source:
               desc_field: "ds_fonte"
-
 # ===============================================
       - id: "bar_taxa_desocupacao"
         type: "multiple-charts"
@@ -432,6 +2001,10 @@ secoes:
             title: "Sobre a métrica"
             content:
               fixed: "A Taxa de Desocupação é medido dividindo o número de pessoas desocupada de 16 a 64 anos pela População Economicamente Ativa (PEA) da mesma faixa etária, multiplicado por 100. Essa métrica é importante para medir quanto de uma determinada população está desocupada no mercado de trabalho em relação ao potencial de população que poderia estar economicamente ativa. O Censo 2010 considerou como desocupada na semana de referência a pessoa sem trabalho na semana de referência, mas que estava disponível para assumir um trabalho nessa semana e que tomou alguma providência efetiva para conseguir trabalho no período de referência de 30 dias, sem ter tido qualquer trabalho ou após terem saído do último trabalho que teve nesse período."
+          - type: "text"
+            title: "Observação:"
+            content:
+              fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
         title_comment:
           template: "{0}, {1}"
           preloaded:
@@ -439,9 +2012,8 @@ secoes:
             function: "slice"
             id: "02_03_08_00"
           args:
-            - named_prop: "nm_uf"
+            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
-              format: "inteiro"
         description:
           - type: "minicards"
             cards:
@@ -475,6 +2047,16 @@ secoes:
               function: "slice"
               id: "02_03_08_00"
             args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -497,12 +2079,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_secundaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -539,12 +2123,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_secundaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -582,12 +2168,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_secundaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -614,179 +2202,6 @@ secoes:
               show_y_axis: false
             source:
               desc_field: "ds_fonte"
-
-# ===============================================
-      - id: "mapa_empregos_formais"
-        title:
-          fixed: "Empregos formais"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "A RAIS é um Registro Administrativo, de periodicidade anual, criada com a finalidade de suprir as necessidades de controle, de estatísticas e de informações às entidades governamentais da área social. Constitui um instrumento imprescindível para o cumprimento das normas legais, como também é de fundamental importância para o acompanhamento e a caracterização do mercado de trabalho formal. O crescimento é calculado de forma a mostrar quanto o mercado formal de trabalho adiciona de número de vínculos na média ao ano em termos percentuais ao que já existe no mercado."
-        title_comment:
-          template: "{0}, {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "02_11_01_00"
-            year: "max"
-          args:
-            - named_prop: "nm_uf"
-            - named_prop: "nu_competencia"
-              format: "inteiro"
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "02_11_01_00"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'real'
-                    precision: 1
-                    collapse:
-                      format: 'real'
-                      precision: 1
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Número de empregos criados"
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "02_11_02_00"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'real'
-                    precision: 1
-                    collapse:
-                      format: 'real'
-                      precision: 1
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Número de empregos perdidos"
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "02_11_01_00"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'media_br'
-                    format: 'real'
-                    precision: 1
-                    collapse:
-                      format: 'real'
-                      precision: 1
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Média nacional de criação de empregos"
-                  - prop: "comment"
-                    function: "calcIndexPercentage" 
-                    fn_args:
-                      - id: "02_11_01_00"
-                        named_prop: "vl_indicador"
-                      - named_prop: 'media_br'
-                    color_changing: 
-                      base_value_prop: 'media_br'
-                      compared_value_prop: 'vl_indicador'
-                      gt_color: 'green'
-                      eq_color: 'blue'
-                      lt_color: 'red'
-
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, o número de empregos formais criados e perdidos em  {0}. No mapa, {1} está em destaque. A escala de cores varia do saldo negativo (vermelho) para o saldo positivo de criação de empregos (azul)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['02_11_01_00']
-                year: 'max'
-              args:
-                - id: "02_11_01_00"
-                  named_prop: "nu_competencia"
-                  format: "inteiro"
-                - id: "02_11_01_00"
-                  named_prop: "nm_municipio_uf"
-
-          - type: "text"
-            title: "Pendência"
-            content:
-              fixed: "Escala está distorcendo por ser em valores absolutos. Solução: fazer escala relativa? Pode ser empregos formais per capita (por habitante) ou algo assim. Marcar pendência."
-            
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "02_11_01_00"
-            args:
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-        chart_type: "MAP_TOPOJSON"
-        api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'02_11_03_00',and,eq-nu_competencia-'2018'"
-          args:
-            - named_prop: "idLocalidade"
-          options:
-            recalc_min_max: true
-            calcs:
-              - id: "deviation_empform"
-                function: "get_bipolar_scale"
-                fn_args: 
-                  - fixed: 'vl_indicador'
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'rank_br'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_empform'
-          colorScale:
-            name: 'RdYlBu'
-            order: "asc"
-            inv_function:
-              name: 'inv_deviation'
-              args:
-                - first_row_prop: 'media_uf'
-        source:
-          desc_field: "ds_fonte"
-
 # ===============================================
       - id: "mapa_trabalho_formal_informal"
         title:
@@ -796,6 +2211,10 @@ secoes:
             title: "Sobre a métrica"
             content:
               fixed: "A população em trabalhos formais e informais mede a quantidade de população efetivamente ocupada, independente de quantos vínculos cada pessoa tem ou deixa de ter. É importante medir o contingente de população ocupada em trabalhos informais, pois estas são o público-alvo de políticas de formalização."
+          - type: "text"
+            title: "Observação:"
+            content:
+              fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
         title_comment:
           template: "{0}, {1}"
           preloaded:
@@ -803,9 +2222,8 @@ secoes:
             function: "slice"
             id: "01_08_02_00"
           args:
-            - named_prop: "nm_uf"
+            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
-              format: "inteiro"
         description:
           - type: "minicards"
             cards:
@@ -818,8 +2236,7 @@ secoes:
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
-                    format: 'real'
-                    precision: 1
+                    format: 'inteiro'
                     collapse:
                       format: 'real'
                       precision: 1
@@ -835,8 +2252,7 @@ secoes:
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
-                    format: 'real'
-                    precision: 1
+                    format: 'inteiro'
                     collapse:
                       format: 'real'
                       precision: 1
@@ -891,6 +2307,18 @@ secoes:
               function: "slice"
               id: "02_05_08_00"
             args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_complementary_text'
+                fixed: ', em número de empregos informais'
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -907,7 +2335,7 @@ secoes:
         api:
           template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_08_11_00'"
           args:
-            - named_prop: "idLocalidade"
+            - named_prop: "cd_uf"
           options:
             recalc_min_max: true
             calcs:
@@ -944,72 +2372,7 @@ secoes:
         source:
           desc_field: "ds_fonte"
 
-# ===============================================
-      - id: "line_dinamica_emprego"
-        chart_type: "LINE"
-        title:
-          fixed: "Dinâmica do emprego (série histórica CAGED)"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "O CAGED constitui importante fonte de informação do mercado de trabalho de âmbito nacional e de periodicidade mensal. Foi criado como instrumento de acompanhamento e de fiscalização do processo de admissão e de dispensa de trabalhadores regidos pela CLT, com o objetivo de assistir os desempregados e de apoiar medidas contra o desemprego. A partir de 1986, passou a ser utilizado como suporte ao pagamento do seguro-desemprego e, mais recentemente, tornou-se, também, um relevante instrumento à reciclagem profissional e à recolocação do trabalhador no mercado de trabalho."
-        title_comment:
-          template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "02_11_01_00"
-            year: 'min'
-          args:
-            - named_prop: "nm_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        description:
-          - type: "text"
-            title: ""
-            content:
-              template: "Os dados do Cadastro Geral de Empregados e Desempregados (CAGED) indicam, no Estado de referência, o comportamento do saldo, a diferença entre o número de admissões (em azul) e desligamentos (em vermelho) de empregos formais, mensalmente, desde {0}."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: '02_11_01_00'
-                year: 'min'
-              args:
-                - id: "02_11_01_00"
-                  named_prop: "nu_competencia"
-                  format: 'inteiro'
-        # preloaded:
-        #   prop: "centralindicadores"
-        #   function: "slice"
-        #   id: ["02_11_01_00", "02_11_02_00"]  
-        #   options:
-        #     formatters:
-        #       - id: "vl_indicador"
-        #         format: 'inteiro'
-        api:
-          template: "/indicadoresestaduais?categorias=cd_mun_ibge,nm_uf,cd_dimensao,ds_indicador_radical,ds_indicador_curto,cd_indicador,nu_competencia,ds_fonte,vl_indicador,rank_br&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'02_11_01_00'-'02_11_02_00',and,le-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "idLocalidade"
-            # - named_prop: "idLocalidadeD6"
-            # - named_prop: "cd_uf"
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Quantidade'
-            value: 'vl_indicador'
-        chart_options:
-          id: "cd_indicador"
-          x: "nu_competencia"
-          y: "vl_indicador"
-          hide_legend: true
-        source:
-          desc_field: "ds_fonte"
-
+        
 # ===============================================
       - id: "bar_taxa_formalidade"
         type: "multiple-charts"
@@ -1020,6 +2383,10 @@ secoes:
             title: "Sobre a métrica"
             content:
               fixed: "A Taxa de Formalidade corresponde à participação do somatório dos trabalhadores com carteira assinada, inclusive os trabalhadores domésticos, dos militares e funcionários públicos estatutários, dos empregadores e dos trabalhadores por conta própria que contribuem para a previdência social, na estrutura ocupacional total."
+          - type: "text"
+            title: "Observação:"
+            content:
+              fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
         title_comment:
           template: "{0}, {1}"
           preloaded:
@@ -1027,9 +2394,8 @@ secoes:
             function: "slice"
             id: "02_05_08_00"
           args:
-            - named_prop: "nm_uf"
+            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
-              format: "inteiro"
         description:
           - type: "minicards"
             cards:
@@ -1064,6 +2430,16 @@ secoes:
               function: "slice"
               id: "02_05_08_00"
             args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -1087,12 +2463,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_secundaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -1128,12 +2506,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_secundaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -1169,12 +2549,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_secundaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -1199,7 +2581,6 @@ secoes:
               show_y_axis: false
             source:
               desc_field: "ds_fonte"
-
 # ===============================================
       - id: "bar_microempreendedores_individuais"
         title:
@@ -1216,14 +2597,13 @@ secoes:
             function: "slice"
             id: "02_06_04_00"
           args:
-            - named_prop: "nm_uf"
+            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
-              format: "inteiro"
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
@@ -1231,6 +2611,22 @@ secoes:
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                      precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Número de MEIs"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_06_04_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_uf'
                     format: 'real'
                     precision: 1
                     collapse:
@@ -1238,8 +2634,7 @@ secoes:
                       precision: 1
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Número de MEIs"
-
+                    fixed: "Média da UF"
               - relevance: 'low'
                 cls: 'xs12 md6'
                 preloaded:
@@ -1257,18 +2652,27 @@ secoes:
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Média nacional"
-
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de trabalhadoras e trabalhadores formalizados na condição de Microempreendedor Individual (MEI). No mapa, apresenta-se perspectiva comparativa quanto ao número de MEIs por município na unidade federativa. A escala de cores varia do branco (menor quantidade de MEIs) para o azul (maior quantidade de MEIs)."
-              # preloaded:
-              #   prop: "centralindicadores"
-              #   function: "slice"
-              #   id: ['02_06_04_00']
-              # args:
-              #     - id: "02_06_04_00"
-              #       named_prop: "nm_municipio_uf"
+              template: "Em destaque, o número de trabalhadoras e trabalhadores formalizados na condição de Microempreendedor Individual (MEI). No mapa, {0} está em destaque. A escala de cores varia da menor quantidade (branco) para a maior quantidade de MEIs (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: '02_06_04_00'
+              args:
+                  - named_prop: "nm_municipio_uf"
+          # - type: "text"
+          #   title: ""
+          #   content:
+          #     template: "No mapa, apresenta-se perspectiva comparativa quanto ao número de MEIs por município na unidade federativa. {0} está destacada com linhas pretas. A escala de cores varia do branco (menor quantidade de MEIs) para o azul (maior quantidade de MEIs)."
+          #     preloaded:
+          #       prop: "centralindicadores"
+          #       function: "slice"
+          #       id: ['02_06_04_00']
+          #     args:
+          #         - id: "02_06_04_00"
+          #           named_prop: "nm_municipio_uf"
 
           - type: "ranking"
             preloaded:
@@ -1276,6 +2680,16 @@ secoes:
               function: "slice"
               id: "02_06_04_00"
             args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -1287,21 +2701,13 @@ secoes:
                 precision: 0
                 default: 0
           
-          - type: "text"
-            title: "Pendência/observação"
-            content:
-              fixed: "O documento pede para incluir dados de 'MEI per capita' (minicards com valor, média da UF, média nacional e mapa). Com isso, o card ficaria com 6 minicards e dois mapas. Ou seja os dados a serem adicionados daria para criar um card específico."
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Ademais, seria necessário a criação do indicador para plotar o mapa."
-
-
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_curto,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'02_06_04_00'"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_curto,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{2},and,eq-cd_indicador-'02_06_04_00'"
           args:
             - named_prop: "idLocalidade"
+            - named_prop: "idLocalidadeD6"
+            - named_prop: "cd_uf"
           options:
             calcs:
               - id: "deviation_mei"
@@ -1329,15 +2735,8 @@ secoes:
           id_field: 'cd_mun_ibge'
           topo_key: "codarea"
           value_field: 'calc_deviation_mei'
-          colorScale:
-            order: "asc"
-            inv_function:
-              name: 'inv_deviation'
-              args:
-                - first_row_prop: 'media_uf'
         source:
           desc_field: "ds_fonte"
-
 # ===============================================
       - id: "bar_taxa_desocupacao_juvenil"
         type: "multiple-charts"
@@ -1349,9 +2748,10 @@ secoes:
             content:
               fixed: "A Taxa de Desocupação Juvenil é medido dividindo o número de pessoas desocupada de 15 a 24 anos pela População Economicamente Ativa (PEA) da mesma faixa etária, multiplicado por 100. O Censo 2010 considerou como desocupada na semana de referência a pessoa sem trabalho na semana de referência, mas que estava disponível para assumir um trabalho nessa semana e que tomou alguma providência efetiva para conseguir trabalho no período de referência de 30 dias, sem ter tido qualquer trabalho ou após terem saído do último trabalho que teve nesse período. "
           - type: "text"
-            title: "Observação importante"
+            title: "Observações importantes"
             content:
-              fixed: "A desagregação da Taxa de Desocupação total para a faixa etária de 15 a 24 anos é relevante porque o Trabalho Decente é um direito das jovens gerações, sendo fundamental para garantir oportunidades de ocupação de qualidade no presente, tornando também factível a construção de melhores trajetórias ocupacionais futuras."
+              fixed: "A desagregação da Taxa de Desocupação total para a faixa etária de 15 a 24 anos é relevante porque o Trabalho Decente é um direito das jovens gerações, sendo fundamental para garantir oportunidades de ocupação de qualidade no presente, tornando também factível a construção de melhores trajetórias ocupacionais futuras.<br/><br/>
+                      Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
         title_comment:
           template: "{0}, {1}"
           preloaded:
@@ -1359,9 +2759,8 @@ secoes:
             function: "slice"
             id: "02_07_08_00"
           args:
-            - named_prop: "nm_uf"
+            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
-              format: "inteiro"
         description:
           - type: "minicards"
             cards:
@@ -1398,6 +2797,16 @@ secoes:
               function: "slice"
               id: "02_07_08_00"
             args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -1419,13 +2828,22 @@ secoes:
               id: ['02_07_09_00', '02_07_10_00']
               options:
                 calcs:
+                  # - id: "bar_description"
+                  #   function: "concat_values"
+                  #   fn_args:
+                  #     - named_prop: 'ds_agreg_secundaria' 
+                  #     - fixed: '-'
+                  #     - named_prop: 'vl_indicador'
+                  #     - fixed: '%'
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_secundaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -1461,12 +2879,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_secundaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -1502,12 +2922,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_secundaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_secundaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -1532,7 +2954,6 @@ secoes:
               show_y_axis: false
             source:
               desc_field: "ds_fonte"
-
 # ===============================================
       - id: "bar_jovens_nao_estudam"
         type: "multiple-charts"
@@ -1544,9 +2965,10 @@ secoes:
             content:
               fixed: "A proporção de jovens que não estudavam, nem estavam ocupados é medida através da combinação das taxas de desocupação e de frequência à escola."
           - type: "text"
-            title: "Observação importante"
+            title: "Observações importantes"
             content:
-              fixed: "Essa métrica é relevante porque tanto a escola como o Trabalho Decente é um direito das jovens gerações, sendo fundamental para garantir oportunidades de ocupação de qualidade no presente, tornando também factível a construção de melhores trajetórias ocupacionais futuras. Existe também a preocupação racial e de gênero, pois o não estudar, nem trabalhar pode recair proporcionalmente mais sobre alguma categoria de população, o que indica um problema estrutural na região em destaque."
+              fixed: "Essa métrica é relevante porque tanto a escola como o Trabalho Decente é um direito das jovens gerações, sendo fundamental para garantir oportunidades de ocupação de qualidade no presente, tornando também factível a construção de melhores trajetórias ocupacionais futuras. Existe também a preocupação racial e de gênero, pois o não estudar, nem trabalhar pode recair proporcionalmente mais sobre alguma categoria de população, o que indica um problema estrutural na região em destaque.<br/><br/>
+                      Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
         title_comment:
           template: "{0}, {1}"
           preloaded:
@@ -1554,14 +2976,13 @@ secoes:
             function: "slice"
             id: "02_08_08_00"
           args:
-            - named_prop: "nm_uf"
+            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
-              format: "inteiro"
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
@@ -1574,7 +2995,20 @@ secoes:
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Proporção"
-
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "02_08_08_00"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_uf'
+                    format: 'porcentagem'
+                    precision: 1
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Média da UF"
               - relevance: 'low'
                 cls: 'xs12 md6'
                 preloaded:
@@ -1606,6 +3040,16 @@ secoes:
               function: "slice"
               id: "02_08_08_00"
             args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -1628,12 +3072,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_primaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -1669,12 +3115,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_primaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -1710,12 +3158,14 @@ secoes:
               options:
                 calcs:
                   - id: "bar_description"
-                    function: "concat_values"
+                    function: "applyInterpolReplaceDatasetParam"
                     fn_args:
-                      - named_prop: 'ds_agreg_primaria' 
-                      - fixed: '-'
-                      - named_prop: 'vl_indicador'
-                      - fixed: '%'
+                      - fixed: 
+                          template: "{0} - {1}%"
+                          args:
+                            - named_prop: "ds_agreg_primaria"
+                            - named_prop: "vl_indicador"
+                              format: "real"
             headers:
               - text: 'Indicador'
                 align: 'left'
@@ -1740,11 +3190,10 @@ secoes:
               show_y_axis: false
             source:
               desc_field: "ds_fonte"
-
 # ===============================================
-      - id: "bar_aprendizes"
+      - id: "mapa_potencial_aprendizes"
         title:
-          fixed: "Aprendizes"
+          fixed: "Potencial de Contratação de Aprendizes"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1755,87 +3204,97 @@ secoes:
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "06_01_03_10"
+            id: "12_03_06_00"
             year: 'max'
           args:
-            - named_prop: "nm_uf"
+            - named_prop: "nm_municipio_uf"
             - named_prop: "nu_competencia"
         description:
           - type: "minicards"
             cards:
+              # - relevance: 'high'
+              #   cls: 'xs12'
+              #   preloaded:
+              #     prop: "centralindicadores"
+              #     function: "slice"
+              #     id: "12_03_05_00"
+              #     year: 'max'
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'vl_indicador'
+              #       format: 'inteiro'
+              #       precision: 1
+              #       collapse:
+              #         format: 'real'
+              #         precision: 1
+              #       default: "Não há"
+              #     - prop: "description"
+              #       fixed: "POTENCIAL DE CONTRATAÇÃO DE APRENDIZES"
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "06_01_03_10"
+                  id: "12_03_03_00"
                   year: 'max'
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
-                    format: 'real'
+                    format: 'inteiro'
                     precision: 1
                     collapse:
                       format: 'real'
                       precision: 1
-                    default: "Sem Registros"
+                    default: "Não há"
                   - prop: "description"
-                    fixed: "Quantidade"
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "06_01_03_20"
-                  year: 'max'
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'real'
-                    precision: 1
-                    collapse:
-                      format: 'real'
-                      precision: 1
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Cota"
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "06_01_03_20"
-                  year: 'max'
-                args:
-                  - prop: "value"
-                    named_prop: 'media_br'
-                    format: 'real'
-                    precision: 1
-                    collapse:
-                      format: 'real'
-                      precision: 1
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Cota - Média nacional"
-                  - prop: "comment"
-                    fixed: "Por município" 
+                    fixed: "TOTAL DE COTAS DE APRENDIZAGEM"
+              # - relevance: 'high'
+              #   cls: 'xs12 md6'
+              #   preloaded:
+              #     prop: "centralindicadores"
+              #     function: "slice"
+              #     id: "12_03_04_00"
+              #     year: 'max'
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'vl_indicador'
+              #       format: 'inteiro'
+              #       precision: 1
+              #       collapse:
+              #         format: 'real'
+              #         precision: 1
+              #       default: "Não há"
+              #     - prop: "description"
+              #       fixed: "TOTAL DE APRENDIZES CONTRATADOS"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de aprendizes contratados e o potencial de cotas para a contratação de aprendizes.  No mapa, a escala de cores varia da menor quantidade branco) para a maior quantidade de vagas (azul escuro)."
+              template: "Em destaque, o potencial de cotas para a contratação de aprendizes, de acordo com as informações oriundas da {0}. No mapa ao lado, a escala de cores varia do menor (branco) para o maior número de vagas (azul). Note-se que alguns municípios não possuem empresas obrigadas ao cumprimento da cota."
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
-                id: '06_01_03_10'
+                id: '12_03_06_00'
                 year: 'max'
               args:
+                - named_prop: "ds_fonte"
                 - named_prop: "nm_municipio_uf"
           - type: "ranking"
             preloaded:
               prop: "centralindicadores"
               function: "slice"
-              id: "06_01_03_20"
+              id: "12_03_03_00"
+              year: 'max'
             args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -1848,15 +3307,17 @@ secoes:
                 default: 0
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_01_03_20',and,eq-nu_competencia-nu_competencia_max"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'12_03_03_00',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "idLocalidade"
+            - named_prop: "cd_uf"
           options:
             calcs:
               - id: "deviation_empform"
                 function: "get_proportional_indicator_uf"
             formatters:
               - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "rank_br"
                 format: 'inteiro'
         headers:
           - text: 'Município'
@@ -1873,7 +3334,7 @@ secoes:
           - text: 'Rank UF'
             value: 'rank_uf'
           - text: 'Rank Brasil'
-            value: 'rank_br'
+            value: 'fmt_rank_br'
         chart_options:
           id_field: 'cd_mun_ibge'
           topo_key: "codarea"
@@ -1881,4 +3342,4 @@ secoes:
           colorScale:
             order: "asc"
         source:
-          desc_field: "ds_fonte"
+          desc_field: "ds_fonte"          
