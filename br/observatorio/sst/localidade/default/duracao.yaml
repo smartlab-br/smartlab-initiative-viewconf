@@ -3,21 +3,18 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "10_12_01_03"
-      year: "max"
+    api:
+      template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
-        format: 'real'
+        format: 'inteiro'
         collapse:
           format: 'real'
       - prop: "description"
-        template: "Dias perdidos por {0}"
-        args:
-          - named_prop: "ds_agreg_primaria"
+        fixed: "DIAS PERDIDOS POR AUXÍLIO-DOENÇA POR ACIDENTE DO TRABALHO (B91)"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -26,19 +23,18 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "10_12_01_04"
-      year: "max"
+    api:
+      template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
-        format: 'real'
+        format: 'inteiro'
         collapse:
           format: 'real'
       - prop: "description"
-        template: "Dias perdidos por {0}"
+        template: "DIAS PERDIDOS POR APOSENTADORIA POR INVALIDEZ POR ACIDENTE DO TRABALHO (B92)"
         args:
           - named_prop: "ds_agreg_primaria"
       - prop: 'comment'
@@ -65,36 +61,33 @@ secoes:
           fixed: "Duração de Benefícios Previdenciários - Auxílio-doença por acidente do trabalho (B91)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_12_01_03"
-            year: "max"
           args:
-            - named_prop: "nm_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "" 
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "" 
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12 md7'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_12_01_03"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
-                    format: 'real'
-                    collapse: true
-                    precision: 1
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Dias perdidos"
@@ -105,20 +98,15 @@ secoes:
             title: ""
             content:
               template: "Em destaque, informações sobre {0}. A soma da duração de cada benefício concedido permite identificar o número de dias de trabalho perdidos, que revela não apenas perdas humanitárias e familiares, mas também econômicas, em matéria de produtividade de empregadores e da economia em geral. No gráfico ao lado, a série histórica em dias perdidos acumulados ao longo dos anos."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_12_01_03"
-                year: "max"
+              api:
+                template: "/sst/indicadoresnacionais?categorias=ds_indicador&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'91'&limit=1"
               args:
-                - named_prop: "ds_indicador_radical"
-
+                - named_prop: "ds_indicador"
           - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_12_01_03"
-              year: "max"
+            api:
+              template: "/sst/indicadoresestaduais?categorias=cd_indicador,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
             args:
               - prop: 'national_rank'
                 named_prop: "rank_br"
@@ -131,13 +119,21 @@ secoes:
                 precision: 0
                 default: 0
         chart_type: "BAR"
-        preloaded:
-          prop: "centralindicadores"
-          function: "slice"
-          id: ['10_12_01_03']
+        api:
+          template: "/sst/indicadoresestaduais?categorias=cd_indicador,ds_indicador-ds_indicador_radical,vl_indicador,nu_competencia,ds_agreg_primaria,ds_fonte&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'91',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "idLocalidade"
           options:
+            calcs:
+              - id: "legend_description"
+                function: "replace_text"
+                fn_args:
+                  - fixed: "ds_indicador_radical"
+                  - fixed: "Duração de Benefícios Previdenciários - "
+                  - fixed: ""
             formatters:
               - id: "vl_indicador"
+                format: 'inteiro'
                 collapse:
                   format: 'real'
                   precision: 1
@@ -148,7 +144,7 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Total de Benefícios'
+          - text: 'Total de dias'
             value: 'fmt_vl_indicador'
         chart_options:
           x: "nu_competencia"
@@ -163,7 +159,7 @@ secoes:
           text: "fmt_vl_indicador"
           show_x_axis: true
           show_y_axis: false
-          legend_field: "ds_agreg_primaria"
+          legend_field: "calc_legend_description"
         source:
           desc_field: "ds_fonte"
 # ===================================================
@@ -172,36 +168,33 @@ secoes:
           fixed: "Duração de Benefícios Previdenciários - Aposentadoria por invalidez por acidente do trabalho (B92)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_12_01_04"
-            year: "max"
           args:
-            - named_prop: "nm_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "" 
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "" 
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12 md7'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_12_01_04"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
-                    format: 'real'
-                    collapse: true
-                    precision: 1
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Dias perdidos"
@@ -212,20 +205,16 @@ secoes:
             title: ""
             content:
               template: "Em destaque, informações sobre {0}. A soma da duração de cada benefício concedido permite identificar o número de dias de trabalho perdidos, que revela não apenas perdas humanitárias e familiares, mas também econômicas, em matéria de produtividade de empregadores e da economia em geral. No gráfico ao lado, a série histórica em dias perdidos acumulados ao longo dos anos."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_12_01_04"
-                year: "max"
+              api:
+                template: "/sst/indicadoresnacionais?categorias=ds_indicador&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'92'&limit=1"
               args:
-                - named_prop: "ds_indicador_radical"
+                - named_prop: "ds_indicador"
         
           - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_12_01_04"
-              year: "max"
+            api:
+              template: "/sst/indicadoresestaduais?categorias=cd_indicador,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
             args:
               - prop: 'national_rank'
                 named_prop: "rank_br"
@@ -239,13 +228,21 @@ secoes:
                 default: 0
 
         chart_type: "BAR"
-        preloaded:
-          prop: "centralindicadores"
-          function: "slice"
-          id: ['10_12_01_04']
+        api:
+          template: "/sst/indicadoresestaduais?categorias=cd_indicador,ds_indicador-ds_indicador_radical,vl_indicador,nu_competencia,ds_agreg_primaria,ds_fonte&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'92',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "idLocalidade"
           options:
+            calcs:
+              - id: "legend_description"
+                function: "replace_text"
+                fn_args:
+                  - fixed: "ds_indicador_radical"
+                  - fixed: "Duração de Benefícios Previdenciários - "
+                  - fixed: ""
             formatters:
               - id: "vl_indicador"
+                format: 'inteiro'
                 collapse:
                   format: 'real'
                   precision: 1
@@ -256,7 +253,7 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Total de Benefícios'
+          - text: 'Total de dias'
             value: 'fmt_vl_indicador'
         chart_options:
           x: "nu_competencia"
@@ -271,7 +268,117 @@ secoes:
           text: "fmt_vl_indicador"
           show_x_axis: true
           show_y_axis: false
-          legend_field: "ds_agreg_primaria"
+          legend_field: "calc_legend_description"
+        source:
+          desc_field: "ds_fonte"
+
+# ===================================================
+      - id: "bar_duracao_auxilio_b31"
+        title: 
+          fixed: "Duração de Benefícios Previdenciários - Auxílio-doença (B31)"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "" 
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'31',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Dias perdidos"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, informações sobre {0}. A soma da duração de cada benefício concedido permite identificar o número de dias de trabalho perdidos, que revela não apenas perdas humanitárias e familiares, mas também econômicas, em matéria de produtividade de empregadores e da economia em geral. No gráfico ao lado, a série histórica em dias perdidos acumulados ao longo dos anos."
+              api:
+                template: "/sst/indicadoresnacionais?categorias=ds_indicador&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'31'&limit=1"
+              args:
+                - named_prop: "ds_indicador"
+        
+          - type: "ranking"
+            api:
+              template: "/sst/indicadoresestaduais?categorias=cd_indicador,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'31',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        
+        chart_type: "BAR"
+        api:
+          template: "/sst/indicadoresestaduais?categorias=cd_indicador,ds_indicador-ds_indicador_radical,vl_indicador,nu_competencia,ds_agreg_primaria,ds_fonte&filtros=eq-cd_indicador-'sst_bene_dias_perdidos_especie',and,eq-ds_agreg_primaria-'31',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "legend_description"
+                function: "replace_text"
+                fn_args:
+                  - fixed: "ds_indicador_radical"
+                  - fixed: "Duração de Benefícios Previdenciários - "
+                  - fixed: ""
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+                collapse:
+                  format: 'real'
+                  precision: 1
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Total de dias'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          x: "nu_competencia"
+          y: "vl_indicador"
+          id: "id"
+          orientation: "vertical"
+          accum: true
+          accumDataType: 'real'
+          accumDataPrecision: 1
+          accumDataCollapse: true
+          stacked: true
+          text: "fmt_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          legend_field: "calc_legend_description"
         source:
           desc_field: "ds_fonte"
 
@@ -308,9 +415,9 @@ secoes:
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
-                    format: 'real'
-                    collapse: true
-                    precision: 1
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Dias perdidos"
@@ -355,6 +462,7 @@ secoes:
           options:
             formatters:
               - id: "vl_indicador"
+                format: 'inteiro'
                 collapse:
                   format: 'real'
                   precision: 1
@@ -365,7 +473,7 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Total de Benefícios'
+          - text: 'Total de dias'
             value: 'fmt_vl_indicador'
         chart_options:
           x: "nu_competencia"
@@ -384,111 +492,3 @@ secoes:
         source:
           desc_field: "ds_fonte"
 
-# ===================================================
-      - id: "bar_duracao_auxilio_b31"
-        title: 
-          fixed: "Duração de Benefícios Previdenciários - Auxílio-doença (B31)"
-        title_comment:
-          template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_12_01_01"
-            year: "max"
-          args:
-            - named_prop: "nm_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "" 
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md7'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_12_01_01"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'real'
-                    collapse: true
-                    precision: 1
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Dias perdidos"
-                  - prop: "comment"
-                    named_prop: "nu_competencia"
-
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, informações sobre {0}. A soma da duração de cada benefício concedido permite identificar o número de dias de trabalho perdidos, que revela não apenas perdas humanitárias e familiares, mas também econômicas, em matéria de produtividade de empregadores e da economia em geral. No gráfico ao lado, a série histórica em dias perdidos acumulados ao longo dos anos."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_12_01_01"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
-        
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_12_01_01"
-              year: "max"
-            args:
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-        
-        chart_type: "BAR"
-        preloaded:
-          prop: "centralindicadores"
-          function: "slice"
-          id: ['10_12_01_01']
-          options:
-            formatters:
-              - id: "vl_indicador"
-                collapse:
-                  format: 'real'
-                  precision: 1
-                  uiTags: false
-        headers:
-          - text: 'Indicador'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Total de Benefícios'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          x: "nu_competencia"
-          y: "vl_indicador"
-          id: "id"
-          orientation: "vertical"
-          accum: true
-          accumDataType: 'real'
-          accumDataPrecision: 1
-          accumDataCollapse: true
-          stacked: true
-          text: "fmt_vl_indicador"
-          show_x_axis: true
-          show_y_axis: false
-          legend_field: "ds_agreg_primaria"
-        source:
-          desc_field: "ds_fonte"
