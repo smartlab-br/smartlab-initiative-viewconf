@@ -22,6 +22,28 @@ principais:
         args:
           - base_object: "sst_beneficio"
             named_prop: "agr_max_ano_beneficio"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-sst_cat_new.cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_municipio_ibge_dv-{1}"
+      args:
+        - base_object: "sst_cat"
+          named_prop: "agr_max_ano_cat"
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - CID B34 ou U07"
+      - prop: 'comment'
+        template: "(INSS/CATWEB, {0})"
+        args:
+          - base_object: "sst_cat"
+            named_prop: "agr_max_ano_cat"
 # ====================================================          
 secoes:
   - id: "frequencia_acidentes"
@@ -62,7 +84,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Afastamento por CID B34 ou U07 no município'
+                    fixed: 'Afastamentos por CID B34 ou U07 no município'
               - relevance: 'low'
                 cls: 'xs12 md6'
                 api:
@@ -79,7 +101,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Afastamento por CID B34 ou U07 na UF'
+                    fixed: 'Afastamentos por CID B34 ou U07 na UF'
               - relevance: 'low'
                 cls: 'xs12 md6'
                 api:
@@ -95,11 +117,12 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Afastamento por CID B34 ou U07 no país'
+                    fixed: 'Afastamentos por CID B34 ou U07 no país'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de de concessões de benefícios previdenciários no município, na unidade federativa e no Brasil, por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19). No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. O município está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários no município, na unidade federativa e no Brasil, por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19). No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. O município está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de afastamentos no ano).<br/>
+                      A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=nm_municipio,ano_beneficio,cd_municipio_ibge_dv&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
@@ -299,7 +322,7 @@ secoes:
 #           - type: "text"
 #             title: ""
 #             content:
-#               fixed: "Em destaque, a ocupação mais frequentemente vitimadas por afastamentos por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19) para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto ao motivo mais frequente, a percepção de tendências e distinções quantitativas relevantes. Utilize os filtros abaixo para combinar as perspectivas."
+#               fixed: "Em destaque, a ocupação mais frequentemente vitimada por afastamentos por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19) para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto ao motivo mais frequente, a percepção de tendências e distinções quantitativas relevantes. Utilize os filtros abaixo para combinar as perspectivas."
 #           - id: "select_cnae"
 #             type: "select"
 #             multiple: true
@@ -396,3 +419,113 @@ secoes:
 #           #     hide_legend: true
 #           #     colorScale:
 #           #       name: "Blues"
+#==================================================================================================
+      - id: "cat_headline"
+        type: "headline"
+        title:
+          fixed: "Notificações de Acidentes de Trabalho (CAT)"
+# ====================================================          
+      - id: "mapa_cat_covid"
+        title: 
+          fixed: "Distribuição Geográfica das Notificações de Acidentes de Trabalho por CID B34 ou U07"
+        title_comment:
+          template: "{0}, {1}"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_municipio_ibge_dv-{1}"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "agr_max_ano_cat"
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 no município'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "agr_max_ano_cat"
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 na UF'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0}"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "agr_max_ano_cat"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 no país'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de notificações de acidente de trabalho no município, na unidade federativa e no Brasil, por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19). No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. O município está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano).<br/>
+                      A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/sst/cats?categorias=nm_municipio,ano_cat,cd_municipio_ibge_dv&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_mun"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'ano_cat'
+          - text: 'Qtde de Notificações de Acidente de Trabalho por CID B34 ou U07'
+            value: 'fmt_agr_count'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_mun'
+          colorScale:
+            name: "Reds"
