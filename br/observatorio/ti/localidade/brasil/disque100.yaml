@@ -1,0 +1,127 @@
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/indicadoresnacionais?categorias=vl_indicador,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'"
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Total de ocorrências registradas no Disque 100"
+      # - prop: "comment"
+      #   named_prop: "nu_competencia"
+# ===================================================
+secoes:
+  - id: "disque100"
+    name: ""
+    cards:
+      # ====================================================          
+      - id: "mapa_denuncias_disque_100"
+        title: 
+          fixed: "Distribuição Geográfica das Denúncias de Trabalho Infantil no Disque 100"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100'"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+              # preloaded:
+              #   prop: "centralindicadores"
+              #   function: "slice"
+              #   id: "06_05_11_00"
+              #   year: "max"
+              # args:
+              #   - named_prop: 'ds_indicador_radical'
+              #   - named_prop: 'ds_fonte'
+              #   - named_prop: 'nu_competencia_min'
+              #   - named_prop: 'nu_competencia_max'
+        description:
+          # - type: "minicards"
+          #   cards:
+          #     - relevance: 'high'
+          #       cls: 'xs12'
+          #       preloaded:
+          #         prop: "centralindicadores"
+          #         function: "slice"
+          #         id: "06_05_11_00"
+          #         year: "max"
+          #       args:
+          #         - prop: "value"
+          #           named_prop: 'vl_indicador'
+          #           format: 'inteiro'
+          #           collapse:
+          #             format: 'real'
+          #           default: "Sem Registros"
+          #         - prop: "description"
+          #           fixed: 'Casos Notificados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número acumulado de denúncias de trabalho infantil para a unidade geográfica em realce. O Disque Direitos Humanos (Disque 100) é um serviço de disseminação de informações sobre direitos de grupos vulneráveis e de denúncias de violações de direitos humanos, atendendo graves situações de violações que acabaram de ocorrer ou que ainda estão em curso, acionando os órgãos competentes e possibilitando o flagrante. No mapa ao lado, apresenta-se a distribuição geográfica das denúncias. Quanto maior a intensidade da cor vermelha, maior a quantidade de denúncias."
+              # preloaded:
+              #   prop: "centralindicadores"
+              #   function: "slice"
+              #   id: ['06_05_10_00']
+              #   year: "max"
+              # args:
+              #   - named_prop: "ds_indicador_radical"
+          - id: "select_tipo"
+            type: "select"
+            multiple: true
+            label: "Tipo de trabalho infantil"
+            api:
+              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100'"
+              # args:
+              #   - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_agreg_secundaria-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+        chart_type: "MAP_TOPOJSON"
+        apiBase: 
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-1-1"
+        api: 
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'"
+          options:
+            # calcs:
+            #   - id: 'faixa_vl_indicador'
+            #     function: 'get_bin'
+            #     fn_args:
+            #       - named_prop: 'agr_sum_vl_indicador'
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde de Notificações'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'agr_sum_vl_indicador'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
