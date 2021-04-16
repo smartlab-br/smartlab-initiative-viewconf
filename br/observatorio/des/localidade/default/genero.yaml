@@ -1,0 +1,1910 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "JD_RAIS_33_VL_HOMEM"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'monetario'
+        collapse:
+          format: 'monetario'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Remuneração média para homens'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "JD_RAIS_33_VL_MULHER"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'monetario'
+        collapse:
+          format: 'monetario'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Remuneração média para mulheres'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "JD_RAIS_24_VL_HOMEM"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'monetario'
+        collapse:
+          format: 'monetario'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Remuneração média para homens em cargos de direção'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "JD_RAIS_24_VL_MULHER"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'monetario'
+        collapse:
+          format: 'monetario'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Remuneração média para mulheres em cargos de direção'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+# ========================================================
+secoes:
+  - id: "genero_perfil"
+    name: "Perfil da Unidade Geográfica"
+    cards:
+
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_sexo"
+        title: 
+          fixed: "Remuneração Média de Homens e Mulheres no Setor Formal"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_33_VL_HOMEM"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_33_VL_HOMEM", JD_RAIS_33_VL_MULHER]
+                  year: "max"
+                  combine:
+                  - id: "disparidade_abs"
+                    desc: "Disparidade de Rendimentos de homens e mulheres"
+                    function: 'calc_subtraction'
+                    fn_args:
+                      - id: "JD_RAIS_33_VL_HOMEM"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_33_VL_MULHER"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "disparidade_abs"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                  - prop: "description"
+                    fixed: 'Disparidade de Rendimentos'
+                  - prop: "comment"
+                    fixed: "No setor formal"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_33_VL_HOMEM", JD_RAIS_33_VL_MULHER]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários entre homens e mulheres"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_33_VL_MULHER"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_33_VL_HOMEM"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'EQUIVALÊNCIA EM % DO RENDIMENTO MÉDIO'
+                  - prop: "comment"
+                    fixed: "No setor formal"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a disparidade e a equivalência percentual entre os rendimentos de mulheres e homens, considerados vínculos de emprego (CLT) e de natureza administrativa  de acordo com a perspectiva geográfica selecionada. A disparidade foi calculada subtraindo-se o valor médio mensal pago às mulheres do valor médio mensal pago aos homens . No caso da equivalência percentual, dividiu-se o valor pago em média às mulheres pelo valor pago em média aos homens, obtendo-se o percentual do rendimento médio masculino mensal que equivale ao rendimento médio feminino mensal. Complementarmente, o gráfico ao lado apresenta uma perspectiva comparada entre os valores de rendimento médio para homens e mulheres na economia formal. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+              
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_33_VL_HOMEM','JD_RAIS_33_VL_MULHER']
+            year: "max"
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "ds_agreg_primaria"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          colorScale:
+            name: "BuGn"
+            type: "singleHue"
+            levels: 4
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_sexo_raca"
+        title: 
+          fixed: "Diferenças de Remuneração pela Perspectiva Interseccional (Sexo e Raça/Cor) no setor formal"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_27_HOMEM_BRANCO"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_27_HOMEM_BRANCO"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    fixed: '100%'
+                    # format: 'monetario'
+                    # collapse:
+                    #   format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    fixed: 'Homens brancos'
+                  # - prop: "comment"
+                  #   fixed: 'Maior remuneração média'
+
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_27_HOMEM_BRANCO", JD_RAIS_27_MULHER_BRANCA]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_27_MULHER_BRANCA"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_27_HOMEM_BRANCO"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres brancas'
+                  # - prop: "comment"
+                  #   fixed: "No setor formal"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_27_HOMEM_BRANCO", JD_RAIS_27_HOMEM_NEGRO]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_27_HOMEM_NEGRO"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_27_HOMEM_BRANCO"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Homens negros'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_27_HOMEM_BRANCO", JD_RAIS_27_MULHER_NEGRA]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_27_MULHER_NEGRA"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_27_HOMEM_BRANCO"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres negras'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Os números em destaque mostram a diferença relativa de rendimentos mensais da população ocupada entre diferentes grupos de sexo e raça/cor, para a perspectiva geográfica selecionada no setor formal da economia, a partir de um enfoque interseccional. Em destaque o percentual da remuneração recebida pelos diferentes grupos (mulheres brancas, homens negros e mulheres negras) em relação ao rendimento médio mensal de homens brancos, utilizado como valor de referência (100%). No gráfico ao lado, de forma complementar comparam-se os valores nominais dos rendimentos médios entre esses grupos. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_27_HOMEM_BRANCO','JD_RAIS_27_HOMEM_NEGRO','JD_RAIS_27_MULHER_BRANCA','JD_RAIS_27_MULHER_NEGRA']
+            year: "max"
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          y: "ds_agreg_primaria"
+          x: "vl_indicador"
+          # orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          order_field: "vl_indicador"
+          colorScale:
+            name: "YlGn"
+            type: "singleHue"
+            levels: 7
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "bar_rendimentos_sexo_raca"
+        title: 
+          fixed: "Disparidade de Remuneração dos Trabalhadores pela Perspectiva Interseccional (Sexo e Raça/Cor) nos setores formal e informal"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "08_01_06_00"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: 'nu_competencia'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O cálculo é feito através do Censo 2010, desagregando-se os rendimentos das pessoas ocupadas com as variáveis de sexo e cor ou raça."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "A OIT destaca que um grande número de estudos, ao examinar as causas da diferença salarial entre homens e mulheres, identificou dois grupos de fatores. O primeiro se refere às características dos indivíduos e das organizações onde trabalham. Neste grupo, destacam-se os seguintes fatores: nível de escolaridade e campo de estudo; experiência no mercado de trabalho e tempo de trabalho na organização ou no cargo exercido; número de horas trabalhadas e tamanho da organização e setor de atividade.<br/>
+                      No entanto, mesmo quando estes fatores são levados em consideração, estudos econométricos repetidamente vêm demonstrando que há uma diferença residual (estimada em torno de 5,0% a 15,0%) não explicada entre a média dos salários de mulheres e homens. Desse modo, se revela que uma proporção da desigualdade salarial observada entre homens e mulheres, objeto da Convenção da OIT sobre Igualdade de Remuneração de Homens e Mulheres Trabalhadores por Trabalho de Igual Valor, 1951 (nº 100), se deve à discriminação.<br/>
+                      Nesse contexto, a diferença residual, que reflete a discriminação salarial baseada no sexo, é resultante de um segundo grupo de fatores: estereótipos e preconceitos com relação ao trabalho das mulheres; métodos tradicionais de avaliação dos postos de trabalho elaborados com base nos requisitos de ocupações com predominância de homens; poder de negociação mais fraco das trabalhadoras, que apresentam menor participação sindical e estão sobre representadas em trabalhos precários e informais; e poucas vagas com maior flexibilidade de horário e com a mesma renda que as vagas tradicionais, o que é extremamente necessário para a mulher na maternidade."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_02_10_00"
+                args:
+                  - prop: "description"
+                    template: "{0}"
+                    args:
+                      - id: "08_02_10_00"
+                        named_prop: 'ds_agreg_primaria'
+                  - prop: "value"
+                    fixed: '100%'
+
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["08_02_10_00", 08_02_07_00]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "08_02_07_00"
+                        named_prop: "vl_indicador"
+                      - id: "08_02_10_00"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres brancas'
+
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["08_02_10_00", 08_02_11_00]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "08_02_11_00"
+                        named_prop: "vl_indicador"
+                      - id: "08_02_10_00"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Homens negros'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["08_02_10_00", 08_02_08_00]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "08_02_08_00"
+                        named_prop: "vl_indicador"
+                      - id: "08_02_10_00"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres negras'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Os números em destaque mostram, para a perspectiva geográfica selecionada, a disparidade relativa de rendimentos mensais da população ocupada, de 16 a 64 anos de idade, entre diferentes grupos de sexo e raça. Ainda que os dados sejam do começo da década, a análise é importante tanto por levar em consideração tanto o setor formal como o informal da economia brasileira quanto por constituir informação da série histórica do Censo Brasileiro, a ser atualizada em 2020. Nota-se, assim, percentual recebido pelos diferentes grupos (mulheres trabalhadoras brancas, homens trabalhadores negros e mulheres trabalhadoras negras) em relação ao rendimento médio mensal de homens brancos, utilizado como valor de referência (100%). No gráfico ao lado, a disparidade de rendimento médio mensal, entre diferentes grupos demográficos baseados nas categorias de análise de sexo e raça/cor (perspectiva interseccional) é apresentada em salários mínimos da época. Em comparação com a análise feita para o setor formal da economia, uma maior disparidade nesta visão indica problema de que ocorre com maior intensidade na informalidade. "
+
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['08_02_07_00','08_02_08_00','08_02_10_00','08_02_11_00']
+            year: "max"
+            options:
+              calcs:
+                - id: "tooltip_title"
+                  function: "concat_values"
+                  fn_args:
+                    - fixed: 'Rendimento médio mensal -'
+                    - named_prop: 'ds_agreg_primaria' 
+                - id: "nr_salarios"
+                  format: 'real'
+                  function: "calc_proportion_ds"
+                  fn_args:
+                    - named_prop: "vl_indicador"
+                    - fixed: 510
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} ({1} - {2} Sal. Mín.)"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+                          - named_prop: 'calc_nr_salarios'
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'calc_tooltip_title'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Rendimento médio'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "vl_indicador"
+          y: "cd_indicador"
+          text: "calc_bar_description"
+          order_field: "vl_indicador"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          colorScale:
+            name: "YlGn"
+            type: "singleHue"
+            levels: 7
+            order: 'desc'
+          # removed_text_list: ["do trabalho principal da população de 16 a 64 anos de idade, com rendimento (Reais) ",", 2010"]
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_dirigentes_sexo"
+        title: 
+          fixed: "Segregação ocupacional em cargos de direção entre homens e mulheres"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "08_01_06_00"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: 'nu_competencia'
+              format: "inteiro" 
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "No Censo 2010, para as pessoas que estavam trabalhando foi perguntada a ocupação que exercia neste trabalho."
+          - type: "text"
+            title: "Observações Importantes"
+            content:
+              fixed: "A segregação ocupacional com base no sexo se manifesta em todas as latitudes, quaisquer que sejam os níveis de desenvolvimento econômico, sistemas políticos e entornos religiosos, sociais e culturais. É uma das características mais importantes e persistentes dos mercados de trabalho em todos os países. Há duas formas básicas de segregação ocupacional por sexo: uma horizontal e outra vertical. Segregação horizontal é a que estabelece barreiras de distintos tipos para que homens e mulheres se distribuam de forma mais equilibrada pela estrutura ocupacional. Segregação vertical é aquela que ocorre dentro de uma mesma ocupação, quando um dos sexos tende a se situar em graus ou níveis hierárquicos superiores em relação ao outro.<br/><br/>
+                      Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["08_01_06_00", "08_01_02_00"]
+                args:
+                  - prop: "value"
+                    id: "08_01_06_00"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Homens em cargo de direção'
+                  - prop: "comment"
+                    id: "08_01_02_00"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                      precision: 1
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  iid: ["08_01_07_00", "08_01_03_00"]
+                args:
+                  - prop: "value"
+                    id: "08_01_07_00"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Mulheres em cargo de direção'
+                  - prop: "comment"
+                    id: "08_01_03_00"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                      precision: 1
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a distribuição da população ocupada de 16 a 64 anos em cargos de direção por sexo. No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor segregação) para o vermelho (maior segregação)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['08_01_01_00']
+              args:
+                - id: "08_01_01_00"
+                  named_prop: "nm_municipio_uf"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,nu_competencia,latitude,longitude,ds_fonte&valor=vl_indicador&pivot=cd_indicador&filtros=eq-cd_uf-{0},and,in-cd_indicador-'08_01_06_00'-'08_01_07_00',and,eq-nu_competencia-nu_competencia_max&agregacao=sum"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: 'vl_indicador'
+                function: 'calc_subtraction_ds'
+                fn_args:
+                  - named_prop: "08_01_06_00"
+                  - named_prop: "08_01_07_00"
+                recalc_min_max: true
+              # - id: "deviation_empform"
+              #   function: "get_bipolar_scale"
+              #   fn_args: 
+              #     - fixed: 'calc_vl_indicador'
+            formatters:
+              - id: "calc_vl_indicador"
+                format: 'real'
+                precision: 1
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Diferença percentual'
+            value: 'fmt_calc_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_vl_indicador'
+          colorScale:
+            name: 'Reds'
+            # order: "desc"
+            # inv_function:
+            #   name: 'inv_deviation'
+            #   args:
+            #     - first_row_prop: 'media_uf'
+          indicadores: ["08_01_06_00"]
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "bar_remuneracao_dirigentes_sexo"
+        title: 
+          fixed: "Remuneração dos Empregados (CLT) em Cargos de Direção por Sexo"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_12_VL_HOMEM"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_12_VL_HOMEM"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Remuneração média para homens'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_12_VL_MULHER"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Remuneração média para mulheres'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o valor médio da remuneração dos trabalhadores com vínculo de emprego (CLT) que ocupam cargos de direção, por sexo. No gráfico ao lado, comparam-se os valores de rendimento mensal entre homens e mulheres para essas posições de liderança. De acordo com a Classificação Brasileira de Ocupações (CBO), trata-se de posições como diretores e gerentes em geral de empresas de vários setores no serviço público e na iniciativa privada, incluindo associações, organizações e empresas de todas as atividades. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+              
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_12_VL_HOMEM','JD_RAIS_12_VL_MULHER']
+            year: "max"
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "ds_agreg_primaria"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          colorScale:
+            name: "BuGn"
+            type: "singleHue"
+            levels: 4
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_remuneracao_dirigentes_sexo"
+        title: 
+          fixed: "Diferença na Remuneração dos Empregados (CLT) em Cargos de Direção por Sexo"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_12_VL_HOMEM"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_12_VL_HOMEM","JD_RAIS_12_VL_MULHER"]
+                  year: "max"
+                  combine:
+                  - id: "disparidade_abs"
+                    desc: "Disparidade de Rendimentos de homens e mulheres"
+                    function: 'calc_subtraction'
+                    fn_args:
+                      - id: "JD_RAIS_12_VL_HOMEM"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_12_VL_MULHER"
+                        named_prop: "vl_indicador"
+                args:
+                  - prop: "value"
+                    id: "disparidade_abs"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Disparidade no Emprego (CLT)'
+                  # - prop: "comment"
+                  #   template: "{0} que os homens em cargos de direção"
+                  #   args:
+                  #     - function: "valueCheck"
+                  #       fn_args:
+                  #         - named_prop: "vl_indicador"
+                  #         - fixed: '0'
+                  #         - fixed: "A mais"
+                  #         - fixed: "A menos"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_12_VL_MULHER","JD_RAIS_12_VL_HOMEM"]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários entre homens e mulheres"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_12_VL_MULHER"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_12_VL_HOMEM"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'EQUIVALÊNCIA % NO EMPREGO (CLT)'
+                  # - prop: "comment"
+                  #   fixed: "Do rendimento médio dos homens em cargos de direção"
+              
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_24_VL_HOMEM","JD_RAIS_24_VL_MULHER"]
+                  year: "max"
+                  combine:
+                  - id: "disparidade_abs"
+                    desc: "Disparidade de Rendimentos de homens e mulheres"
+                    function: 'calc_subtraction'
+                    fn_args:
+                      - id: "JD_RAIS_24_VL_HOMEM"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_24_VL_MULHER"
+                        named_prop: "vl_indicador"
+                args:
+                  - prop: "value"
+                    id: "disparidade_abs"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Disparidade no Trabalho (CLT E OUTROS VÍNCULOS)'
+                  # - prop: "comment"
+                  #   template: "{0} que os homens em cargos de direção"
+                  #   args:
+                  #     - function: "valueCheck"
+                  #       fn_args:
+                  #         - named_prop: "vl_indicador"
+                  #         - fixed: '0'
+                  #         - fixed: "A mais"
+                  #         - fixed: "A menos"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_24_VL_MULHER","JD_RAIS_24_VL_HOMEM"]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários entre homens e mulheres"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_24_VL_MULHER"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_24_VL_HOMEM"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'EQUIVALÊNCIA % NO TRABALHO (CLT E OUTROS VÍNCULOS)'
+                  # - prop: "comment"
+                  #   fixed: "Do rendimento médio dos homens em cargos de direção"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, para a perspectiva geográfica selecionada, a disparidade e a equivalência percentual entre os rendimentos de mulheres e homens em cargos de direção (posições de liderança), consideradas duas perspectivas: a do vínculo de emprego (CLT) e a geral, com todos os vínculos formais. A disparidade foi calculada subtraindo-se o valor médio pago às mulheres do valor médio pago aos homens mensalmente. A equivalência percentual foi obtida pela divisão do valor pago em média às mulheres pelo valor pago em média aos homens, com o que se obteve o percentual do rendimento masculino que equivale ao rendimento feminino. O gráfico ao lado compara diversas unidades geográficas com base na diferença salarial entre homens e mulheres em cargos de direção, considerados todos os vínculos formais. A escala de cores varia do branco (menor diferença) para o vermelho (maior diferença entre homens e mulheres). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_fonte&valor=vl_indicador&pivot=cd_indicador&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,in-cd_indicador-'JD_RAIS_12_VL_HOMEM'-'JD_RAIS_12_VL_MULHER'&agregacao=sum"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: 'vl_indicador'
+                function: 'calc_subtraction_ds'
+                fn_args:
+                  - named_prop: "JD_RAIS_12_VL_HOMEM"
+                  - named_prop: "JD_RAIS_12_VL_MULHER"
+                recalc_min_max: true
+              # - id: "deviation_empform"
+              #   function: "get_bipolar_scale"
+              #   fn_args: 
+              #     - fixed: 'calc_vl_indicador'
+            formatters:
+              - id: "calc_vl_indicador"
+                format: 'monetario'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Diferença salarial'
+            value: 'fmt_calc_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_vl_indicador'
+          colorScale:
+            name: 'Reds'
+            # order: "desc"
+            # inv_function:
+            #   name: 'inv_deviation'
+            #   args:
+            #     - first_row_prop: 'media_uf'
+          indicadores: ["JD_RAIS_12_VL_HOMEM", "JD_RAIS_12_VL_MULHER"]
+        source:
+          desc_field: "ds_fonte"
+
+
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_dirigentes_sexo"
+        title: 
+          fixed: "Remuneração dos Trabalhadores em Cargos de Direção por Sexo"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_24_VL_HOMEM"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_24_VL_HOMEM"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Remuneração média para homens'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_24_VL_MULHER"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Remuneração média para mulheres'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o valor médio da remuneração de trabalhadoras e trabalhadores que ocupam cargos de direção com vínculos de emprego celetista e com vínculos administrativos ou estatutários, mostrando, por sexo, a diferença entre o rendimento médio de homens e mulheres em posição de liderança por tipo de vínculo. No gráfico ao lado, comparam-se os valores entre homens e mulheres, em cargos de direção, distinguindo-se os respectivos rendimentos por sexo, e por tipo de vínculo. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_37_CLT_VL_HOMEM','JD_RAIS_37_CLT_VL_MULHER','JD_RAIS_37_ESTATUTARIO_VL_HOMEM','JD_RAIS_37_ESTATUTARIO_VL_MULHER']
+            year: "max"
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} ({1}) - {2}"
+                        args:
+                          - named_prop: "ds_agreg_secundaria"
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          x: "vl_indicador"
+          y: "cd_indicador"
+          text: "calc_bar_description"
+          order_field: "vl_indicador"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          colorScale:
+            name: "YlGn"
+            type: "singleHue"
+            levels: 7
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+
+# ========================================================
+      - id: "treemap_domestico"
+        type: "multiple-charts"
+        title: 
+          fixed: "Trabalho doméstico"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "08_03_01_00"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: 'nu_competencia'
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Esses indicadores são calculados através do Censo 2010 por intermédio das informações de existência de emprego com carteira de trabalho assinada e contribuição à previdência entre as pessoas ocupadas nos serviços domésticos."
+          - type: "text"
+            title: "Observações Importantes"
+            content:
+              fixed: "O trabalho doméstico desempenha um papel de suma importância na cadeia do cuidado, pois amortece, no âmbito das famílias e principalmente para as mulheres trabalhadoras, a pressão gerada pela necessidade de compatibilizar a inserção no mercado de trabalho com as responsabilidades familiares, em um contexto de insuficiência de políticas públicas nessa área. Apesar desta inequívoca importância para um significativo número de mulheres ocupadas e para a sociedade, de um modo geral, o trabalho doméstico ainda é desvalorizado e marcado pela precariedade das condições laborais e baixa proteção social, se constituindo, portanto, num dos principais núcleos do déficit de Trabalho Decente no Brasil.<br/>
+                      É importante mencionar que no âmbito da legislação nacional a Lei Complementar nº 150, de 01/06/2015, amliou diversos direitos trabalhistas para a categoria do trabalho doméstico, a exemplo do limite de 44 horas de trabalho por semana, o pagamento de horas e de adicional noturno, além do SIMPLES doméstico, que facilita o cumprimento das obrigações por parte dos empregadores e empregadoras. Em dezembro de 2017, o Brasil raticou a Convenção nº 189 da OIT sobre Trabalho Decente para as trabalhadoras e trabalhadores domésticos, adota pela Conferência Internacional do Trabalho em junho de 2011, que entrará em vigor no país em 31 de janeiro de 2019.<br/><br/>
+                      Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
+        description:
+          - type: "minicards"
+            # comment:
+            #   fixed: "Valores em salários mínimos"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_03_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse: 
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Total na UF'
+                  - prop: "comment"
+                    template: "No Brasil: {0}"
+                    args:
+                      - id: "08_03_01_00"
+                        named_prop: 'vl_indicador_br'
+                        format: 'inteiro'
+                        collapse: 
+                          format: 'real'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_04_02_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Com carteira assinada'
+                  - prop: "comment"
+                    template: "No Brasil: {0}"
+                    args:
+                      - id: "08_04_02_00"
+                        named_prop: 'vl_indicador_br'
+                        format: 'porcentagem'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_05_02_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Contribuintes para a previdência'
+                  - prop: "comment"
+                    template: "No Brasil: {0}"
+                    args:
+                      - id: "08_05_02_00"
+                        named_prop: 'vl_indicador_br'
+                        format: 'porcentagem'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_06_03_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    template: "{0} <span>SAL. MIN.</span>"
+                    args:
+                      - id: "08_06_03_00"
+                        named_prop: 'vl_indicador'
+                        format: 'real'
+                        collapse: 
+                          format: 'real'
+                  - prop: "description"
+                    fixed: 'Rendimento médio'
+                  - prop: "comment"
+                    template: "No Brasil: {0} <span>SAL. MIN.</span>"
+                    args:
+                      - id: "08_06_03_00"
+                        named_prop: 'vl_indicador_br'
+                        format: 'real'
+                        collapse:
+                          format: 'real'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o panorama do trabalho doméstico na Unidade Federativa em relação ao número total de trabalhadoras e trabalhadores, o percentual destes com carteira assinada, o percentual de contribuintes para a previdência e o rendimento médio do trabalho doméstico em salários mínimos. No gráfico ao lado, a comparação entre diferentes grupos, pela perspectiva interseccional, destacando a participação percentual de mulheres negras, mulheres brancas e homens no total de pessoas ocupadas com o trabalho doméstico."
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "08_03_01_00"
+              year: "max"
+            args:
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        charts:
+# # ========================================================
+#           - id: "treemap_domestico_brancos_negros"
+#             cls: "xs12 md6"
+#             type: "TREEMAP"
+#             preloaded:
+#               prop: "centralindicadores"
+#               function: "slice"
+#               id: ["08_03_04_00", "08_03_05_00"]
+#               options:
+#                 formatters:
+#                 - id: "vl_indicador"
+#                   format: 'inteiro'
+#             headers:
+#               - text: 'Indicador'
+#                 align: 'left'
+#                 value: 'ds_indicador_radical'
+#               - text: 'Qtde'
+#                 value: 'fmt_vl_indicador'
+#             options:
+#               id: "cd_indicador"
+#               text: "ds_agreg_primaria"
+#               size: "vl_indicador"
+#               colorScale:
+#                 name: "BuGn"
+#                 type: "singleHue"
+#                 levels: 5
+#                 order: 'asc'
+#             # source:
+#             #   desc_field: "ds_fonte"
+# ========================================================
+          - id: "treemap_domestico_mulheres_homens"
+            # cls: "xs12 md6"
+            type: "TREEMAP"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ["08_03_02_00", "08_03_03_00", "08_03_06_00", "08_03_05_00"]
+              year: "max"
+              combine:
+                - id: "mulheres_brancas"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Mulheres Brancas"
+                  ds_agreg_primaria: "Mulheres Brancas"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_03_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
+                - id: "homens_negros"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Homens Negros"
+                  ds_agreg_primaria: "Homens Negros"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_05_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
+                - id: "homens_brancos"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Homens Brancos"
+                  ds_agreg_primaria: "Homens Brancos"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_02_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_05_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
+              slice: 
+                id: ["08_03_06_00", "mulheres_brancas", "homens_negros", "homens_brancos"]
+              options:
+                formatters:
+                - id: "vl_indicador"
+                  format: 'inteiro'
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Quantidade'
+                value: 'fmt_vl_indicador'
+            options:
+              id: "cd_indicador"
+              text: "ds_agreg_primaria"
+              size: "vl_indicador"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 5
+                order: 'asc'
+            source:
+              desc_field: "ds_fonte"
+# ========================================================
+      - id: "genero_acoes_estaduais_headline"
+        type: "headline"
+        title:
+          fixed: "Proteção Social e Garantia de Direitos - Ações Estaduais"
+# ========================================================
+      - id: "map_pm_violencia_domestica_genero"
+        title: 
+          fixed: "Ações de Prevenção da Polícia Militar quanto ao Enfrentamento à Violência doméstica e de gênero"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_01_01"
+# ========================================================
+      # - id: "map_casas-abrigo"
+      #   title: 
+      #     fixed: "Casas-abrigo de Mulheres em situação de Violência e programas de emprego e renda"
+      #   card_template: "t2"
+      #   datasource: "estadicuf"
+      #   cd_indicador: "90_08_01_04"
+# ========================================================
+      # - id: "map_centro_mulheres"
+      #   title: 
+      #     fixed: "Centro de referência para Mulheres em situação de Violência e e programas de emprego e renda"
+      #   card_template: "t2"
+      #   datasource: "estadicuf"
+      #   cd_indicador: "90_08_01_05"
+# ========================================================
+      # - id: "map_ativ_prof_mulheres"
+      #   title: 
+      #     fixed: "Atividades Profissionalizantes em casas-abrigo para atendimento a Mulheres em situação de Violência"
+      #   card_template: "t2"
+      #   datasource: "estadicuf"
+      #   cd_indicador: "90_08_01_06"
+# ========================================================
+      - id: "map_pc_capacitacao_violencia_domestica"
+        title: 
+          fixed: "Capacitação continuada da Polícia Civil sobre Violência doméstica e de gênero"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_01_07"
+# ========================================================
+      - id: "map_pm_capacitacao_violencia_domestica"
+        title: 
+          fixed: "Capacitação continuada da Polícia Militar sobre Violência doméstica e de gênero"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_01_08"
+# ========================================================
+      # - id: "map_capacitacao_genero_governo"
+      #   title: 
+      #     fixed: "Capacitação de gênero para áreas do governo"
+      #   card_template: "t2"
+      #   datasource: "estadicuf"
+      #   cd_indicador: "90_08_01_09"
+# ========================================================
+      # - id: "map_conselho_mulher"
+      #   title: 
+      #     fixed: "Conselho de direitos da mulher"
+      #   card_template: "t2"
+      #   datasource: "estadicuf"
+      #   cd_indicador: "90_08_01_10"
+# ========================================================
+      - id: "map_fundo_mulher"
+        title: 
+          fixed: "Fundo de Defesa das Mulheres"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_01_11"
+# ========================================================
+      - id: "map_legislacao_mulher"
+        title: 
+          fixed: "Legislação que institua Plano de Enfrentamento à Violência contra a Mulher"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_01_12"
+# ========================================================
+      # - id: "map_programas_mulher"
+      #   title: 
+      #     fixed: "Políticas, Ações e Programas para as Mulheres"
+      #   card_template: "t2"
+      #   datasource: "estadicuf"
+      #   cd_indicador: "90_08_01_13"
+# ========================================================
+      - id: "map_programas_direitos_humanos_mulher"
+        title: 
+          fixed: "Ações e Programas de Direitos Humanos para as Mulheres"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_01_14"
+# ========================================================
+      - id: "genero_acoes_municipais_headline"
+        type: "headline"
+        title:
+          fixed: "Proteção Social e Garantia de Direitos - Ações Municipais"
+# ========================================================
+      - id: "map_conf_dir_mulheres_mun_novo"
+        title: 
+          fixed: "Conferências nos últimos quatro anos sobre política para mulheres"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU555"
+# # ========================================================
+#       - id: "map_conf_dir_mulheres_mun"
+#         title: 
+#           fixed: "Conferencias sobre direitos ou políticas para as Mulheres - até 4 anos antes da pesquisa"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_01_06"
+# ========================================================
+      - id: "map_acoes_violencia_domestica_mun"
+        title: 
+          fixed: "Proteção de mulheres vítimas de violência doméstica"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU571"
+# ========================================================
+      - id: "map_leg_enf_vio_mulher_mun_novo"
+        title: 
+          fixed: "Lei Específica sobre Enfrentamento à violência contra a mulher"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU102"
+# # ========================================================
+#       - id: "map_leg_enf_vio_mulher_mun"
+#         title: 
+#           fixed: "Legislação que institua Plano de Enfrentamento à Violência contra a Mulher"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_01_03"
+# ========================================================
+      - id: "map_prog_dh_mulher_mun_novo"
+        title: 
+          fixed: "Programas e ações específicas para mulheres"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU083"
+# # ========================================================
+#       - id: "map_prog_dh_mulher_mun"
+#         title: 
+#           fixed: "Ações e Programas de Direitos Humanos para as Mulheres"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_01_04"
+# # ========================================================
+#       - id: "map_capacitacaoa_guarda_vio_domestica_genero"
+#         title: 
+#           fixed: "Capacitação da Guarda Municipal em temas de Violência doméstica e de gênero"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "MUNIC_MSEG3119"
+# ========================================================
+      - id: "map_dp_mulher_mun_novo"
+        title: 
+          fixed: "Delegacia especializada no Atendimento à Mulher"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MSEG168"
+# # ========================================================
+#       - id: "map_dp_mulher_mun"
+#         title: 
+#           fixed: "Delegacia de polícia especializada no atendimento à mulher"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_01_01"
+# # ========================================================
+#       - id: "map_fundo_mulher_mun"
+#         title: 
+#           fixed: "Fundo de defesa das Mulheres"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_01_02"
+# # ========================================================
+#       - id: "genero_violencia"
+#         type: "headline"
+#         title:
+#           fixed: "Violência"
+# # ========================================================
+#       - id: "mapa_hominicio_mulheres"
+#         title: 
+#           fixed: "Homicídios de mulheres"
+#         title_comment:
+#           template: "{0}, 2016-2017"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: "A fonte para o dado de homicídios com o recorte de mulheres é o Monitor da Violência, elaborado pelo G1 em parceria com o Núcleo de Estudos da Violência da USP (NEV-USP) e o Fórum Brasileiro de Segurança Pública. Apenas para o estado de Roraima foi utilizada outra fonte: a base de microdados enviada pela gestão estadual da Segurança Pública."
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "JD_ABSP_01_Total"
+#                   year: '2016'
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'inteiro'
+#                     collapse:
+#                       format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     fixed: "Homicidios em 2016"
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "JD_ABSP_01_Total"
+#                   year: '2017'
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'inteiro'
+#                     collapse:
+#                       format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     fixed: "Homicidios em 2017"
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "JD_ABSP_01_Taxa"
+#                   year: '2016'
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     fixed: "Taxa em 2016"
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "JD_ABSP_01_Taxa"
+#                   year: '2017'
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     fixed: "Taxa em 2017"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, para a perspectiva geográfica selecionada, o número e a taxa de homicídios com vítimas do sexo feminino em dois momentos distintos. No mapa, apresenta-se a perspectiva comparativa das diferentes unidades ferativas consideradas quanto à variação percentual nos dois anos considerados. A taxa é calculada por 100 mil mulheres, conforme os dados populacionais do IBGE (Projeção da população do Brasil e Unidades da Federação por sexo e idade para o período 2000-2030)."
+#         chart_type: "MAP_TOPOJSON"
+#         api:
+#           template: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_indicador-'JD_ABSP_02',and,eq-nu_competencia-nu_competencia_max"
+#           args:
+#             - named_prop: "cd_uf"
+#           options:
+#             formatters:
+#               - id: "vl_indicador"
+#                 format: 'porcentagem'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           # - text: 'Ano'
+#           #   align: 'left'
+#           #   value: 'nu_competencia'
+#           - text: 'Valor'
+#             value: 'fmt_vl_indicador'
+#         chart_options:
+#           topology: "uf"
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'vl_indicador'
+#         source:
+#           desc_field: "ds_fonte"
+# # ========================================================
+#       - id: "mapa_feminicidio"
+#         title: 
+#           fixed: "Feminicídios"
+#         title_comment:
+#           template: "{0}, 2016-2017"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: "A fonte para o dado de homicídios com o recorte de mulheres é o Monitor da Violência, elaborado pelo G1 em parceria com o Núcleo de Estudos da Violência da USP (NEV-USP) e o Fórum Brasileiro de Segurança Pública. Apenas para o estado de Roraima foi utilizada outra fonte: a base de microdados enviada pela gestão estadual da Segurança Pública."
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "JD_ABSP_03_Total"
+#                   year: '2016'
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'inteiro'
+#                     collapse:
+#                       format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     fixed: "Femininicídios em 2016"
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "JD_ABSP_03_Total"
+#                   year: '2017'
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'inteiro'
+#                     collapse:
+#                       format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     fixed: "Femininicídios em 2017"
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "JD_ABSP_03_Taxa"
+#                   year: '2016'
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     fixed: "Taxa em 2016"
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "JD_ABSP_03_Taxa"
+#                   year: '2017'
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     fixed: "Taxa em 2017"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, para a perspectiva geográfica selecionada, o número e a taxa de femininicídios em dois momentos distintos. Contabilizam-se, assim, crimes praticados contra pessoas do sexo feminino em situação de violência doméstica. No mapa, apresenta-se a perspectiva comparativa das diferentes unidades ferativas consideradas quanto à variação percentual nos dois anos considerados. A taxa é calculada por 100 mil mulheres, conforme os dados populacionais do IBGE (Projeção da população do Brasil e Unidades da Federação por sexo e idade para o período 2000-2030)."
+#         chart_type: "MAP_TOPOJSON"
+#         api:
+#           template: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_indicador-'JD_ABSP_04',and,eq-nu_competencia-nu_competencia_max"
+#           args:
+#             - named_prop: "cd_uf"
+#           options:
+#             formatters:
+#               - id: "vl_indicador"
+#                 format: 'porcentagem'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           # - text: 'Ano'
+#           #   align: 'left'
+#           #   value: 'nu_competencia'
+#           - text: 'Valor'
+#             value: 'fmt_vl_indicador'
+#         chart_options:
+#           topology: "uf"
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'vl_indicador'
+#         source:
+#           desc_field: "ds_fonte"
+# # ========================================================
+#       - id: "mapa_prop_feminicidio"
+#         title: 
+#           fixed: "Proporção de Feminicídios em relação aos homicídios de mulheres"
+#         title_comment:
+#           template: "{0}, 2016-2017"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: "A fonte para o dado de homicídios com o recorte de mulheres é o Monitor da Violência, elaborado pelo G1 em parceria com o Núcleo de Estudos da Violência da USP (NEV-USP) e o Fórum Brasileiro de Segurança Pública. Apenas para o estado de Roraima foi utilizada outra fonte: a base de microdados enviada pela gestão estadual da Segurança Pública."
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "JD_ABSP_05"
+#                   year: '2016'
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'porcentagem'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     fixed: "Em 2016"
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "centralindicadores"
+#                   function: "slice"
+#                   id: "JD_ABSP_05"
+#                   year: '2017'
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'vl_indicador'
+#                     format: 'porcentagem'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     fixed: "Em 2017"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, para a perspectiva geográfica selecionada, proporção (em %) de feminicídios em relação aos homicídios de mulheres em dois momentos distintos. Para os femininicídios, contabilizam-se crimes praticados contra pessoas do sexo feminino em situação de violência doméstica. No mapa, apresenta-se a perspectiva comparativa das diferentes unidades ferativas consideradas quanto à proporção para o ano de 2017."
+#         chart_type: "MAP_TOPOJSON"
+#         api:
+#           template: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_indicador-'JD_ABSP_05',and,eq-nu_competencia-'2017'"
+#           args:
+#             - named_prop: "cd_uf"
+#           options:
+#             formatters:
+#               - id: "vl_indicador"
+#                 format: 'porcentagem'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Ano'
+#             align: 'left'
+#             value: 'nu_competencia'
+#           - text: 'Valor'
+#             value: 'fmt_vl_indicador'
+#         chart_options:
+#           topology: 'uf'
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'vl_indicador'
+#         source:
+#           desc_field: "ds_fonte"
+                                                                                
