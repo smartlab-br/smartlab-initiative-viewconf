@@ -22,10 +22,32 @@ principais:
         args:
           - base_object: "sst_beneficio"
             named_prop: "agr_max_ano_beneficio"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-sst_cat_new.cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+      args:
+        - base_object: "sst_cat"
+          named_prop: "agr_max_ano_cat"
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_count'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - CID B34 ou U07"
+      - prop: 'comment'
+        template: "(INSS/CATWEB, {0})"
+        args:
+          - base_object: "sst_cat"
+            named_prop: "agr_max_ano_cat"
 # ====================================================          
 secoes:
-  - id: "frequencia_acidentes"
-    name: "Afastamentos Previdenciários Acidentários"
+  - id: "beneficios_covid"
+    name: "Afastamentos Previdenciários"
     cards:
 # ====================================================          
       - id: "mapa_bene_covid"
@@ -62,7 +84,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Afastamento por CID B34 ou U07 na UF'
+                    fixed: 'Afastamentos por CID B34 ou U07 na UF'
               - relevance: 'low'
                 cls: 'xs12'
                 api:
@@ -78,11 +100,12 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Afastamento por CID B34 ou U07 no país'
+                    fixed: 'Afastamentos por CID B34 ou U07 no país'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de de concessões de benefícios previdenciários na unidade federativa e no Brasil, por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19). No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. O município está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários na unidade federativa e no Brasil, por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19). No mapa, apresenta-se a perspectiva comparativa da localidade com outros municípios da unidade federativa. O município está destacado em linhas pretas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano).<br/>
+                      A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=nm_municipio,ano_beneficio,cd_municipio_ibge_dv&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
@@ -151,7 +174,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Afastamento por CID B34 ou U07 na UF'
+                    fixed: 'Afastamentos por CID B34 ou U07 na UF'
                   - prop: "comment"
                     named_prop: 'ano_beneficio'
                     default: ''
@@ -170,23 +193,38 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Afastamento por CID B34 ou U07 no país'
+                    fixed: 'Afastamentos por CID B34 ou U07 no país'
                   - prop: "comment"
                     named_prop: 'ano_beneficio'
                     default: ''
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de de concessões de benefícios previdenciários na unidade federativa e no Brasil, por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19). No gráfico, apresenta-se a evolução histórica do número desses afastamentos no período."
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários na unidade federativa e no Brasil, por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19). No gráfico, apresenta-se a evolução histórica do número desses afastamentos no período.<br/>
+                      A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
         chart_type: "BAR"
         api: 
-          template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{0}"
-          args:
-            - named_prop: "idLocalidade"
-          options:
-            formatters:
-              - id: "agr_count"
-                format: 'inteiro'
+          - template: "/sst/beneficios?categorias='{0} a {1}'-ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,lt-ano_beneficio-{2},and,eq-cd_uf-{3}"
+            args:
+              - base_object: "sst_beneficio"
+                named_prop: "agr_min_ano_beneficio"
+              - function: "calc_subtraction"
+                fn_args:
+                  - base_object: "sst_beneficio"
+                    named_prop: "agr_max_ano_beneficio"
+                  - fixed: 1
+              - base_object: "sst_beneficio"
+                named_prop: "agr_max_ano_beneficio"
+              - named_prop: "idLocalidade"
+          - template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+            args:
+              - base_object: "sst_beneficio"
+                named_prop: "agr_max_ano_beneficio"
+              - named_prop: "idLocalidade"
+        api_options:
+          formatters:
+            - id: "agr_count"
+              format: 'inteiro'
         headers:
           - text: 'Ano'
             align: 'left'
@@ -262,7 +300,8 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, a ocupação mais frequentemente vitimadas por afastamentos por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19) para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto ao motivo mais frequente, a percepção de tendências e distinções quantitativas relevantes. Utilize os filtros abaixo para combinar as perspectivas."
+              fixed: "Em destaque, a ocupação mais frequentemente vitimada por afastamentos por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19) para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se os percentuais de participação das diferentes ocupações nos afastamentos previdenciários. Utilize o filtro abaixo para selecionar setores econômicos específicos.<br/>
+                      A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
           - id: "select_cnae"
             type: "select"
             multiple: true
@@ -359,3 +398,291 @@ secoes:
           #     hide_legend: true
           #     colorScale:
           #       name: "Blues"
+#==================================================================================================
+      - id: "cat_headline"
+        type: "headline"
+        title:
+          fixed: "Notificações de Acidentes de Trabalho (CAT)"
+# ====================================================          
+      - id: "mapa_cat_covid"
+        title: 
+          fixed: "Distribuição Geográfica das Notificações de Acidentes de Trabalho por CID B34 ou U07"
+        title_comment:
+          template: "{0}, {1}"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "agr_max_ano_cat"
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 na UF'
+              - relevance: 'low'
+                cls: 'xs12'
+                api:
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0}"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "agr_max_ano_cat"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 no país'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de notificações de acidente de trabalho na unidade federativa e no Brasil, por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19). No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano).<br/>
+                      A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/sst/cats?categorias=nm_municipio,ano_cat,cd_municipio_ibge_dv&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation_mun"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'ano_cat'
+          - text: 'Qtde de Notificações de Acidente de Trabalho por CID B34 ou U07'
+            value: 'fmt_agr_count'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_mun'
+          colorScale:
+            name: "Reds"
+# ====================================================          
+      - id: "bar_cat_covid"
+        title: 
+          fixed: "Série Histórica das Notificações de Acidentes de Trabalho por CID B34 ou U07"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "agr_max_ano_cat"
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 na UF'
+                  - prop: "comment"
+                    named_prop: 'ano_cat'
+                    default: ''
+              - relevance: 'low'
+                cls: 'xs12'
+                api:
+                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0}"
+                  args:
+                    - base_object: "sst_cat"
+                      named_prop: "agr_max_ano_cat"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 no país'
+                  - prop: "comment"
+                    named_prop: 'ano_cat'
+                    default: ''
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de notificações de acidente de trabalho na unidade federativa e no Brasil, por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19). No gráfico, apresenta-se a evolução histórica do número dessas notificações no período.<br/>
+                      A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
+        chart_type: "BAR"
+        api: 
+          - template: "/sst/cats?categorias='{0} a {1}'-ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,lt-ano_cat-{2},and,eq-cd_uf-{3}"
+            args:
+              - base_object: "sst_cat"
+                named_prop: "agr_min_ano_cat"
+              - function: "calc_subtraction"
+                fn_args:
+                  - base_object: "sst_cat"
+                    named_prop: "agr_max_ano_cat"
+                  - fixed: 1
+              - base_object: "sst_cat"
+                named_prop: "agr_max_ano_cat"
+              - named_prop: "idLocalidade"
+          - template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+            args:
+              - base_object: "sst_cat"
+                named_prop: "agr_max_ano_cat"
+              - named_prop: "idLocalidade"
+        api_options:
+          formatters:
+            - id: "agr_count"
+              format: 'inteiro'
+        headers:
+          - text: 'Ano'
+            align: 'left'
+            value: 'ano_cat'
+          - text: 'Qtde de Notificações por CID B34 ou U07'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "id"
+          x: "ano_cat"
+          y: "agr_count"
+          orientation: "vertical"
+          text: "fmt_agr_count"
+          show_x_axis: true
+          show_y_axis: false
+          hide_legend: true
+          color: "#238B45"
+# =====================================================
+      - id: "treemap_cat_cbo"
+        title: 
+          fixed: "Ocupações (CBO) das Notificações de Acidentes de Trabalho por CID B34 ou U07"
+        title_comment:
+          template: "{0}, {1}"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs6'
+                api:
+                  template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0},and,ne-ds_cbo-'',and,eq-ano_cat-{1}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "sst_cat"
+                      named_prop: "agr_max_ano_cat"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    named_prop: "ds_cbo"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a ocupação mais frequentemente vitimada por acidentes por doenças B34(Doenças por vírus, de localização não especificada) ou U07(Covid-19) para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se os percentuais de participação das diferentes ocupações nas notificações de acidentes. Utilize o filtro abaixo para selecionar setores econômicos específicos.<br/>
+                      A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            api:
+              template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=distinct&ordenacao=ds_cnae_classe_cat&filtros=in-cd_cid3-'B34'-'U07',and,ne-ds_cnae_classe_cat-'',and,eq-cd_uf-{0},and,eq-ano_cat-{1}"
+              args:
+                - named_prop: "idLocalidade"
+                - base_object: "sst_cat"
+                  named_prop: "agr_max_ano_cat"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe_cat"
+              - prop: "label"
+                named_prop: "ds_cnae_classe_cat"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe_cat-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe_cat"
+        chart_type: "TREEMAP"
+        api: 
+          template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0},and,ne-ds_cbo-'',and,eq-ano_cat-{1}"
+          args:
+            - named_prop: "idLocalidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
+          options:
+              formatters:
+                - id: "agr_count"
+                  format: 'inteiro'
+        headers:
+          - text: 'Ocupação'
+            align: 'left'
+            value: 'ds_cbo'
+          - text: 'Ano'
+            value: 'ano_cat'
+          - text: 'Qtde'
+            value: 'fmt_agr_count'
+        chart_options:
+          id: "ds_cbo"
+          size: "agr_count"
+          text: "ds_cbo"
+          hide_legend: true
+          colorScale:
+            name: "Reds"
+          

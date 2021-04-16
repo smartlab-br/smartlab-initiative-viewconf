@@ -14,11 +14,12 @@ principais:
     args:
       - prop: "value"
         named_prop: 'calc_faixa'
+        format: "inteiro"
         collapse:
           format: 'real'
         default: "Nenhum"
       - prop: "description"
-        fixed: "Trabalhadores migrantes de outras nacionalidades Ativos no Mercado de Trabalho Formal"
+        fixed: "Trabalhadores Imigrantes Estrangeiros Ativos no Mercado de Trabalho Formal"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -36,7 +37,7 @@ principais:
         named_prop: 'vl_indicador_txt'
         default: "Nenhum"
       - prop: "description"
-        fixed: "Remuneração Média dos trabalhadores migrantes de outras nacionalidades no país"
+        fixed: "Remuneração Média dos trabalhadores imigrantes estrangeiros no país"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -65,7 +66,7 @@ secoes:
                     named_prop: 'nm_uf'
                     default: "-"
                   - prop: "description"
-                    fixed: "UF com maior número de migrantes de outras nacionalidades contratados"
+                    fixed: "UF com maior número de imigrantes estrangeiros contratados"
                   - prop: "comment"
                     named_prop: "nu_competencia"
                     default: ""
@@ -79,7 +80,7 @@ secoes:
                     named_prop: 'ds_agreg_secundaria'
                     default: "-"
                   - prop: "description"
-                    fixed: "Origem do maior número de migrantes de outras nacionalidades contratados<br/>"
+                    fixed: "Origem do maior número de imigrantes estrangeiros contratados<br/>"
                   - prop: "comment"
                     named_prop: "nu_competencia"
                     default: ""
@@ -87,7 +88,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, a UF em que o maior número de migrantes de outras nacionalidades foi contratado no ano de {0}, bem como a nacionalidade mais contratada. No diagrama ao lado, apresentam-se os possíveis fluxos migratórios internacionais associados. É importante observar que a migração pode haver ocorrido com outras etapas antecedentes. Os dados processados consideram apenas a origem do migrante de outra nacionalidade e a Unidade Federativa em que ele foi contratado."
+              template: "Em destaque, a UF em que o maior número de imigrantes estrangeiros foi contratado no ano de {0}, bem como a nacionalidade mais contratada. No diagrama ao lado, apresentam-se os possíveis fluxos migratórios internacionais associados. É importante observar que a migração pode haver ocorrido com outras etapas antecedentes. Os dados processados consideram apenas a origem do migrante de outra nacionalidade e a Unidade Federativa em que ele foi contratado."
               api:
                 fixed: "/indicadoresestaduais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC'"
               args:
@@ -112,6 +113,30 @@ secoes:
                 api:
                   args:
                     - named_prop: "ds_agreg_primaria"
+
+          - id: "select_pais"
+            type: "select"
+            label: "País de Origem"
+            parent: "select_origem"
+            api:
+              fixed: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&ordenacao=ds_agreg_secundaria&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC'"
+            api_reactive:
+              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&ordenacao=ds_agreg_secundaria&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC',and,eq-ds_agreg_primaria-'{0}'"
+              args:
+                - named_prop: "ds_agreg_primaria"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_secundaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
 
           - id: "select_uf"
             type: "select"
@@ -201,13 +226,16 @@ secoes:
                 args:
                   - prop: "value"
                     named_prop: 'calc_faixa'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
                     default: "Nenhum"
                   - prop: "description"
-                    fixed: "Trabalhadores migrantes de outras nacionalidades Admitidos no Mercado de Trabalho Formal"
+                    fixed: "Trabalhadores imigrantes estrangeiros Admitidos no Mercado de Trabalho Formal"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, para a unidade geográfica em realce, o número de trabalhadores migrantes de outras nacionalidades admitidos no mercado de trabalho formal brasileiro de {0} a {1}. No gráfico, apresenta-se a evolução histórica da presença desses migrantes por continente de origem. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {1} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {2}."
+              template: "Em destaque, para a unidade geográfica em realce, o número de trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal brasileiro de {0} a {1}. No gráfico, apresenta-se a evolução histórica da presença desses migrantes por continente de origem. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {1} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {2}."
               api:
                 fixed: "/indicadoresnacionais?categorias=nu_competencia_max,nu_competencia_min&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
                 options:
@@ -277,9 +305,12 @@ secoes:
                 args:
                   - prop: "value"
                     named_prop: 'calc_faixa'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
                     default: "Nenhum"
                   - prop: "description"
-                    fixed: "Trabalhadores migrantes de outras nacionalidades da América Central e do Sul Admitidos no Mercado de Trabalho Formal"
+                    fixed: "Trabalhadores imigrantes estrangeiros da América Central e do Sul Admitidos no Mercado de Trabalho Formal"
           - type: "text"
             title: ""
             content:
@@ -326,7 +357,7 @@ secoes:
 # ========================================================
       - id: "treemap_origem_imigrantes"
         title:
-          fixed: "Migrantes de Outras Nacionalidades no Mercado de Trabalho Formal por Origem"
+          fixed: "Imigrantes Estrangeiros no Mercado de Trabalho Formal por Origem"
         title_comment:
           template: "{0}, {1}"
           api:
@@ -356,14 +387,17 @@ secoes:
                 args:
                   - prop: "value"
                     named_prop: 'calc_faixa'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
                     default: "Nenhum"
                   - prop: "description"
-                    fixed: "Trabalhadores migrantes de outras nacionalidades Ativos no Mercado de Trabalho Formal"
+                    fixed: "Trabalhadores imigrantes estrangeiros Ativos no Mercado de Trabalho Formal"
 
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de migrantes de outras nacionalidades ativos no mercado de trabalho formal na Unidade Federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os totais para os continentes de origem dos trabalhadores. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              template: "Em destaque, o número de imigrantes estrangeiros ativos no mercado de trabalho formal na Unidade Federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os totais para os continentes de origem dos trabalhadores. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
                 fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
                 options:
@@ -393,6 +427,8 @@ secoes:
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
+              - id: "calc_faixa"
+                format: "inteiro"
         headers:
           - text: 'Origem'
             align: 'left'
@@ -406,13 +442,13 @@ secoes:
           # - text: 'Qtde'
           #   value: 'vl_indicador'
           - text: 'Qtde'
-            value: 'calc_faixa'
+            value: 'fmt_calc_faixa'
         chart_options:
           id: "ds_agreg_primaria"
           text: "ds_agreg_primaria"
           size: "vl_indicador"
           colorScale:
-            name: "BuGn"
+            name: "Blues"
             type: "singleHue"
             levels: 6
             order: 'asc'
@@ -421,7 +457,7 @@ secoes:
 # ========================================================
       - id: "treemap_presenca_imigrantes"
         title:
-          fixed: "Presença de migrantes de outras nacionalidades no Mercado de Trabalho formal"
+          fixed: "Presença de Imigrantes Estrangeiros no Mercado de Trabalho formal"
         title_comment:
           template: "{0}, {1}"
           api:
@@ -451,9 +487,12 @@ secoes:
                 args:
                   - prop: "value"
                     named_prop: 'calc_faixa'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
                     default: "Nenhum"
                   - prop: "description"
-                    fixed: "Trabalhadores migrantes de outras nacionalidades Ativos no Mercado de Trabalho Formal"
+                    fixed: "Trabalhadores imigrantes estrangeiros Ativos no Mercado de Trabalho Formal"
 
           - type: "text"
             title: ""
@@ -503,6 +542,8 @@ secoes:
             formatters:
               - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
+              - id: "calc_faixa"
+                format: "inteiro"
         headers:
           - text: 'Unidade Federativa'
             align: 'left'
@@ -516,13 +557,13 @@ secoes:
           # - text: 'Qtde'
           #   value: 'fmt_agr_sum_vl_indicador'
           - text: 'Qtde'
-            value: 'calc_faixa'
+            value: 'fmt_calc_faixa'
         chart_options:
           id: "cd_uf"
           text: "nm_uf"
           size: "agr_sum_vl_indicador"
           colorScale:
-            name: "BuGn"
+            name: "BuPu"
             type: "singleHue"
             levels: 6
             order: 'asc'
@@ -531,7 +572,7 @@ secoes:
 # ========================================================
       - id: "bar_remuneracao_trabalhadores_continente"
         title: 
-          fixed: "Remuneração de Trabalhadores migrantes de outras nacionalidades por Origem"
+          fixed: "Remuneração de Trabalhadores Imigrantes Estrangeiros por Origem"
         title_comment:
           template: "{0}, em {1}"
           api:
@@ -632,18 +673,18 @@ secoes:
           show_y_axis: false
           hide_legend: true
           order_field: "vl_indicador"
-          color: "#238B45"
-          # colorScale:
-          #   name: "Greens"
-          #   type: "singleHue"
-          #   levels: 7
+          colorScale:
+            name: "BuPu"
+            type: "singleHue"
+            order: 'desc'
+          # color: "#238B45"
         source:
           desc_field: "ds_fonte"
 
 # ========================================================
       - id: "mapa_imigrantes_remuneracao"
         title: 
-          fixed: "Distribuição Geográfica das Remunerações Médias de Trabalhadores migrantes de outras nacionalidades"
+          fixed: "Distribuição Geográfica das Remunerações Médias de Trabalhadores Imigrantes Estrangeiros"
         title_comment:
           template: "{0}, {1}"
           api:
@@ -658,7 +699,7 @@ secoes:
         #     content:
         #       fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
         msgNoData:
-          desc: "No período, não houve trabalhadores migrantes de outras nacionalidades admitidos no mercado de trabalho formal."
+          desc: "No período, não houve trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal."
         description:
           - type: "minicards"
             cards:
@@ -675,7 +716,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, a remuneração média dos trabalhadores migrantes de outras nacionalidades, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No mapa, comparam-se as diferentes unidades federativas quanto à remuneração média dos trabalhadores migrantes de outras nacionalidades. A escala de cores varia do branco (menor quantidade) para o azul escuro (maior quantidade). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              template: "Em destaque, a remuneração média dos trabalhadores imigrantes estrangeiros, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No mapa, comparam-se as diferentes unidades federativas quanto à remuneração média dos trabalhadores imigrantes estrangeiros. A escala de cores varia do branco (menor quantidade) para o azul escuro (maior quantidade). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
                 fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
                 options:
@@ -743,7 +784,7 @@ secoes:
 ## ========================================================
       - id: "mapa_imigrantes_admitidos"
         title: 
-          fixed: "Distribuição Geográfica de Contratações de Trabalhadores migrantes de outras nacionalidades"
+          fixed: "Distribuição Geográfica de Contratações de Trabalhadores Imigrantes Estrangeiros"
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
@@ -759,7 +800,7 @@ secoes:
         #     content:
         #       fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
         msgNoData:
-          desc: "No período, não houve trabalhadores migrantes de outras nacionalidades admitidos no mercado de trabalho formal."
+          desc: "No período, não houve trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal."
         description:
           - type: "minicards"
             cards:
@@ -776,13 +817,16 @@ secoes:
                 args:
                   - prop: "value"
                     named_prop: 'calc_faixa'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
                     default: "Nenhum"
                   - prop: "description"
-                    fixed: "Trabalhadores migrantes de outras nacionalidades Admitidos no Mercado de Trabalho Formal"
+                    fixed: "Trabalhadores imigrantes estrangeiros Admitidos no Mercado de Trabalho Formal"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de trabalhadores migrantes de outras nacionalidades admitidos no mercado de trabalho formal de 2015 a {0}. No mapa, as diferentes unidades federativas podem ser comparadas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              template: "Em destaque, o número de trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal de 2015 a {0}. No mapa, as diferentes unidades federativas podem ser comparadas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
@@ -846,14 +890,16 @@ secoes:
             formatters:
               - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
+              - id: "calc_faixa"
+                format: "inteiro"
         headers:
           - text: 'Unidade Federativa'
             align: 'left'
             value: 'nm_uf'
-          # - text: 'Nº de migrantes de outras nacionalidades admitidos'
+          # - text: 'Nº de imigrantes estrangeiros admitidos'
           #   value: 'fmt_agr_sum_vl_indicador'
-          - text: 'Nº de migrantes de outras nacionalidades admitidos'
-            value: 'calc_faixa'
+          - text: 'Nº de imigrantes estrangeiros admitidos'
+            value: 'fmt_calc_faixa'
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
@@ -866,7 +912,7 @@ secoes:
       - id: "mapa_imigrantes_admitidos_calor"
         chart_type: "MAP_HEAT"
         title: 
-          fixed: "Mapa de Calor - Distribuição Geográfica de Contratações de Trabalhadores migrantes de outras nacionalidades"
+          fixed: "Mapa de Calor - Distribuição Geográfica de Contratações de Trabalhadores Imigrantes Estrangeiros"
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
@@ -885,7 +931,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Este mapa de calor representa dinamicamente, conforme suas cores, medidas da intensidade da ocorrência de admissão de trabalhadores migrantes de outras nacionalidades. A variação de cores frias para cores quentes (de forma crescente) indica locais de maior intensidade de contratação de migrantes de outras nacionalidades."
+              fixed: "Este mapa de calor representa dinamicamente, conforme suas cores, medidas da intensidade da ocorrência de admissão de trabalhadores imigrantes estrangeiros. A variação de cores frias para cores quentes (de forma crescente) indica locais de maior intensidade de contratação de imigrantes estrangeiros."
           - type: "slider"
             cls: "pl-2"
             id: "slider_periodo"
@@ -935,14 +981,16 @@ secoes:
             formatters:
               - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
+              - id: "calc_faixa"
+                format: "inteiro"
         headers:
           - text: 'Município'
             align: 'left'
             value: 'nm_municipio_uf'
-          # - text: 'Nº de trabalhadores migrantes de outras nacionalidades admitidos'
+          # - text: 'Nº de trabalhadores imigrantes estrangeiros admitidos'
           #   value: 'fmt_agr_sum_vl_indicador'
-          - text: 'Nº de trabalhadores migrantes de outras nacionalidades admitidos'
-            value: 'calc_faixa'
+          - text: 'Nº de trabalhadores imigrantes estrangeiros admitidos'
+            value: 'fmt_calc_faixa'
         chart_options:
           height_proportion: 1.77
           type: 'heat'
