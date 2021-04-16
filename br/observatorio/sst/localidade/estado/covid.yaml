@@ -204,13 +204,27 @@ secoes:
                       A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
         chart_type: "BAR"
         api: 
-          template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{0}"
-          args:
-            - named_prop: "idLocalidade"
-          options:
-            formatters:
-              - id: "agr_count"
-                format: 'inteiro'
+          - template: "/sst/beneficios?categorias='{0} a {1}'-ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,lt-ano_beneficio-{2},and,eq-cd_uf-{3}"
+            args:
+              - base_object: "sst_beneficio"
+                named_prop: "agr_min_ano_beneficio"
+              - function: "calc_subtraction"
+                fn_args:
+                  - base_object: "sst_beneficio"
+                    named_prop: "agr_max_ano_beneficio"
+                  - fixed: 1
+              - base_object: "sst_beneficio"
+                named_prop: "agr_max_ano_beneficio"
+              - named_prop: "idLocalidade"
+          - template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+            args:
+              - base_object: "sst_beneficio"
+                named_prop: "agr_max_ano_beneficio"
+              - named_prop: "idLocalidade"
+        api_options:
+          formatters:
+            - id: "agr_count"
+              format: 'inteiro'
         headers:
           - text: 'Ano'
             align: 'left'
@@ -544,13 +558,27 @@ secoes:
                       A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
         chart_type: "BAR"
         api: 
-          template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
-          args:
-            - named_prop: "idLocalidade"
-          options:
-            formatters:
-              - id: "agr_count"
-                format: 'inteiro'
+          - template: "/sst/cats?categorias='{0} a {1}'-ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,lt-ano_cat-{2},and,eq-cd_uf-{3}"
+            args:
+              - base_object: "sst_cat"
+                named_prop: "agr_min_ano_cat"
+              - function: "calc_subtraction"
+                fn_args:
+                  - base_object: "sst_cat"
+                    named_prop: "agr_max_ano_cat"
+                  - fixed: 1
+              - base_object: "sst_cat"
+                named_prop: "agr_max_ano_cat"
+              - named_prop: "idLocalidade"
+          - template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+            args:
+              - base_object: "sst_cat"
+                named_prop: "agr_max_ano_cat"
+              - named_prop: "idLocalidade"
+        api_options:
+          formatters:
+            - id: "agr_count"
+              format: 'inteiro'
         headers:
           - text: 'Ano'
             align: 'left'

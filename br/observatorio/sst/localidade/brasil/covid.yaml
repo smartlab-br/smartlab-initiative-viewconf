@@ -160,8 +160,22 @@ secoes:
                       A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
         chart_type: "BAR"
         api: 
-          fixed: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07'"
-          options:
+          - template: "/sst/beneficios?categorias='{0} a {1}'-ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,lt-ano_beneficio-{2}"
+            args:
+              - base_object: "sst_beneficio"
+                named_prop: "agr_min_ano_beneficio"
+              - function: "calc_subtraction"
+                fn_args:
+                  - base_object: "sst_beneficio"
+                    named_prop: "agr_max_ano_beneficio"
+                  - fixed: 1
+              - base_object: "sst_beneficio"
+                named_prop: "agr_max_ano_beneficio"
+          - template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-ano_beneficio-{0}"
+            args:
+              - base_object: "sst_beneficio"
+                named_prop: "agr_max_ano_beneficio"
+        api_options:
             formatters:
               - id: "agr_count"
                 format: 'inteiro'
@@ -172,7 +186,7 @@ secoes:
           - text: 'Qtde de Benefícios por CID B34 ou U07'
             value: 'fmt_agr_count'
         chart_options:
-          id: "id"
+          id: "ano_beneficio"
           x: "ano_beneficio"
           y: "agr_count"
           orientation: "vertical"
@@ -181,6 +195,11 @@ secoes:
           show_y_axis: false
           hide_legend: true
           color: "#238B45"
+          # colorScale:
+          #   name: "Greens"
+          #   type: "singleHue"
+          #   levels: 4
+          #   order: 'desc'
 # =====================================================
       - id: "treemap_benef_cbo"
         type: "multiple-charts"
@@ -450,8 +469,22 @@ secoes:
                       A hipótese que os dados sugerem, além do tempo necessário ao diangóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34, até então nunca ou apenas raramente haviam sido utilizados."
         chart_type: "BAR"
         api: 
-          fixed: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07'"
-          options:
+          - template: "/sst/cats?categorias='{0} a {1}'-ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,lt-ano_cat-{2}"
+            args:
+              - base_object: "sst_cat"
+                named_prop: "agr_min_ano_cat"
+              - function: "calc_subtraction"
+                fn_args:
+                  - base_object: "sst_cat"
+                    named_prop: "agr_max_ano_cat"
+                  - fixed: 1
+              - base_object: "sst_cat"
+                named_prop: "agr_max_ano_cat"
+          - template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0}"
+            args:
+              - base_object: "sst_cat"
+                named_prop: "agr_max_ano_cat"
+        api_options:
             formatters:
               - id: "agr_count"
                 format: 'inteiro'
