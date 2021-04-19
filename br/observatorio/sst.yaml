@@ -376,14 +376,28 @@ prevalencia:
           prop: "odometros"
           function: "slice"
           id: "sst_cat_total"
+          options:
+            calcs:
+              - id: "ano_mais_um"
+                function: "calc_addition_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
+                  - fixed: 1
+              - id: "ano_mais_dois"
+                function: "calc_addition_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
+                  - fixed: 2
         template: "1. Foram notificados {0} acidentes entre {1} e {2} (CATWEB). O número permite estimar a quantidade de acidentes por 
-                unidade de tempo e projeção para 2019 até hoje. Os dados de 2019 serão atualizados em 2020, e assim por diante. 
+                unidade de tempo e projeção para {3} até hoje. Os dados de {3} serão atualizados em {4}, e assim por diante. 
                 Em anos anteriores, a estimativa esteve muito próxima do que se confirmou após a atualização."
         args:
           - named_prop: "vl_indicador"
             format: "inteiro"
           - named_prop: "nu_competencia_min"
           - named_prop: "nu_competencia_max"
+          - named_prop: "calc_ano_mais_um"
+          - named_prop: "calc_ano_mais_dois"
     - type: "text"
       class: "pr-0 pl-2 py-0"
       content:
@@ -392,8 +406,15 @@ prevalencia:
           prop: "odometros"
           function: "slice"
           id: "sst_cat_obito"
+          options:
+            calcs:
+              - id: "ano_mais_um"
+                function: "calc_addition_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
+                  - fixed: 1
         template: "2. No mesmo período, {2} desses acidentes resultaram em morte. Com a mesma forma de projeção temporal, 
-                  calcula-se que 1 morte ocorra a cada {1}. Somando-se o total de {0} a {3} à estimativa de 2019, chega-se ao número exibido."
+                  calcula-se que 1 morte ocorra a cada {1}. Somando-se o total de {0} a {3} à estimativa de {4}, chega-se ao número exibido."
         args:
           - named_prop: "nu_competencia_min"
           - function: "getPaceString" 
@@ -403,6 +424,7 @@ prevalencia:
           - named_prop: "vl_indicador"
             format: "inteiro"
           - named_prop: "nu_competencia_max"
+          - named_prop: "calc_ano_mais_um"
     - type: "text"
       class: "pr-0 pl-2 py-0"
       content:
@@ -411,7 +433,14 @@ prevalencia:
           prop: "odometros"
           function: "slice"
           id: "sst_bene_dias_perdidos_91"
-        template: "3. Também entre {0} a {2}, apuraram-se {1} dias de trabalho perdidos, estimando-se os valores para 2019 conforme dias por unidade 
+          options:
+            calcs:
+              - id: "ano_mais_um"
+                function: "calc_addition_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
+                  - fixed: 1
+        template: "3. Também entre {0} a {2}, apuraram-se {1} dias de trabalho perdidos, estimando-se os valores para {3} conforme dias por unidade 
                   de tempo em anos anteriores. Aqui são somados todos os dias que as pessoas não trabalharam em virtude de afastamentos previdenciários 
                   acidentários. Somaram-se todos os dias de afastamento individualmente ocorridos - muitos, é claro, ao mesmo tempo. 
                   Trata-se de métrica usual para medir por aproximação (proxy) os prejuízos de produtividade na economia formal."
@@ -420,6 +449,7 @@ prevalencia:
           - named_prop: "vl_indicador"
             format: "inteiro"
           - named_prop: "nu_competencia_max"
+          - named_prop: "calc_ano_mais_um"
     - type: "text"
       class: "pr-0 pl-2 py-0"
       content:
@@ -429,8 +459,9 @@ prevalencia:
           function: "slice"
           id: "sst_bene_despesa"
         template: "4. Os gastos estimados consideraram valores de pagamentos pelo INSS de benefícios de natureza acidentária de {0} a {3} e projetados até hoje. 
-                  De {0} a {3}, esse gasto, incluindo benefícios iniciados em anos anteriores, chega a {2} (R$1 gasto a cada {1}). Somente considerando as novas 
-                  concessões no período ({0}-{3}), o valor é de R$26.235.501.489, conforme divulgado anteriormente."
+                  De {0} a {3}, esse gasto, incluindo benefícios iniciados em anos anteriores, chega a {2} (R$1 gasto a cada {1})."
+                  # "Somente considerando as novas 
+                  # concessões no período ({0}-{3}), o valor é de R$26.235.501.489, conforme divulgado anteriormente."
         args:
           - named_prop: "nu_competencia_min"
           - function: "getPaceString" 

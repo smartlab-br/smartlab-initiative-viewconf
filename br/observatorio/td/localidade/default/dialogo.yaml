@@ -1,1 +1,273 @@
-secoes:   
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "11_01_01_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+      - prop: "description"
+        default: "SINDICATOS DE CATEGORIAS PROFISSIONAIS ATIVOS COM SEDE NO MUNICÍPIO"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1}) "
+        args:
+          - named_prop: "ds_fonte"
+            default: "MT - CNES"
+          - named_prop: "nu_competencia"
+            default: "2016"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "11_01_02_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        default: "SINDICATOS DE CATEGORIAS ECONÔMICAS ATIVOS COM SEDE NO MUNICÍPIO"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1}) "
+        args:
+          - named_prop: "ds_fonte"
+            default: "MT - CNES"
+          - named_prop: "nu_competencia"
+            default: "2016"
+# ========================================================
+secoes:
+  - id: "dialogo_unica"
+    name: ""
+    cards:
+# ========================================================
+      - id: "mapas_sindicatos"
+        title: 
+          fixed: "Sindicatos de categorias profissionais ativos com sede no município "
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'11_01_01_00'&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O diálogo social visa fortalecer os valores democráticos nos processos de construção de políticas que afetam a sociedade como um todo ou atores sociais específicos. Nesses termos, ambientes de interlocução entre os atores interessados e muitas vezes detentores de visões de mundo distintas são institucionalizados com o intuito de dirimir e disciplinar os conflitos, potencializar a cooperação e produzir políticas convergentes com os interesses das partes envolvidas. Com isso, contribui-se para a ampliação da legitimidade social de políticas públicas e de gestão das empresas e, portanto, para o fortalecimento de uma cultura democrática no país. No mundo do trabalho, em particular, o diálogo social requer necessariamente uma efetiva liberdade de organização e associação sindical de trabalhadores e de empregadores, assim como a garantia de negociações coletivas periódicas."
+        msgNoData: 
+          desc: "Não há registros de entidades sindicais profissionais (de trabalhadores) na localidade, no ano indicado."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "11_01_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Número de sindicatos'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de entidades sindicais profissionais (de trabalhadores) na localidade. No mapa, {0} está em destaque. A escala de cores varia da menor quantidade (branco) para maior quantidade de sindicatos (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['11_01_01_00']
+              args:
+                - named_prop: "nm_municipio_uf"
+                  required: true
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "11_01_01_00"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'11_01_01_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "rank_br"
+                format: 'inteiro'
+            calcs:
+              - id: "deviation_sind"
+                function: "get_proportional_indicator_uf"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_sind'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapas_sindicatos_economicas"
+        title: 
+          fixed: "Sindicatos de categorias econômicas ativos com sede no município"
+        title_comment:
+          template: "{0}, {1}"
+          api: 
+            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'11_01_02_00'&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O diálogo social visa fortalecer os valores democráticos nos processos de construção de políticas que afetam a sociedade como um todo ou atores sociais específicos. Nesses termos, ambientes de interlocução entre os atores interessados e muitas vezes detentores de visões de mundo distintas são institucionalizados com o intuito de dirimir e disciplinar os conflitos, potencializar a cooperação e produzir políticas convergentes com os interesses das partes envolvidas. Com isso, contribui-se para a ampliação da legitimidade social de políticas públicas e de gestão das empresas e, portanto, para o fortalecimento de uma cultura democrática no país. No mundo do trabalho, em particular, o diálogo social requer necessariamente uma efetiva liberdade de organização e associação sindical de trabalhadores e de empregadores, assim como a garantia de negociações coletivas periódicas."
+        msgNoData: 
+          desc: "Não há registros de entidades sindicais de categorias econômicas (de empregadores) na localidade, no ano indicado."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "11_01_02_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Quantidade de sindicatos'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de entidades sindicais de categorias econômicas (de empregadores) na localidade. No mapa, {0} está em destaque. A escala de cores varia do da menor quantidade (branco) para a maior quantidade de sindicatos (azul escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['11_01_02_00']
+              args:
+                - named_prop: "nm_municipio_uf"
+                  required: true
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "11_01_02_00"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'11_01_02_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "rank_br"
+                format: 'inteiro'
+            calcs:
+              - id: "deviation_sind"
+                function: "get_proportional_indicator_uf"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+          - text: 'Rank UF'
+            value: 'rank_uf'
+          - text: 'Rank Brasil'
+            value: 'fmt_rank_br'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_sind'
+        source:
+          desc_field: "ds_fonte"

@@ -3,18 +3,21 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    api:
-      template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-      args:
-        - named_prop: "idLocalidade"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "10_11_01_01"
+      year: "max"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
-        format: 'monetario'
+        format: 'real'
         collapse:
-          format: 'monetario'
+          format: 'real'
       - prop: "description"
-        fixed: "Gastos previdenciários com AUXÍLIO-DOENÇA POR ACIDENTE DO TRABALHO (B91)"
+        template: "Gastos previdenciários com {0}"
+        args:
+          - named_prop: "ds_agreg_primaria"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -23,18 +26,19 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    api:
-      template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-      args:
-        - named_prop: "idLocalidade"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "10_11_01_02"
+      year: "max"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
-        format: 'monetario'
+        format: 'real'
         collapse:
-          format: 'monetario'
+          format: 'real'
       - prop: "description"
-        template: "Gastos previdenciários com APOSENTADORIA POR INVALIDEZ POR ACIDENTE DO TRABALHO (B92)"
+        template: "Gastos previdenciários com {0}"
         args:
           - named_prop: "ds_agreg_primaria"
       - prop: 'comment'
@@ -44,22 +48,25 @@ principais:
           - named_prop: "nu_competencia"
 # ===================================================
 secoes:
-  - id: "despesa_unica"
+  - id: "duracao_unica"
     name: ""
     cards:
+
 # ========================================================
       - id: "bar_despesa_auxilio_doenca_acidente"
         title: 
           fixed: "Despesa Previdenciária - Auxílio-doença por acidente do trabalho (B91)"
         title_comment:
           template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_11_01_03"
+            year: "max"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_min_ano_beneficio"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_max_ano_beneficio"
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -70,10 +77,11 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-                  args:
-                    - named_prop: "idLocalidade"
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_11_01_03"
+                  year: "max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -91,27 +99,21 @@ secoes:
             title: ""
             content:
               template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              api:
-                template: "/sst/indicadoresnacionais?categorias=ds_indicador&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'91'&limit=1"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "10_11_01_03"
+                year: "max"
               args:
-                - named_prop: "ds_indicador"
-
+                - named_prop: "ds_indicador_radical"
+        
           - type: "ranking"
-            api:
-              template: "/sst/indicadoresestaduais?categorias=cd_indicador,rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-              args:
-                - named_prop: "idLocalidade"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "10_11_01_03"
+              year: "max"
             args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -122,20 +124,13 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
-
+        
         chart_type: "BAR"
-        api:
-          template: "/sst/indicadoresestaduais?categorias=cd_indicador,ds_indicador-ds_indicador_radical,vl_indicador,nu_competencia,ds_agreg_primaria,ds_fonte&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'91',and,eq-cd_uf-{0}"
-          args:
-            - named_prop: "idLocalidade"
+        preloaded:
+          prop: "centralindicadores"
+          function: "slice"
+          id: ['10_11_01_03']
           options:
-            calcs:
-              - id: "legend_description"
-                function: "replace_text"
-                fn_args:
-                  - fixed: "ds_indicador_radical"
-                  - fixed: "Despesa Previdenciária - "
-                  - fixed: ""
             formatters:
               - id: "vl_indicador"
                 collapse:
@@ -163,7 +158,7 @@ secoes:
           text: "fmt_vl_indicador"
           show_x_axis: true
           show_y_axis: false
-          legend_field: "calc_legend_description"
+          legend_field: "ds_agreg_primaria"
         source:
           desc_field: "ds_fonte"
 # ===================================================
@@ -172,13 +167,15 @@ secoes:
           fixed: "Despesa Previdenciária - Aposentadoria por invalidez por acidente do trabalho (B92)"
         title_comment:
           template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_11_01_04"
+            year: "max"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_min_ano_beneficio"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_max_ano_beneficio"
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -189,10 +186,11 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-                  args:
-                    - named_prop: "idLocalidade"
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_11_01_04"
+                  year: "max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -210,27 +208,21 @@ secoes:
             title: ""
             content:
               template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              api:
-                template: "/sst/indicadoresnacionais?categorias=ds_indicador&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'92'&limit=1"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "10_11_01_04"
+                year: "max"
               args:
                 - named_prop: "ds_indicador_radical"
 
           - type: "ranking"
-            api:
-              template: "/sst/indicadoresestaduais?categorias=cd_indicador,rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-              args:
-                - named_prop: "idLocalidade"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "10_11_01_04"
+              year: "max"
             args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -243,18 +235,11 @@ secoes:
                 default: 0
 
         chart_type: "BAR"
-        api:
-          template: "/sst/indicadoresestaduais?categorias=cd_indicador,ds_indicador-ds_indicador_radical,vl_indicador,nu_competencia,ds_agreg_primaria,ds_fonte&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'92',and,eq-cd_uf-{0}"
-          args:
-            - named_prop: "idLocalidade"
+        preloaded:
+          prop: "centralindicadores"
+          function: "slice"
+          id: ['10_11_01_04']
           options:
-            calcs:
-              - id: "legend_description"
-                function: "replace_text"
-                fn_args:
-                  - fixed: "ds_indicador_radical"
-                  - fixed: "Despesa Previdenciária - "
-                  - fixed: ""
             formatters:
               - id: "vl_indicador"
                 collapse:
@@ -282,7 +267,7 @@ secoes:
           text: "fmt_vl_indicador"
           show_x_axis: true
           show_y_axis: false
-          legend_field: "calc_legend_description"
+          legend_field: "ds_agreg_primaria"
         source:
           desc_field: "ds_fonte"
 # ===================================================
@@ -291,13 +276,15 @@ secoes:
           fixed: "Despesa Previdenciária - Pensão por morte por acidente do trabalho (B93)"
         title_comment:
           template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_11_01_05"
+            year: "max"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_min_ano_beneficio"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_max_ano_beneficio"
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -308,10 +295,11 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-                  args:
-                    - named_prop: "idLocalidade"
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_11_01_05"
+                  year: "max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -329,27 +317,21 @@ secoes:
             title: ""
             content:
               template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              api:
-                template: "/sst/indicadoresnacionais?categorias=ds_indicador&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'93'&limit=1"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "10_11_01_05"
+                year: "max"
               args:
                 - named_prop: "ds_indicador_radical"
 
           - type: "ranking"
-            api:
-              template: "/sst/indicadoresestaduais?categorias=cd_indicador,rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-              args:
-                - named_prop: "idLocalidade"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "10_11_01_05"
+              year: "max"
             args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -362,18 +344,11 @@ secoes:
                 default: 0
 
         chart_type: "BAR"
-        api:
-          template: "/sst/indicadoresestaduais?categorias=cd_indicador,ds_indicador-ds_indicador_radical,vl_indicador,nu_competencia,ds_agreg_primaria,ds_fonte&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'93',and,eq-cd_uf-{0}"
-          args:
-            - named_prop: "idLocalidade"
+        preloaded:
+          prop: "centralindicadores"
+          function: "slice"
+          id: ['10_11_01_05']
           options:
-            calcs:
-              - id: "legend_description"
-                function: "replace_text"
-                fn_args:
-                  - fixed: "ds_indicador_radical"
-                  - fixed: "Despesa Previdenciária - "
-                  - fixed: ""
             formatters:
               - id: "vl_indicador"
                 collapse:
@@ -401,7 +376,7 @@ secoes:
           text: "fmt_vl_indicador"
           show_x_axis: true
           show_y_axis: false
-          legend_field: "calc_legend_description"
+          legend_field: "ds_agreg_primaria"
         source:
           desc_field: "ds_fonte"
 # ===================================================
@@ -410,13 +385,15 @@ secoes:
           fixed: "Despesa Previdenciária - Auxílio-acidente por acidente do trabalho (B94)"
         title_comment:
           template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_11_01_06"
+            year: "max"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_min_ano_beneficio"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_max_ano_beneficio"
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -427,10 +404,11 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-                  args:
-                    - named_prop: "idLocalidade"
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_11_01_06"
+                  year: "max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -448,27 +426,21 @@ secoes:
             title: ""
             content:
               template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              api:
-                template: "/sst/indicadoresnacionais?categorias=ds_indicador&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'94'&limit=1"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "10_11_01_06"
+                year: "max"
               args:
                 - named_prop: "ds_indicador_radical"
 
           - type: "ranking"
-            api:
-              template: "/sst/indicadoresestaduais?categorias=cd_indicador,rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-              args:
-                - named_prop: "idLocalidade"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "10_11_01_06"
+              year: "max"
             args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -481,18 +453,11 @@ secoes:
                 default: 0
 
         chart_type: "BAR"
-        api:
-          template: "/sst/indicadoresestaduais?categorias=cd_indicador,ds_indicador-ds_indicador_radical,vl_indicador,nu_competencia,ds_agreg_primaria,ds_fonte&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'94',and,eq-cd_uf-{0}"
-          args:
-            - named_prop: "idLocalidade"
+        preloaded:
+          prop: "centralindicadores"
+          function: "slice"
+          id: ['10_11_01_06']
           options:
-            calcs:
-              - id: "legend_description"
-                function: "replace_text"
-                fn_args:
-                  - fixed: "ds_indicador_radical"
-                  - fixed: "Despesa Previdenciária - "
-                  - fixed: ""
             formatters:
               - id: "vl_indicador"
                 collapse:
@@ -520,7 +485,7 @@ secoes:
           text: "fmt_vl_indicador"
           show_x_axis: true
           show_y_axis: false
-          legend_field: "calc_legend_description"
+          legend_field: "ds_agreg_primaria"
         source:
           desc_field: "ds_fonte"
 # ===================================================
@@ -529,13 +494,15 @@ secoes:
           fixed: "Despesa Previdenciária - Auxílio-doença (B31)"
         title_comment:
           template: "{0}, de {1} a {2}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_11_01_01"
+            year: "max"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_min_ano_beneficio"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_max_ano_beneficio"
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -546,10 +513,11 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'31',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-                  args:
-                    - named_prop: "idLocalidade"
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "10_11_01_01"
+                  year: "max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -567,27 +535,21 @@ secoes:
             title: ""
             content:
               template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              api:
-                template: "/sst/indicadoresnacionais?categorias=ds_indicador&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'31'&limit=1"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "10_11_01_01"
+                year: "max"
               args:
                 - named_prop: "ds_indicador_radical"
 
           - type: "ranking"
-            api:
-              template: "/sst/indicadoresestaduais?categorias=cd_indicador,rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'31',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-              args:
-                - named_prop: "idLocalidade"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "10_11_01_01"
+              year: "max"
             args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -600,18 +562,11 @@ secoes:
                 default: 0
 
         chart_type: "BAR"
-        api:
-          template: "/sst/indicadoresestaduais?categorias=cd_indicador,ds_indicador-ds_indicador_radical,vl_indicador,nu_competencia,ds_agreg_primaria,ds_fonte&filtros=eq-cd_indicador-'sst_bene_despesa_especie',and,eq-ds_agreg_primaria-'31',and,eq-cd_uf-{0}"
-          args:
-            - named_prop: "idLocalidade"
+        preloaded:
+          prop: "centralindicadores"
+          function: "slice"
+          id: ['10_11_01_01']
           options:
-            calcs:
-              - id: "legend_description"
-                function: "replace_text"
-                fn_args:
-                  - fixed: "ds_indicador_radical"
-                  - fixed: "Despesa Previdenciária - "
-                  - fixed: ""
             formatters:
               - id: "vl_indicador"
                 collapse:
@@ -639,7 +594,7 @@ secoes:
           text: "fmt_vl_indicador"
           show_x_axis: true
           show_y_axis: false
-          legend_field: "calc_legend_description"
+          legend_field: "ds_agreg_primaria"
         source:
           desc_field: "ds_fonte"
 # ===================================================
@@ -648,11 +603,13 @@ secoes:
           fixed: "Despesa Previdenciária - Aposentadoria por invalidez (B32)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/indicadoresestaduais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'10_11_01_02'&limit=1"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "10_11_01_02"
+            year: "max"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -702,16 +659,6 @@ secoes:
               id: "10_11_01_02"
               year: "max"
             args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
