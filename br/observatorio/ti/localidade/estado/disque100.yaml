@@ -3,7 +3,9 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'"
+      template: "/indicadoresestaduais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'agr_sum_vl_indicador'
@@ -26,10 +28,13 @@ secoes:
         title: 
           fixed: "Distribuição Geográfica das Denúncias de Trabalho Infantil no Disque 100"
         title_comment:
-          template: "Brasil, de {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100'"
+            template: "/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "idLocalidade"
           args:
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         # info:
@@ -53,9 +58,9 @@ secoes:
               - relevance: "high"
                 cls: "xs12 md6"
                 api:
-                  template: "/indicadoresnacionais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'"
-                  # args:
-                  #   - named_prop: "idLocalidade"
+                  template: "/indicadoresestaduais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: "agr_sum_vl_indicador"
@@ -71,9 +76,9 @@ secoes:
             multiple: true
             label: "Tipo de trabalho infantil"
             api:
-              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100'"
-              # args:
-              #   - named_prop: "cd_uf"
+              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
             args:
               - prop: "id"
                 named_prop: "ds_agreg_secundaria"
@@ -89,9 +94,11 @@ secoes:
                     - named_prop: "ds_agreg_secundaria"
         chart_type: "MAP_TOPOJSON"
         # apiBase: 
-        #   fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-1-1"
+        #   template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-1-1"
         api: 
-          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'"
+          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "idLocalidade"
           options:
             calcs:
               - id: 'faixa_vl_indicador'
@@ -99,22 +106,26 @@ secoes:
                 fn_args:
                   - named_prop: 'agr_sum_vl_indicador'
                   - fixed: [10,100,500,1000,5000,10000,15000,20000]
+              - id: "deviation_vl_indicador"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
             formatters:
               - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
         headers:
-          - text: 'UF'
+          - text: 'Município'
             align: 'left'
-            value: 'nm_uf'
+            value: 'nm_municipio'
           - text: 'Indicador'
             align: 'left'
             value: 'ds_indicador_radical'
           - text: 'Qtde de Notificações'
             value: 'calc_faixa_vl_indicador'
         chart_options:
-          id_field: 'cd_uf'
-          topo_key: "codigo"
-          value_field: 'agr_sum_vl_indicador'
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_vl_indicador'
           colorScale:
             name: "Reds"
         source:
@@ -124,10 +135,13 @@ secoes:
         title: 
           fixed: "Evolução das Denúncias de Trabalho Infantil no Disque 100"
         title_comment:
-          template: "Brasil, de {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100'"
+            template: "/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "idLocalidade"
           args:
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         # info:
@@ -151,9 +165,9 @@ secoes:
               - relevance: "high"
                 cls: "xs12 md6"
                 api:
-                  template: "/indicadoresnacionais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'"
-                  # args:
-                  #   - named_prop: "idLocalidade"
+                  template: "/indicadoresestaduais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: "agr_sum_vl_indicador"
@@ -170,9 +184,9 @@ secoes:
             multiple: true
             label: "Tipo de trabalho infantil"
             api:
-              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100'"
-              # args:
-              #   - named_prop: "cd_uf"
+              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
             args:
               - prop: "id"
                 named_prop: "ds_agreg_secundaria"
@@ -189,9 +203,11 @@ secoes:
 
         chart_type: "BAR"
         # apiBase: 
-        #   fixed: "/indicadoresestaduais?categorias=nu_competencia,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-1-1"
+        #   template: "/indicadoresestaduais?categorias=nu_competencia,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-1-1"
         api:
-          template: "/indicadoresestaduais?categorias=nu_competencia,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'"
+          template: "/indicadoresestaduais?categorias=nu_competencia,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "idLocalidade"
           options:
             formatters:
               - id: "agr_sum_vl_indicador"
@@ -222,10 +238,13 @@ secoes:
         title:
           fixed: "Características das Denúncias de Trabalho Infantil no Disque 100"
         title_comment:
-          template: "Brasil, de {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100'"
+            template: "/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "idLocalidade"
           args:
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         description: 
@@ -234,9 +253,9 @@ secoes:
               - relevance: "high"
                 cls: "xs12"
                 api:
-                  template: "/indicadoresnacionais?categorias=ds_agreg_secundaria&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'&ordenacao=-agr_sum_vl_indicador&limit=1"
-                  # args:
-                  #   - named_prop: "idLocalidade"
+                  template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: "ds_agreg_secundaria"
@@ -262,7 +281,9 @@ secoes:
 
         chart_type: "TREEMAP"
         api:
-          template: "/indicadoresestaduais?categorias=ds_agreg_secundaria,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'"
+          template: "/indicadoresestaduais?categorias=ds_agreg_secundaria,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "idLocalidade"
           options:
             calcs:
               - id: 'faixa_vl_indicador'
@@ -298,14 +319,17 @@ secoes:
           desc_field: "ds_fonte"
 
 # ========================================================
-      - id: "treemap_denuncias_disque_100_ufs"
+      - id: "treemap_denuncias_disque_100_municipios"
         title:
           fixed: "Distribuição Geográfica das Denúncias de Trabalho Infantil no Disque 100"
         title_comment:
-          template: "Brasil, de {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100'"
+            template: "/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "idLocalidade"
           args:
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         description: 
@@ -314,18 +338,18 @@ secoes:
               - relevance: "high"
                 cls: "xs12"
                 api:
-                  template: "/indicadoresestaduais?categorias=nm_uf&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'&ordenacao=-agr_sum_vl_indicador&limit=1"
-                  # args:
-                  #   - named_prop: "idLocalidade"
+                  template: "/indicadoresmunicipais?categorias=nm_municipio&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
-                    named_prop: "nm_uf"
+                    named_prop: "nm_municipio"
                   - prop: "description"
-                    fixed: "UF COM MAIS DENÚNCIAS"
+                    fixed: "MUNICÍPIO COM MAIS DENÚNCIAS"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, a Unidade Federativa com maior quantidade de denúncias de trabalho infantil via Disque 100. O Disque Direitos Humanos (Disque 100) é um serviço de disseminação de informações sobre direitos de grupos vulneráveis e de denúncias de violações de direitos humanos, atendendo graves situações de violações que acabaram de ocorrer ou que ainda estão em curso, acionando os órgãos competentes e possibilitando o flagrante. No gráfico ao lado, apresenta-se a distribuição percentual das denúncias em relação às Unidades Federativas brasileiras."
+              fixed: "Em destaque, para a circunscrição geográfica em realce, o município com a maior quantidade de denúncias de trabalho infantil via Disque 100. O Disque Direitos Humanos (Disque 100) é um serviço de disseminação de informações sobre direitos de grupos vulneráveis e de denúncias de violações de direitos humanos, atendendo graves situações de violações que acabaram de ocorrer ou que ainda estão em curso, acionando os órgãos competentes e possibilitando o flagrante. No gráfico ao lado, apresenta-se a distribuição percentual das denúncias em relação aos municipios UF."
               # api:
               #   fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
               #   options:
@@ -342,7 +366,9 @@ secoes:
 
         chart_type: "TREEMAP"
         api:
-          template: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100'"
+          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "idLocalidade"
           options:
             # calcs:
             #   - id: 'faixa_vl_indicador'
@@ -355,9 +381,9 @@ secoes:
                 format: 'inteiro'
 
         headers:
-          - text: 'UF'
+          - text: 'Município'
             align: 'left'
-            value: 'nm_uf'
+            value: 'nm_municipio'
           - text: 'Indicador'
             align: 'left'
             value: 'ds_indicador_radical'
@@ -366,8 +392,8 @@ secoes:
           - text: 'Qtde'
             value: 'fmt_agr_sum_vl_indicador'
         chart_options:
-          id: "cd_uf"
-          text: "nm_uf"
+          id: "cd_municipio_ibge_dv"
+          text: "nm_municipio"
           size: "agr_sum_vl_indicador"
           colorScale:
             name: "Purples"
