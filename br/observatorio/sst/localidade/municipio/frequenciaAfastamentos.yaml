@@ -117,7 +117,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) no município, na unidade federativa e no país para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) no município, na unidade federativa e no país para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano). Utilize os filtros abaixo para combinar as perspectivas."
           - type: "ranking"
             api:
               template: "/sst/indicadoresmunicipais?categorias=rank_uf,rank_uf_total,rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge_dv-{0}"
@@ -149,7 +149,7 @@ secoes:
             multiple: true
             label: "Categoria CID"
             api:
-              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
+              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
               args:
                 - named_prop: "cd_uf"
                 - base_object: "sst_beneficio"
@@ -167,6 +167,29 @@ secoes:
                 api:
                   args:
                     - named_prop: "cd_agrupamento_categoria_cid"
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            api:
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe&filtros=ne-ds_cnae_classe-'',and,eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
+              args:
+                - named_prop: "cd_uf"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe"
+              - prop: "label"
+                named_prop: "ds_cnae_classe"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
@@ -472,29 +495,29 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
-          - id: "select_cid_b92"
-            type: "select"
-            multiple: true
-            label: "Categoria CID"
-            api:
-              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{1}"
-              args:
-                - named_prop: "cd_uf"
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
-            args:
-              - prop: "id"
-                named_prop: "cd_agrupamento_categoria_cid"
-              - prop: "label"
-                named_prop: "cd_agrupamento_categoria_cid"
-                null_value: "(Não informado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
-                api:
-                  args:
-                    - named_prop: "cd_agrupamento_categoria_cid"
+          # - id: "select_cid_b92"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Categoria CID"
+          #   api:
+          #     template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{1}"
+          #     args:
+          #       - named_prop: "cd_uf"
+          #       - base_object: "sst_beneficio"
+          #         named_prop: "agr_max_ano_beneficio"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #     - prop: "label"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #       null_value: "(Não informado)"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{1}"
@@ -800,29 +823,29 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
-          - id: "select_cid_b93"
-            type: "select"
-            multiple: true
-            label: "Categoria CID"
-            api:
-              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{1}"
-              args:
-                - named_prop: "cd_uf"
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
-            args:
-              - prop: "id"
-                named_prop: "cd_agrupamento_categoria_cid"
-              - prop: "label"
-                named_prop: "cd_agrupamento_categoria_cid"
-                null_value: "(Não informado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
-                api:
-                  args:
-                    - named_prop: "cd_agrupamento_categoria_cid"
+          # - id: "select_cid_b93"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Categoria CID"
+          #   api:
+          #     template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{1}"
+          #     args:
+          #       - named_prop: "cd_uf"
+          #       - base_object: "sst_beneficio"
+          #         named_prop: "agr_max_ano_beneficio"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #     - prop: "label"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #       null_value: "(Não informado)"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{1}"
@@ -1128,29 +1151,29 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
-          - id: "select_cid_b94"
-            type: "select"
-            multiple: true
-            label: "Categoria CID"
-            api:
-              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{1}"
-              args:
-                - named_prop: "cd_uf"
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
-            args:
-              - prop: "id"
-                named_prop: "cd_agrupamento_categoria_cid"
-              - prop: "label"
-                named_prop: "cd_agrupamento_categoria_cid"
-                null_value: "(Não informado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
-                api:
-                  args:
-                    - named_prop: "cd_agrupamento_categoria_cid"
+          # - id: "select_cid_b94"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Categoria CID"
+          #   api:
+          #     template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{1}"
+          #     args:
+          #       - named_prop: "cd_uf"
+          #       - base_object: "sst_beneficio"
+          #         named_prop: "agr_max_ano_beneficio"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #     - prop: "label"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #       null_value: "(Não informado)"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{1}"
