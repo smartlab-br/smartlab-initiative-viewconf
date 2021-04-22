@@ -84,21 +84,40 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de acidentes de trabalho notificados no Brasil para a população com vínculo de emprego regular. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              fixed: "Em destaque, o número de acidentes de trabalho notificados no Brasil para a população com vínculo de emprego regular. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Utilize o filtro abaixo para visualizar o número de acidentes por setor econômico."
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            api:
+              fixed: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=distinct&ordenacao=ds_cnae_classe_cat&filtros=ne-ds_cnae_classe_cat-'',and,nn-cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe_cat"
+              - prop: "label"
+                named_prop: "ds_cnae_classe_cat"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe_cat-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe_cat"
         chart_type: "MAP_TOPOJSON"
         api: 
-          fixed: "/sst/indicadoresestaduais?categorias=cd_uf,sg_uf,nm_uf,cd_indicador,nu_competencia,ds_fonte,media_br,rank_br&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,nn-cd_uf"
+          template: "/sst/cats?categorias=cd_uf,sg_uf,nm_uf,ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,nn-cd_uf"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
           options:
             calcs:
-              - id: "deviation_cat"
-                function: "get_proportional_indicator_uf"
+              - id: "log_cat"
+                function: "get_log"
                 fn_args:
-                  - fixed: "agr_sum_vl_indicador"
-                  - fixed: "media_br"
+                  - fixed: "agr_count"
             formatters:
-              - id: "agr_sum_vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
+              - id: "agr_count"
                 format: 'inteiro'
         headers:
           - text: 'UF'
@@ -106,19 +125,15 @@ secoes:
             value: 'nm_uf'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'ano_cat'
           - text: 'Nº de Notificações de Acidente de Trabalho'
-            value: 'fmt_agr_sum_vl_indicador'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
+            value: 'fmt_agr_count'
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
-          value_field: 'calc_deviation_cat'
+          value_field: 'calc_log_cat'
           colorScale:
             name: "Reds"
-        source:
-          desc_field: "ds_fonte"
 # ====================================================          
       - id: "card2_acidente_trabalho"
         # type: "multiple-charts"

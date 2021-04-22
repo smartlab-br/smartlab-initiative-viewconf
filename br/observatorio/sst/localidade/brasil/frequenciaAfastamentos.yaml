@@ -108,13 +108,13 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Utilize os filtros abaixo para combinar as perspectivas."
           - id: "select_cid_b91"
             type: "select"
             multiple: true
             label: "Categoria CID"
             api:
-              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}"
+              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}"
               args:
                 - base_object: "sst_beneficio"
                   named_prop: "agr_max_ano_beneficio"
@@ -131,6 +131,28 @@ secoes:
                 api:
                   args:
                     - named_prop: "cd_agrupamento_categoria_cid"
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            api:
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe"
+              - prop: "label"
+                named_prop: "ds_cnae_classe"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}"
@@ -336,28 +358,28 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Aposentadoria por Invalidez Acidentária (B92) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
-          - id: "select_cid_b92"
-            type: "select"
-            multiple: true
-            label: "Categoria CID"
-            api:
-              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{0}"
-              args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
-            args:
-              - prop: "id"
-                named_prop: "cd_agrupamento_categoria_cid"
-              - prop: "label"
-                named_prop: "cd_agrupamento_categoria_cid"
-                null_value: "(Não informado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
-                api:
-                  args:
-                    - named_prop: "cd_agrupamento_categoria_cid"
+          # - id: "select_cid_b92"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Categoria CID"
+          #   api:
+          #     template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{0}"
+          #     args:
+          #       - base_object: "sst_beneficio"
+          #         named_prop: "agr_max_ano_beneficio"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #     - prop: "label"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #       null_value: "(Não informado)"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{0}"
@@ -564,28 +586,28 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Pensão por morte por acidente do trabalho (B93) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
-          - id: "select_cid_b93"
-            type: "select"
-            multiple: true
-            label: "Categoria CID"
-            api:
-              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{0}"
-              args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
-            args:
-              - prop: "id"
-                named_prop: "cd_agrupamento_categoria_cid"
-              - prop: "label"
-                named_prop: "cd_agrupamento_categoria_cid"
-                null_value: "(Não informado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
-                api:
-                  args:
-                    - named_prop: "cd_agrupamento_categoria_cid"
+          # - id: "select_cid_b93"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Categoria CID"
+          #   api:
+          #     template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{0}"
+          #     args:
+          #       - base_object: "sst_beneficio"
+          #         named_prop: "agr_max_ano_beneficio"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #     - prop: "label"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #       null_value: "(Não informado)"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{0}"
@@ -791,28 +813,28 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B94) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
-          - id: "select_cid_b94"
-            type: "select"
-            multiple: true
-            label: "Categoria CID"
-            api:
-              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{0}"
-              args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
-            args:
-              - prop: "id"
-                named_prop: "cd_agrupamento_categoria_cid"
-              - prop: "label"
-                named_prop: "cd_agrupamento_categoria_cid"
-                null_value: "(Não informado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
-                api:
-                  args:
-                    - named_prop: "cd_agrupamento_categoria_cid"
+          # - id: "select_cid_b94"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Categoria CID"
+          #   api:
+          #     template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{0}"
+          #     args:
+          #       - base_object: "sst_beneficio"
+          #         named_prop: "agr_max_ano_beneficio"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #     - prop: "label"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #       null_value: "(Não informado)"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{0}"
