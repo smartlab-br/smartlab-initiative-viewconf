@@ -21,63 +21,48 @@ principais:
         args:
           - named_prop: "nu_competencia_min"
           - named_prop: "nu_competencia_max"
-  # - relevance: 'lead' 
-  #   cls: 'xs12 xl6'
-  #   rowClass: "pt-0 px-3 pb-5"
-  #   preloaded:
-  #     prop: "centralindicadores"
-  #     function: "slice"
-  #     id: "00_01_03_02"
-  #     year: "max"
-  #   args:
-  #     - prop: "value"
-  #       named_prop: 'vl_indicador'
-  #       format: 'inteiro'
-  #     - prop: "description"
-  #       named_prop: "ds_indicador_radical"
-  #     - prop: 'comment'
-  #       template: "({0}, {1})"
-  #       args:
-  #         - named_prop: "ds_fonte"
-  #         - named_prop: "nu_competencia"
-  # - relevance: 'lead' 
-  #   cls: 'xs12 xl6'
-  #   rowClass: "pt-0 px-3 pb-5"
-  #   preloaded:
-  #     prop: "centralindicadores"
-  #     function: "slice"
-  #     id: "00_01_02_02"
-  #     year: "max"
-  #   args:
-  #     - prop: "value"
-  #       named_prop: 'vl_indicador'
-  #       format: 'inteiro'
-  #     - prop: "description"
-  #       named_prop: "ds_indicador_radical"
-  #     - prop: 'comment'
-  #       template: "({0}, {1})"
-  #       args:
-  #         - named_prop: "ds_fonte"
-  #         - named_prop: "nu_competencia"
-  # - relevance: 'lead' 
-  #   cls: 'xs12 xl6'
-  #   rowClass: "pt-0 px-3 pb-5"
-  #   preloaded:
-  #     prop: "centralindicadores"
-  #     function: "slice"
-  #     id: "00_01_01_02"
-  #     year: "max"
-  #   args:
-  #     - prop: "value"
-  #       named_prop: 'vl_indicador'
-  #       format: 'inteiro'
-  #     - prop: "description"
-  #       named_prop: "ds_indicador_radical"
-  #     - prop: 'comment'
-  #       template: "({0}, {1})"
-  #       args:
-  #         - named_prop: "ds_fonte"
-  #         - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/estadicmunic?categorias=cd_indicador_spai-cd_indicador,cd_indicador-cd_indicador_externo,nu_ano_indicador-nu_competencia,tema,sub_tema,ds_indicador,ds_fonte,presenca_total_br,total_br,pct_presenca_br,spai_ds_texto&valor=cd_indicador_spai&agregacao=DISTINCT&filtros=eq-cd_indicador_spai-'MUNIC_MDHU549',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+    args:
+      - prop: "value"
+        template: "{0}"
+        args:
+          - named_prop: 'presenca_total_br'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com comitê ou comissão de Enfrentamento do Trabalho Escravo"
+        args:
+          - named_prop: "total_br"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/estadicmunic?categorias=cd_indicador_spai-cd_indicador,cd_indicador-cd_indicador_externo,nu_ano_indicador-nu_competencia,tema,sub_tema,ds_indicador,ds_fonte,presenca_total_br,total_br,pct_presenca_br,spai_ds_texto&valor=cd_indicador_spai&agregacao=DISTINCT&filtros=eq-cd_indicador_spai-'MUNIC_MDHU5710',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+    args:
+      - prop: "value"
+        template: "{0}"
+        args:
+          - named_prop: 'presenca_total_br'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com programa de enfrentamento do trabalho escravo e reinserção de suas vítimas"
+        args:
+          - named_prop: "total_br"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
 # ========================================================
 secoes:
   - id: "garantia_trabalho_escravo"
@@ -230,13 +215,27 @@ secoes:
         type: "headline"
         title:
           fixed: "Ações Municipais"
-#==================================================================================================
-      - id: "map_acoes_enf_trab_escravo_mun"
+# ========================================================
+      - id: "map_existencia_comite_te_mun"
         title: 
-          fixed: "Ações de Enfrentamento ao Trabalho Escravo"
+          fixed: "Comitê ou comissão de Enfrentamento do Trabalho Escravo"
         card_template: "t3"
         datasource: "estadicmunic"
-        cd_indicador: "91_06_01_02"
+        cd_indicador: "MUNIC_MDHU549"
+# # ========================================================
+#       - id: "map_comite_enf_trabalho_escravo_mun"
+#         title: 
+#           fixed: "Comitê e Comissáo de Enfrentamento do Trabalho Escravo"
+#         card_template: "t3"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_06_01_04"
+# ========================================================
+      - id: "map_prog_pol_reinsercao_vitimas_te_mun"
+        title: 
+          fixed: "Combate e reinserção de vítimas"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU5710"
 #==================================================================================================
       - id: "map_acoes_reinsercao_vitimas_mun"
         title: 
@@ -244,13 +243,13 @@ secoes:
         card_template: "t3"
         datasource: "estadicmunic"
         cd_indicador: "91_06_01_03"
-#==================================================================================================
-      - id: "map_comite_enf_trabalho_escravo_mun"
-        title: 
-          fixed: "Comitê e Comissáo de Enfrentamento do Trabalho Escravo"
-        card_template: "t3"
-        datasource: "estadicmunic"
-        cd_indicador: "91_06_01_04"
+# #==================================================================================================
+#       - id: "map_acoes_enf_trab_escravo_mun"
+#         title: 
+#           fixed: "Ações de Enfrentamento ao Trabalho Escravo"
+#         card_template: "t3"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_06_01_02"
 # # ===============================================
 #       - id: "garantia_mpt_headline"
 #         type: "headline"

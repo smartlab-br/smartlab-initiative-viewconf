@@ -1,0 +1,120 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicuf?categorias=cd_indicador_spai,spai_ds_texto,ds_fonte,presenca_total_br,nu_ano_indicador-nu_competencia&filtros=eq-cd_indicador_spai-'{0}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - fixed: "90_06_02_10"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_br'
+        default: "Sem Registros"
+      - prop: "description"
+        template: 'UFs com {0}'
+        args:
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai,nu_ano_indicador-nu_competencia,ds_fonte,presenca_total_br,total_br,spai_ds_texto&filtros=eq-cd_indicador_spai-'{0}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - fixed: "91_06_02_12"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_br'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com {1}"
+        args:
+          - named_prop: "total_br"
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+
+# ========================================================
+secoes:
+#==================================================================================================
+  - id: "acoes_estaduais_trabalho_infantil"
+    name: "Ações estaduais"
+    cards:
+#==================================================================================================
+      - id: "map_acoes_dh"
+        title:
+          fixed: "Ações de Direitos Humanos para Proteção de Crianças e Adolescentes"
+        card_template: "t1"
+        datasource: "estadicuf"
+        cd_indicador: "90_06_02_10"
+#==================================================================================================
+      - id: "map_fundo_direitos"
+        title:
+          fixed: "Fundo de Direitos da criança e do adolescente"
+        card_template: "t1"
+        datasource: "estadicuf"
+        cd_indicador: "90_06_02_03"
+#==================================================================================================
+#==================================================================================================
+      - id: "acoes_municipais_trabalho_infantil_headline"
+        type: "headline"
+        title:
+          fixed: "Ações municipais"
+#==================================================================================================
+      - id: "map_lei_prim_infancia_mun"
+        title: 
+          fixed: "Lei Específica sobre Proteção integral a primeira infância"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU105"
+#==================================================================================================
+      - id: "map_fundos_direitos_crianca_mun_novo"
+        title: 
+          fixed: "Fundo municipal de Direitos da criança e do adolescente"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU562"
+# #==================================================================================================
+#       - id: "map_fundos_direitos_crianca_mun"
+#         title: 
+#           fixed: "Fundos de direitos da criança e do adolescente"
+#         card_template: "t3"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_06_02_07"
+#==================================================================================================
+      - id: "map_conferencias_direitos_politicas_mun_novo"
+        title: 
+          fixed: "Conferências nos últimos quatro anos sobre política para a criança e do adolescente"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU552"
+# #==================================================================================================
+#       - id: "map_conferencias_direitos_politicas_mun"
+#         title: 
+#           fixed: "Conferencias sobre direitos ou políticas para a Criança e o Adolescente - até 4 anos antes da pesquisa"
+#         card_template: "t3"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_06_02_16"
+#==================================================================================================
+      - id: "map_combate_drogas_mun"
+        title: 
+          fixed: "Combate ao uso de drogas"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU609"
+#==================================================================================================
+      - id: "map_acoes_promocao_direitos_mun"
+        title: 
+          fixed: "Ações e Programas de promoção dos direitos das Crianças e Adolescentes"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "91_06_02_12"

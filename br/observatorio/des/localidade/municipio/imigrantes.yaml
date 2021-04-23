@@ -1,0 +1,720 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresmunicipais?categorias=cd_indicador,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
+      options:
+        calcs:
+          - id: "faixa"
+            function: "get_bin"
+            fn_args:
+              - named_prop: "agr_sum_vl_indicador"
+    args:
+      - prop: "value"
+        named_prop: 'calc_faixa'
+        format: "inteiro"
+        collapse:
+          format: 'real'
+        default: "Nenhum"
+      - prop: "description"
+        fixed: "Trabalhadores imigrantes estrangeiros Ativos no Mercado de Trabalho Formal"
+      - prop: 'comment'
+        api:
+          fixed: "/indicadoresnacionais?categorias=nu_competencia_max,ds_fonte&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia_max"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresmunicipais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador_txt&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador_txt'
+        default: "-"
+      - prop: "description"
+        fixed: "Remuneração Média dos trabalhadores imigrantes estrangeiros no município"
+      - prop: 'comment'
+        api:
+          fixed: "/indicadoresnacionais?categorias=nu_competencia_max,ds_fonte&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG'"
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia_max"
+
+# ========================================================
+secoes:
+  - id: "imigrantes_unico"
+    name: ""
+    cards:
+# ========================================================
+      - id: "treemap_origem_imigrantes"
+        title:
+          fixed: "Imigrantes Estrangeiros no Mercado de Trabalho Formal por Origem"
+        title_comment:
+          template: "{0}, {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description: 
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "agr_sum_vl_indicador"
+                args:
+                  - prop: "value"
+                    named_prop: 'calc_faixa'
+                    format: "inteiro"
+                    collapse:
+                      format: 'real'
+                    default: "Nenhum"
+                  - prop: "description"
+                    fixed: "Trabalhadores imigrantes estrangeiros Ativos no Mercado de Trabalho Formal"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de imigrantes estrangeiros ativos no mercado de trabalho formal na Unidade Federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os totais para os continentes de origem dos trabalhadores. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+
+        chart_type: "TREEMAP"
+        preloaded:
+          prop: "centralindicadores"
+          function: "slice"
+          id: ['MIGRA_ATIVOS']
+          year: "max"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "calc_faixa"
+                format: "inteiro"
+            calcs:
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "vl_indicador"
+        headers:
+          - text: 'Origem'
+            align: 'left'
+            value: 'ds_agreg_primaria'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_completo'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          # - text: 'Qtde'
+          #   value: 'fmt_vl_indicador'
+          - text: 'Qtde'
+            value: 'fmt_calc_faixa'
+        chart_options:
+          id: "ds_agreg_primaria"
+          text: "ds_agreg_primaria"
+          size: "vl_indicador"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+            levels: 6
+            order: 'asc'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "treemap_presenca_imigrantes"
+        title:
+          fixed: "Presença de Imigrantes Estrangeiros no Mercado de Trabalho formal na Unidade Federativa"
+        title_comment:
+          template: "{0}, {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        description: 
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "agr_sum_vl_indicador"
+                args:
+                  - prop: "value"
+                    named_prop: 'calc_faixa'
+                    format: "inteiro"
+                    collapse:
+                      format: 'real'
+                    default: "Nenhum"
+                  - prop: "description"
+                    fixed: "Trabalhadores imigrantes estrangeiros Ativos no Mercado de Trabalho Formal"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de trabalhadores estrangeiro ativos no mercado de trabalho formal no município selecionado, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os totais de trabalhadores estrageiros para os municípios da Unidade Federativa. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+          - id: "select_origem"
+            type: "select"
+            label: "Origem/Continente"
+            api:
+              fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+
+        chart_type: "TREEMAP"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_indicador,cd_municipio_ibge_dv,nm_municipio,ds_indicador_completo,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+              - id: "calc_faixa"
+                format: "inteiro"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_completo'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          # - text: 'Qtde'
+          #   value: 'fmt_agr_sum_vl_indicador'
+          - text: 'Qtde'
+            value: 'fmt_calc_faixa'
+        chart_options:
+          id: "cd_municipio_ibge_dv"
+          text: "nm_municipio"
+          size: "agr_sum_vl_indicador"
+          colorScale:
+            name: "BuPu"
+            type: "singleHue"
+            levels: 6
+            order: 'asc'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_continente"
+        title: 
+          fixed: "Remuneração de Trabalhadores Imigrantes Estrangeiros por Origem"
+        title_comment:
+          template: "{0}, em {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_agreg_primaria'
+                    default: "Nenhum"
+                  - prop: "description"
+                    fixed: "Origem dos Trabalhadores com maior remuneração média"
+                  - prop: "comment"
+                    named_prop: 'vl_indicador_txt'
+                    default: "-"
+
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_agreg_primaria'
+                    default: "Nenhum"
+                  - prop: "description"
+                    fixed: "Origem dos Trabalhadores com menor remuneração média"
+                  - prop: "comment"
+                    named_prop: 'vl_indicador_txt'
+                    default: "-"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a origem dos trabalhadores de maior e menor remuneração média, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os valores para as origens dos trabalhadores. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+              
+        chart_type: "BAR"
+        api:
+          template: "/indicadoresmunicipais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria,ds_indicador_completo,nu_competencia,ds_fonte&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "bar_description"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed: 
+                      template: "{0} - {1}"
+                      args:
+                        - named_prop: "ds_agreg_primaria"
+                        - named_prop: "vl_indicador_txt"
+        headers:
+          - text: 'Origem'
+            align: 'left'
+            value: 'ds_agreg_primaria'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_completo'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Remuneração Média'
+            value: 'vl_indicador_txt'
+          # - text: 'Remuneração Média (R$)'
+          #   value: 'vl_indicador'
+          #   format: "monetario"
+        chart_options:
+          id: "ds_agreg_primaria"
+          y: "ds_agreg_primaria"
+          x: "vl_indicador"
+          # orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          order_field: "vl_indicador"
+          colorScale:
+            name: "BuPu"
+            type: "singleHue"
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_imigrantes_remuneracao"
+        title: 
+          fixed: "Distribuição Geográfica das Remunerações Médias de Trabalhadores Imigrantes Estrangeiros"
+        title_comment:
+          template: "{0}, {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_max,nu_competencia_min&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+        msgNoData:
+          desc: "No período, não houve trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal nessa Unidade Federativa."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador_txt&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_txt'
+                    default: "-"
+                  - prop: "description"
+                    fixed: "Remuneração Média no município"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a remuneração média dos trabalhadores imigrantes estrangeiros no município selecionado, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No mapa, comparam-se os diferentes municípios da unidade federativa quanto à remuneração média dos trabalhadores imigrantes estrangeiros. A escala de cores varia do branco (menor quantidade) para o azul escuro (maior quantidade). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                  required: true
+                - named_prop: "calc_proximo_ano"
+          - id: "select_origem"
+            type: "select"
+            label: "Origem/Continente"
+            api:
+              fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                api:
+                  template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_agreg_primaria,ds_fonte,vl_indicador,vl_indicador_txt&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max,and,nn-cd_uf,and,eq-ds_agreg_primaria-'{0}',and,eq-cd_uf-{1}"
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+                    - named_prop: "cd_uf"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,'Todas'-ds_agreg_primaria,ds_fonte,vl_indicador,vl_indicador_txt&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max,and,nn-cd_uf,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_log"
+            formatters:
+              - id: "vl_indicador"
+                format: 'monetario'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Origem'
+            align: 'left'
+            value: 'ds_agreg_primaria'
+          - text: 'Remuneração Média'
+            value: 'vl_indicador_txt'
+          # - text: 'Remuneração Média (R$)'
+          #   value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+          colorScale:
+            name: 'Reds'
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_imigrantes_admitidos"
+        title: 
+          fixed: "Distribuição Geográfica de Contratações de Trabalhadores imigrantes estrangeiros"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_max,nu_competencia_min&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - fixed: "2015"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+        msgNoData:
+          desc: "No período, não houve trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal no município."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS',and,ge-nu_competencia-'2015'"
+                  args:
+                    - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "agr_sum_vl_indicador"
+                args:
+                  - prop: "value"
+                    named_prop: 'calc_faixa'
+                    format: "inteiro"
+                    collapse:
+                      format: 'real'
+                    default: "Nenhum"
+                  - prop: "description"
+                    fixed: "Trabalhadores imigrantes estrangeiros Admitidos no Mercado de Trabalho Formal"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal de 2015 a {0}. No mapa ao lado, o município selecionado está em destaque e é comparado a diferentes municípios da mesma unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: ['MIGRA_ATIVOS_CONTRATADOS']
+              args:
+                - named_prop: "nu_competencia_max"
+                  required: true
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_periodo"
+            range: true
+            title: ""
+            api:
+              fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            args:
+              - prop: "min"
+                fixed: "2015"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-'{0}',and,le-nu_competencia-'{1}'"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+          - id: "select_origem"
+            type: "select"
+            label: "Origem/Continente"
+            api:
+              fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS',and,ge-nu_competencia-'2015'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "agr_sum_vl_indicador"
+              - id: "deviation"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+              - id: "calc_faixa"
+                format: "inteiro"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          # - text: 'Nº de imigrantes estrangeiros admitidos'
+          #   value: 'fmt_agr_sum_vl_indicador'
+          - text: 'Nº de imigrantes estrangeiros admitidos'
+            value: 'fmt_calc_faixa'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+          colorScale:
+            name: 'Reds'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_imigrantes_admitidos_calor"
+        chart_type: "MAP_HEAT"
+        title: 
+          fixed: "Mapa de Calor - Distribuição Geográfica de Contratações de Trabalhadores Imigrantes Estrangeiros"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_max,nu_competencia_min&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - fixed: "2015"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre"
+        #     content:
+        #       fixed: ""
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Este mapa de calor representa dinamicamente, conforme suas cores, medidas da intensidade da ocorrência de admissão de trabalhadores imigrantes estrangeiros. A variação de cores frias para cores quentes (de forma crescente) indica locais de maior intensidade de contratação de imigrantes estrangeiros."
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_periodo"
+            range: true
+            title: ""
+            api:
+              fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            args:
+              - prop: "min"
+                fixed: "2015"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-'{0}',and,le-nu_competencia-'{1}'"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+          - id: "select_origem"
+            type: "select"
+            label: "Origem/Continente"
+            api:
+              fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_indicador,cd_municipio_ibge_dv,nm_municipio,ds_fonte,latitude,longitude&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS',and,ge-nu_competencia-'2015'"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "agr_sum_vl_indicador"
+            formatters:
+              - id: "calc_faixa"
+                format: "inteiro"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          # - text: 'Nº de trabalhadores imigrantes estrangeiros admitidos'
+          #   value: 'fmt_agr_sum_vl_indicador'
+          - text: 'Nº de trabalhadores imigrantes estrangeiros admitidos'
+            value: 'fmt_calc_faixa'
+        chart_options:
+          height_proportion: 1.77
+          type: 'heat'
+          lat: 'latitude'
+          long: 'longitude'
+          indicadores: ["MIGRA_ATIVOS_CONTRATADOS"]
+          value_field: 'agr_sum_vl_indicador'
+        source:
+          desc_field: "ds_fonte"

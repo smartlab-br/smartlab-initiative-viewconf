@@ -1,0 +1,186 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicuf?categorias=cd_indicador_spai,spai_ds_texto,ds_fonte,presenca_total_br,nu_ano_indicador-nu_competencia&filtros=eq-cd_indicador_spai-'{0}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - fixed: "90_06_02_02"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_br'
+        default: "Sem Registros"
+      - prop: "description"
+        template: 'UFs com {0}'
+        args:
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai,nu_ano_indicador-nu_competencia,ds_fonte,presenca_total_br,total_br,spai_ds_texto&filtros=eq-cd_indicador_spai-'{0}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - fixed: "MUNIC_MDHU61"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_br'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com {1}"
+        args:
+          - named_prop: "total_br"
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai,nu_ano_indicador-nu_competencia,ds_fonte,presenca_total_br,total_br,spai_ds_texto&filtros=eq-cd_indicador_spai-'{0}',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - fixed: "MUNIC_MDHU18"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_br'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com {1}"
+        args:
+          - named_prop: "total_br"
+          - named_prop: "spai_ds_texto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+
+# ========================================================
+secoes:
+#==================================================================================================
+  - id: "acoes_estaduais_trabalho_infantil"
+    name: "Ações estaduais"
+    cards:
+#==================================================================================================
+      - id: "map_conselho_direitos"
+        title:
+          fixed: "Conselho de direitos da Criança e do Adolescente"
+        card_template: "t1"
+        datasource: "estadicuf"
+        cd_indicador: "90_06_02_02"
+#==================================================================================================
+#==================================================================================================
+      - id: "acoes_municipais_trabalho_infantil_headline"
+        type: "headline"
+        title:
+          fixed: "Ações municipais"
+#==================================================================================================
+      - id: "map_conselho_tutelar_mun_novo"
+        title: 
+          fixed: "Conselho tutelar"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU61"
+# #==================================================================================================
+#       - id: "map_conselho_tutelar_mun"
+#         title: 
+#           fixed: "Conselho tutelar"
+#         card_template: "t3"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_06_02_06"
+#==================================================================================================
+      - id: "map_conselho_direitos_crianca_mun_novo"
+        title: 
+          fixed: "Conselho Municipal de Direitos da Criança e do Adolescente"
+        card_template: "t3"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU18"
+# #==================================================================================================
+#       - id: "map_conselho_direitos_crianca_mun"
+#         title: 
+#           fixed: "Conselho de direitos da criança e do adolescente"
+#         card_template: "t3"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_06_02_05"
+# ====================================================          
+      - id: "mapa_atencao_psicossocial"
+        title: 
+          fixed: "Centros de Atenção Psicossocial"
+        card_template: "tIndicadorTopoJsonBrasil"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_26"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_convivencia"
+        title: 
+          fixed: "Centros de Convivência"
+        card_template: "tIndicadorTopoJsonBrasil"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_10"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_geracao_trabalho"
+        title: 
+          fixed: "Centros de Geração de Trabalho e Renda Profissional"
+        card_template: "tIndicadorTopoJsonBrasil"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_13"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_juventude"
+        title: 
+          fixed: "Centros de Juventude"
+        card_template: "tIndicadorTopoJsonBrasil"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_11"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_ref_assistencia_social"
+        title: 
+          fixed: "Centros de Referência de Assistência Social"
+        card_template: "tIndicadorTopoJsonBrasil"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_08"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_ref__espec_assistencia_social"
+        title: 
+          fixed: "Centros de Referência Especializado de Assistência Social"
+        card_template: "tIndicadorTopoJsonBrasil"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_09"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 

@@ -3,19 +3,16 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "10_10_01_91"
-      year: "max"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
         format: 'inteiro'
-        collapse: 
+        collapse:
           format: 'real'
       - prop: "description"
-        named_prop: "ds_indicador_radical"
+        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - AUXÍLIO-DOENÇA POR ACIDENTE DO TRABALHO (B91)"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -24,19 +21,16 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "10_10_01_92"
-      year: "max"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
         format: 'inteiro'
-        collapse: 
+        collapse:
           format: 'real'
       - prop: "description"
-        named_prop: "ds_indicador_radical"
+        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - APOSENTADORIA POR INVALIDEZ POR ACIDENTE DO TRABALHO (B92)"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -53,11 +47,8 @@ secoes:
           fixed: "Concessão de Benefícios Previdenciários Acidentários (B91)"
         title_comment:
           template: "Brasil, {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_10_01_91"
-            year: "max"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "nu_competencia"
         info:
@@ -65,13 +56,10 @@ secoes:
             title: "Sobre a métrica"
             content:
               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_91"
-                year: "max"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
                 - named_prop: 'nu_competencia'
         description:
@@ -79,11 +67,8 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_91"
-                  year: "max"
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -92,7 +77,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Quantidade de concessões"
+                    fixed: "B91 - Quantidade de concessões"
           # - type: "ranking_list"
           #   title: "Maiores Frequências"
           #   rankings:
@@ -123,13 +108,16 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de concessões de benefícios previdenciários no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Utilize os filtros abaixo para combinar as perspectivas."
           - id: "select_cid_b91"
             type: "select"
             multiple: true
             label: "Categoria CID"
             api:
-              fixed: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-91,and,eq-ano_beneficio-2018"
+              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
             args:
               - prop: "id"
                 named_prop: "cd_agrupamento_categoria_cid"
@@ -143,9 +131,34 @@ secoes:
                 api:
                   args:
                     - named_prop: "cd_agrupamento_categoria_cid"
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            api:
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe"
+              - prop: "label"
+                named_prop: "ds_cnae_classe"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe"
         chart_type: "MAP_TOPOJSON"
         api: 
-          fixed: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-91,and,eq-ano_beneficio-2018"
+          template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
           options:
             calcs:
               - id: "deviation_b91"
@@ -171,81 +184,99 @@ secoes:
           colorScale:
             name: "Reds"
         # source:
-        #   desc_field: "ds_fonte"
+        #   desc: "INSS/BENEFÍCIOS"
 # ==========================================================
       - id: "bar_ben_b91"
         title: 
           fixed: "Concessão de Benefícios Previdenciários Acidentários (B91) – Série Histórica"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_10_01_91"
-            year: "max"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
+            - id: "10_10_01_91"
+              named_prop: "nu_competencia_min"
+            - id: "sst_bene_qtd_especie"
+              named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_91"
-                year: "max"
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a 2017<br/>
+                          Nome: {3}<br/>Fonte: {4}<br/>Ano: 2018 a {5}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_91"
+                  named_prop: 'cd_indicador'
+                - id: "10_10_01_91"
+                  named_prop: 'ds_fonte'
+                - id: "10_10_01_91"
+                  named_prop: 'nu_competencia_min'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'cd_indicador'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'ds_fonte'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api: 
-                  fixed: "/indicadoresnacionais?categorias=cd_mun_ibge,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91'"
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,gt-nu_competencia-2017"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,le-nu_competencia-'2017'"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_91"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        devault: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Quantidade acumulada'
+                    fixed: "B91 - Quantidade acumulada"
           - type: "text"
             title: ""
             content:
               template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['10_10_01_91']
-                year: "min"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_91"
+                  named_prop: "nu_competencia_min"
+                - id: "sst_bene_qtd_especie"
+                  named_prop: "nu_competencia_max"
         chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['10_10_01_91']
-            options:
-              formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
+        api:
+          - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,gt-nu_competencia-2017"
+          - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'10_10_01_91',and,le-nu_competencia-'2017'"
+        api_options:
+          formatters:
+            - id: "vl_indicador"
+              format: "inteiro"
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Qtde'
+          - text: 'Qtde de Benefícios B91 - Auxílio-doença por acidente de trabalho'
             value: 'fmt_vl_indicador'
         chart_options:
           id: "nu_competencia"
@@ -257,19 +288,16 @@ secoes:
           show_y_axis: false
           hide_legend: true
           color: "#238B45"
-        source:
-          desc_field: "ds_fonte"
+        # source:
+        #   desc_field: "ds_fonte"
 # ==========================================================
       - id: "mapa_b92"
         title: 
           fixed: "Concessão de Aposentadorias por Invalidez Acidentária (B92)"
         title_comment:
           template: "Brasil, {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_10_01_92"
-            year: "max"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "nu_competencia"
         info:
@@ -277,13 +305,10 @@ secoes:
             title: "Sobre a métrica"
             content:
               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_92"
-                year: "max"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
                 - named_prop: 'nu_competencia'
         description:
@@ -291,11 +316,8 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_92"
-                  year: "max"
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -304,7 +326,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Quantidade de concessões"
+                    fixed: "B92 - Quantidade de concessões"
           # - type: "ranking_list"
           #   title: "Maiores Frequências"
           #   rankings:
@@ -335,21 +357,43 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de concessões de benefícios previdenciários no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Aposentadoria por Invalidez Acidentária (B92) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+          # - id: "select_cid_b92"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Categoria CID"
+          #   api:
+          #     template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{0}"
+          #     args:
+          #       - base_object: "sst_beneficio"
+          #         named_prop: "agr_max_ano_beneficio"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #     - prop: "label"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #       null_value: "(Não informado)"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
-          fixed: "/indicadoresestaduais?categorias=cd_mun_ibge,cd_uf,nm_uf,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_br,rank_br&filtros=eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{0}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
           options:
             calcs:
               - id: "deviation_b92"
-                function: "get_proportional_indicator_uf"
+                function: "get_log"
                 fn_args:
-                  - fixed: "vl_indicador"
-                  - fixed: "media_br"
+                  - fixed: "agr_count"
             formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
+              - id: "agr_count"
                 format: 'inteiro'
         headers:
           - text: 'UF'
@@ -357,96 +401,109 @@ secoes:
             value: 'nm_uf'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Qtde de Benefícios'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
+            value: 'ano_beneficio'
+          - text: 'Qtde de Benefícios B92 - Aposentadorias por Invalidez Acidentária'
+            value: 'fmt_agr_count'
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
           value_field: 'calc_deviation_b92'
           colorScale:
             name: "Reds"
-        source:
-          desc_field: "ds_fonte"
+        # source:
+        #   desc: "INSS/BENEFÍCIOS"
 # ==========================================================
       - id: "bar_ben_b92"
         title: 
           fixed: "Concessão de Aposentadorias por Invalidez Acidentária (B92) – Série Histórica"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_10_01_92"
-            year: "max"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
+            - id: "10_10_01_92"
+              named_prop: "nu_competencia_min"
+            - id: "sst_bene_qtd_especie"
+              named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_92"
-                year: "max"
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a 2017<br/>
+                          Nome: {3}<br/>Fonte: {4}<br/>Ano: 2018 a {5}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_92"
+                  named_prop: 'cd_indicador'
+                - id: "10_10_01_92"
+                  named_prop: 'ds_fonte'
+                - id: "10_10_01_92"
+                  named_prop: 'nu_competencia_min'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'cd_indicador'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'ds_fonte'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api: 
-                  fixed: "/indicadoresnacionais?categorias=cd_mun_ibge,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92'"
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,gt-nu_competencia-2017"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,le-nu_competencia-'2017'"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_92"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Quantidade acumulada'
+                    fixed: 'B92 - Quantidade acumulada'
           - type: "text"
             title: ""
             content:
               template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Aposentadorias por Invalidez Acidentária (B92) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['10_10_01_92']
-                year: "min"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_92"
+                  named_prop: "nu_competencia_min"
+                - id: "sst_bene_qtd_especie"
+                  named_prop: "nu_competencia_max"
         chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['10_10_01_92']
-            options:
-              formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
+        api:
+          - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,gt-nu_competencia-2017"
+          - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'10_10_01_92',and,le-nu_competencia-'2017'"
+        api_options:
+          formatters:
+            - id: "vl_indicador"
+              format: "inteiro"
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Qtde'
+          - text: 'Qtde de Benefícios B92 - Aposentadorias por Invalidez Acidentária'
             value: 'fmt_vl_indicador'
         chart_options:
           id: "nu_competencia"
@@ -458,19 +515,17 @@ secoes:
           show_y_axis: false
           hide_legend: true
           color: "#238B45"
-        source:
-          desc_field: "ds_fonte"
+        # source:
+        #   desc_field: "ds_fonte"
+
 # ==========================================================
       - id: "mapa_b93"
         title: 
           fixed: "Pensão por morte por acidente do trabalho (B93)"
         title_comment:
           template: "Brasil, {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_10_01_93"
-            year: "max"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "nu_competencia"
         info:
@@ -478,13 +533,10 @@ secoes:
             title: "Sobre a métrica"
             content:
               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_93"
-                year: "max"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
                 - named_prop: 'nu_competencia'
         description:
@@ -492,11 +544,8 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_93"
-                  year: "max"
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -505,7 +554,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Quantidade de pensões"
+                    fixed: "B93 - Quantidade de concessões"
           # - type: "ranking_list"
           #   title: "Maiores Frequências"
           #   rankings:
@@ -518,6 +567,7 @@ secoes:
           #           named_prop: "nm_municipio_uf"
           #         - prop: 'vl_indicador'
           #           named_prop: "vl_indicador"
+          #           format: "inteiro"
           #         - prop: 'rank'
           #           named_prop: "rank_br"
           #     - title: "Unidades Federativas"
@@ -529,26 +579,49 @@ secoes:
           #           named_prop: "nm_uf"
           #         - prop: 'vl_indicador'
           #           named_prop: "vl_indicador"
+          #           format: "inteiro"
           #         - prop: 'rank'
           #           named_prop: "rank_br"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de concessões de benefícios previdenciários no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Pensão por morte por acidente do trabalho (B93) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+          # - id: "select_cid_b93"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Categoria CID"
+          #   api:
+          #     template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{0}"
+          #     args:
+          #       - base_object: "sst_beneficio"
+          #         named_prop: "agr_max_ano_beneficio"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #     - prop: "label"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #       null_value: "(Não informado)"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
-          fixed: "/indicadoresestaduais?categorias=cd_mun_ibge,cd_uf,nm_uf,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_br,rank_br&filtros=eq-cd_indicador-'10_10_01_93',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{0}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
           options:
             calcs:
               - id: "deviation_b93"
-                function: "get_proportional_indicator_uf"
+                function: "get_log"
                 fn_args:
-                  - fixed: "vl_indicador"
-                  - fixed: "media_br"
+                  - fixed: "agr_count"
             formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
+              - id: "agr_count"
                 format: 'inteiro'
         headers:
           - text: 'UF'
@@ -556,96 +629,109 @@ secoes:
             value: 'nm_uf'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Qtde de Benefícios'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
+            value: 'ano_beneficio'
+          - text: 'Qtde de Benefícios B93 - Pensão por morte por acidente do trabalho'
+            value: 'fmt_agr_count'
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
           value_field: 'calc_deviation_b93'
           colorScale:
             name: "Reds"
-        source:
-          desc_field: "ds_fonte"
+        # source:
+        #   desc: "INSS/BENEFÍCIOS"
 # ==========================================================
       - id: "bar_ben_b93"
         title: 
           fixed: "Pensão por morte por acidente do trabalho (B93) – Série Histórica"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_10_01_93"
-            year: "max"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_93',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
+            - id: "10_10_01_93"
+              named_prop: "nu_competencia_min"
+            - id: "sst_bene_qtd_especie"
+              named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_93"
-                year: "max"
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a 2017<br/>
+                          Nome: {3}<br/>Fonte: {4}<br/>Ano: 2018 a {5}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_93',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_93"
+                  named_prop: 'cd_indicador'
+                - id: "10_10_01_93"
+                  named_prop: 'ds_fonte'
+                - id: "10_10_01_93"
+                  named_prop: 'nu_competencia_min'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'cd_indicador'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'ds_fonte'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api: 
-                  fixed: "/indicadoresnacionais?categorias=cd_mun_ibge,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_93'"
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,gt-nu_competencia-2017"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_93',and,le-nu_competencia-'2017'"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_93"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Quantidade acumulada'
+                    fixed: 'B93 - Quantidade acumulada'
           - type: "text"
             title: ""
             content:
               template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Pensão por morte por acidente do trabalho (B93) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['10_10_01_93']
-                year: "min"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_93',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_93"
+                  named_prop: "nu_competencia_min"
+                - id: "sst_bene_qtd_especie"
+                  named_prop: "nu_competencia_max"
         chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['10_10_01_93']
-            options:
-              formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
+        api:
+          - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'93',and,gt-nu_competencia-2017"
+          - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'10_10_01_93',and,le-nu_competencia-'2017'"
+        api_options:
+          formatters:
+            - id: "vl_indicador"
+              format: "inteiro"
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Qtde'
+          - text: 'Qtde de Benefícios B93 - Pensão por morte por acidente do trabalho'
             value: 'fmt_vl_indicador'
         chart_options:
           id: "nu_competencia"
@@ -657,19 +743,16 @@ secoes:
           show_y_axis: false
           hide_legend: true
           color: "#238B45"
-        source:
-          desc_field: "ds_fonte"
+        # source:
+        #   desc_field: "ds_fonte"
 # ==========================================================
       - id: "mapa_b94"
         title: 
           fixed: "Auxílio-acidente por acidente do trabalho (B94)"
         title_comment:
           template: "Brasil, {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_10_01_94"
-            year: "max"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "nu_competencia"
         info:
@@ -677,13 +760,10 @@ secoes:
             title: "Sobre a métrica"
             content:
               template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_94"
-                year: "max"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
                 - named_prop: 'nu_competencia'
         description:
@@ -691,11 +771,8 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_10_01_94"
-                  year: "max"
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -704,7 +781,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Quantidade de auxílios"
+                    fixed: "B94 - Quantidade de concessões"
           # - type: "ranking_list"
           #   title: "Maiores Frequências"
           #   rankings:
@@ -717,6 +794,7 @@ secoes:
           #           named_prop: "nm_municipio_uf"
           #         - prop: 'vl_indicador'
           #           named_prop: "vl_indicador"
+          #           format: "inteiro"
           #         - prop: 'rank'
           #           named_prop: "rank_br"
           #     - title: "Unidades Federativas"
@@ -728,26 +806,49 @@ secoes:
           #           named_prop: "nm_uf"
           #         - prop: 'vl_indicador'
           #           named_prop: "vl_indicador"
+          #           format: "inteiro"
           #         - prop: 'rank'
           #           named_prop: "rank_br"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de concessões de benefícios previdenciários no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B94) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+          # - id: "select_cid_b94"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Categoria CID"
+          #   api:
+          #     template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{0}"
+          #     args:
+          #       - base_object: "sst_beneficio"
+          #         named_prop: "agr_max_ano_beneficio"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #     - prop: "label"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #       null_value: "(Não informado)"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
-          fixed: "/indicadoresestaduais?categorias=cd_mun_ibge,cd_uf,nm_uf,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_br,rank_br&filtros=eq-cd_indicador-'10_10_01_94',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{0}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
           options:
             calcs:
               - id: "deviation_b94"
-                function: "get_proportional_indicator_uf"
+                function: "get_log"
                 fn_args:
-                  - fixed: "vl_indicador"
-                  - fixed: "media_br"
+                  - fixed: "agr_count"
             formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
+              - id: "agr_count"
                 format: 'inteiro'
         headers:
           - text: 'UF'
@@ -755,96 +856,109 @@ secoes:
             value: 'nm_uf'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Qtde de Benefícios'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
+            value: 'ano_beneficio'
+          - text: 'Qtde de Benefícios B94 - Auxílio-acidente por acidente do trabalho'
+            value: 'fmt_agr_count'
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
           value_field: 'calc_deviation_b94'
           colorScale:
             name: "Reds"
-        source:
-          desc_field: "ds_fonte"
+        # source:
+        #   desc: "INSS/BENEFÍCIOS"
 # ==========================================================
       - id: "bar_ben_b94"
         title: 
           fixed: "Auxílio-acidente por acidente do trabalho (B94) – Série Histórica"
         title_comment:
           template: "Brasil, de {0} a {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_10_01_94"
-            year: "max"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_94',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
+            - id: "10_10_01_94"
+              named_prop: "nu_competencia_min"
+            - id: "sst_bene_qtd_especie"
+              named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_10_01_94"
-                year: "max"
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a 2017<br/>
+                          Nome: {3}<br/>Fonte: {4}<br/>Ano: 2018 a {5}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_94',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_94"
+                  named_prop: 'cd_indicador'
+                - id: "10_10_01_94"
+                  named_prop: 'ds_fonte'
+                - id: "10_10_01_94"
+                  named_prop: 'nu_competencia_min'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'cd_indicador'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'ds_fonte'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                api: 
-                  fixed: "/indicadoresnacionais?categorias=cd_mun_ibge,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_94'"
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,gt-nu_competencia-2017"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_94',and,le-nu_competencia-'2017'"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_94"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
                 args:
-                  - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Quantidade acumulada'
+                    fixed: 'B94 - Quantidade acumulada'
           - type: "text"
             title: ""
             content:
               template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Auxílio-acidente por acidente do trabalho (B94) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['10_10_01_94']
-                year: "min"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_94',and,eq-nu_competencia-nu_competencia_max"
               args:
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
+                - id: "10_10_01_94"
+                  named_prop: "nu_competencia_min"
+                - id: "sst_bene_qtd_especie"
+                  named_prop: "nu_competencia_max"
         chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['10_10_01_94']
-            options:
-              formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
+        api:
+          - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'94',and,gt-nu_competencia-2017"
+          - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'10_10_01_94',and,le-nu_competencia-'2017'"
+        api_options:
+          formatters:
+            - id: "vl_indicador"
+              format: "inteiro"
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Qtde'
+          - text: 'Qtde de Benefícios B94 - Auxílio-acidente por acidente do trabalho'
             value: 'fmt_vl_indicador'
         chart_options:
           id: "nu_competencia"
@@ -856,9 +970,5 @@ secoes:
           show_y_axis: false
           hide_legend: true
           color: "#238B45"
-        source:
-          desc_field: "ds_fonte"
-# =====================####### Exemplo de autocard 
-#      - id: "bar_ben_b94_teste"
-#        autoFill: true
-#        cd_indicador: "10_10_01_94"
+        # source:
+        #   desc_field: "ds_fonte"
