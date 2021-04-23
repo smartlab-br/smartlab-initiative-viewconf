@@ -26,7 +26,7 @@ principais:
     cls: 'xs12 sm6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      - template: "/sst/beneficios?categorias='covid'-cd_indicador&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-ano_beneficio-{0}",and,eq-cd_uf-{1}"
+      - template: "/sst/beneficios?categorias='covid'-cd_indicador&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
         args:
           - base_object: "sst_beneficio"
             named_prop: "agr_max_ano_beneficio"
@@ -67,7 +67,7 @@ principais:
         - base_object: "sst_cat"
           named_prop: "agr_max_ano_cat"
         - named_prop: "idLocalidade"
-  args:
+    args:
       - prop: "value"
         named_prop: 'agr_count'
         format: 'inteiro'
@@ -164,7 +164,7 @@ secoes:
                       Considera-se, em especial, além do código U07 (Covid-19) da Classificação Internacional de Doenças (CID), o código B34 (Doenças por vírus, de localização não especificada), em especial as subcategorias B342 (Infecção por coronavírus de localização não especificada) e B349 (Infecção viral não especificada). O código U07 foi incluído na Classificação Internacional de Doenças após a descoberta do novo vírus. A hipótese que os dados sugerem, além do tempo necessário ao diagnóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34 (em especial os códigos B34.2 e B34.9), até então nunca ou apenas raramente haviam sido utilizados para comunicações de acidentes de trabalho e afastamentos previdenciários."
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/sst/beneficios?categorias=nm_uf,ano_beneficio,cd_uf&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+          template: "/sst/beneficios?categorias=nm_municipio,ano_beneficio,cd_municipio_ibge_dv&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
           args:
             - base_object: "sst_beneficio"
               named_prop: "agr_max_ano_beneficio"
@@ -179,17 +179,17 @@ secoes:
               - id: "agr_count"
                 format: 'inteiro'
         headers:
-          - text: 'Unidade Federativa'
+          - text: 'Município'
             align: 'left'
-            value: 'nm_uf'
+            value: 'nm_municipio'
           - text: 'Ano'
             align: 'left'
             value: 'ano_beneficio'
           - text: 'Qtde de Benefícios por CID B34 ou U07'
             value: 'fmt_agr_count'
         chart_options:
-          id_field: 'cd_uf'
-          topo_key: "codigo"
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
           value_field: 'calc_deviation_uf'
           colorScale:
             name: "Reds"
@@ -588,7 +588,7 @@ secoes:
             cls: "xs12 md6"
             # title: 'Acidentes de Trabalho por Idade e Sexo ()'
             footnote: 
-              template: Afastamentos por Tipo de Doença ({0} - ano de início da pandemia Covid-19)"
+              template: "Afastamentos por Tipo de Doença ({0} - ano de início da pandemia Covid-19)"
               args:
                 - base_object: "sst_beneficio"
                   named_prop: "agr_max_ano_beneficio"
@@ -665,7 +665,7 @@ secoes:
                       Considera-se, em especial, além do código U07 (Covid-19) da Classificação Internacional de Doenças (CID), o código B34 (Doenças por vírus, de localização não especificada), em especial as subcategorias B342 (Infecção por coronavírus de localização não especificada) e B349 (Infecção viral não especificada). O código U07 foi incluído na Classificação Internacional de Doenças após a descoberta do novo vírus. A hipótese que os dados sugerem, além do tempo necessário ao diagnóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34 (em especial os códigos B34.2 e B34.9), até então nunca ou apenas raramente haviam sido utilizados para comunicações de acidentes de trabalho e afastamentos previdenciários."
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/sst/cats?categorias=cd_uf,nm_uf,ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+          template: "/sst/cats?categorias=cd_municipio_ibge_dv,nm_municipio,ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
           args:
             - base_object: "sst_cat"
               named_prop: "agr_max_ano_cat"
@@ -680,17 +680,17 @@ secoes:
               - id: "agr_count"
                 format: 'inteiro'
         headers:
-          - text: 'Unidade Federativa'
+          - text: 'Município'
             align: 'left'
-            value: 'nm_uf'
+            value: 'nm_municipio'
           - text: 'Ano'
             align: 'left'
             value: 'ano_cat'
           - text: 'Qtde de Notificações de Acidente de Trabalho por CID B34 ou U07'
             value: 'fmt_agr_count'
         chart_options:
-          id_field: 'cd_uf'
-          topo_key: "codigo"
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
           value_field: 'calc_deviation_mun'
           colorScale:
             name: "Reds"
@@ -798,7 +798,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,ne-ds_cbo-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,ne-ds_cbo-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}&ordenacao=-agr_count&limit=1"
                   args:
                     - base_object: "sst_cat"
                       named_prop: "agr_max_ano_cat"
