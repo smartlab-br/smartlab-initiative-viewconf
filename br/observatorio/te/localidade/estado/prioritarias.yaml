@@ -25,23 +25,23 @@ principais:
       id: "line_te_rgt"
       type: "LINE"
       api: 
-        template: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+        template: "/te/indicadoresestaduais?categorias=cd_indicador,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'te_sit_trab_resgatados'"
         args:
           - named_prop: "idLocalidade"
         options:
           formatters:
-            - id: "vl_indicador"
+            - id: "agr_sum_vl_indicador"
               format: 'inteiro'
       headers:
         - text: 'Ano'
           align: 'left'
           value: 'nu_competencia'
         - text: 'Nº resgatados do trabalho escravo'
-          value: 'fmt_vl_indicador'
+          value: 'fmt_agr_sum_vl_indicador'
       options:
         id: 'cd_indicador'
         x: 'nu_competencia'
-        y: "vl_indicador"
+        y: "agr_sum_vl_indicador"
         x_options:
           axis: false
         y_options:
@@ -62,9 +62,11 @@ principais:
         default: 'Nenhum'
         zero: 'Nenhum'
       - prop: "description"
-        fixed: "Trabalhadores resgatados em situação de Trabalho Forçado com naturalidade apurada"
+        fixed: "Trabalhadores resgatados naturais em situação de Trabalho Forçado"
       - prop: 'comment'
         template: "(De {0} a {1})"
+        api: 
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
         args:
           - named_prop: "nu_competencia_min"
           - named_prop: "nu_competencia_max"
@@ -72,23 +74,23 @@ principais:
       id: "line_te_nat"
       type: "LINE"
       api: 
-        template: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_nat'"
+        template: "/te/indicadoresestaduais?categorias=cd_indicador,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'te_nat'"
         args:
           - named_prop: "idLocalidade"
         options:
           formatters:
-            - id: "vl_indicador"
+            - id: "agr_sum_vl_indicador"
               format: 'inteiro'
       headers:
         - text: 'Ano'
           align: 'left'
           value: 'nu_competencia'
-        - text: 'Nº resgatados do trabalho escravo - Naturalidade apurada'
-          value: 'fmt_vl_indicador'
+        - text: 'Nº resgatados do trabalho escravo - naturais'
+          value: 'fmt_agr_sum_vl_indicador'
       options:
         id: 'cd_indicador'
         x: 'nu_competencia'
-        y: "vl_indicador"
+        y: "agr_sum_vl_indicador"
         x_options:
           axis: false
         y_options:
@@ -109,9 +111,11 @@ principais:
         default: 'Nenhum'
         zero: 'Nenhum'
       - prop: "description"
-        fixed: "Trabalhadores resgatados em situação de Trabalho Forçado com residência apurada"
+        fixed: "Trabalhadores resgatados residentes em situação de Trabalho Forçado"
       - prop: 'comment'
         template: "(De {0} a {1})"
+        api: 
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_res'"
         args:
           - named_prop: "nu_competencia_min"
           - named_prop: "nu_competencia_max"
@@ -119,23 +123,23 @@ principais:
       id: "line_te_res"
       type: "LINE"
       api: 
-        template: "/te/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'te_res'"
+        template: "/te/indicadoresestaduais?categorias=cd_indicador,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'te_res'"
         args:
           - named_prop: "idLocalidade"
         options:
           formatters:
-            - id: "vl_indicador"
+            - id: "agr_sum_vl_indicador"
               format: 'inteiro'
       headers:
         - text: 'Ano'
           align: 'left'
           value: 'nu_competencia'
-        - text: 'Nº resgatados do trabalho escravo - Residência apurada'
-          value: 'fmt_vl_indicador'
+        - text: 'Nº resgatados do trabalho escravo - residentes'
+          value: 'fmt_agr_sum_vl_indicador'
       options:
         id: 'cd_indicador'
         x: 'nu_competencia'
-        y: "vl_indicador"
+        y: "agr_sum_vl_indicador"
         x_options:
           axis: false
         y_options:
@@ -163,23 +167,27 @@ principais:
         fixed: "Média de resgatados por ano"
       - prop: 'comment'
         template: "(De {0} a {1})"
+        api: 
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
         args:
           - named_prop: "nu_competencia_min"
           - named_prop: "nu_competencia_max"
 # ========================================================
 secoes:
   - id: 'prioritarias'
-    name: 'Áreas Prioritárias no Brasil'
+    name: 'Áreas Prioritárias na Unidade Federativa'
     cards:
 # ========================================================
       - id: "sparkline_resgatados_escravo"
         title: 
           fixed: "Municípios de Resgate"
         title_comment:
-          template: "Brasil, {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api: 
             fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
           args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -198,7 +206,9 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+                  template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
                     named_prop: 'nm_municipio_uf'
@@ -244,7 +254,9 @@ secoes:
                     - named_prop: "value_max"
         component_type: "SPARKLINES"
         api:
-          fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
         headers:
           - text: 'Município'
             align: 'center'
@@ -294,130 +306,16 @@ secoes:
           desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
           link: "https://sit.trabalho.gov.br/radar/"
 # ========================================================
-      - id: "sparkline_uf_resgatados_escravo"
-        title: 
-          fixed: "Unidades Federativas de Resgate"
-        title_comment:
-          template: "Brasil, {0} a {1}"
-          api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
-          args:
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "O total de resgates foi calculado com base em informações extraídas do Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
-          - type: "text"
-            title: "Observação Importante"
-            content:
-              fixed: "Esse tipo de informação ajuda gestores na definição de regiões geográficas prioritárias para atividades de combate e prevenção, as quais também obedecem a lógica das curvas de oferta e de demanda do trabalho escravo no Brasil. Ilustrativamente, locais de maior intensidade de resgates devem ser prioritários quanto a atividades de inspeção do trabalho, sobretudo quanto às operações promovidas pela Divisão de Fiscalização para Erradicação do Trabalho Escravo (DETRAE – Ministério do Trabalho) e pelas equipes interinstitucionais do Grupo Especial de Fiscalização Móvel, conjuntamente com as ações coordenadas no âmbito das Superintendências Regionais do Trabalho nos Estados. Nesses locais, a orquestração interinstitucional fomenta e facilita a atuação efetiva e eficiente de operadores da lei, incluindo as forças policiais, da Justiça e do Ministério Público.<br/><br/>
-                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12'
-                api: 
-                  fixed: "/te/indicadoresmunicipais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
-                args:
-                  - prop: "value"
-                    named_prop: 'nm_uf'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: 'UF com mais Resgatados'
-                  - prop: "comment"
-                    template: 'Total de Resgatados: {0}'
-                    args:
-                      - named_prop: "agr_sum_vl_indicador"
-                        format: "inteiro"
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, a unidade federativa com mais vítimas do trabalho resgatadas na série histórica. Na tabela ao lado, apresentam-se as UFs com alta incidência para o período selecionado. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
-              preloaded:
-                prop: "trabalho_escravo_agr"
-                function: "slice"
-                id: ['te_sit_trab_resgatados']
-              args:
-                - named_prop: "nu_competencia_min"
-                  required: true
-          - type: "slider"
-            cls: "pl-2"
-            id: "slider_rgt"
-            range: true
-            title: ""
-            api: 
-              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
-            args:
-              - prop: "min"
-                named_prop: "nu_competencia_min"
-              - prop: "max"
-                named_prop: "nu_competencia_max"
-            selection:
-              event: "selection"
-              rules:
-                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
-                api:
-                  args:
-                    - named_prop: "value_min"
-                    - named_prop: "value_max"
-        component_type: "SPARKLINES"
-        api:
-          fixed: "/te/indicadoresmunicipais?categorias=cd_uf,nm_uf,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
-        headers:
-          - text: 'Unidade Federativa'
-            align: 'center'
-            width: '26%'
-            value: 'nm_uf'
-            item_align: 'center'
-          - text: 'Sigla'
-            align: 'center'
-            width: '5%'
-            value: 'sg_uf'
-            item_align: 'center'
-          - text: 'Total'
-            align: 'center'
-            width: '10%'
-            value: 'total_te_sit_trab_resgatados'
-            item_align: 'center'
-          - text: 'Smartline'
-            align: 'center'
-            width: '34%'
-            value: 'last_value_te_sit_trab_resgatados'
-            item_align: 'center'
-            type: 'spark'
-            series: 'te_sit_trab_resgatados'
-            bgColor: '#00C853'
-            stroke: 2
-          - text: 'Pico'
-            align: 'center'
-            width: '25%'
-            value: 'higher_value_str_te_sit_trab_resgatados'
-            item_align: 'center'
-            sort_field: 'higher_value_te_sit_trab_resgatados'
-        component_options:
-          id: "sparklines_uf_freq_rgt"
-          title: "Resgatados do Trabalho Escravo"
-          cls: "xs12 md6 lg4 pa-3"
-          id_field: "cd_uf"
-          value_field: "agr_sum_vl_indicador"
-          series_field: "cd_indicador"
-          category_field: "nu_competencia"
-        source:
-          desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
-          link: "https://sit.trabalho.gov.br/radar/"
-# ========================================================
       - id: "sparkline_naturalidade_resgatados"
         title: 
           fixed: "Locais de nascimento de resgatados"
         title_comment:
-          template: "Brasil, {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api: 
             fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
           args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -436,7 +334,9 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_nat'"
+                  template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_nat',and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
                     named_prop: 'nm_municipio_uf'
@@ -482,7 +382,9 @@ secoes:
                     - named_prop: "value_max"
         component_type: "SPARKLINES"
         api:
-          fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_nat'"
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_nat',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
         headers:
           - text: 'Município'
             align: 'center'
@@ -533,10 +435,12 @@ secoes:
         title: 
           fixed: "Locais de residência declarada"
         title_comment:
-          template: "Brasil, {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api: 
             fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_res'"
           args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -555,7 +459,9 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_res'"
+                  template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_res',and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
                     named_prop: 'nm_municipio_uf'
@@ -601,7 +507,9 @@ secoes:
                     - named_prop: "value_max"
         component_type: "SPARKLINES"
         api:
-          fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_res'"
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_res',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
         headers:
           - text: 'Município'
             align: 'center'
