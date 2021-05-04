@@ -9,7 +9,23 @@ principais:
         named_prop: 'agr_sum_vl_indicador'
         format: 'inteiro'
       - prop: "description"
-        fixed: "Total de ocorrências registradas no Disque 100"
+        fixed: "Total de ocorrências registradas no Disque 100<br/>Tráfico de pessoas e trabalho escravo"
+      - prop: "comment"
+        template: "De {0} a {1}"
+        args:
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'"
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Total de ocorrências registradas no Disque 100<br/>Tráfico de Crianças e Adolescente"
       - prop: "comment"
         template: "De {0} a {1}"
         args:
@@ -19,7 +35,7 @@ principais:
 # ===================================================
 secoes:
   - id: "disque100"
-    name: ""
+    name: "Trabalho Escravo e Tráfico de Pessoas"
     cards:
       # ====================================================          
       - id: "mapa_denuncias_disque_100"
@@ -376,3 +392,364 @@ secoes:
             order: 'asc'
         source:
           desc_field: "ds_fonte"
+
+# ===============================================
+      - id: "disque_100_ti_headline"
+        type: "headline"
+        title:
+          fixed: "Tráfico de Crianças e Adolescentes"
+      # ====================================================          
+      - id: "mapa_denuncias_ti_disque_100"
+        title: 
+          fixed: "Distribuição Geográfica das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil'"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+              # preloaded:
+              #   prop: "centralindicadores"
+              #   function: "slice"
+              #   id: "06_05_11_00"
+              #   year: "max"
+              # args:
+              #   - named_prop: 'ds_indicador_radical'
+              #   - named_prop: 'ds_fonte'
+              #   - named_prop: 'nu_competencia_min'
+              #   - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: "high"
+                cls: "xs12 md6"
+                api:
+                  template: "/indicadoresnacionais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'"
+                  # args:
+                  #   - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: "agr_sum_vl_indicador"
+                    format: 'inteiro'
+                  - prop: "description"
+                    fixed: "DENÚNCIAS DE Tráfico de Crianças e Adolescente"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número acumulado de denúncias de Tráfico de Crianças e Adolescente para a unidade geográfica em realce. O Disque Direitos Humanos (Disque 100) é um serviço de disseminação de informações sobre direitos de grupos vulneráveis e de denúncias de violações de direitos humanos, atendendo graves situações de violações que acabaram de ocorrer ou que ainda estão em curso, acionando os órgãos competentes e possibilitando o flagrante. No mapa ao lado, apresenta-se a distribuição geográfica das denúncias. Quanto maior a intensidade da cor vermelha, maior a quantidade de denúncias."
+          - id: "select_tipo"
+            type: "select"
+            multiple: true
+            label: "Tipo de Tráfico de Crianças e Adolescente"
+            api:
+              fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'"
+              # args:
+              #   - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_agreg_secundaria-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+        chart_type: "MAP_TOPOJSON"
+        # apiBase: 
+        #   fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-1-1"
+        api: 
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'"
+          options:
+            calcs:
+              - id: 'faixa_vl_indicador'
+                function: 'get_bin'
+                fn_args:
+                  - named_prop: 'agr_sum_vl_indicador'
+                  - fixed: [10,100,500,1000,5000,10000,15000,20000]
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde de Notificações'
+            value: 'calc_faixa_vl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'agr_sum_vl_indicador'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
+# # ====================================================          
+      - id: "bar_denuncias_ti_disque_100"
+        title: 
+          fixed: "Evolução das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil'"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: ""
+              # preloaded:
+              #   prop: "centralindicadores"
+              #   function: "slice"
+              #   id: "06_05_13_00"
+              #   year: "max"
+              # args:
+              #   - named_prop: 'ds_indicador_radical'
+              #   - named_prop: 'ds_fonte'
+              #   - named_prop: 'nu_competencia_min'
+              #   - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: "high"
+                cls: "xs12 md6"
+                api:
+                  template: "/indicadoresnacionais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'"
+                  # args:
+                  #   - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: "agr_sum_vl_indicador"
+                    format: 'inteiro'
+                  - prop: "description"
+                    fixed: "DENÚNCIAS DE Tráfico de Crianças e Adolescente"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número acumulado de denúncias de tráfico de crianças e adolescente para a unidade geográfica em realce. O Disque Direitos Humanos (Disque 100) é um serviço de disseminação de informações sobre direitos de grupos vulneráveis e de denúncias de violações de direitos humanos, atendendo graves situações de violações que acabaram de ocorrer ou que ainda estão em curso, acionando os órgãos competentes e possibilitando o flagrante. No gráfico ao lado, nota-se a evolução histórica do número de denúncias."
+              
+          - id: "select_tipo"
+            type: "select"
+            multiple: true
+            label: "Tipo de Tráfico de Crianças e Adolescente"
+            api:
+              template: "/indicadoresnacionais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'"
+              # args:
+              #   - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_agreg_secundaria-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+
+        chart_type: "BAR"
+        # apiBase: 
+        #   fixed: "/indicadoresestaduais?categorias=nu_competencia,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-1-1"
+        api:
+          template: "/indicadoresestaduais?categorias=nu_competencia,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'"
+          options:
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "agr_sum_vl_indicador"
+          orientation: "vertical"
+          text: "fmt_agr_sum_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          hide_legend: true
+          color: "#238B45"
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "treemap_denuncias_ti_disque_100"
+        title:
+          fixed: "Características das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil'"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        description: 
+          - type: "minicards"
+            cards:
+              - relevance: "high"
+                cls: "xs12"
+                api:
+                  fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'&ordenacao=-agr_sum_vl_indicador&limit=1"
+                  # args:
+                  #   - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: "ds_agreg_secundaria"
+                  - prop: "description"
+                    fixed: "TIPO MAIS FREQUENTE"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o tipo mais frequente de tráfico de crianças e adolescente denunciado via Disque 100 para a unidade geográfica em realce. O Disque Direitos Humanos (Disque 100) é um serviço de disseminação de informações sobre direitos de grupos vulneráveis e de denúncias de violações de direitos humanos, atendendo graves situações de violações que acabaram de ocorrer ou que ainda estão em curso, acionando os órgãos competentes e possibilitando o flagrante. No gráfico ao lado, apresentam-se os diferentes tipos frequentemente denunciados e sua distribuição percentual."
+              # api:
+              #   fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
+              #   options:
+              #     calcs:
+              #       - id: "proximo_ano"
+              #         function: "calc_addition_ids_ds"
+              #         fn_args:
+              #           - named_prop: "nu_competencia_max"
+              #           - fixed: 1
+              #           - fixed: 1
+              # args:
+              #   - named_prop: "nu_competencia_max"
+              #   - named_prop: "calc_proximo_ano"
+
+        chart_type: "TREEMAP"
+        api:
+          template: "/indicadoresestaduais?categorias=ds_agreg_secundaria,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'"
+          options:
+            calcs:
+              - id: 'faixa_vl_indicador'
+                function: 'get_bin'
+                fn_args:
+                  - named_prop: 'agr_sum_vl_indicador'
+                  - fixed: [10,100,500,1000,5000,10000,15000,20000]
+            # formatters:
+            #   - id: "agr_sum_vl_indicador"
+            #     format: 'inteiro'
+
+        headers:
+          - text: 'Tipo'
+            align: 'left'
+            value: 'ds_agreg_secundaria'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          # - text: 'Qtde'
+          #   value: 'vl_indicador'
+          - text: 'Qtde'
+            value: 'calc_faixa_vl_indicador'
+        chart_options:
+          id: "ds_agreg_secundaria"
+          text: "ds_agreg_secundaria"
+          size: "agr_sum_vl_indicador"
+          colorScale:
+            name: "Blues"
+            type: "singleHue"
+            levels: 6
+            order: 'asc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "treemap_denuncias_ti_disque_100_ufs"
+        title:
+          fixed: "Distribuição Geográfica das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil'"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        description: 
+          - type: "minicards"
+            cards:
+              - relevance: "high"
+                cls: "xs12"
+                api:
+                  template: "/indicadoresestaduais?categorias=nm_uf&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'&ordenacao=-agr_sum_vl_indicador&limit=1"
+                  # args:
+                  #   - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: "nm_uf"
+                  - prop: "description"
+                    fixed: "UF COM MAIS DENÚNCIAS"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a Unidade Federativa com maior quantidade de denúncias de tráfico de crianças e adolescente via Disque 100. O Disque Direitos Humanos (Disque 100) é um serviço de disseminação de informações sobre direitos de grupos vulneráveis e de denúncias de violações de direitos humanos, atendendo graves situações de violações que acabaram de ocorrer ou que ainda estão em curso, acionando os órgãos competentes e possibilitando o flagrante. No gráfico ao lado, apresenta-se a distribuição percentual das denúncias em relação às Unidades Federativas brasileiras."
+              # api:
+              #   fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
+              #   options:
+              #     calcs:
+              #       - id: "proximo_ano"
+              #         function: "calc_addition_ids_ds"
+              #         fn_args:
+              #           - named_prop: "nu_competencia_max"
+              #           - fixed: 1
+              #           - fixed: 1
+              # args:
+              #   - named_prop: "nu_competencia_max"
+              #   - named_prop: "calc_proximo_ano"
+
+        chart_type: "TREEMAP"
+        api:
+          template: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo'"
+          options:
+            # calcs:
+            #   - id: 'faixa_vl_indicador'
+            #     function: 'get_bin'
+            #     fn_args:
+            #       - named_prop: 'agr_sum_vl_indicador'
+            #       - fixed: [10,100,500,1000,5000,10000,15000,20000]
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          # - text: 'Qtde'
+          #   value: 'vl_indicador'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id: "cd_uf"
+          text: "nm_uf"
+          size: "agr_sum_vl_indicador"
+          colorScale:
+            name: "Purples"
+            type: "singleHue"
+            levels: 6
+            order: 'asc'
+        source:
+          desc_field: "ds_fonte"          
