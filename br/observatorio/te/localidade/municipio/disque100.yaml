@@ -11,7 +11,25 @@ principais:
         named_prop: 'agr_sum_vl_indicador'
         format: 'inteiro'
       - prop: "description"
-        fixed: "Total de ocorrências registradas no Disque 100"
+        fixed: "Total de ocorrências registradas no Disque 100<br/>Tráfico de pessoas e trabalho escravo"
+      - prop: "comment"
+        template: "De {0} a {1}"
+        args:
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_mun_ibge-{0}"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+      - prop: "description"
+        fixed: "Total de ocorrências registradas no Disque 100<br/>Tráfico de Crianças e Adolescente"
       - prop: "comment"
         template: "De {0} a {1}"
         args:
@@ -130,4 +148,101 @@ secoes:
             name: "Reds"
         source:
           desc_field: "ds_fonte"
-# # ====================================================          
+# ===============================================
+      - id: "mapa_denuncias_ti_disque_100"
+        title: 
+          fixed: "Distribuição Geográfica das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          api:
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil'"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+              # preloaded:
+              #   prop: "centralindicadores"
+              #   function: "slice"
+              #   id: "06_05_11_00"
+              #   year: "max"
+              # args:
+              #   - named_prop: 'ds_indicador_radical'
+              #   - named_prop: 'ds_fonte'
+              #   - named_prop: 'nu_competencia_min'
+              #   - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: "high"
+                cls: "xs12 md6"
+                api:
+                  template: "/indicadoresmunicipais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_municipio_ibge_dv-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: "agr_sum_vl_indicador"
+                    format: 'inteiro'
+                  - prop: "description"
+                    fixed: "DENÚNCIAS DE Tráfico de Crianças e Adolescente"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número acumulado de denúncias de tráfico de crianças e adolescente para a unidade geográfica em realce. O Disque Direitos Humanos (Disque 100) é um serviço de disseminação de informações sobre direitos de grupos vulneráveis e de denúncias de violações de direitos humanos, atendendo graves situações de violações que acabaram de ocorrer ou que ainda estão em curso, acionando os órgãos competentes e possibilitando o flagrante. No mapa ao lado, apresenta-se a distribuição geográfica das denúncias. Quanto maior a intensidade da cor vermelha, maior a quantidade de denúncias."
+          - id: "select_tipo"
+            type: "select"
+            multiple: true
+            label: "Tipo de Tráfico de Crianças e Adolescente"
+            api:
+              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_agreg_secundaria-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: 'faixa_vl_indicador'
+                function: 'get_bin'
+                fn_args:
+                  - named_prop: 'agr_sum_vl_indicador'
+                  - fixed: [10,100,500,1000,5000,10000,15000,20000]
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde de Notificações'
+            value: 'calc_faixa_vl_indicador'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'agr_sum_vl_indicador'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
