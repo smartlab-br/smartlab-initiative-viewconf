@@ -39,7 +39,7 @@ principais:
 # ===================================================
 secoes:
   - id: "disque100"
-    name: "Trabalho Escravo e Tráfico de Pessoas"
+    name: "Denúncias de Trabalho Escravo e Tráfico de Pessoas"
     cards:
       # ====================================================          
       - id: "mapa_denuncias_disque_100"
@@ -48,11 +48,10 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            template: "/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo',and,eq-cd_uf-{0}"
-            args:
-              - named_prop: "idLocalidade"
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo'"
           args:
-            - named_prop: "nm_uf"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         # info:
@@ -155,11 +154,10 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            template: "/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo',and,eq-cd_uf-{0}"
-            args:
-              - named_prop: "idLocalidade"
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo'"
           args:
-            - named_prop: "nm_uf"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         # info:
@@ -258,11 +256,10 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            template: "/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo',and,eq-cd_uf-{0}"
-            args:
-              - named_prop: "idLocalidade"
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo'"
           args:
-            - named_prop: "nm_uf"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         description: 
@@ -343,11 +340,10 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            template: "/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo',and,eq-cd_uf-{0}"
-            args:
-              - named_prop: "idLocalidade"
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo'"
           args:
-            - named_prop: "nm_uf"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         description: 
@@ -424,16 +420,18 @@ secoes:
       - id: "disque_100_ti_headline"
         type: "headline"
         title:
-          fixed: "Tráfico de Crianças e Adolescentes"
+          fixed: "Denúncias de Tráfico de Crianças e Adolescentes"
       # ====================================================          
       - id: "mapa_denuncias_ti_disque_100"
         title: 
           fixed: "Distribuição Geográfica das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
         title_comment:
-          template: "Brasil, de {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil'"
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo'"
           args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         # info:
@@ -503,6 +501,10 @@ secoes:
                 fn_args:
                   - named_prop: 'agr_sum_vl_indicador'
                   - fixed: [10,100,500,1000,5000,10000,15000,20000]
+              - id: "deviation_vl_indicador"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
             formatters:
               - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
@@ -518,118 +520,122 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'agr_sum_vl_indicador'
+          value_field: 'calc_deviation_vl_indicador'
           colorScale:
             name: "Reds"
         source:
           desc_field: "ds_fonte"
-# # ====================================================          
-      - id: "bar_denuncias_ti_disque_100"
-        title: 
-          fixed: "Evolução das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
-        title_comment:
-          template: "Brasil, de {0} a {1}"
-          api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil'"
-          args:
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       template: ""
-              # preloaded:
-              #   prop: "centralindicadores"
-              #   function: "slice"
-              #   id: "06_05_13_00"
-              #   year: "max"
-              # args:
-              #   - named_prop: 'ds_indicador_radical'
-              #   - named_prop: 'ds_fonte'
-              #   - named_prop: 'nu_competencia_min'
-              #   - named_prop: 'nu_competencia_max'
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: "high"
-                cls: "xs12 md6"
-                api:
-                  template: "/indicadoresestaduais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_uf-{0}"
-                  args:
-                    - named_prop: "cd_uf"
-                args:
-                  - prop: "value"
-                    named_prop: "agr_sum_vl_indicador"
-                    format: 'inteiro'
-                  - prop: "description"
-                    fixed: "DENÚNCIAS DE Tráfico de Crianças e Adolescente"
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o número acumulado de denúncias de tráfico de crianças e adolescente para a unidade geográfica em realce. O Disque Direitos Humanos (Disque 100) é um serviço de disseminação de informações sobre direitos de grupos vulneráveis e de denúncias de violações de direitos humanos, atendendo graves situações de violações que acabaram de ocorrer ou que ainda estão em curso, acionando os órgãos competentes e possibilitando o flagrante. No gráfico ao lado, nota-se a evolução histórica do número de denúncias."
+# # # ====================================================          
+#       - id: "bar_denuncias_ti_disque_100"
+#         title: 
+#           fixed: "Evolução das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           api:
+#             fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo'"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - named_prop: "nu_competencia_min"
+#             - named_prop: "nu_competencia_max"
+#         # info:
+#         #   - type: "text"
+#         #     title: "Sobre a métrica"
+#         #     content:
+#         #       template: ""
+#               # preloaded:
+#               #   prop: "centralindicadores"
+#               #   function: "slice"
+#               #   id: "06_05_13_00"
+#               #   year: "max"
+#               # args:
+#               #   - named_prop: 'ds_indicador_radical'
+#               #   - named_prop: 'ds_fonte'
+#               #   - named_prop: 'nu_competencia_min'
+#               #   - named_prop: 'nu_competencia_max'
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: "high"
+#                 cls: "xs12 md6"
+#                 api:
+#                   template: "/indicadoresestaduais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_uf-{0}"
+#                   args:
+#                     - named_prop: "cd_uf"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: "agr_sum_vl_indicador"
+#                     format: 'inteiro'
+#                   - prop: "description"
+#                     fixed: "DENÚNCIAS DE Tráfico de Crianças e Adolescente"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número acumulado de denúncias de tráfico de crianças e adolescente para a unidade geográfica em realce. O Disque Direitos Humanos (Disque 100) é um serviço de disseminação de informações sobre direitos de grupos vulneráveis e de denúncias de violações de direitos humanos, atendendo graves situações de violações que acabaram de ocorrer ou que ainda estão em curso, acionando os órgãos competentes e possibilitando o flagrante. No gráfico ao lado, nota-se a evolução histórica do número de denúncias."
               
-          - id: "select_tipo"
-            type: "select"
-            multiple: true
-            label: "Tipo de Tráfico de Crianças e Adolescente"
-            api:
-              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_uf-{0}"
-              args:
-                - named_prop: "cd_uf"
-            args:
-              - prop: "id"
-                named_prop: "ds_agreg_secundaria"
-              - prop: "label"
-                named_prop: "ds_agreg_secundaria"
-                # null_value: "(Não informado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-ds_agreg_secundaria-{0}"
-                api:
-                  args:
-                    - named_prop: "ds_agreg_secundaria"
+#           - id: "select_tipo"
+#             type: "select"
+#             multiple: true
+#             label: "Tipo de Tráfico de Crianças e Adolescente"
+#             api:
+#               template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_uf-{0}"
+#               args:
+#                 - named_prop: "cd_uf"
+#             args:
+#               - prop: "id"
+#                 named_prop: "ds_agreg_secundaria"
+#               - prop: "label"
+#                 named_prop: "ds_agreg_secundaria"
+#                 # null_value: "(Não informado)"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,in-ds_agreg_secundaria-{0}"
+#                 api:
+#                   args:
+#                     - named_prop: "ds_agreg_secundaria"
 
-        chart_type: "BAR"
-        api:
-          template: "/indicadoresmunicipais?categorias=nu_competencia,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_uf-{0}"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            formatters:
-              - id: "agr_sum_vl_indicador"
-                format: 'inteiro'
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Qtde'
-            value: 'fmt_agr_sum_vl_indicador'
-        chart_options:
-          id: "nu_competencia"
-          x: "nu_competencia"
-          y: "agr_sum_vl_indicador"
-          orientation: "vertical"
-          text: "fmt_agr_sum_vl_indicador"
-          show_x_axis: true
-          show_y_axis: false
-          hide_legend: true
-          color: "#238B45"
-        source:
-          desc_field: "ds_fonte"
+#         chart_type: "BAR"
+#         api:
+#           template: "/indicadoresmunicipais?categorias=nu_competencia,ds_indicador_radical,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_uf-{0}"
+#           args:
+#             - named_prop: "cd_uf"
+#           options:
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Indicador'
+#             align: 'left'
+#             value: 'ds_indicador_radical'
+#           - text: 'Ano'
+#             align: 'left'
+#             value: 'nu_competencia'
+#           - text: 'Qtde'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id: "nu_competencia"
+#           x: "nu_competencia"
+#           y: "agr_sum_vl_indicador"
+#           orientation: "vertical"
+#           text: "fmt_agr_sum_vl_indicador"
+#           show_x_axis: true
+#           show_y_axis: false
+#           hide_legend: true
+#           color: "#238B45"
+#         source:
+#           desc_field: "ds_fonte"
 # ========================================================
       - id: "treemap_denuncias_ti_disque_100"
         title:
           fixed: "Características das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
         title_comment:
-          template: "Brasil, de {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil'"
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo'"
           args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         description: 
@@ -695,10 +701,12 @@ secoes:
         title:
           fixed: "Distribuição Geográfica das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
         title_comment:
-          template: "Brasil, de {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil'"
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo'"
           args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         description: 
@@ -707,7 +715,7 @@ secoes:
               - relevance: "high"
                 cls: "xs12"
                 api:
-                  template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_municipio_ibge_dv-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
+                  template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,in-ds_agreg_secundaria-'Exploração sexual comercial'-'Tráfico de pessoas\\, inclusive trabalho escravo',and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
                   args:
                     - named_prop: "cd_uf"
                 args:
