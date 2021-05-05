@@ -48,11 +48,10 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            template: "/indicadoresmunicipais?categorias=nm_municipio,nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo',and,eq-cd_mun_ibge-{0}"
-            args:
-              - named_prop: "idLocalidade"
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo'"
           args:
-            - named_prop: "nm_municipio"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         # info:
@@ -153,10 +152,12 @@ secoes:
         title: 
           fixed: "Distribuição Geográfica das Denúncias de Tráfico de Crianças e Adolescente no Disque 100"
         title_comment:
-          template: "Brasil, de {0} a {1}"
+          template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil'"
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&agregacao=distinct&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Tráfico de pessoas e trabalho escravo'"
           args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         # info:
@@ -226,6 +227,10 @@ secoes:
                 fn_args:
                   - named_prop: 'agr_sum_vl_indicador'
                   - fixed: [10,100,500,1000,5000,10000,15000,20000]
+              - id: "deviation_vl_indicador"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
             formatters:
               - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
@@ -241,7 +246,7 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'agr_sum_vl_indicador'
+          value_field: 'calc_deviation_vl_indicador'
           colorScale:
             name: "Reds"
         source:
