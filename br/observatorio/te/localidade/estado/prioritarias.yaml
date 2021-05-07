@@ -1,0 +1,707 @@
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "trabalho_escravo_agr"
+      function: "slice"
+      id: ['te_sit_trab_resgatados']
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+        default: 'Nenhum'
+        zero: 'Nenhum'
+      - prop: "description"
+        fixed: "Pessoas em condição análoga à de escravo - Resgates"
+      - prop: 'comment'
+        template: "(De {0} a {1})"
+        api: 
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+        args:
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
+    chart:
+      id: "line_te_rgt"
+      type: "LINE"
+      api: 
+        template: "/te/indicadoresestaduais?categorias=cd_indicador,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'te_sit_trab_resgatados'"
+        args:
+          - named_prop: "idLocalidade"
+        options:
+          formatters:
+            - id: "agr_sum_vl_indicador"
+              format: 'inteiro'
+      headers:
+        - text: 'Ano'
+          align: 'left'
+          value: 'nu_competencia'
+        - text: 'Nº resgatados do trabalho escravo'
+          value: 'fmt_agr_sum_vl_indicador'
+      options:
+        id: 'cd_indicador'
+        x: 'nu_competencia'
+        y: "agr_sum_vl_indicador"
+        x_options:
+          axis: false
+        y_options:
+          axis: false
+        hide_legend: true
+        color: "#00C853"
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   preloaded:
+  #     prop: "trabalho_escravo_agr"
+  #     function: "slice"
+  #     id: ['te_nat']
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'agr_sum_vl_indicador'
+  #       format: 'inteiro'
+  #       default: 'Nenhum'
+  #       zero: 'Nenhum'
+  #     - prop: "description"
+  #       fixed: "Trabalhadores resgatados naturais em situação de Trabalho Forçado"
+  #     - prop: 'comment'
+  #       template: "(De {0} a {1})"
+  #       api: 
+  #         fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+  #       args:
+  #         - named_prop: "nu_competencia_min"
+  #         - named_prop: "nu_competencia_max"
+  #   chart:
+  #     id: "line_te_nat"
+  #     type: "LINE"
+  #     api: 
+  #       template: "/te/indicadoresestaduais?categorias=cd_indicador,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'te_nat'"
+  #       args:
+  #         - named_prop: "idLocalidade"
+  #       options:
+  #         formatters:
+  #           - id: "agr_sum_vl_indicador"
+  #             format: 'inteiro'
+  #     headers:
+  #       - text: 'Ano'
+  #         align: 'left'
+  #         value: 'nu_competencia'
+  #       - text: 'Nº resgatados do trabalho escravo - naturais'
+  #         value: 'fmt_agr_sum_vl_indicador'
+  #     options:
+  #       id: 'cd_indicador'
+  #       x: 'nu_competencia'
+  #       y: "agr_sum_vl_indicador"
+  #       x_options:
+  #         axis: false
+  #       y_options:
+  #         axis: false
+  #       hide_legend: true
+  #       color: "red"
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   preloaded:
+  #     prop: "trabalho_escravo_agr"
+  #     function: "slice"
+  #     id: ['te_res']
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'agr_sum_vl_indicador'
+  #       format: 'inteiro'
+  #       default: 'Nenhum'
+  #       zero: 'Nenhum'
+  #     - prop: "description"
+  #       fixed: "Trabalhadores resgatados residentes em situação de Trabalho Forçado"
+  #     - prop: 'comment'
+  #       template: "(De {0} a {1})"
+  #       api: 
+  #         fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_res'"
+  #       args:
+  #         - named_prop: "nu_competencia_min"
+  #         - named_prop: "nu_competencia_max"
+  #   chart:
+  #     id: "line_te_res"
+  #     type: "LINE"
+  #     api: 
+  #       template: "/te/indicadoresestaduais?categorias=cd_indicador,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'te_res'"
+  #       args:
+  #         - named_prop: "idLocalidade"
+  #       options:
+  #         formatters:
+  #           - id: "agr_sum_vl_indicador"
+  #             format: 'inteiro'
+  #     headers:
+  #       - text: 'Ano'
+  #         align: 'left'
+  #         value: 'nu_competencia'
+  #       - text: 'Nº resgatados do trabalho escravo - residentes'
+  #         value: 'fmt_agr_sum_vl_indicador'
+  #     options:
+  #       id: 'cd_indicador'
+  #       x: 'nu_competencia'
+  #       y: "agr_sum_vl_indicador"
+  #       x_options:
+  #         axis: false
+  #       y_options:
+  #         axis: false
+  #       hide_legend: true
+  #       color: "#03A9F4"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "trabalho_escravo_agr"
+      function: "slice"
+      id: ['te_sit_trab_resgatados']
+    args:
+      - prop: "value"
+        function: "calc_average_by_year"
+        fn_args:
+          - fixed: 0
+          - named_prop: "nu_competencia_min"
+          - named_prop: "agr_sum_vl_indicador"
+          - named_prop: "nu_competencia_max"
+        format: "real"
+        default: "Nenhum"
+      - prop: "description"
+        fixed: "Média de resgatados por ano"
+      - prop: 'comment'
+        template: "(De {0} a {1})"
+        api: 
+          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+        args:
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
+# ========================================================
+secoes:
+  - id: 'prioritarias'
+    name: 'Áreas Prioritárias na Unidade Federativa'
+    cards:
+# ========================================================
+      - id: "sparkline_resgatados_escravo"
+        title: 
+          fixed: "Municípios de Resgate"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O total de resgates foi calculado com base em informações extraídas do Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "Esse tipo de informação ajuda gestores na definição de regiões geográficas prioritárias para atividades de combate e prevenção, as quais também obedecem a lógica das curvas de oferta e de demanda do trabalho escravo no Brasil. Ilustrativamente, locais de maior intensidade de resgates devem ser prioritários quanto a atividades de inspeção do trabalho, sobretudo quanto às operações promovidas pela Divisão de Fiscalização para Erradicação do Trabalho Escravo (DETRAE – Ministério do Trabalho) e pelas equipes interinstitucionais do Grupo Especial de Fiscalização Móvel, conjuntamente com as ações coordenadas no âmbito das Superintendências Regionais do Trabalho nos Estados. Nesses locais, a orquestração interinstitucional fomenta e facilita a atuação efetiva e eficiente de operadores da lei, incluindo as forças policiais, da Justiça e do Ministério Público.<br/><br/>
+                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'nm_municipio_uf'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Município com mais Resgatados'
+                  - prop: "comment"
+                    template: 'Total de Resgatados: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o município com mais vítimas do trabalho resgatadas na série histórica para a unidade geográfica em realce. Na tabela ao lado, apresentam-se os municípios com alta incidência para o período selecionado. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_rgt"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        component_type: "SPARKLINES"
+        api:
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+        headers:
+          - text: 'Município'
+            align: 'center'
+            value: 'nm_municipio'
+            item_align: 'center'
+          - text: 'UF'
+            align: 'center'
+            value: 'sg_uf'
+            item_align: 'center'
+          - text: 'Total de Resgatados'
+            align: 'center'
+            value: 'total_te_sit_trab_resgatados'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_te_sit_trab_resgatados'
+            item_align: 'center'
+            type: 'spark'
+            series: 'te_sit_trab_resgatados'
+            bgColor: '#00C853'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Ano de Pico'
+            align: 'center'
+            value: 'fmt_higher_value_te_sit_trab_resgatados'
+            item_align: 'center'
+          - text: 'Número de Anos de Incidência'
+            align: 'center'
+            width: '10%'
+            value: 'series_length_te_sit_trab_resgatados'
+            item_align: 'center'
+          - text: 'Número de Anos de Incidência'
+            align: 'center'
+            width: '10%'
+            value: 'series_length_last_5_te_sit_trab_resgatados'
+            item_align: 'center'
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_2_value_te_sit_trab_resgatados'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_value_te_sit_trab_resgatados'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Variação'
+            align: 'center'
+            value: 'fmt_last_rate_te_sit_trab_resgatados'
+            item_align: 'center'
+        component_options:
+          id: "sparklines_freq_rgt"
+          title: "Resgatados do Trabalho Escravo"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "cd_mun_ibge"
+          value_field: "agr_sum_vl_indicador"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
+          link: "https://sit.trabalho.gov.br/radar/"
+# ========================================================
+      - id: "sparkline_cnae_resgatados_escravo"
+        title: 
+          fixed: "Setores econômicos de resgate"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O total de resgates foi calculado com base em informações extraídas do Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "Esse tipo de informação ajuda gestores na definição de regiões geográficas prioritárias para atividades de combate e prevenção, as quais também obedecem a lógica das curvas de oferta e de demanda do trabalho escravo no Brasil. Ilustrativamente, locais de maior intensidade de resgates devem ser prioritários quanto a atividades de inspeção do trabalho, sobretudo quanto às operações promovidas pela Divisão de Fiscalização para Erradicação do Trabalho Escravo (DETRAE – Ministério do Trabalho) e pelas equipes interinstitucionais do Grupo Especial de Fiscalização Móvel, conjuntamente com as ações coordenadas no âmbito das Superintendências Regionais do Trabalho nos Estados. Nesses locais, a orquestração interinstitucional fomenta e facilita a atuação efetiva e eficiente de operadores da lei, incluindo as forças policiais, da Justiça e do Ministério Público.<br/><br/>
+                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae',and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_agreg_primaria'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Setor Econômico com mais Resgatados'
+                  - prop: "comment"
+                    template: 'Total de Resgatados: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o setor econômico com mais vítimas do trabalho resgatadas na série histórica para a unidade geográfica em realce. Na tabela ao lado, apresentam-se os setores econômicos com alta incidência para o período selecionado abaixo. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_rgt"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        component_type: "SPARKLINES"
+        api:
+          template: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados_cnae',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+        headers:
+          - text: 'Setor Econômico'
+            align: 'center'
+            value: 'ds_agreg_primaria'
+            item_align: 'center'
+          - text: 'Total de Resgatados'
+            align: 'center'
+            value: 'total_te_sit_trab_resgatados_cnae'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_te_sit_trab_resgatados_cnae'
+            item_align: 'center'
+            type: 'spark'
+            series: 'te_sit_trab_resgatados_cnae'
+            bgColor: '#00C853'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Ano de Pico'
+            align: 'center'
+            value: 'fmt_higher_value_te_sit_trab_resgatados_cnae'
+            item_align: 'center'
+          - text: 'Número de Anos de Incidência'
+            align: 'center'
+            width: '10%'
+            value: 'series_length_te_sit_trab_resgatados_cnae'
+            item_align: 'center'
+          - text: 'Número de Anos de Incidência'
+            align: 'center'
+            width: '10%'
+            value: 'series_length_last_5_te_sit_trab_resgatados_cnae'
+            item_align: 'center'
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_2_value_te_sit_trab_resgatados_cnae'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_value_te_sit_trab_resgatados_cnae'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Variação'
+            align: 'center'
+            value: 'fmt_last_rate_te_sit_trab_resgatados_cnae'
+            item_align: 'center'
+        component_options:
+          id: "sparklines_cnae_freq_rgt"
+          title: "Resgatados do Trabalho Escravo por Setores Econômicos"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "ds_agreg_primaria"
+          value_field: "agr_sum_vl_indicador"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
+          link: "https://sit.trabalho.gov.br/radar/"
+# ========================================================
+      - id: "sparkline_naturalidade_resgatados"
+        title: 
+          fixed: "Locais de nascimento de resgatados"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "Esse tipo de informação ajuda gestores na definição de regiões geográficas prioritárias para atividades de combate e prevenção, as quais também obedecem a lógica das curvas de oferta e de demanda do trabalho escravo no Brasil. Ilustrativamente, locais de maior intensidade de resgates devem ser prioritários quanto a atividades de inspeção do trabalho, sobretudo quanto às operações promovidas pela Divisão de Fiscalização para Erradicação do Trabalho Escravo (DETRAE – Ministério do Trabalho) e pelas equipes interinstitucionais do Grupo Especial de Fiscalização Móvel, conjuntamente com as ações coordenadas no âmbito das Superintendências Regionais do Trabalho nos Estados. Nesses locais, a orquestração interinstitucional fomenta e facilita a atuação efetiva e eficiente de operadores da lei, incluindo as forças policiais, da Justiça e do Ministério Público.<br/><br/>
+                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_nat',and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'nm_municipio_uf'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Município com mais Resgatados'
+                  - prop: "comment"
+                    template: 'Total de Resgatados Naturais do Município: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o município de nascimento mais frequente de vítimas do trabalho escravo na série histórica para a unidade geográfica em realce. Na tabela ao lado, apresentam-se os principais municípios com essas mesmas características para o período selecionado. Locais de naturalidade de vítimas apresentam vulnerabilidades em nível de desenvolvimento humano e socioeconômico. No longo prazo, esses fatores (associados a pobreza, baixa escolaridade, desigualdade e violência, entre outros) contribuem para o aliciamento. Para saber mais sobre a localidade, visite o Observatório do Trabalho Decente em Municípios Brasileiros.<br/><br/>"
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_rgt"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        component_type: "SPARKLINES"
+        api:
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_nat',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+        headers:
+          - text: 'Município'
+            align: 'center'
+            value: 'nm_municipio'
+            item_align: 'center'
+          - text: 'UF'
+            align: 'center'
+            value: 'sg_uf'
+            item_align: 'center'
+          - text: 'Total de Naturais'
+            align: 'center'
+            value: 'total_te_nat'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_te_nat'
+            item_align: 'center'
+            type: 'spark'
+            series: 'te_nat'
+            bgColor: '#F44336'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Ano de Pico'
+            align: 'center'
+            value: 'fmt_higher_value_te_nat'
+            item_align: 'center'
+          - text: 'Número de Anos de Incidência'
+            align: 'center'
+            width: '10%'
+            value: 'series_length_te_nat'
+            item_align: 'center'
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_2_value_te_nat'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_value_te_nat'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Variação'
+            align: 'center'
+            value: 'fmt_last_rate_te_nat'
+            item_align: 'center'
+        component_options:
+          id: "sparklines_freq_nat"
+          title: 'Naturalidade dos Resgatados do Trabalho Escravo'
+          cls: "xs12 md6 lg4"
+          id_field: "cd_mun_ibge"
+          value_field: "agr_sum_vl_indicador"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+# ========================================================
+      - id: "sparkline_residencia_resgatados"
+        title: 
+          fixed: "Locais de residência declarada"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_res'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "Esse tipo de informação ajuda gestores na definição de regiões geográficas prioritárias para atividades de combate e prevenção, as quais também obedecem a lógica das curvas de oferta e de demanda do trabalho escravo no Brasil. Ilustrativamente, locais de maior intensidade de resgates devem ser prioritários quanto a atividades de inspeção do trabalho, sobretudo quanto às operações promovidas pela Divisão de Fiscalização para Erradicação do Trabalho Escravo (DETRAE – Ministério do Trabalho) e pelas equipes interinstitucionais do Grupo Especial de Fiscalização Móvel, conjuntamente com as ações coordenadas no âmbito das Superintendências Regionais do Trabalho nos Estados. Nesses locais, a orquestração interinstitucional fomenta e facilita a atuação efetiva e eficiente de operadores da lei, incluindo as forças policiais, da Justiça e do Ministério Público.<br/><br/>
+                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_res',and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'nm_municipio_uf'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Município com mais Resgatados'
+                  - prop: "comment"
+                    template: 'Total de Resgatados Residentes no Município: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o município em que declaradamente residiam as vítimas do trabalho à época do resgate, considerada a série histórica para a unidade geográfica em realce. Na tabela ao lado, apresentam-se os principais municípios com essas mesmas características para o período selecionado. Lugares de residência declarada possuem características híbridas. Além de marcados por desigualdades de desenvolvimento humano, renda, disparidades territoriais e inequidades de base identitária (como os municípios de naturalidade), frequentemente são locais de maior dinamismo econômico, ou se localizam proximamente a territórios com esse dinamismo. Tendem, também, a constituir ponto de vulnerabilidade de trabalhadores quanto ao aliciamento.<br/><br/>"
+          - type: "slider"
+            cls: "pl-2"
+            id: "slider_rgt"
+            range: true
+            title: ""
+            api: 
+              fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_res'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-{0},and,le-nu_competencia-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        component_type: "SPARKLINES"
+        api:
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_res',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+        headers:
+          - text: 'Município'
+            align: 'center'
+            value: 'nm_municipio'
+            item_align: 'center'
+          - text: 'UF'
+            align: 'center'
+            value: 'sg_uf'
+            item_align: 'center'
+          - text: 'Total de Residentes'
+            align: 'center'
+            value: 'total_te_res'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_te_res'
+            item_align: 'center'
+            type: 'spark'
+            series: 'te_res'
+            bgColor: '#03A9F4'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Ano de Pico'
+            align: 'center'
+            value: 'fmt_higher_value_te_res'
+            item_align: 'center'
+          - text: 'Número de Anos de Incidência'
+            align: 'center'
+            width: '10%'
+            value: 'series_length_te_res'
+            item_align: 'center'
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_2_value_te_res'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_value_te_res'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Variação'
+            align: 'center'
+            value: 'fmt_last_rate_te_res'
+            item_align: 'center'
+        component_options:
+          id: "sparklines_freq_res"
+          title: 'Residência dos Resgatados do Trabalho Escravo'
+          cls: "xs12 md6 lg4"
+          id_field: "cd_mun_ibge"
+          value_field: "agr_sum_vl_indicador"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
