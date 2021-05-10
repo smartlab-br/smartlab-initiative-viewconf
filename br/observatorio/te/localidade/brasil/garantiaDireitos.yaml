@@ -68,6 +68,106 @@ secoes:
   - id: "garantia_trabalho_escravo"
     name: "Operações de Combate ao Trabalho Escravo"
     cards:
+# ====================================================          
+      - id: "bar_resgates"
+        title: 
+          fixed: "Trabalhadores Resgatados do Trabalho Escravo - Série Histórica"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/indicadoresnacionais?categorias=ds_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Resgatados'
+                  - prop: "comment"
+                    template: "de {0} a {1}"
+                    args:
+                      - named_prop: "nu_competencia_min"
+                      - named_prop: "nu_competencia_max"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/te/indicadoresnacionais?categorias=nu_competencia,ds_indicador&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Resgatados'
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a circunscrição geográfica selecionada, o número de sobreviventes encontrados em condição análoga à de escravo na série histórica e no último ano considerado. No gráfico ao lado, apresentam-se os dados da série histórica."
+              
+          - id: "select_tipo"
+            type: "select"
+            label: "Setor Econômico"
+            api:
+              template: "/te/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae'&ordenacao=ds_agreg_primaria"
+              # args:
+              #   - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                api:
+                  template: "/te/indicadoresnacionais?categorias=nu_competencia,ds_indicador&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae',and,eq-ds_agreg_primaria-'{0}'"
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+
+        chart_type: "BAR"
+        api:
+          template: "/te/indicadoresnacionais?categorias=nu_competencia,ds_indicador&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+          options:
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "agr_sum_vl_indicador"
+          orientation: "vertical"
+          text: "fmt_agr_sum_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          hide_legend: true
+          color: "#238B45"
+          fontMax: 18
 # ========================================================
       - id: "mapa_op_resgatados_escravo"
         title: 
