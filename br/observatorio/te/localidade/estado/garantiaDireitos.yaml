@@ -55,7 +55,7 @@ principais:
         format: 'inteiro'
         default: "Sem Registros"
       - prop: "description"
-        template: "de {0} municípios com programa de enfrentamento do trabalho escravo e reinserção de suas vítimas
+        template: "de {0} municípios com programa de enfrentamento do trabalho escravo e reinserção de suas vítimas"
         args:
           - named_prop: "total_uf"
       - prop: 'comment'
@@ -68,6 +68,92 @@ secoes:
   - id: "garantia_operacoes"
     name: "Operações de Combate ao Trabalho Escravo"
     cards:
+# ====================================================          
+      - id: "bar_resgates"
+        title: 
+          fixed: "Trabalhadores Resgatados do Trabalho Escravo - Série Histórica"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "trabalho_escravo_agr"
+                  function: "slice"
+                  id: ['te_sit_trab_resgatados']
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Resgatados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a circunscrição geográfica selecionada, o número de sobreviventes encontrados em condição análoga à de escravo na série histórica. No gráfico ao lado, apresentam-se os dados da série histórica."
+              
+          - id: "select_tipo"
+            type: "select"
+            label: "Setor Econômico"
+            api:
+              template: "/te/indicadoresestaduais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae',and,eq-cd_uf-{0}&ordenacao=ds_agreg_primaria"
+              args:
+                - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                api:
+                  template: "/te/indicadoresestaduais?categorias=nu_competencia,ds_indicador&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae',and,eq-ds_agreg_primaria-'{0}',and,eq-cd_uf-{1}"
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+                    - named_prop: "cd_uf"
+
+        chart_type: "BAR"
+        api:
+          template: "/te/indicadoresestaduais?categorias=nu_competencia,ds_indicador&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "agr_sum_vl_indicador"
+          orientation: "vertical"
+          text: "fmt_agr_sum_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          hide_legend: true
+          color: "#238B45"
+          fontMax: 18
 # ========================================================
       - id: "mapa_op_resgatados_escravo"
         title: 
