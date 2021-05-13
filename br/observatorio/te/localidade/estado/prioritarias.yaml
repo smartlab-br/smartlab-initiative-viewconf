@@ -177,6 +177,134 @@ secoes:
   - id: 'prioritarias'
     name: 'Áreas Prioritárias na Unidade Federativa'
     cards:
+# # ========================================================
+#       - id: "datatable_resgatados_escravo"
+#         title: 
+#           fixed: "Municípios de Resgate - Indicadores Sociais"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           api: 
+#             fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - named_prop: "nu_competencia_min"
+#             - named_prop: "nu_competencia_max"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: "O total de resgates foi calculado com base em informações extraídas do Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
+#           - type: "text"
+#             title: "Observação Importante"
+#             content:
+#               fixed: "Esse tipo de informação ajuda gestores na definição de regiões geográficas prioritárias para atividades de combate e prevenção, as quais também obedecem a lógica das curvas de oferta e de demanda do trabalho escravo no Brasil. Ilustrativamente, locais de maior intensidade de resgates devem ser prioritários quanto a atividades de inspeção do trabalho, sobretudo quanto às operações promovidas pela Divisão de Fiscalização para Erradicação do Trabalho Escravo (DETRAE – Ministério do Trabalho) e pelas equipes interinstitucionais do Grupo Especial de Fiscalização Móvel, conjuntamente com as ações coordenadas no âmbito das Superintendências Regionais do Trabalho nos Estados. Nesses locais, a orquestração interinstitucional fomenta e facilita a atuação efetiva e eficiente de operadores da lei, incluindo as forças policiais, da Justiça e do Ministério Público.<br/><br/>
+#                       Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api: 
+#                   template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
+#                   args:
+#                     - named_prop: "cd_uf"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'nm_municipio_uf'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: 'Município com mais Resgatados'
+#                   - prop: "comment"
+#                     template: 'Total de Resgatados: {0}'
+#                     args:
+#                       - named_prop: "agr_sum_vl_indicador"
+#                         format: "inteiro"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o município com mais vítimas do trabalho resgatadas na série histórica para a unidade geográfica em realce. Na tabela ao lado, apresentam-se os municípios com alta incidência para o período e seus indicadores sociais. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
+#         component_type: "DATATABLE"
+#         api:
+#           - template: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,'(Quantidade)'-ds_indicador_prefixo&valor=vl_indicador&agregacao=sum,rank_dense_sum,avg&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
+#             args:
+#               - named_prop: "cd_uf"
+#             options:
+#               calcs:
+#                 - id: "header_label"
+#                   function: "applyInterpolReplaceDatasetParam"
+#                   fn_args:
+#                     - fixed:
+#                         template: "{0} ({1}-{2})"
+#                         args:
+#                           - named_prop: "ds_indicador"
+#                           - named_prop: "nu_competencia_min"
+#                           - named_prop: "nu_competencia_max"
+#                 - id: "fmt_value"
+#                   function: "get_formatted_value"
+#                   fn_args:
+#                     - named_prop: "agr_sum_vl_indicador"
+#                     - named_prop: "ds_indicador_prefixo"
+#                 - id: "det_value"
+#                   function: "get_detail_value"
+#                   fn_args:
+#                     - named_prop: "class_indicador"
+#                     - named_prop: "agr_sum_vl_indicador"
+#                     - fixed: "0"
+#                     - named_prop: "agr_rank_dense_sum_vl_indicador"
+#                     - fixed: "0"
+#                     - named_prop: "agr_avg_vl_indicador"
+#           - template: "/indicadoresmunicipais?categorias='bom'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'06_01_09_01'-'06_01_09_02'-'06_01_09_04'-'PIB_00001'-'PIB_00002'-'POP_DOU_01',and,eq-cd_uf-{0}"
+#             args:
+#               - named_prop: "cd_uf"
+#             options:
+#               calcs:
+#                 - id: "header_label"
+#                   function: "applyInterpolReplaceDatasetParam"
+#                   fn_args:
+#                     - fixed:
+#                         template: "{0} ({1})"
+#                         args:
+#                           - named_prop: "ds_indicador"
+#                           - named_prop: "nu_competencia_max"
+#                 - id: "fmt_value"
+#                   function: "get_formatted_value"
+#                   fn_args:
+#                     - named_prop: "agr_sum_vl_indicador"
+#                     - named_prop: "ds_indicador_prefixo"
+#                 - id: "det_value"
+#                   function: "get_detail_value"
+#                   fn_args:
+#                     - named_prop: "class_indicador"
+#                     - named_prop: "agr_sum_vl_indicador"
+#                     - named_prop: "rank_br"
+#                     - named_prop: "rank_uf"
+#                     - named_prop: "media_br"
+#                     - named_prop: "media_uf"
+#         headers:
+#           - text: 'Município'
+#             align: 'center'
+#             value: 'nm_municipio'
+#             item_align: 'center'
+#           - text: 'UF'
+#             align: 'center'
+#             value: 'sg_uf'
+#             item_align: 'center'
+#         component_options:
+#           id: "datatable_rgt"
+#           title: "Resgatados do Trabalho Escravo"
+#           cls: "xs12 md6 lg4 pa-3"
+#           pivot: 
+#             col_fields: ["cd_mun_ibge","nm_municipio","sg_uf"]
+#             layer_field: "calc_header_label"
+#             fmt_value_field: "calc_fmt_value"
+#             value_field: "agr_sum_vl_indicador"
+#           det_value_field: "calc_det_value"
+#           search_position: "bottom"
+#         source:
+#           desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
+#           link: "https://sit.trabalho.gov.br/radar/"
 # ========================================================
       - id: "sparkline_resgatados_escravo"
         title: 
