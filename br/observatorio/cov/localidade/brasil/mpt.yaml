@@ -1942,135 +1942,139 @@ secoes:
         source:
           desc: "Brasil.io"
           link: "https://brasil.io/covid19/"
-# # ========================================================
-#       - id: "line_srag_idade_obitos"
-#         type: "multiple-charts"
-#         title:
-#           fixed: "Óbitos COVID-19 por SRAG por faixa etária e por Semana Epidemiológica da notificação"
-#         # info:
-#         #   - type: "text"
-#         #     title: "Sobre a métrica"
-#         #     content:
-#         #       fixed: ""
-#         title_comment:
-#           template: "Brasil, {0} a {1}"
-#           api: 
-#             fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2019"
-#           args:
-#             - named_prop: "agr_min_dt_notificacao"
-#               format: 'dataDMY'
-#             - named_prop: "agr_max_dt_notificacao"
-#               format: 'dataDMY'
-#         description:
-#           - type: "minicards"
-#             cards:
-#               - relevance: 'high'
-#                 cls: 'xs12'
-#                 api: 
-#                   fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
-#                 args:
-#                   - prop: "value"
-#                     named_prop: 'agr_count'
-#                     format: 'inteiro'
-#                     default: 'Nenhum'
-#                     zero: 'Nenhum'
-#                   - prop: "description"
-#                     fixed: "Óbitos - SRAG por COVID-19"
-#               - relevance: 'low'
-#                 cls: 'xs12 md6'
-#                 api: 
-#                   fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'SRAG não especificado',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
-#                 args:
-#                   - prop: "value"
-#                     named_prop: 'agr_count'
-#                     format: 'inteiro'
-#                     default: 'Nenhum'
-#                     zero: 'Nenhum'
-#                   - prop: "description"
-#                     fixed: "Óbitos - SRAG não especificado"
-#               - relevance: 'low'
-#                 cls: 'xs12 md6'
-#                 api: 
-#                   fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'Investigação',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
-#                 args:
-#                   - prop: "value"
-#                     named_prop: 'agr_count'
-#                     format: 'inteiro'
-#                     default: 'Nenhum'
-#                     zero: 'Nenhum'
-#                   - prop: "description"
-#                     fixed: "Óbitos - em Investigação"
-#           - type: "text"
-#             title: ""
-#             content:
-#               fixed: "Em destaque, o total de registros de óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19, causas não especificadas e em investigação.
-#               O gráfico apresenta a série histórica de todos os óbitos registrados relacionados à SRAG, por semana epidemiológica da notificação, conforme etiologia. 
-#               <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
-#           - id: "select_prt"
-#             type: "select"
-#             multiple: true
-#             label: "Faixa Etária"
-#             api:
-#               fixed: "/thematic/srag?categorias=idade_bin,idade_bin_ordem&agregacao=DISTINCT&ordenacao=idade_bin_ordem"
-#             args:
-#               - prop: "id"
-#                 named_prop: "idade_bin"
-#               - prop: "label"
-#                 named_prop: "idade_bin"
-#             selection:
-#               event: "selection" 
-#               rules:
-#                 filter: ",and,in-idade_bin-{0}"
-#                 api:
-#                   args:
-#                     - named_prop: "idade_bin"
-#         charts:
-#           - id: "bar_srag_faixa_etaria_obitos"
-#             title: "Óbitos de SRAG por Faixa Etária"
-#             cls: "xs12"
-#             type: "LINE"
-#             api:
-#               fixed: "/thematic/srag?categorias=idade_bin,idade_bin_ordem,ano_notificacao,semana_notificacao,semana_notificacao_inicio,semana_notificacao_fim&agregacao=COUNT&filtros=gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,eq-srag_classificacao-'COVID\\-19'"
-#               options:
-#                 calcs:
-#                   - id: "semana"
-#                     function: "get_week_year"
-#                     fn_args:
-#                       - named_prop: "semana_notificacao"
-#                       - named_prop: "semana_notificacao_inicio"
-#                 formatters:
-#                   - id: "agr_count"
-#                     format: 'inteiro'
-#                   - id: "semana_notificacao_inicio"
-#                     format: 'dataDMY'
-#                   - id: "semana_notificacao_fim"
-#                     format: 'dataDMY'
-#             headers:
-#               - text: 'Faixa Etária'
-#                 align: 'left'
-#                 value: 'idade_bin'
-#               - text: 'Semana Epidemiológica'
-#                 align: 'left'
-#                 value: 'calc_semana'
-#               - text: 'Início'
-#                 align: 'left'
-#                 value: 'fmt_semana_notificacao_inicio'
-#               - text: 'Fim'
-#                 align: 'left'
-#                 value: 'fmt_semana_notificacao_fim'
-#               - text: 'Número de óbitos'
-#                 value: 'fmt_agr_count'
-#             options:
-#               id: "idade_bin_ordem"
-#               x: "calc_semana"
-#               y: "agr_count"
-#               text: "fmt_agr_count"
-#               order_field: "semana_notificacao_inicio"
-#               # orientation: "vertical"
-#               # show_x_axis: true
-#               # show_y_axis: true
-#               # stacked: true
-#               legend_field: "idade_bin"
-#         source:
-#           desc: "SIVEP-Gripe/SVS/MS"
-#           link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2021"
+# ========================================================
+      - id: "line_srag_idade_obitos"
+        type: "multiple-charts"
+        title:
+          fixed: "Óbitos COVID-19 por SRAG por faixa etária e por Semana Epidemiológica da notificação"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        title_comment:
+          template: "Brasil, {0} a {1}"
+          api: 
+            fixed: "/thematic/srag?categorias=1&valor=dt_notificacao&agregacao=MAX,MIN&filtros=gt-ano_notificacao-2019"
+          args:
+            - named_prop: "agr_min_dt_notificacao"
+              format: 'dataDMY'
+            - named_prop: "agr_max_dt_notificacao"
+              format: 'dataDMY'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'COVID\\-19',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG por COVID-19"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'SRAG não especificado',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - SRAG não especificado"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-srag_classificacao-'Investigação',and,gt-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: 'Nenhum'
+                    zero: 'Nenhum'
+                  - prop: "description"
+                    fixed: "Óbitos - em Investigação"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de registros de óbitos por Síndrome Respiratória Aguda Grave (SRAG) por COVID-19, causas não especificadas e em investigação.
+              O gráfico apresenta a série histórica de todos os óbitos registrados relacionados à SRAG, por semana epidemiológica da notificação, conforme classificação etária: Idoso (60 anos ou mais) e Não Idoso (Abaixo de 60 anos). 
+              <br/><b>Os valores referentes às últimas semanas epidemiológicas podem sofrer grandes alterações após atualizações dos dados.</b>"
+          - id: "select_prt"
+            type: "select"
+            multiple: true
+            label: "Faixa Etária"
+            api:
+              fixed: "/thematic/srag?categorias=idade_bin,idade_bin_ordem&agregacao=DISTINCT&ordenacao=idade_bin_ordem"
+            args:
+              - prop: "id"
+                named_prop: "idade_bin"
+              - prop: "label"
+                named_prop: "idade_bin"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-idade_bin-{0}"
+                api:
+                  args:
+                    - named_prop: "idade_bin"
+        charts:
+          - id: "bar_srag_faixa_etaria_obitos"
+            title: "Óbitos de SRAG por Faixa Etária"
+            cls: "xs12"
+            type: "LINE"
+            api:
+              fixed: "/thematic/srag?categorias=idade_bin,idade_bin_ordem,ano_notificacao,semana_notificacao,semana_notificacao_inicio,semana_notificacao_fim&agregacao=COUNT&ordenacao=semana_notificacao_inicio,idade_bin_ordem&filtros=gt-ano_notificacao-2019,and,eq-evolucao-'Óbito',and,eq-srag_classificacao-'COVID\\-19'"
+              options:
+                calcs:
+                  - id: "semana"
+                    function: "get_week_year"
+                    fn_args:
+                      - named_prop: "semana_notificacao"
+                      - named_prop: "semana_notificacao_inicio"
+                  - id: "classificacao"
+                    function: "get_age_class"
+                    fn_args:
+                      - named_prop: "idade_bin"
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+                  - id: "semana_notificacao_inicio"
+                    format: 'dataDMY'
+                  - id: "semana_notificacao_fim"
+                    format: 'dataDMY'
+            headers:
+              - text: 'Faixa Etária'
+                align: 'left'
+                value: 'idade_bin'
+              - text: 'Semana Epidemiológica'
+                align: 'left'
+                value: 'calc_semana'
+              - text: 'Início'
+                align: 'left'
+                value: 'fmt_semana_notificacao_inicio'
+              - text: 'Fim'
+                align: 'left'
+                value: 'fmt_semana_notificacao_fim'
+              - text: 'Número de óbitos'
+                value: 'agr_count'
+            options:
+              id: "calc_classificacao"
+              x: "calc_semana"
+              y: "agr_count"
+              text: "agr_count"
+              order_field: "semana_notificacao_inicio"
+              # orientation: "vertical"
+              # show_x_axis: true
+              # show_y_axis: true
+              # stacked: true
+              legend_field: "calc_classificacao"
+        source:
+          desc: "SIVEP-Gripe/SVS/MS"
+          link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2021"
