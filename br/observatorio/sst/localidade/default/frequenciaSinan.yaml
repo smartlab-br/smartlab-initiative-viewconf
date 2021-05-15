@@ -16,38 +16,32 @@ principais:
           format: 'real'
       - prop: "description"
         named_prop: "ds_indicador_radical"
-        default: "NOTIFICAÇÕES RELACIONADAS AO TRABALHO NO SISTEMA DE INFORMAÇÃO DE AGRAVOS DE NOTIFICAÇÃO (SINAN) - TOTAL DE NOTIFICAÇÕES SINAN RELACIONADAS AO TRABALHO"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
-            default: "Ministério da Saúde/SVS - Sistema de Informação de Agravos de Notificação – Sinan"
           - named_prop: "nu_competencia"
-            default: ""
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "06_05_13_00"
-      year: "max"
-    args:
-      - prop: "value"
-        named_prop: 'vl_indicador'
-        format: 'inteiro'
-        collapse:
-          format: 'real'
-      - prop: "description"
-        named_prop: "ds_indicador_radical"
-        default: "NOTIFICAÇÕES RELACIONADAS AO TRABALHO NO SISTEMA DE INFORMAÇÃO DE AGRAVOS DE NOTIFICAÇÃO (SINAN) - ACIDENTE DE TRABALHO GRAVE ENVOLVENDO CRIANÇAS E ADOLESCENTES (0 A 17 ANOS)"
-      - prop: 'comment'
-        template: "({0}, {1})"
-        args:
-          - named_prop: "ds_fonte"
-            default: "Ministério da Saúde/SVS - Sistema de Informação de Agravos de Notificação – Sinan"
-          - named_prop: "nu_competencia"
-            default: ""
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   preloaded:
+  #     prop: "centralindicadores"
+  #     function: "slice"
+  #     id: "06_05_13_00"
+  #     year: "max"
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'vl_indicador'
+  #       format: 'inteiro'
+  #       collapse:
+  #         format: 'real'
+  #     - prop: "description"
+  #       named_prop: "ds_indicador_radical"
+  #     - prop: 'comment'
+  #       template: "({0}, {1})"
+  #       args:
+  #         - named_prop: "ds_fonte"
+  #         - named_prop: "nu_competencia"
 # ====================================================          
 secoes:
   - id: "frequencia_sinan"
@@ -65,10 +59,8 @@ secoes:
             id: "06_05_10_00"
             year: "max"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_max"
-              default: ""
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -101,15 +93,13 @@ secoes:
                     format: 'inteiro'
                     collapse:
                       format: 'real'
-                    default: "0"
+                    default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Casos Notificados no município'
-                  - prop: "comment"
-                    named_prop: 'nu_competencia'
+                    fixed: 'Casos Notificados na UF'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre Notificações Relacionadas ao Trabalho no Sistema de Informação de Agravos de Notificação (SINAN). Nesta versão, somente foram consideradas as doenças e agravos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério da Saúde. O total inclui os seguintes casos: Acidente de Trabalho Grave, Câncer Relacionado ao Trabalho, Dermatoses Ocupacionais, Acidente de Trabalho com Exposição a Material Biológico, Intoxicação Exógena Relacionada ao Trabalho, LER/DORT, Perda Auditiva Induzida por Ruído (PAIR) Relacionada ao Trabalho, Pneumoconioses Relacionadas ao Trabalho, Transtornos Mentais Relacionados ao Trabalho e Acidente de Trabalho Grave envolvendo Crianças e Adolescentes (0 a 17 anos). No gráfico a seguir, a escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). O município selecionado está em destaque."
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre Notificações Relacionadas ao Trabalho no Sistema de Informação de Agravos de Notificação (SINAN). Nesta versão, somente foram consideradas as doenças e agravos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério da Saúde. O total inclui os seguintes casos: Acidente de Trabalho Grave, Câncer Relacionado ao Trabalho, Dermatoses Ocupacionais, Acidente de Trabalho com Exposição a Material Biológico, Intoxicação Exógena Relacionada ao Trabalho, LER/DORT, Perda Auditiva Induzida por Ruído (PAIR) Relacionada ao Trabalho, Pneumoconioses Relacionadas ao Trabalho, Transtornos Mentais Relacionados ao Trabalho e Acidente de Trabalho Grave envolvendo Crianças e Adolescentes (0 a 17 anos). No gráfico a seguir, a escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
               # preloaded:
               #   prop: "centralindicadores"
               #   function: "slice"
@@ -124,16 +114,6 @@ secoes:
               id: "06_05_10_00"
               year: "max"
             args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
               - prop: 'national_rank'
                 named_prop: "rank_br"
                 format: 'inteiro'
@@ -148,7 +128,7 @@ secoes:
         api: 
           template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "cd_uf"
+            - named_prop: "idLocalidade"
           options:
             calcs:
               - id: "deviation_sinan"
@@ -188,11 +168,13 @@ secoes:
           fixed: "Notificações Relacionadas ao Trabalho (SINAN) conforme Agravos e Doenças"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_00'&limit=1"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "06_05_10_00"
+            year: "max"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -200,7 +182,7 @@ secoes:
             title: "Sobre a métrica"
             content:
               template: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções.<br/>
-                      Os dados analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
+                      Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
@@ -217,7 +199,7 @@ secoes:
               - relevance: "high"
                 cls: "xs12 md6"
                 api:
-                  template: "/indicadoresmunicipais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'06_05_01_00'-'06_05_02_00'-'06_05_03_00'-'06_05_04_00'-'06_05_05_00'-'06_05_06_00'-'06_05_07_00'-'06_05_08_00'-'06_05_09_00'-'06_05_13_00'"
+                  template: "/indicadoresmunicipais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,in-cd_indicador-'06_05_01_00'-'06_05_02_00'-'06_05_03_00'-'06_05_04_00'-'06_05_05_00'-'06_05_06_00'-'06_05_07_00'-'06_05_08_00'-'06_05_09_00'-'06_05_20_00'"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -239,7 +221,7 @@ secoes:
               #   - named_prop: 'ds_indicador_radical'
         chart_type: "TREEMAP"
         api:
-          template: "/indicadoresmunicipais?categorias=ds_agreg_primaria,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'06_05_01_00'-'06_05_02_00'-'06_05_03_00'-'06_05_04_00'-'06_05_05_00'-'06_05_06_00'-'06_05_07_00'-'06_05_08_00'-'06_05_09_00'-'06_05_13_00'"
+          template: "/indicadoresmunicipais?categorias=ds_agreg_primaria,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,in-cd_indicador-'06_05_01_00'-'06_05_02_00'-'06_05_03_00'-'06_05_04_00'-'06_05_05_00'-'06_05_06_00'-'06_05_07_00'-'06_05_08_00'-'06_05_09_00'-'06_05_20_00'"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -266,11 +248,13 @@ secoes:
           fixed: "Notificações Relacionadas ao Trabalho (SINAN) - Série Histórica"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_00'&limit=1"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "06_05_10_00"
+            year: "max"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -278,7 +262,7 @@ secoes:
             title: "Sobre a métrica"
             content:
               template: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções.<br/>
-                      Os dados analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
+                      Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
@@ -295,7 +279,7 @@ secoes:
               - relevance: "high"
                 cls: "xs12 md6"
                 api:
-                  template: "/indicadoresmunicipais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador-'06_05_10_00'"
+                  template: "/indicadoresmunicipais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_05_10_00'"
                   args:
                     - named_prop: "idLocalidade"
                 args:

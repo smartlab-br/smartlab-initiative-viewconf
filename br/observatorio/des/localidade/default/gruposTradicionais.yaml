@@ -1,0 +1,457 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresestaduais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_mun_ibge-{0},and,lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: "real"
+      - prop: "description"
+        fixed: 'Total de Famílias de GPTE no CADÚNICO'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresestaduais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_mun_ibge-{0},and,lk-cd_indicador-'JD_CADUN_04%25'"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'agr_sum_vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: "real"
+      - prop: "description"
+        fixed: 'Total de Famílias de GPTE Beneficiárias do Bolsa Família'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+# ========================================================
+secoes:
+  - id: "gpTrad_garantia"
+    name: "Identificação no Cadastro Único e no Programa Bolsa Família"
+    cards:
+
+# ===============================================
+      - id: "mapa_familias_registradas_cadunico"
+        title:
+          fixed: "Famílias de GPTEs Registradas no Cadastro Único"
+        title_comment:
+          template: "{0}, em {1}"
+          api:
+            template: "/indicadoresestaduais?categorias=nu_competencia,nm_uf&agregacao=distinct&filtros=lk-cd_indicador-%27JD_CADUN_03%25%27,and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge-{0}&limit=1"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Integram o Cadastro Único as famílias: com renda mensal de até meio salário mínimo por pessoa; com renda mensal total de até três salários mínimos ou com renda maior que três salários mínimos, desde que o cadastramento esteja vinculado à inclusão em programas sociais nas três esferas do governo."
+        description:
+          - id: "select_categoria"
+            type: "select"
+            multiple: false
+            label: "Grupo"
+            placeholder: "Todos"
+            api:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+          - id: "select_subcategoria"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Subgrupo"
+            parent: "select_categoria"
+            api:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            api_reactive:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0},and,eq-ds_agreg_primaria-'{1}'"
+              args:
+                - named_prop: "idLocalidade"
+                - named_prop: "ds_agreg_primaria"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_secundaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                reactive: true
+                api:
+                  template: "/indicadoresestaduais?categorias=cd_mun_ibge,nm_uf,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_mun_ibge-{0},and,lk-cd_indicador-'JD_CADUN_03%25'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Famílias cadastradas'
+                  - prop: "comment"
+                    fixed: 'Na UF'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "O Cadastro Único para Programas Sociais do Governo Federal (CADUNICO) mapeia o perfil das famílias de baixa renda para garantir o acesso a políticas públicas. Famílias de Grupos Populacionais Tradicionais e Específicos (GPTEs) devem receber atenção em estratégias de busca ativa pois vivem em geral distantes de centros municipais. Nesta visão, consideraram-se a origem étnica (indígenas, quilombolas, ciganos e comunidades de terreiro), a relação com o meio ambiente (extrativistas, pescadores artesanais e ribeirinhos), o meio rural (assentados, acampados, agricultores familiares e beneficiários de crédito fundiário) e certas conjunturas (empreendimento de infraestrutura, famílias de presos, catadores, trabalho escravo e situação de rua). Em destaque, o número de famílias cadastradas, de acordo com a perspectiva selecionada. Com os filtros, podem ser selecionados grupos e subgrupos. No mapa, são identificadas as unidades geográficas com famílias cadastradas (conforme o filtro ou, em sua ausência, o total). A cor varia conforme a frequência, sendo que a branca evidência a inexistência."
+          
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,lk-cd_indicador-'JD_CADUN_03%25',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          # - text: 'Indicador'
+          #   align: 'left'
+          #   value: 'ds_indicador'
+          - text: 'Valor'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+          colorScale:
+            name: 'Reds'
+        # source:
+        #   desc_field: "ds_fonte"           
+
+# ===============================================
+      - id: "mapa_familias_beneficiarias_bolsa_familia"
+        title:
+          fixed: "Famílias de GPTEs Beneficiárias do Programa Bolsa Família"
+        title_comment:
+          template: "{0}, em {1}"
+          api:
+            template: "/indicadoresestaduais?categorias=nu_competencia,nm_uf&agregacao=distinct&filtros=lk-cd_indicador-%27JD_CADUN_04%25%27,and,eq-nu_competencia-nu_competencia_max,and,eq-cd_mun_ibge-{0}&limit=1"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Podem fazer parte do Programa todas as famílias com renda per capita de até R$ 89,00 mensais e também as famílias com renda per capita entre R$ 89,01 e R$ 178,00 mensais, desde que tenham crianças ou adolescentes de 0 a 17 anos."
+        description:
+          - id: "select_categoria"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Grupo"
+            api:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_04%25',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+          - id: "select_subcategoria"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Subgrupo"
+            parent: "select_categoria"
+            api:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_04%25',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            api_reactive:
+              template: "/indicadoresmunicipais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'JD_CADUN_04%25',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0},and,eq-ds_agreg_primaria-'{1}'"
+              args:
+                - named_prop: "idLocalidade"
+                - named_prop: "ds_agreg_primaria"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_secundaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                reactive: true
+                api:
+                  template: "/indicadoresestaduais?categorias=cd_mun_ibge,nm_uf,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_mun_ibge-{0},and,lk-cd_indicador-'JD_CADUN_04%25'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Famílias cadastradas'
+                  - prop: "comment"
+                    fixed: 'Na UF'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "O Programa Bolsa Família atende às famílias que vivem em situação de pobreza e de extrema pobreza, conforme a renda familiar. Em destaque, o número de famílias beneficiárias do Bolsa Família e o respectivo percentual em relação ao total de famílias cadastradas. Nesta visão, consideraram-se a origem étnica (indígenas, quilombolas, ciganos e comunidades de terreiro), a relação com o meio ambiente (extrativistas, pescadores artesanais e ribeirinhos), o meio rural (assentados, acampados, agricultores familiares e beneficiários de crédito fundiário) e certas conjunturas (empreendimento de infraestrutura, famílias de presos, catadores, trabalho escravo e situação de rua). Em destaque, o número de famílias cadastradas, de acordo com a perspectiva selecionada. Com os filtros, podem ser selecionados grupos e subgrupos. No mapa, são identificadas as unidades geográficas com famílias cadastradas (conforme o filtro ou, em sua ausência, o total). A cor varia conforme a frequência, sendo que a branca evidência a inexistência."
+          
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,lk-cd_indicador-'JD_CADUN_04%25',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          # - text: 'Indicador'
+          #   align: 'left'
+          #   value: 'ds_indicador'
+          - text: 'Valor'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+          colorScale:
+            name: 'Reds'
+        # source:
+        #   desc_field: "ds_fonte"           
+
+# ========================================================
+      - id: "gpTrad_acoes_municipais_headline"
+        type: "headline"
+        title:
+          fixed: "Proteção Social e Garantia de Direitos - Ações Municipais"
+# ========================================================
+      - id: "map_conf_direitos_gpTrad_mun"
+        title: 
+          fixed: "Conferências nos últimos quatro anos sobre política para povos e comunidades tradicionais "
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU559"
+# ========================================================
+      - id: "map_procedimento_gpTrad_mun"
+        title: 
+          fixed: "Procedimentos para a consulta livre, prévia e esclarecida aos povos e comunidades tradicionais"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU72"
+# # ========================================================
+#       - id: "map_acampamento_cigano"
+#         title: 
+#           fixed: "Acampamento ou rancho cigano"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "MUNIC_MDHU48"
+# ========================================================
+      - id: "map_pessoal_capac_linguas_indigenas_mun"
+        title: 
+          fixed: "Acessibilidade na prefeitura - Pessoal capacitado para atendimento nas línguas indígenas"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU6615"
+# ========================================================
+      - id: "map_pessoal_capac_linguas_ciganas_mun"
+        title: 
+          fixed: "Acessibilidade na prefeitura - Pessoal capacitado para atendimento nas línguas ciganas "
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU6616"
+# ========================================================
+      - id: "map_pessoal_capac_linguas_pomerana_mun"
+        title: 
+          fixed: "Acessibilidade na prefeitura - Pessoal capacitado para atendimento na língua pomerana"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU6617"
+# ========================================================
+      - id: "map_acoes_programas_dh_atedimento_gtradicionais_mun"
+        title: 
+          fixed: "Atendimento a pessoas falantes de línguas indígenas, línguas ciganas ou da língua pomerana"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU5715"
+# ========================================================
+      - id: "map_acoes_programas_dh_documentacao_gtradicionais_mun"
+        title: 
+          fixed: "Documentação de indivíduos pertencentes a povos e comunidades tradicionais"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU5713"
+# ========================================================
+      - id: "map_acoes_programas_ciganos_mun"
+        title: 
+          fixed: "Programas e ações para grupos específicos (ciganos)"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU081"
+# ========================================================
+      - id: "map_acoes_programas_indigenas_mun"
+        title: 
+          fixed: "Programas e ações para grupos específicos - Povos indígenas "
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU089"
+# ========================================================
+      - id: "map_acoes_programas_quilombolas_mun"
+        title: 
+          fixed: "Programas e ações para Comunidades Quilombolas"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU0810"
+# ========================================================
+      - id: "map_acoes_programas_africanas_mun"
+        title: 
+          fixed: "Programas e ações para povos de terreiro (matriz africana)"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU0811"
+# ========================================================
+      - id: "map_acoes_programas_outros_mun"
+        title: 
+          fixed: "Programas e Ações para Grupos Específicos, Povos e Comunidades Tradicionais"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU0812"
+# ========================================================
+      - id: "map_leg_reconhecimento_pat_gtrad_mun"
+        title: 
+          fixed: "Lei Específica sobre patrimônio das comunidades indígenas, quilombolas e outros povos e comunidades tradicionais"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU1012"
+# ========================================================
+      - id: "map_leg_garantia_atendimento_nao_portugues_mun"
+        title: 
+          fixed: "Legislação específica de garantia de atendimento diferenciado a povos não falantes da língua portuguesa"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU1011"
+# ========================================================
+      - id: "map_conselho_municipal_gtrad"
+        title: 
+          fixed: "Conselho Municipal dos Povos e Comunidades Tradicionais"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU48"
+# # ========================================================
+#       - id: "map_prog_gpTrad_mun"
+#         title: 
+#           fixed: "Ações e Programas de Direitos Humanos para povos e comunidades tradicionais"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_05_01"
+# #==================================================================================================
+#       - id: "map_prog_dh_ciganos_mun"
+#         title: 
+#           fixed: "Ações e Programas de Direitos Humanos para Ciganos"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_05_02"
+
+# ========================================================
+      - id: "gpTrad_acoes_estaduais_headline"
+        type: "headline"
+        title:
+          fixed: "Proteção Social e Garantia de Direitos - Ações Estaduais"
+# ========================================================
+      - id: "map_prog_dh_tradicionais"
+        title: 
+          fixed: "Ações e Programas de Direitos Humanos para povos e comunidades tradicionais"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_05_02"
+# ========================================================
+      - id: "map_prog_dh_ciganos"
+        title: 
+          fixed: "Ações e Programas de Direitos Humanos para Ciganos"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_05_01"

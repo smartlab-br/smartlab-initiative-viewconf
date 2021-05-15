@@ -4,7 +4,7 @@ title_sub: "Promoção do Meio Ambiente do Trabalho Guiada por Dados"
 new: false
 subtitle: "ENTENDA, COMPARE, ACESSE OS DADOS, PARTICIPE"
 map_image: "sst.jpg"
-background_images: ["sst1.jpg","sst2.jpg","sst3.jpg","sst4.jpg","sst5.jpg","sst6.jpg","sst7.jpg"]
+background_images: ["sst2.jpg","sst1.jpg","sst3.jpg","sst4.jpg","sst5.jpg","sst6.jpg"]
 theme:
   toolbar:
     title: "Smartlab - Observatório de Segurança e Saúde no Trabalho"
@@ -12,7 +12,7 @@ ranking_cards:
   - title: "Lesões mais frequentes"
     cls: "sm12 md6 pa-3"
     api: 
-      fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-ds_natureza_lesao-'null'&limit=5"
+      fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-ds_natureza_lesao-''&limit=5"
     args:
       - prop: 'localidade'
         named_prop: "ds_natureza_lesao"
@@ -36,7 +36,7 @@ ranking_cards:
   - title: "Afastamentos Acidentários por Agravo"
     cls: "sm12 md6 pa-3"
     api:
-      fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'null',and,eq-cd_especie_beneficio-91"
+      fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91"
     args:
       - prop: 'localidade'
         named_prop: "cd_agrup_categoria_cid_agravo"
@@ -49,7 +49,6 @@ ranking_cards:
     cls: "sm12 md6 pa-3"
     api:
       fixed: "/sst/beneficios?categorias=nm_municipio_uf&agregacao=COUNT,RANK_DENSE_COUNT&limit=5&filtros=nn-nm_municipio_uf,and,eq-cd_especie_beneficio-91"
-      # fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_br&agregacao=DISTINCT&filtros=in-rank_br-1-2-3-4-5,and,eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max&ordenacao=rank_br"
     args:
       - prop: 'localidade'
         named_prop: "nm_municipio_uf"
@@ -71,7 +70,7 @@ prevalencia:
       - named_prop: "agr_min_nu_competencia"
       - named_prop: "agr_max_nu_competencia"
   api:
-    fixed: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&agregacao=COUNT&filtros=eq-1-1"
+    fixed: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&agregacao=COUNT&ordenacao=-agr_count_cd_municipio_ibge&filtros=eq-1-1"
     #&calcs=ln_norm_pos_part
     # fixed: "/sst/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,in-cd_indicador-'sst_cat_total'-'sst_bene_qtd_91'"
   chart_options:
@@ -118,7 +117,7 @@ prevalencia:
               default: "Sem Registros"
             - prop: "description"
               fixed: "Notificações de Acidentes<br/>de Trabalho (AEAT/CAT - INSS)"
-        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-1-1"
+        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-1-1"
       - id: "mortes"
         value: "mortes"
         cls: "xs12"
@@ -134,7 +133,7 @@ prevalencia:
               default: "Sem Registros"
             - prop: "description"
               fixed: "Notificações de Acidentes<br/>com mortes (AEAT/CAT - INSS)"
-        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'mortes'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_indica_obito-'S'"
+        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'mortes'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_indica_obito-'S'"
       - id: "beneficio"
         value: "beneficio"
         cls: "xs12"
@@ -150,7 +149,7 @@ prevalencia:
               default: "Sem Registros"
             - prop: "description"
               fixed: "Afastamentos Acidentários<br/>(AEAT/SUB - INSS)"
-        api: "/sst/beneficios?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'beneficio'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_especie_beneficio-91"
+        api: "/sst/beneficios?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'beneficio'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_especie_beneficio-91"
       - id: "sinan"
         value: "sinan"
         cls: "xs12"
@@ -166,7 +165,7 @@ prevalencia:
               default: "Sem Registros"
             - prop: "description"
               fixed: "Notificações SINAN<br/>(MS - SUS)"
-        api: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,'sinan'-codigo&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_05_10_00',and,ge-nu_competencia-'2012'"
+        api: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,'sinan'-codigo&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_05_10_00',and,ge-nu_competencia-'2012'"
       event: 'selection'
     # - id: "selectlayer"
     #   type: "switch-group"
@@ -208,9 +207,9 @@ prevalencia:
       cls: "ma-0 pa-0"
       content:
         cls: "pa-0"
-        fixed: "O Observatório de Segurança e Saúde no Trabalho foi desenvolvido pela iniciativa SmartLab do Trabalho Decente(*), em colaboração com pesquisadores da Faculdade de Saúde Pública da USP no âmbito do projeto “Acidente de Trabalho: da Análise Sócio Técnica à Construção Social de Mudanças”.<br/>
-                O objetivo fundamental da ferramenta é o de melhor informar políticas públicas de prevenção de acidentes e doenças no trabalho, de modo que todas as ações, programas e iniciativas passem a ser orientadas por evidências não apenas em nível nacional, mas principalmente em cada um dos 5.570 municípios brasileiros.<br/>
-                Com esse objetivo, a iniciativa SmartLab facilita o acesso a estatísticas que antes se encontravam perdidas em bancos de dados governamentais e anuários pouco inteligíveis, o que dificultava a pesquisa sobre o assunto e sua compreensão.<br/>
+        fixed: "O Observatório de Segurança e Saúde no Trabalho foi desenvolvido pela iniciativa SmartLab de Trabalho Decente, em colaboração com pesquisadores da Faculdade de Saúde Pública da USP no âmbito do projeto “Acidente de Trabalho: da Análise Sócio Técnica à Construção Social de Mudanças”.<br/>
+                O objetivo fundamental da ferramenta é o de melhor informar e subsidiar políticas públicas de prevenção de acidentes e doenças no trabalho, de modo que todas as ações, programas e iniciativas passem a ser orientadas por evidências não apenas em nível nacional, mas principalmente em cada um dos 5.570 municípios brasileiros.<br/>
+                Com esse objetivo, a iniciativa SmartLab busca facilitar o acesso a informações oriundas dos mais diversos bancos de dados e anuários governamentais, disponibilizando estatísticas e indicadores de forma integrada e sinérgica, o que facilita a pesquisa e compreensão sobre o tema e, consequentemente, a rapidez do processo de tomada de decisão.<br/>
                 Espera-se que as informações geradas informem o desenvolvimento de novas iniciativas e aumentem a eficiência de ações hoje existentes em órgãos governamentais, ONGs, instituições do setor privado e na academia, por meio da produção e disseminação de conhecimento científico.<br/>
                 A seguir, a distribuição do registro de ocorrências conforme as categorias acima indicadas, para o período considerado."
   odometers:
@@ -219,7 +218,10 @@ prevalencia:
     # title_font_color: "white"
     odometer_items:
     - id: "odometer_acidentes_teste"
-      title: "Acidentes de Trabalhadores com Carteira<br/>Assinada Notificados desde 2012 (INSS)<span style='vertical-align:text-top'><SUP>1</SUP></span>"
+      title: 
+        template: "Acidentes de Trabalhadores com Carteira<br/>Assinada Notificados desde {0} (INSS)<span style='vertical-align:text-top'><SUP>1</SUP></span>"
+        args:
+          - named_prop: "nu_competencia_min"
       cls: 'xs12 sm4 md2'
       id_odometer: "sst_cat_total"
       show_pace: true
@@ -227,21 +229,30 @@ prevalencia:
       options: 
         cls_format: ""
     - id: "odometer_acidentes_mortes_teste"
-      title: "Mortes de Trabalhadores com Carteira<br/>Assinada Notificadas desde 2012 (INSS)<span style='vertical-align:text-top'><SUP>2</SUP></span>"
+      title: 
+        template: "Óbitos de Trabalhadores/as com Carteira<br/>Assinada Notificados desde {0} (INSS)<span style='vertical-align:text-top'><SUP>2</SUP></span>"
+        args:
+          - named_prop: "nu_competencia_min"
       cls: 'xs12 sm4 md2'
       id_odometer: "sst_cat_obito"
       show_pace: true
-      pace_description: "1 morte a cada"
+      pace_description: "1 óbito a cada"
       options: 
         cls_format: ""
     - id: "odometer_dias_perdidos_teste"
-      title: "Dias de Trabalho Perdidos com<br/>Afastamentos Acidentários desde 2012 (INSS)<span style='vertical-align:text-top'><SUP>3</SUP></span>"
+      title: 
+        template: "Dias de Trabalho Perdidos com<br/>Afastamentos Acidentários desde {0} (INSS)<span style='vertical-align:text-top'><SUP>3</SUP></span>"
+        args:
+          - named_prop: "nu_competencia_min"
       cls: 'xs12 sm4 md3'
       id_odometer: "sst_bene_dias_perdidos_91"
       options: 
         cls_format: ""
     - id: "odometer_gastos_teste"
-      title: "Gastos com Afastamentos<br/>Acidentários desde 2012 (INSS)<span style='vertical-align:text-top'><SUP>4</SUP></span>"
+      title: 
+        template: "Gastos com Afastamentos<br/>Acidentários desde {0} (INSS)<span style='vertical-align:text-top'><SUP>4</SUP></span>"
+        args:
+          - named_prop: "nu_competencia_min"
       cls: 'xs12 sm6 md3'
       id_odometer: "sst_bene_despesa"
       show_pace: true
@@ -249,7 +260,10 @@ prevalencia:
       options: 
         cls_format: "monetario"
     - id: "odometer_sinan"
-      title: "Notificações no Sistema Nacional de<br/>Agravos de Notificação (SINAN) desde 2012 (SUS)<span class='caption' style='vertical-align:text-top'><SUP>5</SUP></span>"
+      title: 
+        template: "Notificações no Sistema Nacional de<br/>Agravos de Notificação (SINAN) desde {0} (SUS)<span class='caption' style='vertical-align:text-top'><SUP>5</SUP></span>"
+        args:
+          - named_prop: "nu_competencia_min"
       cls: 'xs12 sm6 md2'
       id_odometer: "06_05_10_00"
       show_pace: true
@@ -377,14 +391,28 @@ prevalencia:
           prop: "odometros"
           function: "slice"
           id: "sst_cat_total"
+          options:
+            calcs:
+              - id: "ano_mais_um"
+                function: "calc_addition_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
+                  - fixed: 1
+              - id: "ano_mais_dois"
+                function: "calc_addition_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
+                  - fixed: 2
         template: "1. Foram notificados {0} acidentes entre {1} e {2} (CATWEB). O número permite estimar a quantidade de acidentes por 
-                unidade de tempo e projeção para 2019 até hoje. Os dados de 2019 serão atualizados em 2020, e assim por diante. 
+                unidade de tempo e projeção para {3} até hoje. Os dados de {3} serão atualizados em {4}, e assim por diante. 
                 Em anos anteriores, a estimativa esteve muito próxima do que se confirmou após a atualização."
         args:
           - named_prop: "vl_indicador"
             format: "inteiro"
           - named_prop: "nu_competencia_min"
           - named_prop: "nu_competencia_max"
+          - named_prop: "calc_ano_mais_um"
+          - named_prop: "calc_ano_mais_dois"
     - type: "text"
       class: "pr-0 pl-2 py-0"
       content:
@@ -393,8 +421,15 @@ prevalencia:
           prop: "odometros"
           function: "slice"
           id: "sst_cat_obito"
+          options:
+            calcs:
+              - id: "ano_mais_um"
+                function: "calc_addition_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
+                  - fixed: 1
         template: "2. No mesmo período, {2} desses acidentes resultaram em morte. Com a mesma forma de projeção temporal, 
-                  calcula-se que 1 morte ocorra a cada {1}. Somando-se o total de {0} a {3} à estimativa de 2019, chega-se ao número exibido."
+                  calcula-se que 1 morte ocorra a cada {1}. Somando-se o total de {0} a {3} à estimativa de {4}, chega-se ao número exibido."
         args:
           - named_prop: "nu_competencia_min"
           - function: "getPaceString" 
@@ -404,6 +439,7 @@ prevalencia:
           - named_prop: "vl_indicador"
             format: "inteiro"
           - named_prop: "nu_competencia_max"
+          - named_prop: "calc_ano_mais_um"
     - type: "text"
       class: "pr-0 pl-2 py-0"
       content:
@@ -412,7 +448,14 @@ prevalencia:
           prop: "odometros"
           function: "slice"
           id: "sst_bene_dias_perdidos_91"
-        template: "3. Também entre {0} a {2}, apuraram-se {1} dias de trabalho perdidos, estimando-se os valores para 2019 conforme dias por unidade 
+          options:
+            calcs:
+              - id: "ano_mais_um"
+                function: "calc_addition_ds"
+                fn_args:
+                  - named_prop: "nu_competencia_max"
+                  - fixed: 1
+        template: "3. Também entre {0} a {2}, apuraram-se {1} dias de trabalho perdidos, estimando-se os valores para {3} conforme dias por unidade 
                   de tempo em anos anteriores. Aqui são somados todos os dias que as pessoas não trabalharam em virtude de afastamentos previdenciários 
                   acidentários. Somaram-se todos os dias de afastamento individualmente ocorridos - muitos, é claro, ao mesmo tempo. 
                   Trata-se de métrica usual para medir por aproximação (proxy) os prejuízos de produtividade na economia formal."
@@ -421,6 +464,7 @@ prevalencia:
           - named_prop: "vl_indicador"
             format: "inteiro"
           - named_prop: "nu_competencia_max"
+          - named_prop: "calc_ano_mais_um"
     - type: "text"
       class: "pr-0 pl-2 py-0"
       content:
@@ -430,8 +474,9 @@ prevalencia:
           function: "slice"
           id: "sst_bene_despesa"
         template: "4. Os gastos estimados consideraram valores de pagamentos pelo INSS de benefícios de natureza acidentária de {0} a {3} e projetados até hoje. 
-                  De {0} a {3}, esse gasto, incluindo benefícios iniciados em anos anteriores, chega a {2} (R$1 gasto a cada {1}). Somente considerando as novas 
-                  concessões no período ({0}-{3}), o valor é de R$26.235.501.489, conforme divulgado anteriormente."
+                  De {0} a {3}, esse gasto, incluindo benefícios iniciados em anos anteriores, chega a {2} (R$1 gasto a cada {1})."
+                  # "Somente considerando as novas 
+                  # concessões no período ({0}-{3}), o valor é de R$26.235.501.489, conforme divulgado anteriormente."
         args:
           - named_prop: "nu_competencia_min"
           - function: "getPaceString" 
@@ -452,10 +497,9 @@ prevalencia:
         template: "5. Os números do SINAN (Sistema Nacional de Agravos de Notificação) incluem todos os trabalhadores atendidos pelo SUS no período. 
                   O SINAN é alimentado sobretudo por notificações de casos de doenças e agravos da lista nacional de doenças de notificação compulsória 
                   (Portaria MS nº 4/2017). O total inclui os seguintes casos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério 
-                  da Saúde: Acidente de Trabalho Grave, Câncer Relacionado ao Trabalho, Dermatoses Ocupacionais, Acidente de Trabalho com 
+                  da Saúde: Acidente de Trabalho Grave, Acidente por Animais Peçonhentos, Câncer Relacionado ao Trabalho, Dermatoses Ocupacionais, Acidente de Trabalho com 
                   Exposição a Material Biológico, Intoxicação Exógena Relacionada ao Trabalho, LER/DORT, Perda Auditiva Induzida por Ruído (PAIR) 
-                  Relacionada ao Trabalho, Pneumoconioses Relacionadas ao Trabalho, Transtornos Mentais Relacionados ao Trabalho e Acidente de Trabalho 
-                  Grave envolvendo Crianças e Adolescentes (0 a 17 anos)."
+                  Relacionada ao Trabalho, Pneumoconioses Relacionadas ao Trabalho e Transtornos Mentais Relacionados ao Trabalho."
         # args:
         #   - function: "getPaceString" 
         #     fn_args:
@@ -491,25 +535,25 @@ prevalencia:
         default: true
         color: "red darken-4"
         label: "Notificações de Acidentes<br/>de Trabalho (AEAT/CAT - INSS)"
-        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-1-1"
+        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'cat'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-1-1"
       - id: "mortes"
         value: "mortes"
         cls: "xs12"
         color: "black"
-        label: "Notificações de Acidentes<br/>com mortes (AEAT/CAT - INSS)"
-        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'mortes'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_indica_obito-'S'"
+        label: "Notificações de Acidentes<br/>com óbitos (AEAT/CAT - INSS)"
+        api: "/sst/cats?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'mortes'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_indica_obito-'S'"
       - id: "beneficio"
         value: "beneficio"
         cls: "xs12"
         color: "light-blue"
         label: "Afastamentos Acidentários<br/>(AEAT/SUB - INSS)"
-        api: "/sst/beneficios?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'beneficio'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_especie_beneficio-91"
+        api: "/sst/beneficios?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_municipio_ibge-cd_mun_ibge,nm_municipio_uf,'beneficio'-codigo&agregacao=COUNT&valor=cd_municipio_ibge&ordenacao=-agr_count_cd_municipio_ibge&calcs=ln_norm_pos_part&filtros=eq-cd_especie_beneficio-91"
       - id: "sinan"
         value: "sinan"
         cls: "xs12"
         color: "#c800c8"
         label: "Notificações SINAN<br/>(MS - SUS)"
-        api: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,'sinan'-codigo&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_05_10_00',and,ge-nu_competencia-'2012'"
+        api: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,'sinan'-codigo&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_05_10_00',and,ge-nu_competencia-'2012'"
       event: 'selection'            
 ############# Filtros CAT ##############
     - id: "select_uf"
@@ -1069,7 +1113,7 @@ prevalencia:
       default:
         fixed: "06_05_10_00"
       api:
-        fixed: "/indicadoresmunicipais?categorias=cd_indicador,ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=in-cd_indicador-'06_05_10_00'-'06_05_01_00'-'06_05_02_00'-'06_05_03_00'-'06_05_04_00'-'06_05_05_00'-'06_05_06_00'-'06_05_07_00'-'06_05_08_00'-'06_05_09_00'-'06_05_11_00'-'06_05_12_00',and,ge-nu_competencia-'2012'"
+        fixed: "/indicadoresmunicipais?categorias=cd_indicador,ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=in-cd_indicador-'06_05_10_00'-'06_05_01_00'-'06_05_02_00'-'06_05_03_00'-'06_05_04_00'-'06_05_05_00'-'06_05_06_00'-'06_05_07_00'-'06_05_08_00'-'06_05_09_00'-'06_05_20_00',and,ge-nu_competencia-'2012'"
       args:
         - prop: "id"
           named_prop: "cd_indicador"
@@ -1158,7 +1202,7 @@ prevalencia:
           group: "cat"
           reactive: true
           api: 
-            fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&limit=5&filtros=ne-ds_natureza_lesao-'null'"
+            fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&limit=5&filtros=ne-ds_natureza_lesao-''"
           args:
             - prop: 'localidade'
               named_prop: "ds_natureza_lesao"
@@ -1186,7 +1230,7 @@ prevalencia:
           group: "mortes"
           reactive: true
           api: 
-            fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&limit=5&filtros=ne-ds_natureza_lesao-'null',and,eq-cd_indica_obito-'S'"
+            fixed: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT,RANK_DENSE_COUNT&limit=5&filtros=ne-ds_natureza_lesao-'',and,eq-cd_indica_obito-'S'"
           args:
             - prop: 'localidade'
               named_prop: "ds_natureza_lesao"
@@ -1214,7 +1258,7 @@ prevalencia:
           group: "beneficio"
           reactive: true
           api:
-            fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'null',and,eq-cd_especie_beneficio-91"
+            fixed: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT,RANK_DENSE_COUNT&filtros=ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91"
           args:
             - prop: 'localidade'
               named_prop: "cd_agrup_categoria_cid_agravo"
@@ -1229,7 +1273,6 @@ prevalencia:
           reactive: true
           api:
             fixed: "/sst/beneficios?categorias=nm_municipio_uf&agregacao=COUNT,RANK_DENSE_COUNT&limit=5&filtros=nn-nm_municipio_uf,and,eq-cd_especie_beneficio-91"
-            # fixed: "/sst/beneficios?categorias=nm_municipio_uf,vl_indicador,rank_br&agregacao=DISTINCT&ordenacao=rank_br&filtros=in-rank_br-1-2-3-4-5,and,eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
           args:
             - prop: 'localidade'
               named_prop: "nm_municipio_uf"
@@ -1281,10 +1324,8 @@ sparklines:
         - text: 'Pico'
           align: 'center'
           width: '23.34%'
-          value: 'higher_value_str_cat'
+          value: 'fmt_higher_value_cat'
           item_align: 'center'
-          sort_field: 'higher_value_cat'
-          format: 'inteiro'
     - id: "sparklines_beneficio_uf"
       title: "Afastamentos Acidentários por UF"
       cls: "xs12 md6 lg4"
@@ -1319,10 +1360,8 @@ sparklines:
         - text: 'Pico'
           align: 'center'
           width: '23.34%'
-          value: 'higher_value_str_beneficio'
+          value: 'fmt_higher_value_beneficio'
           item_align: 'center'
-          sort_field: 'higher_value_beneficio'
-          format: 'inteiro'
     - id: "sparklines_sinan"
       title: 'Notificações SINAN'
       cls: "xs12 md6 lg4"
@@ -1359,10 +1398,8 @@ sparklines:
         - text: 'Pico'
           align: 'center'
           width: '23.34%'
-          value: 'higher_value_str_06_05_10_00'
+          value: 'fmt_higher_value_06_05_10_00'
           item_align: 'center'
-          sort_field: 'higher_value_06_05_10_00'
-          format: 'inteiro'
     - id: "sparklines_cat"
       title: "Notificações de Acidente de Trabalho por Município"
       cls: "xs12 md6 lg4"
@@ -1397,10 +1434,8 @@ sparklines:
         - text: 'Pico'
           align: 'center'
           width: '23.34%'
-          value: 'higher_value_str_cat'
+          value: 'fmt_higher_value_cat'
           item_align: 'center'
-          sort_field: 'higher_value_cat'
-          format: 'inteiro'
     - id: "sparklines_cnae"
       title: "Notificações de Acidente de Trabalho por Setor Econômico"
       cls: "xs12 md6 lg4"
@@ -1435,10 +1470,8 @@ sparklines:
         - text: 'Pico'
           align: 'center'
           width: '23.34%'
-          value: 'higher_value_str_cat'
+          value: 'fmt_higher_value_cat'
           item_align: 'center'
-          sort_field: 'higher_value_cat'
-          format: 'inteiro'
     - id: "sparklines_cbo"
       title: "Notificações de Acidente de Trabalho por Ocupação"
       cls: "xs12 md6 lg4"
@@ -1447,7 +1480,7 @@ sparklines:
       series_field: "codigo"
       category_field: "ano_cat"
       api:
-        fixed: "/sst/cats?categorias=ds_cbo,'cat'-codigo,ano_cat&agregacao=COUNT&valor=ds_cbo&filtros=ne-ds_cbo-'null'"
+        fixed: "/sst/cats?categorias=ds_cbo,'cat'-codigo,ano_cat&agregacao=COUNT&valor=ds_cbo&filtros=ne-ds_cbo-''"
       headers:
         - text: 'Ocupação'
           align: 'center'
@@ -1473,10 +1506,8 @@ sparklines:
         - text: 'Pico'
           align: 'center'
           width: '23.34%'
-          value: 'higher_value_str_cat'
+          value: 'fmt_higher_value_cat'
           item_align: 'center'
-          sort_field: 'higher_value_cat'
-          format: 'inteiro'
 
     # - id: "sparklines_prev_cat"
     #   title: "Notificações de Acidente de Trabalho (casos a cada 10mil trabalhadores)"
@@ -1515,8 +1546,7 @@ sparklines:
     #     - text: 'Pico'
     #       align: 'center'
     #       width: '23.34%'
-    #       value: 'higher_value_str_10_13_01_01'
+    #       value: 'higher_value_10_13_01_01'
     #       item_align: 'center'
-    #       sort_field: 'higher_value_10_13_01_01'
     #       format: 'inteiro'
     #       multiplier: 10000

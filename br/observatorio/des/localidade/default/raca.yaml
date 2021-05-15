@@ -1,0 +1,1079 @@
+# ========================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "JD_RAIS_30_PRETA"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'monetario'
+        collapse:
+          format: 'monetario'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Remuneração média de negros'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "JD_RAIS_27_MULHER_NEGRA"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'monetario'
+        collapse:
+          format: 'monetario'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Remuneração média de mulheres negras'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "08_03_06_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Mulheres negras, de 18 a 64 anos de idade, trabalhoras domésticas'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+
+          
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api: 
+      template: "/indicadoresmunicipais?categorias=cd_indicador,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=in-cd_indicador-'08_01_04_00'-'08_01_05_00',and,eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
+      options:
+        combine:
+        - id: "pct_negros_direcao"
+          desc: "Distribuição Negros em cargo de direção"
+          function: 'calc_percentage_val1'
+          fn_args:
+            - id: "08_01_05_00"
+              named_prop: "agr_sum_vl_indicador"
+            - id: "08_01_04_00"
+              named_prop: "agr_sum_vl_indicador"
+    args:
+      - prop: "value"
+        id: "pct_negros_direcao"
+        named_prop: 'vl_indicador'
+        format: 'porcentagem'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Percentual de negros em cargo de direção'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - id: "08_01_05_00"
+            named_prop: "ds_fonte"
+          - id: "08_01_05_00"
+            named_prop: "nu_competencia"
+# ========================================================
+secoes:
+  - id: "raca_perfil"
+    name: "Perfil da Unidade Geográfica"
+    cards:
+
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_raca"
+        title: 
+          fixed: "Remuneração Média de Trabalhadores por Raça/Cor"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_30_BRANCA"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresestaduais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'JD_RAIS_30_BRANCA'-'JD_RAIS_30_AMARELA'-'JD_RAIS_30_INDIGENA'-'JD_RAIS_30_PARDA'-'JD_RAIS_30_PRETA'&ordenacao=-vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    named_prop: 'ds_agreg_primaria'
+                  - prop: "comment"
+                    fixed: 'Maior remuneração média'
+
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresestaduais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'JD_RAIS_30_BRANCA'-'JD_RAIS_30_AMARELA'-'JD_RAIS_30_INDIGENA'-'JD_RAIS_30_PARDA'-'JD_RAIS_30_PRETA'&ordenacao=vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    named_prop: 'ds_agreg_primaria'
+                  - prop: "comment"
+                    fixed: 'Menor remuneração média'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o valor médio da remuneração dos trabalhadores, por raça/cor, de maior e menor renda, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os valores para os cinco coortes de raça/cor, conforme definidos pelo IBGE. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+              
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_30_BRANCA','JD_RAIS_30_AMARELA','JD_RAIS_30_INDIGENA','JD_RAIS_30_PARDA','JD_RAIS_30_PRETA']
+            year: "max"
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          y: "ds_agreg_primaria"
+          x: "vl_indicador"
+          # orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          order_field: "vl_indicador"
+          colorScale:
+            name: "BuPu"
+            type: "singleHue"
+            levels: 6
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "bar_remuneracao_clt_raca"
+        title: 
+          fixed: "Remuneração de Empregados (CLT) por Raça/Cor"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_18_BRANCA"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresestaduais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'JD_RAIS_18_AMARELA'-'JD_RAIS_18_BRANCA'-'JD_RAIS_18_INDIGENA'-'JD_RAIS_18_PARDA'-'JD_RAIS_18_PRETA'&ordenacao=-vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    named_prop: 'ds_agreg_primaria'
+                  - prop: "comment"
+                    fixed: 'Maior remuneração média'
+
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresestaduais?categorias=vl_indicador,ds_agreg_primaria&filtros=eq-cd_mun_ibge-{0},and,in-cd_indicador-'JD_RAIS_18_AMARELA'-'JD_RAIS_18_BRANCA'-'JD_RAIS_18_INDIGENA'-'JD_RAIS_18_PARDA'-'JD_RAIS_18_PRETA'&ordenacao=vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                    uiTags: false
+                    default: "Sem Registros"
+                  - prop: "description"
+                    named_prop: 'ds_agreg_primaria'
+                  - prop: "comment"
+                    fixed: 'Menor remuneração média'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o valor médio da remuneração dos trabalhadores, por raça, de maior e menor renda, somente para os vínculos com carteira assinada (CLT). No gráfico ao lado, comparam-se os valores para os cinco coortes de raça/cor, conforme definidos pelo IBGE. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_18_AMARELA','JD_RAIS_18_BRANCA','JD_RAIS_18_INDIGENA','JD_RAIS_18_PARDA','JD_RAIS_18_PRETA']
+            year: "max"
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          y: "ds_agreg_primaria"
+          x: "vl_indicador"
+          # orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          order_field: "vl_indicador"
+          colorScale:
+            name: "BuPu"
+            type: "singleHue"
+            levels: 7
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_sexo_raca"
+        title: 
+          fixed: "Diferenças de Remuneração pela Perspectiva Interseccional (Sexo e Raça/Cor) no setor formal"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "JD_RAIS_27_HOMEM_BRANCO"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_RAIS_27_HOMEM_BRANCO"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    fixed: '100%'
+                    # format: 'monetario'
+                    # collapse:
+                    #   format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    fixed: 'Homens brancos'
+                  # - prop: "comment"
+                  #   fixed: 'Maior remuneração média'
+
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_27_HOMEM_BRANCO", JD_RAIS_27_MULHER_BRANCA]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_27_MULHER_BRANCA"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_27_HOMEM_BRANCO"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres brancas'
+                  # - prop: "comment"
+                  #   fixed: "No setor formal"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_27_HOMEM_BRANCO", JD_RAIS_27_HOMEM_NEGRO]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_27_HOMEM_NEGRO"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_27_HOMEM_BRANCO"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Homens negros'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["JD_RAIS_27_HOMEM_BRANCO", JD_RAIS_27_MULHER_NEGRA]
+                  year: "max"
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "JD_RAIS_27_MULHER_NEGRA"
+                        named_prop: "vl_indicador"
+                      - id: "JD_RAIS_27_HOMEM_BRANCO"
+                        named_prop: "vl_indicador"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres negras'
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Os números em destaque mostram a diferença relativa de rendimentos mensais da população ocupada entre diferentes grupos de sexo e raça/cor, para a perspectiva geográfica selecionada no setor formal da economia, a partir de um enfoque interseccional. Em destaque o percentual da remuneração recebida pelos diferentes grupos (mulheres brancas, homens negros e mulheres negras) em relação ao rendimento médio mensal de homens brancos, utilizado como valor de referência (100%). No gráfico ao lado, de forma complementar comparam-se os valores nominais dos rendimentos médios entre esses grupos. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "nu_competencia_max"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "nu_competencia_max"
+                - named_prop: "calc_proximo_ano"
+        chart_type: "BAR"
+        preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: ['JD_RAIS_27_HOMEM_BRANCO','JD_RAIS_27_HOMEM_NEGRO','JD_RAIS_27_MULHER_BRANCA','JD_RAIS_27_MULHER_NEGRA']
+            year: "max"
+            options:
+              calcs:
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "ds_agreg_primaria"
+                          - named_prop: "vl_indicador"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "vl_indicador"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "cd_indicador"
+          y: "ds_agreg_primaria"
+          x: "vl_indicador"
+          # orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          order_field: "vl_indicador"
+          colorScale:
+            name: "YlGn"
+            type: "singleHue"
+            levels: 7
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_dirigentes_raca"
+        title: 
+          fixed: "Segregação ocupacional de Negros em cargos de direção"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "08_01_08_00"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: 'nu_competencia'
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "No Censo 2010, para as pessoas que estavam trabalhando foi perguntada a ocupação que exercia neste trabalho."
+          - type: "text"
+            title: "Observação:"
+            content:
+              fixed: "Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: ["08_01_08_00", "08_01_04_00"]
+                args:
+                  - prop: "value"
+                    id: "08_01_08_00"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Brancos em cargo de direção'
+                  - prop: "comment"
+                    id: "08_01_04_00"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                      precision: 1
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  iid: ["08_01_09_00", "08_01_05_00"]
+                args:
+                  - prop: "value"
+                    id: "08_01_09_00"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Negros em cargo de direção'
+                  - prop: "comment"
+                    id: "08_01_05_00"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                      precision: 1
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a distribuição percentual da população ocupada, de 16 a 64 anos de idade, em cargos de direção, para dois grupos distintos de raça/cor (de um lado. brancos e amarelos, e de outro lado pretos, pardos - negros - e indígenas).  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa a partir da participação percentual de negros em cargos de direção. A escala de cores varia do branco (menor participação) para o azul (maior participação)."
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,nu_competencia,latitude,longitude,vl_indicador,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'08_01_09_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            # calcs:
+            #   - id: 'vl_indicador'
+            #     function: 'calc_subtraction_ds'
+            #     fn_args:
+            #       - named_prop: "08_01_08_00"
+            #       - named_prop: "08_01_09_00"
+            #     recalc_min_max: true
+              # - id: "deviation_empform"
+              #   function: "get_bipolar_scale"
+              #   fn_args: 
+              #     - fixed: 'calc_vl_indicador'
+            formatters:
+              - id: "vl_indicador"
+                format: 'porcentagem'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Negros em cargos de direção'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'vl_indicador'
+          colorScale:
+            name: 'Blues'
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "treemap_domestico"
+        type: "multiple-charts"
+        title: 
+          fixed: "Trabalho doméstico"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "08_03_01_00"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: 'nu_competencia'
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Esses indicadores são calculados através do Censo 2010 por intermédio das informações de existência de emprego com carteira de trabalho assinada e contribuição à previdência entre as pessoas ocupadas nos serviços domésticos."
+          - type: "text"
+            title: "Observações Importantes"
+            content:
+              fixed: "O trabalho doméstico desempenha um papel de suma importância na cadeia do cuidado, pois amortece, no âmbito das famílias e principalmente para as mulheres trabalhadoras, a pressão gerada pela necessidade de compatibilizar a inserção no mercado de trabalho com as responsabilidades familiares, em um contexto de insuficiência de políticas públicas nessa área. Apesar desta inequívoca importância para um significativo número de mulheres ocupadas e para a sociedade, de um modo geral, o trabalho doméstico ainda é desvalorizado e marcado pela precariedade das condições laborais e baixa proteção social, se constituindo, portanto, num dos principais núcleos do déficit de Trabalho Decente no Brasil.<br/>
+                      É importante mencionar que no âmbito da legislação nacional a Lei Complementar nº 150, de 01/06/2015, amliou diversos direitos trabalhistas para a categoria do trabalho doméstico, a exemplo do limite de 44 horas de trabalho por semana, o pagamento de horas e de adicional noturno, além do SIMPLES doméstico, que facilita o cumprimento das obrigações por parte dos empregadores e empregadoras. Em dezembro de 2017, o Brasil raticou a Convenção nº 189 da OIT sobre Trabalho Decente para as trabalhadoras e trabalhadores domésticos, adota pela Conferência Internacional do Trabalho em junho de 2011, que entrará em vigor no país em 31 de janeiro de 2019.<br/><br/>
+                      Os dados do Censo Demográfico de 2010, a serem atualizados em 2020, são os mais recentes do ponto de vista censitário-demográfico, considerada a série histórica estatística do IBGE . Essa série, por alcançar todos os municípios brasileiros, têm importância fundamental para políticas públicas e em geral para métricas de desenvolvimento sustentável, servindo, portanto, para a avaliação da efetiva implementação da Agenda 2030 (Objetivos do Desenvolvimento Sustentável) para os 5.570 municípios brasileiros."
+        description:
+          - type: "minicards"
+            # comment:
+            #   fixed: "Valores em salários mínimos"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_03_01_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse: 
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Total na UF'
+                  - prop: "comment"
+                    template: "No Brasil: {0}"
+                    args:
+                      - id: "08_03_01_00"
+                        named_prop: 'vl_indicador_br'
+                        format: 'inteiro'
+                        collapse: 
+                          format: 'real'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_04_02_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Com carteira assinada'
+                  - prop: "comment"
+                    template: "No Brasil: {0}"
+                    args:
+                      - id: "08_04_02_00"
+                        named_prop: 'vl_indicador_br'
+                        format: 'porcentagem'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_05_02_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Contribuintes para a previdência'
+                  - prop: "comment"
+                    template: "No Brasil: {0}"
+                    args:
+                      - id: "08_05_02_00"
+                        named_prop: 'vl_indicador_br'
+                        format: 'porcentagem'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "08_06_03_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    template: "{0} <span>SAL. MIN.</span>"
+                    args:
+                      - id: "08_06_03_00"
+                        named_prop: 'vl_indicador'
+                        format: 'real'
+                        collapse: 
+                          format: 'real'
+                  - prop: "description"
+                    fixed: 'Rendimento médio'
+                  - prop: "comment"
+                    template: "No Brasil: {0} <span>SAL. MIN.</span>"
+                    args:
+                      - id: "08_06_03_00"
+                        named_prop: 'vl_indicador_br'
+                        format: 'real'
+                        collapse:
+                          format: 'real'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o panorama do trabalho doméstico na Unidade Federativa em relação ao número total de trabalhadoras e trabalhadores, o percentual destes com carteira assinada, o percentual de contribuintes para a previdência e o rendimento médio do trabalho doméstico em salários mínimos. No gráfico ao lado, a comparação entre diferentes grupos, pela perspectiva interseccional, destacando a participação percentual de mulheres negras, mulheres brancas e homens no total de pessoas ocupadas com o trabalho doméstico."
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "08_03_01_00"
+              year: "max"
+            args:
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+        charts:
+# # ========================================================
+#           - id: "treemap_domestico_brancos_negros"
+#             cls: "xs12 md6"
+#             type: "TREEMAP"
+#             preloaded:
+#               prop: "centralindicadores"
+#               function: "slice"
+#               id: ["08_03_04_00", "08_03_05_00"]
+#               options:
+#                 formatters:
+#                 - id: "vl_indicador"
+#                   format: 'inteiro'
+#             headers:
+#               - text: 'Indicador'
+#                 align: 'left'
+#                 value: 'ds_indicador_radical'
+#               - text: 'Qtde'
+#                 value: 'fmt_vl_indicador'
+#             options:
+#               id: "cd_indicador"
+#               text: "ds_agreg_primaria"
+#               size: "vl_indicador"
+#               colorScale:
+#                 name: "BuGn"
+#                 type: "singleHue"
+#                 levels: 5
+#                 order: 'asc'
+#             # source:
+#             #   desc_field: "ds_fonte"
+# ========================================================
+          - id: "treemap_domestico_mulheres_homens"
+            # cls: "xs12 md6"
+            type: "TREEMAP"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: ["08_03_02_00", "08_03_03_00", "08_03_06_00", "08_03_05_00"]
+              year: "max"
+              combine:
+                - id: "mulheres_brancas"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Mulheres Brancas"
+                  ds_agreg_primaria: "Mulheres Brancas"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_03_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
+                - id: "homens_negros"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Homens Negros"
+                  ds_agreg_primaria: "Homens Negros"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_05_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
+                - id: "homens_brancos"
+                  desc: "População de 18 a 64 anos de idade, ocupada como trabalhador doméstico - Homens Brancos"
+                  ds_agreg_primaria: "Homens Brancos"
+                  ds_fonte: "IBGE - Censo Demográfico"
+                  format: 'inteiro'
+                  function: 'calc_subtraction'
+                  fn_args:
+                    - id: "08_03_02_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_05_00"
+                      named_prop: "vl_indicador"
+                    - id: "08_03_06_00"
+                      named_prop: "vl_indicador"
+              slice: 
+                id: ["08_03_06_00", "mulheres_brancas", "homens_negros", "homens_brancos"]
+              options:
+                formatters:
+                - id: "vl_indicador"
+                  format: 'inteiro'
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Quantidade'
+                value: 'fmt_vl_indicador'
+            options:
+              id: "cd_indicador"
+              text: "ds_agreg_primaria"
+              size: "vl_indicador"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 5
+                order: 'asc'
+            source:
+              desc_field: "ds_fonte"
+# ========================================================
+      - id: "raca_acoes_municipais_headline"
+        type: "headline"
+        title:
+          fixed: "Proteção Social e Garantia de Direitos - Ações Municipais"
+# ========================================================
+      - id: "map_conf_dir_pol_igualdade_racial_mun_novo"
+        title: 
+          fixed: "Conferências nos últimos quatro anos sobre política para igualdade racial"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU557"
+# # ========================================================
+#       - id: "map_conf_dir_pol_igualdade_racial_mun"
+#         title: 
+#           fixed: "Conferencias sobre direitos ou políticas para a igualdade racial (até 4 anos antes da pesquisa)"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_02_07"        
+# ========================================================
+      - id: "map_capacitacao_guarda_municipal_racismo"
+        title: 
+          fixed: "Enfrentamento ao Racismo pela Guarda Municipal"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MSEG3112"
+# ========================================================
+      - id: "map_pol_dh_pat_afro_mun"
+        title: 
+          fixed: "Reconhecimento do patrimônio afro-brasileiro"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU5714"
+# ========================================================
+      - id: "map_leg_combate_disc_racial_adm_publica_mun"
+        title: 
+          fixed: "Lei Específica sobre Combate à discriminação racial no âmbito da administração pública"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU107"
+# ========================================================
+      - id: "map_leg_promo_igualdade_racial_mun_novo"
+        title: 
+          fixed: "Lei Específica sobre Promoção da igualdade racial e/ou de enfrentamento ao racismo"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU106"
+# # ========================================================
+#       - id: "map_leg_promo_igualdade_racial_mun"
+#         title: 
+#           fixed: "Legislação que institua Plano de Promoção da Igualdade Racial e/ou de Enfrentamento ao Racismo"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_02_05"
+# ========================================================
+      - id: "map_prog_dh_negros_mun_novo"
+        title: 
+          fixed: "Programas e ações para grupos específicos - População negra "
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU088"
+# # ========================================================
+#       - id: "map_prog_dh_negros_mun"
+#         title: 
+#           fixed: "Ações e Programas de Direitos Humanos para a população Negra"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_02_03"
+# ========================================================
+      - id: "map_prog_igualdade_racial_mun_novo"
+        title: 
+          fixed: "Promoção à igualdade racial e enfrentamento ao racismo"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU572"
+# # ========================================================
+#       - id: "map_prog_igualdade_racial_mun"
+#         title: 
+#           fixed: "Políticas, Ações e Programas de promoção à igualdade racial e/ou Enfrentamento ao racismo"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_02_02"
+# ========================================================
+      - id: "map_conselho_mun_igualdade_racial"
+        title: 
+          fixed: "Conselho Municipal de Igualdade Racial"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU42"
+# ========================================================
+      - id: "map_fundo_igualdade_racial_mun_novo"
+        title: 
+          fixed: "Fundo de Promoção da igualdade racial "
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "MUNIC_MDHU565"
+# # ========================================================
+#       - id: "map_fundo_igualdade_racial_mun"
+#         title: 
+#           fixed: "Fundo de promoção da igualdade racial"
+#         card_template: "t4"
+#         datasource: "estadicmunic"
+#         cd_indicador: "91_08_02_01"
+# ========================================================
+      - id: "map_leg_igualdade_racial_mun"
+        title: 
+          fixed: "Legislação que institua Estatuto de Igualdade Racial"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "91_08_02_04"
+# ========================================================
+      - id: "map_leg_vaga_negros_mun"
+        title: 
+          fixed: "Legislação que garanta vagas para população Negra ou afrodescendente em concursos públicos no município"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "91_08_02_06"
+# ========================================================
+      - id: "raca_acoes_estaduais_headline"
+        type: "headline"
+        title:
+          fixed: "Proteção Social e Garantia de Direitos - Ações Estaduais"
+# ========================================================
+      - id: "map_pm_violencia_preconceito_racial"
+        title: 
+          fixed: "Ações de Prevenção da Polícia Militar quanto ao Enfrentamento ao preconceito e à Violência racial "
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_02_01"
+# ========================================================
+      - id: "map_pm_capacitacao_racismo"
+        title: 
+          fixed: "Capacitação da Polícia Militar para Enfrentamento ao racismo"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_02_02"
+# ========================================================
+      - id: "map_conselho_racial"
+        title: 
+          fixed: "Conselho de promoção da igualdade racial"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_02_03"
+# ========================================================
+      - id: "map_fundo_promo_racial"
+        title: 
+          fixed: "Fundo de Promoção da igualdade racial"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_02_04"
+# ========================================================
+      - id: "map_politica_igualdade"
+        title: 
+          fixed: "Políticas, Ações e Programas de promoção à igualdade racial e/ou Enfrentamento ao racismo"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_02_05"
+# ========================================================
+      - id: "map_programa_negros"
+        title: 
+          fixed: "Ações e Programas para a população Negra"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_02_06"
+# ========================================================
+      - id: "map_leg_cota_raca"
+        title: 
+          fixed: "Legislação que garanta vagas para população Negra ou afrodescendente em concursos públicos"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_02_07"
+# ========================================================
+      - id: "map_leg_estatuto_igualdade"
+        title: 
+          fixed: "Legislação que institua Estatuto de Igualdade Racial "
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_02_08"
+# ========================================================
+      - id: "map_leg_plano_promo_igualdade"
+        title: 
+          fixed: "Legislação que institua Plano de Promoção da Igualdade Racial e/ou de Enfrentamento ao Racismo"
+        card_template: "t2"
+        datasource: "estadicuf"
+        cd_indicador: "90_08_02_09"
