@@ -10,8 +10,8 @@ principais:
       - prop: "value"
         named_prop: 'agr_sum_vl_indicador'
         format: 'inteiro'
-        default: 'Nenhum'
-        zero: 'Nenhum'
+        default: 'Nenhuma'
+        zero: 'Nenhuma'
       - prop: "description"
         fixed: "Pessoas em condição análoga à de escravo - Resgates"
       - prop: 'comment'
@@ -162,7 +162,7 @@ principais:
           - named_prop: "agr_sum_vl_indicador"
           - named_prop: "nu_competencia_max"
         format: "real"
-        default: "Nenhum"
+        default: "-"
       - prop: "description"
         fixed: "Média de resgatados por ano"
       - prop: 'comment'
@@ -180,14 +180,15 @@ secoes:
 # ========================================================
       - id: "sparkline_resgatados_escravo"
         title: 
-          fixed: "Municípios de Resgate"
+          fixed: "Municípios de Resgate na Unidade Federativa"
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+            template: "/te/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -204,7 +205,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api: 
                   template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
                   args:
@@ -215,7 +216,7 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Município com mais Resgatados'
+                    fixed: 'Município com mais Resgatados na UF'
                   - prop: "comment"
                     template: 'Total de Resgatados: {0}'
                     args:
@@ -245,9 +246,29 @@ secoes:
                   args:
                     - named_prop: "value_min"
                     - named_prop: "value_max"
+          - id: "select_tipo"
+            type: "select"
+            label: "Setor Econômico"
+            api:
+              template: "/te/indicadoresestaduais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae',and,eq-cd_uf-{0}&ordenacao=ds_agreg_primaria"
+              args:
+                - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
         component_type: "SPARKLINES"
         api:
-          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
+          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados_cnae',and,eq-cd_uf-{0}"
           args:
             - named_prop: "cd_uf"
         headers:
@@ -261,46 +282,46 @@ secoes:
             item_align: 'center'
           - text: 'Total de Resgatados'
             align: 'center'
-            value: 'total_te_sit_trab_resgatados'
+            value: 'total_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             format: 'inteiro'
           - text: 'Smartline'
             align: 'center'
             width: '26%'
-            value: 'last_value_te_sit_trab_resgatados'
+            value: 'last_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             type: 'spark'
-            series: 'te_sit_trab_resgatados'
+            series: 'te_sit_trab_resgatados_cnae'
             bgColor: '#00C853'
             stroke: 2
             item_align: 'center'
           - text: 'Ano de Pico'
             align: 'center'
-            value: 'fmt_higher_value_te_sit_trab_resgatados'
+            value: 'fmt_higher_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
           - text: 'Número de Anos de Incidência'
             align: 'center'
             width: '10%'
-            value: 'series_length_te_sit_trab_resgatados'
+            value: 'series_length_te_sit_trab_resgatados_cnae'
             item_align: 'center'
           - text: 'Número de Anos de Incidência'
             align: 'center'
             width: '10%'
-            value: 'series_length_last_5_te_sit_trab_resgatados'
+            value: 'series_length_last_5_te_sit_trab_resgatados_cnae'
             item_align: 'center'
           - text: 'Ano'
             align: 'center'
-            value: 'last_2_value_te_sit_trab_resgatados'
+            value: 'last_2_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             format: "inteiro"
           - text: 'Ano'
             align: 'center'
-            value: 'last_value_te_sit_trab_resgatados'
+            value: 'last_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             format: "inteiro"
           - text: 'Variação'
             align: 'center'
-            value: 'fmt_last_rate_te_sit_trab_resgatados'
+            value: 'fmt_last_rate_te_sit_trab_resgatados_cnae'
             item_align: 'center'
         component_options:
           id: "sparklines_freq_rgt"
@@ -321,10 +342,11 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+            template: "/te/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -453,11 +475,12 @@ secoes:
           fixed: "Locais de nascimento de resgatados"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat'"
+          api:
+            template: "/te/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -474,7 +497,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api: 
                   template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_nat',and,eq-cd_uf-{0}"
                   args:
@@ -485,7 +508,7 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Município com mais Resgatados'
+                    fixed: 'Município com mais Resgatados Naturais da UF'
                   - prop: "comment"
                     template: 'Total de Resgatados Naturais do Município: {0}'
                     args:
@@ -582,11 +605,12 @@ secoes:
           fixed: "Locais de residência declarada"
         title_comment:
           template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_res'"
+          api:
+            template: "/te/indicadoresestaduais?categorias=nm_uf,nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_nat',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
           args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
+            - named_prop: "nm_uf"
             - named_prop: "nu_competencia_min"
             - named_prop: "nu_competencia_max"
         info:
@@ -603,7 +627,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api: 
                   template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_res',and,eq-cd_uf-{0}"
                   args:
@@ -614,7 +638,7 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Município com mais Resgatados'
+                    fixed: 'Município com mais Resgatados Residentes na UF'
                   - prop: "comment"
                     template: 'Total de Resgatados Residentes no Município: {0}'
                     args:
