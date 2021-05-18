@@ -198,7 +198,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api: 
                   template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
                 args:
@@ -208,6 +208,22 @@ secoes:
                     zero: "Nenhum"
                   - prop: "description"
                     fixed: 'Município com mais Resgatados'
+                  - prop: "comment"
+                    template: 'Total de Resgatados: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,ge-nu_competencia-2016"
+                args:
+                  - prop: "value"
+                    named_prop: 'nm_municipio_uf'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Município com mais Resgatados nos últimos 5 anos'
                   - prop: "comment"
                     template: 'Total de Resgatados: {0}'
                     args:
@@ -244,23 +260,23 @@ secoes:
                     - named_prop: "rank_uf"
                     - named_prop: "media_br"
                     - named_prop: "media_uf"
-          - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador-calc_header_label,'(Razão)'-ds_indicador_prefixo,vl_indicador-agr_sum_vl_indicador,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados_incidencia_5_anos'"
-            options:
-              calcs:
-                - id: "fmt_value"
-                  function: "get_formatted_value"
-                  fn_args:
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "ds_indicador_prefixo"
-                - id: "det_value"
-                  function: "get_detail_value"
-                  fn_args:
-                    - named_prop: "class_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "rank_br"
-                    - named_prop: "rank_uf"
-                    - named_prop: "media_br"
-                    - named_prop: "media_uf"
+          # - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador-calc_header_label,'(Razão)'-ds_indicador_prefixo,vl_indicador-agr_sum_vl_indicador,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados_incidencia_5_anos'"
+          #   options:
+          #     calcs:
+          #       - id: "fmt_value"
+          #         function: "get_formatted_value"
+          #         fn_args:
+          #           - named_prop: "agr_sum_vl_indicador"
+          #           - named_prop: "ds_indicador_prefixo"
+          #       - id: "det_value"
+          #         function: "get_detail_value"
+          #         fn_args:
+          #           - named_prop: "class_indicador"
+          #           - named_prop: "agr_sum_vl_indicador"
+          #           - named_prop: "rank_br"
+          #           - named_prop: "rank_uf"
+          #           - named_prop: "media_br"
+          #           - named_prop: "media_uf"
           - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,'(Quantidade)'-ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
             options:
               calcs:
@@ -303,32 +319,7 @@ secoes:
                     - named_prop: "rank_uf"
                     - named_prop: "media_br"
                     - named_prop: "media_uf"
-          - fixed: "/indicadoresmunicipais?categorias='bom'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'06_01_09_04'-'PIB_00001'-'PIB_00002'&ordenacao=ds_indicador_curto"
-            options:
-              calcs:
-                - id: "header_label"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed:
-                        template: "{0} ({1})"
-                        args:
-                          - named_prop: "ds_indicador"
-                          - named_prop: "nu_competencia_max"
-                - id: "fmt_value"
-                  function: "get_formatted_value"
-                  fn_args:
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "ds_indicador_prefixo"
-                - id: "det_value"
-                  function: "get_detail_value"
-                  fn_args:
-                    - named_prop: "class_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "rank_br"
-                    - named_prop: "rank_uf"
-                    - named_prop: "media_br"
-                    - named_prop: "media_uf"
-          - fixed: "/indicadoresmunicipais?categorias='neutro'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'POP_DOU_01'-'PIB_00004'"
+          - fixed: "/indicadoresmunicipais?categorias='bom'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'06_01_09_04'-'PIB_00002'&ordenacao=ds_indicador_curto"
             options:
               calcs:
                 - id: "header_label"
@@ -354,6 +345,31 @@ secoes:
                     - named_prop: "media_br"
                     - named_prop: "media_uf"
           - fixed: "/indicadoresmunicipais?categorias='bom'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'JD_RAIS_44_CLT'"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "{0} ({1})"
+                        args:
+                          - named_prop: "ds_indicador"
+                          - named_prop: "nu_competencia_max"
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "ds_indicador_prefixo"
+                - id: "det_value"
+                  function: "get_detail_value"
+                  fn_args:
+                    - named_prop: "class_indicador"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "rank_br"
+                    - named_prop: "rank_uf"
+                    - named_prop: "media_br"
+                    - named_prop: "media_uf"
+          - fixed: "/indicadoresmunicipais?categorias='neutro'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'POP_DOU_01'-'PIB_00004'"
             options:
               calcs:
                 - id: "header_label"
@@ -466,10 +482,26 @@ secoes:
                     args:
                       - named_prop: "agr_sum_vl_indicador"
                         format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,ge-nu_competencia-2016"
+                args:
+                  - prop: "value"
+                    named_prop: 'nm_municipio_uf'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Município com mais Resgatados nos últimos 5 anos'
+                  - prop: "comment"
+                    template: 'Total de Resgatados: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o município com mais vítimas do trabalho resgatadas na série histórica. Na tabela ao lado, apresentam-se os municípios com alta incidência para o período selecionado abaixo. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
+              fixed: "Em destaque, os municípios com mais vítimas do trabalho resgatadas na série histórica e nos últimos 5 anos. Na tabela ao lado, apresentam-se os municípios com alta incidência para o período selecionado abaixo. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
           - type: "slider"
             cls: "pl-2"
             id: "slider_rgt"
@@ -490,9 +522,27 @@ secoes:
                   args:
                     - named_prop: "value_min"
                     - named_prop: "value_max"
+          - id: "select_setor"
+            type: "select"
+            label: "Setor Econômico"
+            api:
+              fixed: "/te/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae'&ordenacao=ds_agreg_primaria"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
         component_type: "SPARKLINES"
         api:
-          fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
+          fixed: "/te/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados_cnae'"
         headers:
           - text: 'Município'
             align: 'center'
@@ -504,46 +554,46 @@ secoes:
             item_align: 'center'
           - text: 'Total de Resgatados'
             align: 'center'
-            value: 'total_te_sit_trab_resgatados'
+            value: 'total_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             format: 'inteiro'
           - text: 'Smartline'
             align: 'center'
             width: '26%'
-            value: 'last_value_te_sit_trab_resgatados'
+            value: 'last_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             type: 'spark'
-            series: 'te_sit_trab_resgatados'
+            series: 'te_sit_trab_resgatados_cnae'
             bgColor: '#00C853'
             stroke: 2
             item_align: 'center'
           - text: 'Ano de Pico'
             align: 'center'
-            value: 'fmt_higher_value_te_sit_trab_resgatados'
+            value: 'fmt_higher_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
           - text: 'Número de Anos de Incidência'
             align: 'center'
             width: '10%'
-            value: 'series_length_te_sit_trab_resgatados'
+            value: 'series_length_te_sit_trab_resgatados_cnae'
             item_align: 'center'
           - text: 'Número de Anos de Incidência'
             align: 'center'
             width: '10%'
-            value: 'series_length_last_5_te_sit_trab_resgatados'
+            value: 'series_length_last_5_te_sit_trab_resgatados_cnae'
             item_align: 'center'
           - text: 'Ano'
             align: 'center'
-            value: 'last_2_value_te_sit_trab_resgatados'
+            value: 'last_2_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             format: "inteiro"
           - text: 'Ano'
             align: 'center'
-            value: 'last_value_te_sit_trab_resgatados'
+            value: 'last_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             format: "inteiro"
           - text: 'Variação'
             align: 'center'
-            value: 'fmt_last_rate_te_sit_trab_resgatados'
+            value: 'fmt_last_rate_te_sit_trab_resgatados_cnae'
             item_align: 'center'
         component_options:
           id: "sparklines_freq_rgt"
@@ -597,10 +647,26 @@ secoes:
                     args:
                       - named_prop: "agr_sum_vl_indicador"
                         format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/te/indicadoresestaduais?categorias=nm_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,ge-nu_competencia-2016"
+                args:
+                  - prop: "value"
+                    named_prop: 'nm_uf'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'UF com mais Resgatados nos últimos 5 anos'
+                  - prop: "comment"
+                    template: 'Total de Resgatados: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, a unidade federativa com mais vítimas do trabalho resgatadas na série histórica. Na tabela ao lado, apresentam-se as UFs com alta incidência para o período selecionado abaixo. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
+              fixed: "Em destaque, as unidades federativas com mais vítimas do trabalho resgatadas na série histórica e nos últimos 5 anos. Na tabela ao lado, apresentam-se as UFs com alta incidência para o período selecionado abaixo. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
           - type: "slider"
             cls: "pl-2"
             id: "slider_rgt"
@@ -621,9 +687,27 @@ secoes:
                   args:
                     - named_prop: "value_min"
                     - named_prop: "value_max"
+          - id: "select_tipo"
+            type: "select"
+            label: "Setor Econômico"
+            api:
+              fixed: "/te/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae'&ordenacao=ds_agreg_primaria"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
         component_type: "SPARKLINES"
         api:
-          fixed: "/te/indicadoresmunicipais?categorias=cd_uf,nm_uf,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
+          fixed: "/te/indicadoresmunicipais?categorias=cd_uf,nm_uf,sg_uf,cd_indicador,nu_competencia,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados_cnae'"
         headers:
           - text: 'Unidade Federativa'
             align: 'center'
@@ -635,46 +719,46 @@ secoes:
             item_align: 'center'
           - text: 'Total de Resgatados'
             align: 'center'
-            value: 'total_te_sit_trab_resgatados'
+            value: 'total_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             format: 'inteiro'
           - text: 'Smartline'
             align: 'center'
             width: '26%'
-            value: 'last_value_te_sit_trab_resgatados'
+            value: 'last_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             type: 'spark'
-            series: 'te_sit_trab_resgatados'
+            series: 'te_sit_trab_resgatados_cnae'
             bgColor: '#00C853'
             stroke: 2
             item_align: 'center'
           - text: 'Ano de Pico'
             align: 'center'
-            value: 'fmt_higher_value_te_sit_trab_resgatados'
+            value: 'fmt_higher_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
           - text: 'Número de Anos de Incidência'
             align: 'center'
             width: '10%'
-            value: 'series_length_te_sit_trab_resgatados'
+            value: 'series_length_te_sit_trab_resgatados_cnae'
             item_align: 'center'
           - text: 'Número de Anos de Incidência'
             align: 'center'
             width: '10%'
-            value: 'series_length_last_5_te_sit_trab_resgatados'
+            value: 'series_length_last_5_te_sit_trab_resgatados_cnae'
             item_align: 'center'
           - text: 'Ano'
             align: 'center'
-            value: 'last_2_value_te_sit_trab_resgatados'
+            value: 'last_2_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             format: "inteiro"
           - text: 'Ano'
             align: 'center'
-            value: 'last_value_te_sit_trab_resgatados'
+            value: 'last_value_te_sit_trab_resgatados_cnae'
             item_align: 'center'
             format: "inteiro"
           - text: 'Variação'
             align: 'center'
-            value: 'fmt_last_rate_te_sit_trab_resgatados'
+            value: 'fmt_last_rate_te_sit_trab_resgatados_cnae'
             item_align: 'center'
         component_options:
           id: "sparklines_uf_freq_rgt"
@@ -728,10 +812,26 @@ secoes:
                     args:
                       - named_prop: "agr_sum_vl_indicador"
                         format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/te/indicadoresmunicipais?categorias=ds_agreg_primaria,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados_cnae',and,ge-nu_competencia-2016"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_agreg_primaria'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Setor Econômico com mais Resgatados nos últimos 5 anos'
+                  - prop: "comment"
+                    template: 'Total de Resgatados: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o setor econômico com mais vítimas do trabalho resgatadas na série histórica. Na tabela ao lado, apresentam-se os setores econômicos com alta incidência para o período selecionado abaixo. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
+              fixed: "Em destaque, os setores econômicos com mais vítimas do trabalho resgatadas na série histórica e nos últimos 5 anos. Na tabela ao lado, apresentam-se os setores econômicos com alta incidência para o período selecionado abaixo. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
           - type: "slider"
             cls: "pl-2"
             id: "slider_rgt"
