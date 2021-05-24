@@ -4,7 +4,7 @@ principais:
     preloaded:
       prop: "centralindicadores"
       function: "slice"
-      id: "06_05_13_00"
+      id: "06_05_02_99"
       year: 'max'
     args:
       - prop: "value"
@@ -15,7 +15,7 @@ principais:
           precision: 1
         default: "Sem Registros"
       - prop: "description"
-        fixed: "Notificações Relacionadas ao Trabalho Envolvendo Crianças e Adolescentes (até 17 anos)"
+        fixed: "Notificações do SINAN - Acidentes de Trabalho Grave (5 a 17 anos)"
       - prop: 'comment'
         template: "Ministério da Saúde/SVS - SINAN, {0}"
         args:
@@ -25,7 +25,7 @@ principais:
     preloaded:
       prop: "centralindicadores"
       function: "slice"
-      id: "06_05_11_00"
+      id: "06_05_10_99"
       year: "max"
     args:
       - prop: "value"
@@ -35,27 +35,7 @@ principais:
           format: 'real'
         default: "Sem Registros"
       - prop: "description"
-        fixed: "Notificações Relacionadas ao Trabalho Envolvendo Crianças (até 12 anos)"
-      - prop: 'comment'
-        template: "Ministério da Saúde/SVS - SINAN, {0}"
-        args:
-          - named_prop: "nu_competencia"
-  - relevance: 'lead'
-    cls: 'xs12 md6'
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "06_05_12_00"
-      year: "max"
-    args:
-      - prop: "value"
-        named_prop: 'vl_indicador'
-        format: 'inteiro'
-        collapse:
-          format: 'real'
-        default: "Sem Registros"
-      - prop: "description"
-        fixed: "Notificações Relacionadas ao Trabalho Envolvendo Adolescentes (12 a 17 anos)"
+        fixed: "Notificações do SINAN - Total de Notificações Relacionadas ao Trabalho (5 a 17 anos)"
       - prop: 'comment'
         template: "Ministério da Saúde/SVS - SINAN, {0}"
         args:
@@ -67,15 +47,15 @@ secoes:
     cards:
 
 # ====================================================          
-      - id: "mapa_sinan_total_notif"
+      - id: "mapa_sinan_grave_notif"
         title: 
-          fixed: "Distribuição dos Acidentes de Trabalho com Crianças e Adolescentes - SINAN"
+          fixed: "Notificações do SINAN - Acidentes de Trabalho Grave (5 a 17 anos)"
         title_comment:
           template: "Brasil, de {0} a {1}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "06_05_13_00"
+            id: "06_05_02_99"
             year: "max"
           args:
             - named_prop: "nu_competencia_min"
@@ -89,7 +69,7 @@ secoes:
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
-                id: "06_05_13_00"
+                id: "06_05_02_99"
                 year: "max"
               args:
                 - named_prop: 'ds_indicador_radical'
@@ -101,14 +81,9 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12'
-                # preloaded:
-                #   prop: "centralindicadores"
-                #   function: "slice"
-                #   id: "06_05_13_00"
-                #   year: "max"
+                cls: 'xs12 md6'
                 api:
-                  template: "/indicadoresnacionais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_13_00'"
+                  template: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_02_99'"
                 args:
                   - prop: "value"
                     named_prop: 'agr_sum_vl_indicador'
@@ -118,73 +93,61 @@ secoes:
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: 'Casos Notificados'
+                  - prop: "comment"
+                    template: '{0} a {1}'
+                    args:
+                      - named_prop: "nu_competencia_min"
+                      - named_prop: "nu_competencia_max"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresnacionais?categorias=nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_02_99',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Casos Notificados'
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, para a unidade geográfica selecionada e no período indicado, informações sobre notificações de acidentes relacionados ao trabalho envolvendo crianças e adolescentes (até 17 anos) conforme registradas no Sistema de Informação de Agravos de Notificação (SINAN). No mapa ao lado, a escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Selecione pelos filtros abaixo o ano e a faixa etária desejada."
-              # preloaded:
-              #   prop: "centralindicadores"
-              #   function: "slice"
-              #   id: ['06_05_10_00']
-              #   year: "max"
-              # args:
-              #   - named_prop: "ds_indicador_radical"
-          - id: "select_ano"
-            type: "select"
-            multiple: true
-            label: "Ano"
-            api:
-              template: "/indicadoresestaduais?categorias=nu_competencia&agregacao=distinct&filtros=eq-cd_indicador-'06_05_13_00'"
-              # args:
-              #   - named_prop: "cd_uf"
+              fixed: "Em destaque, para a unidade geográfica selecionada e no período indicado, informações sobre notificações de acidentes de trabalho grave envolvendo crianças e adolescentes (de 5 até 17 anos) conforme registradas no Sistema de Informação de Agravos de Notificação (SINAN). No mapa ao lado, a escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Ajuste os filtros abaixo para refinar a visualização."
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'06_05_02_99'"
             args:
-              - prop: "id"
-                named_prop: "nu_competencia"
-              - prop: "label"
-                named_prop: "nu_competencia"
-                # null_value: "(Não informado)"
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
             selection:
-              event: "selection" 
+              event: "selection"
               rules:
-                filter: ",and,in-nu_competencia-{0}"
+                filter: ",and,ge-nu_competencia-'{0}',and,le-nu_competencia-'{1}'"
                 api:
                   args:
-                    - named_prop: "nu_competencia"
-
-            # selection:
-            #   event: "selection"
-            #   rules:
-            #     api:
-            #       template: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_13_00',and,in-nu_competencia-{0}"
-            #       args:
-            #         - named_prop: "nu_competencia"
-          
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"         
           - id: "select_idade"
             type: "select"
-            multiple: false
             clearable: false
             label: "Faixa etária"
             default: 
-              fixed: "06_05_13_00"
+              fixed: "06_05_02_99"
             api:
-              template: "/indicadoresestaduais?categorias=cd_indicador,ds_agreg_primaria&agregacao=distinct&filtros=in-cd_indicador-'06_05_13_00'-'06_05_12_00'-'06_05_11_00'"
-              options:
-                calcs:
-                  - id: "label"
-                    function: "get_text_from_parentheses_ds"
-                    fn_args:
-                      - named_prop: "ds_agreg_primaria"
-              args:
-                - named_prop: "cd_uf"
-
+              - fixed: "/indicadoresestaduais?categorias=cd_indicador,ds_agreg_primaria,ds_agreg_secundaria&agregacao=distinct&filtros=in-cd_indicador-'06_05_02_99'-'06_05_02_79'-'06_05_02_89'"
             args:
               - prop: "id"
                 named_prop: "cd_indicador"
               - prop: "label"
-                named_prop: "calc_label"
-                # function: "get_text_from_parentheses"
-                # fn_args: 
-                #   - named_prop: 'ds_agreg_primaria'
+                named_prop: "ds_agreg_secundaria"
             selection:
               event: "selection" 
               rules:
@@ -197,7 +160,298 @@ secoes:
         apiBase: 
           fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-1-1"
         api: 
-          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_13_00'"
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_02_99'"
+          options:
+            calcs:
+              - id: "deviation_sinan"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_sum_vl_indicador"
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde de Notificações'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_deviation_sinan'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
+
+# # ====================================================          
+      - id: "bar_sinan_grave_notif"
+        title: 
+          fixed: "Notificações do SINAN - Acidentes de Trabalho Grave (5 a 17 anos) - Série Histórica"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "06_05_02_99"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções.<br/>
+                      Os dados analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "06_05_02_99"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_02_99'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Casos Notificados'
+                  - prop: "comment"
+                    template: '{0} a {1}'
+                    args:
+                      - named_prop: "nu_competencia_min"
+                      - named_prop: "nu_competencia_max"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresnacionais?categorias=nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_02_99',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Casos Notificados'
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a unidade geográfica selecionada e no período indicado, informações sobre notificações de acidentes de trabalho grave envolvendo crianças e adolescentes (de 5 até 17 anos) conforme registradas no Sistema de Informação de Agravos de Notificação (SINAN). No gráfico ao lado, apresenta-se a evolução das notificações da categoria em destaque na série histórica. Ajuste os filtros abaixo para refinar a visualização."
+          - id: "select_idade"
+            type: "select"
+            multiple: false
+            clearable: false
+            label: "Faixa etária"
+            default: 
+              fixed: "06_05_02_99"
+            api:
+              - fixed: "/indicadoresestaduais?categorias=cd_indicador,ds_agreg_primaria,ds_agreg_secundaria&agregacao=distinct&filtros=in-cd_indicador-'06_05_02_99'-'06_05_02_79'-'06_05_02_89'"
+            args:
+              - prop: "id"
+                named_prop: "cd_indicador"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-cd_indicador-'{0}'"
+                api:
+                  args:
+                    - named_prop: "cd_indicador"
+        chart_type: "BAR"
+        apiBase:
+          template: "/indicadoresnacionais?categorias=ds_indicador_radical,nu_competencia,vl_indicador&filtros=eq-1-1"
+        api:
+          template: "/indicadoresnacionais?categorias=ds_indicador_radical,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'06_05_02_99'"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "fmt_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          hide_legend: true
+          color: "#238B45"
+        source:
+          desc_field: "ds_fonte"
+
+# ====================================================          
+      - id: "mapa_sinan_total_notif"
+        title: 
+          fixed: "Notificações do SINAN - Notificações Relacionadas ao Trabalho (5 a 17 anos)"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "06_05_10_99"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções.<br/>
+                      Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "06_05_10_99"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+                    
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_10_99'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Casos Notificados'
+                  - prop: "comment"
+                    template: '{0} a {1}'
+                    args:
+                      - named_prop: "nu_competencia_min"
+                      - named_prop: "nu_competencia_max"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresnacionais?categorias=nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_10_99',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Casos Notificados'
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a unidade geográfica selecionada e no período indicado, informações sobre notificações relacionadas ao trabalho de crianças e adolescentes (de 5 até 17 anos) conforme registradas no Sistema de Informação de Agravos de Notificação (SINAN). Consideram-se os seguintes eventos, quando relacionados ao trabalho: acidente de trabalho com exposição a material biológico; acidente de trabalho grave; acidentes por animais peçonhentos; câncer relacionado ao trabalho; dermatoses ocupacionais; intoxicação exógena; LER/DORT; perda auditiva induzida por ruído (PAIR); pneumoconioses; transtornos mentais relacionados ao trabalho. No gráfico ao lado, apresenta-se a evolução das notificações da categoria em destaque na série histórica. Ajuste os filtros abaixo para refinar a visualização."
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'06_05_10_99'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-nu_competencia-'{0}',and,le-nu_competencia-'{1}'"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"         
+          - id: "select_tipo"
+            type: "select"
+            multiple: false
+            clearable: false
+            label: "Tipo de Notificação"
+            default: 
+              fixed: "Total"
+            api:
+              - fixed: "/indicadoresestaduais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'&ordenacao=ds_agreg_primaria"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
+          - id: "select_idade"
+            type: "select"
+            multiple: false
+            clearable: false
+            label: "Faixa etária"
+            default: 
+              fixed: "5 a 17 anos"
+            api:
+              - fixed: "/indicadoresestaduais?categorias=ds_agreg_secundaria,ds_agreg_secundaria-label&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+                # function: "get_text_from_parentheses"
+                # fn_args: 
+                #   - named_prop: 'ds_agreg_primaria'
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_secundaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+
+        chart_type: "MAP_TOPOJSON"
+        apiBase: 
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'"
+        api: 
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_10_99'"
           options:
             calcs:
               - id: "deviation_sinan"
@@ -214,9 +468,6 @@ secoes:
           - text: 'UF'
             align: 'left'
             value: 'nm_uf'
-          # - text: 'Ano'
-          #   align: 'left'
-          #   value: 'nu_competencia'
           - text: 'Indicador'
             align: 'left'
             value: 'ds_indicador_radical'
@@ -234,13 +485,13 @@ secoes:
 # # ====================================================          
       - id: "bar_sinan_total_notif"
         title: 
-          fixed: "Série Histórica das Notificações de Acidentes de Trabalho com Crianças e Adolescentes - SINAN"
+          fixed: "SINAN - Notificações Relacionadas ao Trabalho (5 a 17 anos) - Série Histórica"
         title_comment:
           template: "Brasil, de {0} a {1}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "06_05_13_00"
+            id: "06_05_10_99"
             year: "max"
           args:
             - named_prop: "nu_competencia_min"
@@ -254,7 +505,7 @@ secoes:
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
-                id: "06_05_13_00"
+                id: "06_05_10_99"
                 year: "max"
               args:
                 - named_prop: 'ds_indicador_radical'
@@ -264,676 +515,249 @@ secoes:
         description:
           - type: "minicards"
             cards:
-              - relevance: "high"
-                cls: "xs12 md6"
+              - relevance: 'high'
+                cls: 'xs12 md6'
                 api:
-                  template: "/indicadoresnacionais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_13_00'"
-                  # args:
-                  #   - named_prop: "idLocalidade"
+                  template: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_10_99'"
                 args:
                   - prop: "value"
-                    named_prop: "agr_sum_vl_indicador"
+                    named_prop: 'agr_sum_vl_indicador'
                     format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
                   - prop: "description"
-                    fixed: "CASOS NOTIFICADOS"
+                    fixed: 'Casos Notificados'
+                  - prop: "comment"
+                    template: '{0} a {1}'
+                    args:
+                      - named_prop: "nu_competencia_min"
+                      - named_prop: "nu_competencia_max"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresnacionais?categorias=nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_10_99',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Casos Notificados'
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, para a unidade geográfica selecionada e no período indicado, informações sobre notificações de acidentes relacionados ao trabalho envolvendo crianças e adolescentes (até 17 anos) conforme registradas no Sistema de Informação de Agravos de Notificação (SINAN). No gráfico ao lado, destaca-se a evolução da série histórica das notificações registradas de acidentes de trabalho na unidade geográfica selecionada. Selecione pelos filtros abaixo o ano e a faixa etária desejada."
-              # preloaded:
-              #   prop: "centralindicadores"
-              #   function: "slice"
-              #   id: ['06_05_10_00']
-              #   year: "min"
-              # args:
-              #   - named_prop: 'ds_indicador_radical'
+              fixed: "Em destaque, para a unidade geográfica selecionada e no período indicado, informações sobre notificações relacionadas ao trabalho de crianças e adolescentes (de 5 até 17 anos) conforme registradas no Sistema de Informação de Agravos de Notificação (SINAN). Consideram-se os seguintes eventos, quando relacionados ao trabalho: acidente de trabalho com exposição a material biológico; acidente de trabalho grave; acidentes por animais peçonhentos; câncer relacionado ao trabalho; dermatoses ocupacionais; intoxicação exógena; LER/DORT; perda auditiva induzida por ruído (PAIR); pneumoconioses; transtornos mentais relacionados ao trabalho. No gráfico ao lado, apresenta-se a evolução das notificações da categoria em destaque na série histórica. Ajuste os filtros abaixo para refinar a visualização."
+          - id: "select_tipo"
+            type: "select"
+            multiple: false
+            clearable: false
+            label: "Tipo de Notificação"
+            default: 
+              fixed: "Crianças e Adolecentes (5 a 17 anos) - Total"
+            api:
+              - fixed: "/indicadoresestaduais?categorias=ds_agreg_primaria&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'&ordenacao=ds_agreg_primaria"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_primaria"
+              - prop: "label"
+                named_prop: "ds_agreg_primaria"
+                # function: "get_text_from_parentheses"
+                # fn_args: 
+                #   - named_prop: 'ds_agreg_primaria'
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_primaria"
           - id: "select_idade"
             type: "select"
             multiple: false
             clearable: false
             label: "Faixa etária"
-            default: 
-              fixed: "06_05_13_00"
+            # default: 
+            #   fixed: "06_05_02_99"
             api:
-              template: "/indicadoresnacionais?categorias=cd_indicador,ds_agreg_primaria&agregacao=distinct&filtros=in-cd_indicador-'06_05_13_00'-'06_05_12_00'-'06_05_11_00'"
-              options:
-                calcs:
-                  - id: "label"
-                    function: "get_text_from_parentheses_ds"
-                    fn_args:
-                      - named_prop: "ds_agreg_primaria"
-              args:
-                - named_prop: "cd_uf"
+              - fixed: "/indicadoresestaduais?categorias=ds_agreg_secundaria,ds_agreg_secundaria-label&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'"
             args:
               - prop: "id"
-                named_prop: "cd_indicador"
+                named_prop: "ds_agreg_secundaria"
               - prop: "label"
-                # named_prop: "nu_competencia"
+                named_prop: "ds_agreg_secundaria"
                 # function: "get_text_from_parentheses"
                 # fn_args: 
                 #   - named_prop: 'ds_agreg_primaria'
-                named_prop: 'calc_label'
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_secundaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+        chart_type: "BAR"
+        apiBase:
+          template: "/indicadoresnacionais?categorias=ds_indicador_radical,nu_competencia,vl_indicador&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'"
+        api:
+          template: "/indicadoresnacionais?categorias=ds_indicador_radical,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'06_05_10_99'"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "fmt_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          hide_legend: true
+          color: "#238B45"
+        source:
+          desc_field: "ds_fonte"
+
+# ====================================================          
+      - id: "treemap_sinan_agravos"
+        title: 
+          fixed: "Notificações do SINAN - Notificações Relacionadas ao Trabalho (5 a 17 anos) conforme Agravos e Doenças"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "06_05_10_99"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções.<br/>
+                      Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "06_05_10_99"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_10_99'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Casos Notificados'
+                  - prop: "comment"
+                    template: '{0} a {1}'
+                    args:
+                      - named_prop: "nu_competencia_min"
+                      - named_prop: "nu_competencia_max"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresnacionais?categorias=nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_10_99',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Casos Notificados'
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a unidade geográfica selecionada e no período indicado, informações sobre notificações relacionadas ao trabalho de crianças e adolescentes (de 5 até 17 anos) conforme registradas no Sistema de Informação de Agravos de Notificação (SINAN). Consideram-se os seguintes eventos, quando relacionados ao trabalho: acidente de trabalho com exposição a material biológico; acidente de trabalho grave; acidentes por animais peçonhentos; câncer relacionado ao trabalho; dermatoses ocupacionais; intoxicação exógena; LER/DORT; perda auditiva induzida por ruído (PAIR); pneumoconioses; transtornos mentais relacionados ao trabalho. No gráfico ao lado, apresenta-se a distribuição percentual das diferentes categorias. Ajuste os filtros abaixo para refinar a visualização."
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'06_05_10_99'"
+            args:
+              - prop: "min"
+                named_prop: "nu_competencia_min"
+              - prop: "max"
+                named_prop: "nu_competencia_max"
             selection:
               event: "selection"
               rules:
+                filter: ",and,ge-nu_competencia-'{0}',and,le-nu_competencia-'{1}'"
                 api:
-                  template: "/indicadoresnacionais?categorias=ds_indicador_radical,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'{0}'"
                   args:
-                    - named_prop: "cd_indicador"
-        chart_type: "BAR"
-        # preloaded:
-        #   prop: "centralindicadores"
-        #   function: "slice"
-        #   id: ['06_05_13_00']
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"         
+          - id: "select_idade"
+            type: "select"
+            multiple: false
+            clearable: false
+            label: "Faixa etária"
+            # default: 
+            #   fixed: "06_05_02_99"
+            api:
+              - fixed: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'"
+            args:
+              - prop: "id"
+                named_prop: "ds_agreg_secundaria"
+              - prop: "label"
+                named_prop: "ds_agreg_secundaria"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-ds_agreg_secundaria-'{0}'"
+                api:
+                  args:
+                    - named_prop: "ds_agreg_secundaria"
+        chart_type: "TREEMAP"
         api:
-          template: "/indicadoresnacionais?categorias=ds_indicador_radical,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'06_05_13_00'"
+          fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00',and,nk-cd_indicador-'06_05_10_%25'"
           options:
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
         headers:
           - text: 'Indicador'
             align: 'left'
             value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
           - text: 'Qtde'
-            value: 'fmt_vl_indicador'
+            value: 'fmt_agr_sum_vl_indicador'
         chart_options:
-          id: "nu_competencia"
-          x: "nu_competencia"
-          y: "vl_indicador"
-          orientation: "vertical"
-          text: "fmt_vl_indicador"
-          show_x_axis: true
-          show_y_axis: false
-          hide_legend: true
-          color: "#238B45"
-        source:
-          desc_field: "ds_fonte"
-
-# ====================================================          
-      - id: "mapa_sinan_total_notif_criancas"
-        title: 
-          fixed: "Distribuição Geográfica das Notificações Relacionadas ao Trabalho Envolvendo Crianças (até 12 anos) (SINAN)"
-        title_comment:
-          template: "Brasil, {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_11_00"
-            year: "max"
-          args:
-            - named_prop: "nu_competencia"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              template: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções.<br/>
-                      Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "06_05_11_00"
-                year: "max"
-              args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "06_05_11_00"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'Casos Notificados'
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre notificações relacionadas ao trabalho envolvendo crianças no Sistema de Informação de Agravos de Notificação (SINAN). Nesta versão, somente foram consideradas as doenças e agravos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério da Saúde. O total inclui os seguintes casos: Acidente de Trabalho Grave, Câncer Relacionado ao Trabalho, Dermatoses Ocupacionais, Acidente de Trabalho com Exposição a Material Biológico, Intoxicação Exógena Relacionada ao Trabalho, LER/DORT, Perda Auditiva Induzida por Ruído (PAIR) Relacionada ao Trabalho, Pneumoconioses Relacionadas ao Trabalho, Transtornos Mentais Relacionados ao Trabalho e Acidente de Trabalho Grave envolvendo Crianças (0 a 12 anos). No gráfico a seguir, a escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
-              # preloaded:
-              #   prop: "centralindicadores"
-              #   function: "slice"
-              #   id: ['06_05_10_00']
-              #   year: "max"
-              # args:
-              #   - named_prop: "ds_indicador_radical"
-        chart_type: "MAP_TOPOJSON"
-        api: 
-          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_br,rank_br&filtros=eq-cd_indicador-'06_05_11_00',and,eq-nu_competencia-nu_competencia_max"
-          options:
-            calcs:
-              - id: "deviation_sinan"
-                function: "get_proportional_indicator_uf"
-                fn_args:
-                  - fixed: "vl_indicador"
-                  - fixed: "media_br"
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
-                format: 'inteiro'
-        headers:
-          - text: 'UF'
-            align: 'left'
-            value: 'nm_uf'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Qtde de Notificações'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id_field: 'cd_uf'
-          topo_key: "codigo"
-          value_field: 'calc_deviation_sinan'
+          id: "cd_indicador"
+          size: "agr_sum_vl_indicador"
+          text: "ds_agreg_primaria"
           colorScale:
             name: "Reds"
         source:
           desc_field: "ds_fonte"
-
-# ====================================================          
-      - id: "bar_sinan_total_notif_criancas"
-        title: 
-          fixed: "Notificações Relacionadas ao Trabalho Envolvendo Crianças (até 12 anos) (SINAN) - Série Histórica"
-        title_comment:
-          template: "Brasil, de {0} a {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_11_00"
-            year: "max"
-          args:
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              template: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções.<br/>
-                      Os dados analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "06_05_11_00"
-                year: "max"
-              args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: "high"
-                cls: "xs12 md6"
-                api:
-                  template: "/indicadoresnacionais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_11_00'"
-                  # args:
-                  #   - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: "agr_sum_vl_indicador"
-                    format: 'inteiro'
-                  - prop: "description"
-                    fixed: "CASOS NOTIFICADOS"
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre notificações relacionadas ao trabalho envolvendo crianças no Sistema de Informação de Agravos de Notificação (SINAN). Nesta versão, somente foram consideradas as doenças e agravos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério da Saúde. O total inclui os seguintes casos: Acidente de Trabalho Grave, Câncer Relacionado ao Trabalho, Dermatoses Ocupacionais, Acidente de Trabalho com Exposição a Material Biológico, Intoxicação Exógena Relacionada ao Trabalho, LER/DORT, Perda Auditiva Induzida por Ruído (PAIR) Relacionada ao Trabalho, Pneumoconioses Relacionadas ao Trabalho, Transtornos Mentais Relacionados ao Trabalho e Acidente de Trabalho Grave envolvendo Crianças (0 a 12 anos). No gráfico a seguir, destaca-se a evolução da série histórica."
-              # preloaded:
-              #   prop: "centralindicadores"
-              #   function: "slice"
-              #   id: ['06_05_10_00']
-              #   year: "min"
-              # args:
-              #   - named_prop: 'ds_indicador_radical'
-        chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['06_05_11_00']
-            options:
-              formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Qtde'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id: "nu_competencia"
-          x: "nu_competencia"
-          y: "vl_indicador"
-          orientation: "vertical"
-          text: "fmt_vl_indicador"
-          show_x_axis: true
-          show_y_axis: false
-          hide_legend: true
-          color: "#238B45"
-        source:
-          desc_field: "ds_fonte"
-
-# ====================================================          
-      - id: "mapa_sinan_total_notif_adolescentes"
-        title: 
-          fixed: "Distribuição Geográfica das Notificações Relacionadas ao Trabalho Envolvendo Adolescentes (12  a 17 anos) (SINAN)"
-        title_comment:
-          template: "Brasil, {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_12_00"
-            year: "max"
-          args:
-            - named_prop: "nu_competencia"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              template: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções.<br/>
-                      Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "06_05_12_00"
-                year: "max"
-              args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "06_05_12_00"
-                  year: "max"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: 'Casos Notificados'
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre notificações relacionadas ao trabalho envolvendo adolescentes no Sistema de Informação de Agravos de Notificação (SINAN). Nesta versão, somente foram consideradas as doenças e agravos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério da Saúde. O total inclui os seguintes casos: Acidente de Trabalho Grave, Câncer Relacionado ao Trabalho, Dermatoses Ocupacionais, Acidente de Trabalho com Exposição a Material Biológico, Intoxicação Exógena Relacionada ao Trabalho, LER/DORT, Perda Auditiva Induzida por Ruído (PAIR) Relacionada ao Trabalho, Pneumoconioses Relacionadas ao Trabalho, Transtornos Mentais Relacionados ao Trabalho e Acidente de Trabalho Grave envolvendo Adolescentes (12 a 17 anos). No gráfico a seguir, a escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
-              # preloaded:
-              #   prop: "centralindicadores"
-              #   function: "slice"
-              #   id: ['06_05_10_00']
-              #   year: "max"
-              # args:
-              #   - named_prop: "ds_indicador_radical"
-        chart_type: "MAP_TOPOJSON"
-        api: 
-          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_br,rank_br&filtros=eq-cd_indicador-'06_05_12_00',and,eq-nu_competencia-nu_competencia_max"
-          options:
-            calcs:
-              - id: "deviation_sinan"
-                function: "get_proportional_indicator_uf"
-                fn_args:
-                  - fixed: "vl_indicador"
-                  - fixed: "media_br"
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
-                format: 'inteiro'
-        headers:
-          - text: 'UF'
-            align: 'left'
-            value: 'nm_uf'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Qtde de Notificações'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id_field: 'cd_uf'
-          topo_key: "codigo"
-          value_field: 'calc_deviation_sinan'
-          colorScale:
-            name: "Reds"
-        source:
-          desc_field: "ds_fonte"
-
-# ====================================================          
-      - id: "bar_sinan_total_notif_adolescentes"
-        title: 
-          fixed: "Notificações Relacionadas ao Trabalho Envolvendo Adolescentes (12 a 17 anos) (SINAN) - Série Histórica"
-        title_comment:
-          template: "Brasil, de {0} a {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_12_00"
-            year: "max"
-          args:
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              template: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções.<br/>
-                      Os dados analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "06_05_12_00"
-                year: "max"
-              args:
-                - named_prop: 'ds_indicador_radical'
-                - named_prop: 'ds_fonte'
-                - named_prop: 'nu_competencia_min'
-                - named_prop: 'nu_competencia_max'
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: "high"
-                cls: "xs12 md6"
-                api:
-                  template: "/indicadoresnacionais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_12_00'"
-                  # args:
-                  #   - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: "agr_sum_vl_indicador"
-                    format: 'inteiro'
-                  - prop: "description"
-                    fixed: "CASOS NOTIFICADOS"
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre notificações relacionadas ao trabalho envolvendo adolescentes no Sistema de Informação de Agravos de Notificação (SINAN). Nesta versão, somente foram consideradas as doenças e agravos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério da Saúde. O total inclui os seguintes casos: Acidente de Trabalho Grave, Câncer Relacionado ao Trabalho, Dermatoses Ocupacionais, Acidente de Trabalho com Exposição a Material Biológico, Intoxicação Exógena Relacionada ao Trabalho, LER/DORT, Perda Auditiva Induzida por Ruído (PAIR) Relacionada ao Trabalho, Pneumoconioses Relacionadas ao Trabalho, Transtornos Mentais Relacionados ao Trabalho e Acidente de Trabalho Grave envolvendo Adolescentes (12 a 17 anos). No gráfico a seguir, destaca-se a evolução da série histórica."
-              # preloaded:
-              #   prop: "centralindicadores"
-              #   function: "slice"
-              #   id: ['06_05_10_00']
-              #   year: "min"
-              # args:
-              #   - named_prop: 'ds_indicador_radical'
-        chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['06_05_12_00']
-            options:
-              formatters:
-                - id: "vl_indicador"
-                  format: 'inteiro'
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Qtde'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id: "nu_competencia"
-          x: "nu_competencia"
-          y: "vl_indicador"
-          orientation: "vertical"
-          text: "fmt_vl_indicador"
-          show_x_axis: true
-          show_y_axis: false
-          hide_legend: true
-          color: "#238B45"
-        source:
-          desc_field: "ds_fonte"
-
-
-
-# ====================================================          
-      - id: "mapa_sinan_acidentes_graves"
-        title: 
-          fixed: "Acidentes Graves - Distribuição Geográfica"
-        card_template: "tSinanTopoJsonBrasil"
-        datasource: "indicadoresestaduais"
-        cd_indicador: "06_05_02_99"
-# ====================================================          
-      - id: "bar_sinan_acidentes_graves"
-        title: 
-          fixed: "Acidentes Graves - Série Histórica"
-        card_template: "tSinanBarSerieHistoricaBrasil"
-        datasource: "indicadoresnacionais"
-        cd_indicador: "06_05_02_99"
-# # ====================================================          
-#       - id: "mapa_sinan_cancer"
-#         title: 
-#           fixed: "Câncer relacionado ao trabalho - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonBrasil"
-#         datasource: "indicadoresestaduais"
-#         cd_indicador: "06_05_03_99"
-# # ====================================================          
-#       - id: "bar_sinan_cancer"
-#         title: 
-#           fixed: "Câncer relacionado ao trabalho - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaBrasil"
-#         datasource: "indicadoresnacionais"
-#         cd_indicador: "06_05_03_99"
-# # ====================================================          
-#       - id: "mapa_sinan_dermatoses"
-#         title: 
-#           fixed: "Dermatoses ocupacionais - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonBrasil"
-#         datasource: "indicadoresestaduais"
-#         cd_indicador: "06_05_04_99"
-# # ====================================================          
-#       - id: "bar_sinan_dermatoses"
-#         title: 
-#           fixed: "Dermatoses ocupacionais - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaBrasil"
-#         datasource: "indicadoresnacionais"
-#         cd_indicador: "06_05_04_99"
-
-# # ====================================================          
-#       - id: "mapa_sinan_exposicao_mat_biologico"
-#         title: 
-#           fixed: "Exposicão a material biológico - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonBrasil"
-#         datasource: "indicadoresestaduais"
-#         cd_indicador: "06_05_01_99"
-# # ====================================================          
-#       - id: "bar_sinan_exposicao_mat_biologico"
-#         title: 
-#           fixed: "Exposicão a material biológico - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaBrasil"
-#         datasource: "indicadoresnacionais"
-#         cd_indicador: "06_05_01_99"
-# # ====================================================          
-#       - id: "mapa_sinan_intoxicacao"
-#         title: 
-#           fixed: "Intoxicação Exógena - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonBrasil"
-#         datasource: "indicadoresestaduais"
-#         cd_indicador: "06_05_09_99"
-# # ====================================================          
-#       - id: "bar_sinan_intoxicacao"
-#         title: 
-#           fixed: "Intoxicação Exógena - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaBrasil"
-#         datasource: "indicadoresnacionais"
-#         cd_indicador: "06_05_09_99"
-# # ====================================================          
-#       - id: "mapa_sinan_lerdort"
-#         title: 
-#           fixed: "LER/DORT - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonBrasil"
-#         datasource: "indicadoresestaduais"
-#         cd_indicador: "06_05_05_99"
-# # ====================================================          
-#       - id: "bar_sinan_lerdort"
-#         title: 
-#           fixed: "LER/DORT - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaBrasil"
-#         datasource: "indicadoresnacionais"
-#         cd_indicador: "06_05_05_99"
-# # ====================================================          
-#       - id: "mapa_sinan_perda_auditiva"
-#         title: 
-#           fixed: "Perda Auditiva Induzida por Ruído (PAIR) - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonBrasil"
-#         datasource: "indicadoresestaduais"
-#         cd_indicador: "06_05_06_99"
-# # ====================================================          
-#       - id: "bar_sinan_perda_autidiva"
-#         title: 
-#           fixed: "Perda Auditiva Induzida por Ruído (PAIR) - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaBrasil"
-#         datasource: "indicadoresnacionais"
-#         cd_indicador: "06_05_06_99"
-# # ====================================================          
-#       - id: "mapa_sinan_pneumoconioses"
-#         title: 
-#           fixed: "Pneumoconioses - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonBrasil"
-#         datasource: "indicadoresestaduais"
-#         cd_indicador: "06_05_07_99"
-# # ====================================================          
-#       - id: "bar_sinan_pneumoconioses"
-#         title: 
-#           fixed: "Pneumoconioses - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaBrasil"
-#         datasource: "indicadoresnacionais"
-#         cd_indicador: "06_05_07_99"
-
-# # ====================================================          
-#       - id: "mapa_sinan_trans_mental"
-#         title: 
-#           fixed: "Transtornos mentais relacionados ao trabalho - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonBrasil"
-#         datasource: "indicadoresestaduais"
-#         cd_indicador: "06_05_08_99"
-# # ====================================================          
-#       - id: "bar_sinan_trans_mental"
-#         title: 
-#           fixed: "Transtornos mentais relacionados ao trabalho - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaBrasil"
-#         datasource: "indicadoresnacionais"
-#         cd_indicador: "06_05_08_99"
-
-
-
-
-
-
-
-
-
-# # ====================================================          
-#       - id: "mapa_sinan_criancas"
-#         title: 
-#           fixed: "Crianças (Menores de 12 anos) - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonMunicipio"
-#         datasource: "indicadoresmunicipais"
-#         cd_indicador: "06_05_11_00"
-#         term:
-#           template: "localidade-{0}"
-#           args:
-#             - base_object: "localidade"
-#               named_prop: 'nm_localidade' 
-# # ====================================================          
-#       - id: "bar_sinan_criancas"
-#         title: 
-#           fixed: "Crianças (Menores de 12 anos) - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaMunicipio"
-#         datasource: "indicadoresmunicipais"
-#         cd_indicador: "06_05_11_00"
-#         term:
-#           template: "localidade-{0}"
-#           args:
-#             - base_object: "localidade"
-#               named_prop: 'nm_localidade' 
-# # ====================================================          
-#       - id: "mapa_sinan_adolescentes"
-#         title: 
-#           fixed: "Adolecentes ( 12 a 17 anos) - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonMunicipio"
-#         datasource: "indicadoresmunicipais"
-#         cd_indicador: "06_05_12_00"
-#         term:
-#           template: "localidade-{0}"
-#           args:
-#             - base_object: "localidade"
-#               named_prop: 'nm_localidade' 
-# # ====================================================          
-#       - id: "bar_sinan_adolescentes"
-#         title: 
-#           fixed: "Adolecentes ( 12 a 17 anos) - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaMunicipio"
-#         datasource: "indicadoresmunicipais"
-#         cd_indicador: "06_05_12_00"
-#         term:
-#           template: "localidade-{0}"
-#           args:
-#             - base_object: "localidade"
-#               named_prop: 'nm_localidade' 
-# # ====================================================          
-#       - id: "mapa_sinan_criancas_adolescentes"
-#         title: 
-#           fixed: "Crianças e Adolecentes ( 0 a 17 anos) - Distribuição Geográfica"
-#         card_template: "tSinanTopoJsonMunicipio"
-#         datasource: "indicadoresmunicipais"
-#         cd_indicador: "06_05_13_00"
-#         term:
-#           template: "localidade-{0}"
-#           args:
-#             - base_object: "localidade"
-#               named_prop: 'nm_localidade' 
-# # ====================================================          
-#       - id: "bar_sinan_criancas_adolescentes"
-#         title: 
-#           fixed: "Crianças e Adolecentes ( 0 a 17 anos) - Série Histórica"
-#         card_template: "tSinanBarSerieHistoricaMunicipio"
-#         datasource: "indicadoresmunicipais"
-#         cd_indicador: "06_05_13_00"
-#         term:
-#           template: "localidade-{0}"
-#           args:
-#             - base_object: "localidade"
-#               named_prop: 'nm_localidade' 
-
-
-
-
-# # ====================================================          
-# secoes:
-#   - id: "secao_unica"
-#     name: ""
-#     cards:
