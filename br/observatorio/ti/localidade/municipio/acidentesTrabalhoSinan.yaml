@@ -1,11 +1,10 @@
 principais:
   - relevance: 'lead'
     cls: 'xs12 md6'
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "06_05_02_99"
-      year: 'max'
+    api:
+      template: "/indicadoresmunicipais?categorias=vl_indicador&filtros=eq-cd_indicador-'06_05_02_99',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_municipio_ibge_dv-{0}"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -13,33 +12,38 @@ principais:
         collapse:
           format: 'real'
           precision: 1
-        default: "Sem Registros"
+        default: "Nenhuma"
       - prop: "description"
         fixed: "Notificações do SINAN - Acidentes de Trabalho Grave (5 a 17 anos)"
       - prop: 'comment'
-        template: "Ministério da Saúde/SVS - SINAN, {0}"
+        api:
+          fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_02_99'&limit=1"
+        template: "{0}, {1}"
         args:
-          - named_prop: "nu_competencia"
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia_max"
   - relevance: 'lead'
     cls: 'xs12 md6'
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "06_05_10_99"
-      year: "max"
+    api:
+      template: "/indicadoresmunicipais?categorias=vl_indicador&filtros=eq-cd_indicador-'06_05_10_99',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_municipio_ibge_dv-{0}"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
         format: 'inteiro'
         collapse:
           format: 'real'
-        default: "Sem Registros"
+        default: "Nenhuma"
       - prop: "description"
         fixed: "Notificações do SINAN - Total de Notificações Relacionadas ao Trabalho (5 a 17 anos)"
       - prop: 'comment'
-        template: "Ministério da Saúde/SVS - SINAN, {0}"
+        api:
+          fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_99'&limit=1"
+        template: "{0}, {1}"
         args:
-          - named_prop: "nu_competencia"
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia_max"
 # ===================================================
 secoes:
   - id: "perfil_sinan"
@@ -52,11 +56,8 @@ secoes:
           fixed: "Notificações do SINAN - Acidentes de Trabalho Grave (5 a 17 anos)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_02_99"
-            year: "max"
+          api:
+            fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_02_99'&limit=1"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -94,10 +95,12 @@ secoes:
                     format: 'inteiro'
                     # collapse:
                     #   format: 'real'
-                    default: "Sem Registros"
+                    default: "Nenhum"
                   - prop: "description"
                     fixed: 'Casos Notificados'
                   - prop: "comment"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_02_99'&limit=1"
                     template: '{0} a {1}'
                     args:
                       - named_prop: "nu_competencia_min"
@@ -114,11 +117,13 @@ secoes:
                     format: 'inteiro'
                     # collapse:
                     #   format: 'real'
-                    default: "Sem Registros"
+                    default: "Nenhum"
                   - prop: "description"
                     fixed: 'Casos Notificados'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_02_99'&limit=1"
+                    named_prop: "nu_competencia_max"
           - type: "text"
             title: ""
             content:
@@ -148,7 +153,7 @@ secoes:
             default: 
               fixed: "06_05_02_99"
             api:
-              - fixed: "/indicadoresnacionais?categorias=cd_indicador,ds_agreg_primaria,ds_agreg_secundaria&agregacao=distinct&filtros=in-cd_indicador-'06_05_02_99'-'06_05_02_79'-'06_05_02_89'"
+              - fixed: "/indicadoresnacionais?categorias=cd_indicador,ds_agreg_primaria,ds_agreg_secundaria&agregacao=distinct&filtros=in-cd_indicador-'06_05_02_99'-'06_05_02_79'-'06_05_02_89'&ordenacao=-ds_agreg_secundaria"
             args:
               - prop: "id"
                 named_prop: "cd_indicador"
@@ -165,6 +170,8 @@ secoes:
         chart_type: "MAP_TOPOJSON"
         apiBase: 
           template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-1-1,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
         api: 
           template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_02_99',and,eq-cd_uf-{0}"
           args:
@@ -204,11 +211,8 @@ secoes:
           fixed: "Notificações do SINAN - Acidentes de Trabalho Grave (5 a 17 anos) - Série Histórica"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_02_99"
-            year: "max"
+          api:
+            fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_02_99'&limit=1"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -245,10 +249,12 @@ secoes:
                     format: 'inteiro'
                     # collapse:
                     #   format: 'real'
-                    default: "Sem Registros"
+                    default: "Nenhum"
                   - prop: "description"
                     fixed: 'Casos Notificados'
                   - prop: "comment"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_02_99'&limit=1"
                     template: '{0} a {1}'
                     args:
                       - named_prop: "nu_competencia_min"
@@ -265,11 +271,13 @@ secoes:
                     format: 'inteiro'
                     # collapse:
                     #   format: 'real'
-                    default: "Sem Registros"
+                    default: "Nenhum"
                   - prop: "description"
                     fixed: 'Casos Notificados'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_02_99'&limit=1"
+                    named_prop: "nu_competencia_max"
           - type: "text"
             title: ""
             content:
@@ -282,7 +290,7 @@ secoes:
             default: 
               fixed: "06_05_02_99"
             api:
-              - fixed: "/indicadoresnacionais?categorias=cd_indicador,ds_agreg_primaria,ds_agreg_secundaria&agregacao=distinct&filtros=in-cd_indicador-'06_05_02_99'-'06_05_02_79'-'06_05_02_89'"
+              - fixed: "/indicadoresnacionais?categorias=cd_indicador,ds_agreg_primaria,ds_agreg_secundaria&agregacao=distinct&filtros=in-cd_indicador-'06_05_02_99'-'06_05_02_79'-'06_05_02_89'&ordenacao=-ds_agreg_secundaria"
             args:
               - prop: "id"
                 named_prop: "cd_indicador"
@@ -297,9 +305,11 @@ secoes:
                     - named_prop: "cd_indicador"
         chart_type: "BAR"
         apiBase:
-          template: "/indicadoresmunicipais?categorias=ds_indicador_radical,nu_competencia,vl_indicador&filtros=eq-cd_municipio_ibge_dv-{0}"
+          template: "/indicadoresmunicipais?categorias=ds_indicador_curto,nu_competencia,vl_indicador&filtros=eq-cd_municipio_ibge_dv-{0}"
+          args:
+            - named_prop: "idLocalidade"
         api:
-          template: "/indicadoresmunicipais?categorias=ds_indicador_radical,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'06_05_02_99',and,eq-cd_municipio_ibge_dv-{0}"
+          template: "/indicadoresmunicipais?categorias=ds_indicador_curto,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'06_05_02_99',and,eq-cd_municipio_ibge_dv-{0}"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -309,7 +319,7 @@ secoes:
         headers:
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'ds_indicador_curto'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
@@ -334,11 +344,8 @@ secoes:
           fixed: "Notificações do SINAN - Notificações Relacionadas ao Trabalho (5 a 17 anos)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_10_99"
-            year: "max"
+          api:
+            fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_99'&limit=1"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -376,10 +383,12 @@ secoes:
                     format: 'inteiro'
                     # collapse:
                     #   format: 'real'
-                    default: "Sem Registros"
+                    default: "Nenhum"
                   - prop: "description"
                     fixed: 'Casos Notificados'
                   - prop: "comment"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_99'&limit=1"
                     template: '{0} a {1}'
                     args:
                       - named_prop: "nu_competencia_min"
@@ -396,11 +405,13 @@ secoes:
                     format: 'inteiro'
                     # collapse:
                     #   format: 'real'
-                    default: "Sem Registros"
+                    default: "Nenhum"
                   - prop: "description"
                     fixed: 'Casos Notificados'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_99'&limit=1"
+                    named_prop: "nu_competencia_max"
           - type: "text"
             title: ""
             content:
@@ -452,7 +463,7 @@ secoes:
             default: 
               fixed: "5 a 17 anos"
             api:
-              - fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria,ds_agreg_secundaria-label&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'"
+              - fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria,ds_agreg_secundaria-label&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'&ordenacao=-ds_agreg_secundaria"
             args:
               - prop: "id"
                 named_prop: "ds_agreg_secundaria"
@@ -471,9 +482,11 @@ secoes:
 
         chart_type: "MAP_TOPOJSON"
         apiBase: 
-          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00',eq-cd_uf-{0}"
+          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00',and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
         api: 
-          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_10_99',eq-cd_uf-{0}"
+          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_05_10_99',and,eq-cd_uf-{0}"
           args:
             - named_prop: "cd_uf"
           options:
@@ -512,11 +525,8 @@ secoes:
           fixed: "SINAN - Notificações Relacionadas ao Trabalho (5 a 17 anos) - Série Histórica"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_10_99"
-            year: "max"
+          api:
+            fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_99'&limit=1"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -553,10 +563,12 @@ secoes:
                     format: 'inteiro'
                     # collapse:
                     #   format: 'real'
-                    default: "Sem Registros"
+                    default: "Nenhum"
                   - prop: "description"
                     fixed: 'Casos Notificados'
                   - prop: "comment"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_99'&limit=1"
                     template: '{0} a {1}'
                     args:
                       - named_prop: "nu_competencia_min"
@@ -573,11 +585,13 @@ secoes:
                     format: 'inteiro'
                     # collapse:
                     #   format: 'real'
-                    default: "Sem Registros"
+                    default: "Nenhum"
                   - prop: "description"
                     fixed: 'Casos Notificados'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_99'&limit=1"
+                    named_prop: "nu_competencia_max"
           - type: "text"
             title: ""
             content:
@@ -614,7 +628,7 @@ secoes:
             default: 
               fixed: "5 a 17 anos"
             api:
-              - fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria,ds_agreg_secundaria-label&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'"
+              - fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria,ds_agreg_secundaria-label&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'&ordenacao=-ds_agreg_secundaria"
             args:
               - prop: "id"
                 named_prop: "ds_agreg_secundaria"
@@ -632,9 +646,11 @@ secoes:
                     - named_prop: "ds_agreg_secundaria"
         chart_type: "BAR"
         apiBase:
-          template: "/indicadoresmunicipais?categorias=ds_indicador_radical,nu_competencia,vl_indicador&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00',and,eq-cd_municipio_ibge_dv-{0}"
+          template: "/indicadoresmunicipais?categorias=ds_indicador_curto,nu_competencia,vl_indicador&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00',and,eq-cd_municipio_ibge_dv-{0}"
+          args:
+            - named_prop: "idLocalidade"
         api:
-          template: "/indicadoresmunicipais?categorias=ds_indicador_radical,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'06_05_10_99',and,eq-cd_municipio_ibge_dv-{0}"
+          template: "/indicadoresmunicipais?categorias=ds_indicador_curto,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'06_05_10_99',and,eq-cd_municipio_ibge_dv-{0}"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -644,7 +660,7 @@ secoes:
         headers:
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'ds_indicador_curto'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
@@ -669,11 +685,8 @@ secoes:
           fixed: "Notificações do SINAN - Notificações Relacionadas ao Trabalho (5 a 17 anos) conforme Agravos e Doenças"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "06_05_10_99"
-            year: "max"
+          api:
+            fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_99'&limit=1"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -710,10 +723,12 @@ secoes:
                     format: 'inteiro'
                     # collapse:
                     #   format: 'real'
-                    default: "Sem Registros"
+                    default: "Nenhum"
                   - prop: "description"
                     fixed: 'Casos Notificados'
                   - prop: "comment"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_99'&limit=1"
                     template: '{0} a {1}'
                     args:
                       - named_prop: "nu_competencia_min"
@@ -730,11 +745,13 @@ secoes:
                     format: 'inteiro'
                     # collapse:
                     #   format: 'real'
-                    default: "Sem Registros"
+                    default: "Nenhum"
                   - prop: "description"
                     fixed: 'Casos Notificados'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'06_05_10_99'&limit=1"
+                    named_prop: "nu_competencia_max"
           - type: "text"
             title: ""
             content:
@@ -765,7 +782,7 @@ secoes:
             default: 
               fixed: "5 a 17 anos"
             api:
-              - fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'"
+              - fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00'&ordenacao=-ds_agreg_secundaria"
             args:
               - prop: "id"
                 named_prop: "ds_agreg_secundaria"
@@ -779,8 +796,12 @@ secoes:
                   args:
                     - named_prop: "ds_agreg_secundaria"
         chart_type: "TREEMAP"
+        apiBase:
+          template: "/indicadoresmunicipais?categorias=ds_agreg_primaria,ds_indicador_curto,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00',and,nk-cd_indicador-'06_05_10_%25',and,eq-cd_municipio_ibge_dv-{0}"
+          args:
+            - named_prop: "idLocalidade"
         api:
-          template: "/indicadoresmunicipais?categorias=ds_agreg_primaria,ds_indicador_radical,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=lk-cd_indicador-'06_05_%25',and,nk-cd_indicador-'%25_00',and,nk-cd_indicador-'06_05_10_%25',and,eq-cd_municipio_ibge_dv-{0}"
+          template: "/indicadoresmunicipais?categorias=ds_agreg_primaria,ds_indicador_curto,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&filtros=lk-cd_indicador-'06_05_%25_99',and,nk-cd_indicador-'06_05_10_99',and,eq-cd_municipio_ibge_dv-{0}"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -790,7 +811,7 @@ secoes:
         headers:
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'ds_indicador_curto'
           - text: 'Qtde'
             value: 'fmt_agr_sum_vl_indicador'
         chart_options:
