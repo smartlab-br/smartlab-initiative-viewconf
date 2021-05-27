@@ -235,6 +235,32 @@ secoes:
               fixed: "Em destaque, o município com mais vítimas do trabalho resgatadas na série histórica para a unidade geográfica em realce. Na tabela ao lado, apresentam-se os municípios com alta incidência para o período e seus indicadores sociais. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
         component_type: "DATATABLE"
         api:
+          - fixed: "/indicadoresmunicipais?categorias='neutro'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'POP_DOU_01'"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "{0} ({1})"
+                        args:
+                          - named_prop: "ds_indicador"
+                          - named_prop: "nu_competencia_max"
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "ds_indicador_prefixo"
+                - id: "det_value"
+                  function: "get_detail_value"
+                  fn_args:
+                    - named_prop: "class_indicador"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "rank_br"
+                    - named_prop: "rank_uf"
+                    - named_prop: "media_br"
+                    - named_prop: "media_uf"
           - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,'(Razão)'-ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados_incidencia'"
             options:
               calcs:
@@ -374,32 +400,32 @@ secoes:
                     - named_prop: "rank_uf"
                     - named_prop: "media_br"
                     - named_prop: "media_uf"
-          - fixed: "/indicadoresmunicipais?categorias='neutro'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'POP_DOU_01'-'PIB_00004'"
-            options:
-              calcs:
-                - id: "header_label"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed:
-                        template: "{0} ({1})"
-                        args:
-                          - named_prop: "ds_indicador"
-                          - named_prop: "nu_competencia_max"
-                - id: "fmt_value"
-                  function: "get_formatted_value"
-                  fn_args:
-                    - named_prop: "ds_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "ds_indicador_prefixo"
-                - id: "det_value"
-                  function: "get_detail_value"
-                  fn_args:
-                    - named_prop: "class_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "rank_br"
-                    - named_prop: "rank_uf"
-                    - named_prop: "media_br"
-                    - named_prop: "media_uf"
+          # - fixed: "/indicadoresmunicipais?categorias='neutro'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'PIB_00004'"
+          #   options:
+          #     calcs:
+          #       - id: "header_label"
+          #         function: "applyInterpolReplaceDatasetParam"
+          #         fn_args:
+          #           - fixed:
+          #               template: "{0} ({1})"
+          #               args:
+          #                 - named_prop: "ds_indicador"
+          #                 - named_prop: "nu_competencia_max"
+          #       - id: "fmt_value"
+          #         function: "get_formatted_value"
+          #         fn_args:
+          #           - named_prop: "ds_indicador"
+          #           - named_prop: "agr_sum_vl_indicador"
+          #           - named_prop: "ds_indicador_prefixo"
+          #       - id: "det_value"
+          #         function: "get_detail_value"
+          #         fn_args:
+          #           - named_prop: "class_indicador"
+          #           - named_prop: "agr_sum_vl_indicador"
+          #           - named_prop: "rank_br"
+          #           - named_prop: "rank_uf"
+          #           - named_prop: "media_br"
+          #           - named_prop: "media_uf"
           - fixed: "/thematic/cagedindicadores?categorias='bom'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_radical-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'caged_saldo'"
             options:
               calcs:
