@@ -99,7 +99,9 @@ principais:
         template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - function: "format_scope"
+            fn_args:
+              - named_prop: "nu_competencia"
 # ========================================================
 secoes:
   - id: "pcd_mercado_trabalho"
@@ -995,7 +997,9 @@ secoes:
               - named_prop: "cd_uf"
           args:
             - named_prop: "nm_uf"
-            - named_prop: "nu_competencia"
+            - function: "format_scope"
+              fn_args:
+                - named_prop: "nu_competencia"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1035,6 +1039,10 @@ secoes:
             calcs:
               - id: "deviation_bpc"
                 function: "get_proportional_indicator_uf"
+              - id: "competencia"
+                function: "format_month_ds"
+                fn_args:
+                  - named_prop: "nu_competencia"
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
@@ -1047,9 +1055,9 @@ secoes:
           - text: 'Indicador'
             align: 'left'
             value: 'ds_indicador_radical'
-          - text: 'Ano'
+          - text: 'Mês'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'calc_competencia'
           - text: 'Quantidade'
             value: 'fmt_vl_indicador'
         chart_options:
