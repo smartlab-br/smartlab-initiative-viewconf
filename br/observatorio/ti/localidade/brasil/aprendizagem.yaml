@@ -18,7 +18,12 @@ principais:
       - prop: "description"
         fixed: "TOTAL DE COTAS DE APRENDIZAGEM"
       - prop: "comment"
-        named_prop: "ds_fonte"
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - function: "format_scope"
+            fn_args:
+              - named_prop: "nu_competencia"
   - relevance: 'lead'
     cls: 'xs12'
     preloaded:
@@ -37,10 +42,12 @@ principais:
       - prop: "description"
         fixed: "TOTAL DE APRENDIZES CONTRATADOS (<i>PROXY</i> SMARTLAB)"
       - prop: "comment"
-        template: "{0}, {1}"
+        template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - function: "format_scope"
+            fn_args:
+              - named_prop: "nu_competencia"
   - relevance: 'lead'
     cls: 'xs12'
     preloaded:
@@ -56,10 +63,12 @@ principais:
       - prop: "description"
         fixed: "<i>PROXY</i> DO % DE CUMPRIMENTO DA COTA DE APRENDIZAGEM"
       - prop: "comment"
-        template: "{0}, {1}"
+        template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - function: "format_scope"
+            fn_args:
+              - named_prop: "nu_competencia"
   # - relevance: 'lead'
   #   cls: 'xs12 md6'
   #   preloaded:
@@ -97,7 +106,9 @@ secoes:
           api: 
             template: "/indicadoresnacionais?categorias=nu_competencia_max&filtros=eq-cd_indicador-'APRZ_21_001'&limit=1"
           args:
-            - named_prop: "nu_competencia_max"
+            - function: "format_scope"
+              fn_args:
+                - named_prop: "nu_competencia_max"
         description:
           - type: "minicards"
             cards:
@@ -121,14 +132,13 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o potencial de cotas para a contratação de aprendizes, de acordo com as informações oriundas da Subsecretaria de Inspeção do Trabalho do Ministério da Economia, com base no eSocial (janeiro de 2021). No mapa ao lado, a escala de cores varia do menor (branco) para o maior número de vagas (azul). Note-se que os municípios sem informação do potencial da cota de aprendizes, não possuem estabelecimentos enquadrados na Lei da Aprendizagem."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: 'APRZ_21_001'
-                year: 'max'
+              template: "Em destaque, o potencial de cotas para a contratação de aprendizes, de acordo com as informações oriundas da Subsecretaria de Inspeção do Trabalho do Ministério da Economia, com base no eSocial ({0}}). No mapa ao lado, a escala de cores varia do menor (branco) para o maior número de vagas (azul). Note-se que os municípios sem informação do potencial da cota de aprendizes, não possuem estabelecimentos enquadrados na Lei da Aprendizagem."
+              api: 
+                template: "/indicadoresnacionais?categorias=nu_competencia_max&filtros=eq-cd_indicador-'APRZ_21_001'&limit=1"
               args:
-                - named_prop: "ds_fonte"
+                - function: "format_scope"
+                  fn_args:
+                    - named_prop: "nu_competencia_max"
         chart_type: "MAP_TOPOJSON"
         api:
           fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'APRZ_21_001',and,eq-nu_competencia-nu_competencia_max"
@@ -138,6 +148,10 @@ secoes:
                 function: "get_log"
                 fn_args:
                   - fixed: "vl_indicador"
+              - id: "competencia"
+                function: "format_month_ds"
+                fn_args:
+                  - named_prop: "nu_competencia"
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
@@ -145,9 +159,9 @@ secoes:
           - text: 'Unidade Federativa'
             align: 'left'
             value: 'nm_uf'
-          - text: 'Ano'
+          - text: 'Mês'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'calc_competencia'
           - text: 'Indicador'
             align: 'left'
             value: 'ds_indicador_radical'
@@ -170,7 +184,9 @@ secoes:
           api: 
             template: "/indicadoresnacionais?categorias=nu_competencia_max&filtros=eq-cd_indicador-'APRZ_21_009'&limit=1"
           args:
-            - named_prop: 'nu_competencia_max'
+            - function: "format_scope"
+              fn_args:
+                - named_prop: "nu_competencia_max"
         info:
           # - type: "text"
           #   title: "Sobre a métrica"
@@ -224,7 +240,13 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, segundo <i>proxy</i> calculada pelo SmartLab com base na RAIS 2019 e Novo CAGED de março de 2021, a quantidade de aprendizes com vínculo empregatício ativo no país inteiro. Este indicador inclui, além de aprendizes de 14 a 17 anos, todos os demais de 18 a 24 anos e, ainda, aprendizes com deficiência de todas as idades. No mapa, apresenta-se a perspectiva comparativa entre as unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+              template: "Em destaque, segundo <i>proxy</i> calculada pelo SmartLab com base na RAIS 2019 e Novo CAGED de {0}, a quantidade de aprendizes com vínculo empregatício ativo no país inteiro. Este indicador inclui, além de aprendizes de 14 a 17 anos, todos os demais de 18 a 24 anos e, ainda, aprendizes com deficiência de todas as idades. No mapa, apresenta-se a perspectiva comparativa entre as unidades federativas. A escala de cores varia do branco (menor quantidade) para o azul (maior quantidade)."
+              api: 
+                template: "/indicadoresnacionais?categorias=nu_competencia_max&filtros=eq-cd_indicador-'APRZ_21_009'&limit=1"
+              args:
+                - function: "format_scope"
+                  fn_args:
+                    - named_prop: "nu_competencia_max"
         chart_type: "MAP_TOPOJSON"
         api: 
           fixed: "/indicadoresestaduais?categorias=cd_uf,sg_uf,nm_uf,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&pivot=cd_indicador&filtros=in-cd_indicador-'APRZ_21_009'-'APRZ_21_007'-'APRZ_21_008',and,eq-nu_competencia-nu_competencia_max"
@@ -239,6 +261,10 @@ secoes:
                 function: "get_log"
                 fn_args:
                   - fixed: 'APRZ_21_009'
+              - id: "competencia"
+                function: "format_month_ds"
+                fn_args:
+                  - named_prop: "nu_competencia"
             formatters:
               - id: "APRZ_21_009"
                 format: 'inteiro'
@@ -250,9 +276,9 @@ secoes:
           - text: 'Unidade Federativa'
             align: 'left'
             value: 'nm_uf'
-          - text: 'Ano'
+          - text: 'Mês'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'calc_competencia'
           - text: 'Total de Aprendizes'
             align: 'left'
             value: 'fmt_APRZ_21_009'
@@ -280,7 +306,9 @@ secoes:
           api: 
             template: "/indicadoresnacionais?categorias=nu_competencia_max&filtros=eq-cd_indicador-'APRZ_21_010'&limit=1"
           args:
-            - named_prop: 'nu_competencia_max'
+            - function: "format_scope"
+              fn_args:
+                - named_prop: "nu_competencia_max"
         info:
           # - type: "text"
           #   title: "Sobre a métrica"
