@@ -27,18 +27,14 @@ secoes:
     name: 'Áreas Prioritárias no Brasil'
     cards:
 # ========================================================
-      - id: "datatable_resgatados_escravo"
+      - id: "datatable_infantil"
         title: 
           fixed: "Trabalho Infantil - Indicadores Principais"
         title_comment:
-          template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+          template: "{0}"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -73,7 +69,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o município ... Na tabela ao lado, apresentam-se os municípios com alta incidência para o período e seus indicadores sociais."
+              fixed: "Na tabela ao lado, apresentam-se os municípios e seus indicadores..."
         component_type: "DATATABLE"
         api:
           - fixed: "/indicadoresmunicipais?categorias='bom'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,'(Quantidade)'-ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'APRZ_21_001'-'APRZ_21_009'&ordenacao=ds_indicador_curto&filtros=nn-cd_municipio_ibge_dv"
@@ -190,7 +186,7 @@ secoes:
               clone:
                 - id: "agr_count"
                   new_column: "agr_sum_vl_indicador"
-          - fixed: "/ti/censoagromunicipal?categorias='ruim'-class_indicador,'2017'-nu_competencia,cod_mun-cd_mun_ibge,nm_municipio,sg_uf,'Crianças e Adolescentes menores de 14 anos ocupados em Estabelecimentos Agropecuários'-ds_indicador,'(Quantidade)'-ds_indicador_prefixo,qt_ocupados_menores14"
+          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf,vl_indicador-agr_sum_vl_indicador&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'CAGRO_TICA01'"
             options:
               calcs:
                 - id: "header_label"
@@ -200,16 +196,22 @@ secoes:
                         template: "{0} ({1})"
                         args:
                           - named_prop: "ds_indicador"
-                          - named_prop: "nu_competencia"
+                          - named_prop: "nu_competencia_max"
                 - id: "fmt_value"
                   function: "get_formatted_value"
                   fn_args:
                     - named_prop: "ds_indicador"
-                    - named_prop: "qt_ocupados_menores14"
+                    - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-              clone:
-                - id: "qt_ocupados_menores14"
-                  new_column: "agr_sum_vl_indicador"
+                - id: "det_value"
+                  function: "get_detail_value"
+                  fn_args:
+                    - named_prop: "class_indicador"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "rank_br"
+                    - named_prop: "rank_uf"
+                    - named_prop: "media_br"
+                    - named_prop: "media_uf"
           - fixed: "/ti/provabrasil?categorias='ruim'-class_indicador,nu_ano_prova_brasil-nu_competencia,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,ds_indicador,'(Quantidade)'-ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM,AVG&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,eq-nu_ano_prova_brasil-2017,and,eq-cd_tr_fora-1,and,nn-cd_municipio_ibge_dv"
             options:
               calcs:
@@ -227,26 +229,6 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/ti/censoagromunicipal?categorias='ruim'-class_indicador,'2017'-nu_competencia,cod_mun-cd_mun_ibge,nm_municipio,sg_uf,'Crianças e Adolescentes menores de 14 anos ocupados em Estabelecimentos Agropecuários'-ds_indicador,'(Quantidade)'-ds_indicador_prefixo,qt_ocupados_menores14"
-            options:
-              calcs:
-                - id: "header_label"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed:
-                        template: "{0} ({1})"
-                        args:
-                          - named_prop: "ds_indicador"
-                          - named_prop: "nu_competencia"
-                - id: "fmt_value"
-                  function: "get_formatted_value"
-                  fn_args:
-                    - named_prop: "ds_indicador"
-                    - named_prop: "qt_ocupados_menores14"
-                    - named_prop: "ds_indicador_prefixo"
-              clone:
-                - id: "qt_ocupados_menores14"
-                  new_column: "agr_sum_vl_indicador"
         headers:
           - text: 'Município'
             align: 'center'
