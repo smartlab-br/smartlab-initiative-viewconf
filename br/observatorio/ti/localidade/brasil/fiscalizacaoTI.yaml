@@ -1,0 +1,413 @@
+principais:
+  - relevance: 'lead'
+    cls: 'xs12 md6'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "TI_SIT_01"
+      year: 'max'
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+          precision: 1
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: "CRIANÇAS/ADOLESCENTES ALCANÇADOS EM SITUAÇÃO IRREGULAR DE TRABALHO"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead'
+    cls: 'xs12 md6'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "TI_SIT_02"
+      year: 'max'
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+          precision: 1
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: "CRIANÇAS ATÉ 13 ANOS DE IDADE EM SITUAÇÃO IRREGULAR DE TRABALHO"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead'
+    cls: 'xs12 md6'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "TI_SIT_05"
+      year: 'max'
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+          precision: 1
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: "CRIANÇAS/ADOLESCENTES DO SEXO MASCULINO EM SITUAÇÃO IRREGULAR DE TRABALHO"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead'
+    cls: 'xs12 md6'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "TI_SIT_06"
+      year: 'max'
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+          precision: 1
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: "CRIANÇAS/ADOLESCENTES DO SEXO FEMININO EM SITUAÇÃO IRREGULAR DE TRABALHO"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+# ========================================================
+secoes:
+  - id: "censo_agro"
+    name: ""
+    cards:
+# ========================================================
+      - id: "mapa_trabalho_irregular_criancas"
+        title: 
+          fixed: "Crianças e Adolescentes em Situação Irregular de Trabalho"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "TI_SIT_01"
+            year: 'max'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        # msg_nodata:
+        #   desc: "Em função do elevado Coeficiente de Variação associado aos dados amostrais do Censo 2010, não foi possível disponibilizar as informações referentes ao trabalho de crianças e adolescentes na faixa etária de 10 a 17 anos de idade nesse município. Para maiores informações ver as notas metodológicas na p. 4 do relatório municipal de trabalho decente."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "TI_SIT_01"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Crianças e Adolescentes em Situação Irregular de Trabalho'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de crianças e adolescentes alcançados em situação irregular de trabalho pelas ações fiscais de acordo com as informações oriundas da Subsecretaria de Inspeção do Trabalho do Ministério da Economia, com base no SFITWEB. No mapa ao lado, a escala de cores varia do menor (branco) para o maior número de crianças e adolescentes (vemelho escuro). Note-se que as unidades federativas sem informação são aquelas nas quais não foram realizadas ações fiscais de combate ao trabalho infantil ou não foram alcançados crianças e adolescentes em situação irregular de trabalho. Selecione abaixo um indicador por faixa etária ou sexo para refinar a visualização."
+
+          - id: "select_categoria"
+            type: "select"
+            clearable: false
+            default: 
+              fixed: "Total  "
+            multiple: false
+            label: "Indicador"
+            api:
+              template: "/indicadoresnacionais?categorias=cd_indicador,ds_agreg_primaria,ds_agreg_secundaria&agregacao=distinct&filtros=lk-cd_indicador-'TI_SIT_%25',and,eq-nu_competencia-nu_competencia_max&ordenacao=ds_agreg_primaria,ds_agreg_secundaria"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: "label"
+                    function: "concat_values"
+                    fn_args:
+                      - named_prop: "ds_agreg_primaria"
+                      - named_prop: "ds_agreg_secundaria"
+            args:
+              - prop: "id"
+                named_prop: "cd_indicador"
+              - prop: "label"
+                named_prop: "calc_label"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-cd_indicador-'{0}'"
+                api:
+                  args:
+                    - named_prop: "cd_indicador"
+
+        chart_type: "MAP_TOPOJSON"
+        apiBase: 
+          fixed: "/indicadoresestaduais?categorias=nu_competencia,ds_indicador,cd_uf,nm_uf,ds_fonte,vl_indicador&filtros=eq-nu_competencia-nu_competencia_max"
+        api: 
+          fixed: "/indicadoresestaduais?categorias=nu_competencia,ds_indicador,cd_uf,nm_uf,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'TI_SIT_01',and,eq-nu_competencia-nu_competencia_max"
+          options:
+            calcs:
+              - id: "log"
+                function: "get_log"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Crianças e Adolescentes em Situação Irregular de Trabalho'
+            align: 'left'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'vl_indicador'
+          colorScale:
+            name: 'Reds'
+        source: 
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_trabalho_irregular_criancas_sexo"
+        title: 
+          fixed: "Crianças e Adolescentes em Situação Irregular de Trabalho por Sexo"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "TI_SIT_01"
+            year: 'max'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        # msg_nodata:
+        #   desc: "Em função do elevado Coeficiente de Variação associado aos dados amostrais do Censo 2010, não foi possível disponibilizar as informações referentes ao trabalho de crianças e adolescentes na faixa etária de 10 a 17 anos de idade nesse município. Para maiores informações ver as notas metodológicas na p. 4 do relatório municipal de trabalho decente."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "TI_SIT_05"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Crianças e Adolescentes do Sexo Masculino em Situação Irregular de Trabalho'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "TI_SIT_06"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Crianças e Adolescentes do Sexo Feminino em Situação Irregular de Trabalho'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de crianças e adolescentes alcançados em situação irregular de trabalho, por sexo, pelas ações fiscais de acordo com as informações oriundas da Subsecretaria de Inspeção do Trabalho do Ministério da Economia, com base no SFITWEB. No mapa ao lado, a escala de cores varia do menor (branco) para o maior número de crianças e adolescentes (vemelho escuro). Note-se que as unidades federativas sem informação são aquelas nas quais não foram realizadas ações de fiscais de combate ao trabalho infantil ou não foram alcançados crianças e adolescentes em situação irregular de trabalho."
+
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          fixed: "/indicadoresestaduais?categorias=nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=sum&pivot=cd_indicador&filtros=in-cd_indicador-'TI_SIT_06'-'TI_SIT_05'-'TI_SIT_01',and,eq-nu_competencia-nu_competencia_max"
+          options:
+            formatters:
+              - id: "TI_SIT_06"
+                format: 'inteiro'
+              - id: "TI_SIT_05"
+                format: 'inteiro'
+              - id: "TI_SIT_01"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Crianças e Adolescentes em Situação Irregular de Trabalho'
+            align: 'left'
+            value: 'fmt_TI_SIT_01'
+          - text: 'Crianças e Adolescentes de Sexo Masculino'
+            align: 'left'
+            value: 'fmt_TI_SIT_05'
+          - text: 'Crianças e Adolescentes de Sexo Feminino'
+            align: 'left'
+            value: 'fmt_TI_SIT_06'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'TI_SIT_01'
+          colorScale:
+            name: 'Reds'
+        source: 
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "mapa_trabalho_irregular_criancas_faixa"
+        title: 
+          fixed: "Crianças e Adolescentes em Situação Irregular de Trabalho por Faixa Etária"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "TI_SIT_01"
+            year: 'max'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        # msg_nodata:
+        #   desc: "Em função do elevado Coeficiente de Variação associado aos dados amostrais do Censo 2010, não foi possível disponibilizar as informações referentes ao trabalho de crianças e adolescentes na faixa etária de 10 a 17 anos de idade nesse município. Para maiores informações ver as notas metodológicas na p. 4 do relatório municipal de trabalho decente."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "TI_SIT_02"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Crianças e Adolescentes até 13 anos de idade em Situação Irregular de Trabalho'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "TI_SIT_03"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Crianças e Adolescentes de 14 a 15 anos de idade em Situação Irregular de Trabalho'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "TI_SIT_04"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Crianças e Adolescentes de 16 a 17 anos de idade em Situação Irregular de Trabalho'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número total de crianças e adolescentes alcançados em situação irregular de trabalho, por faixa etária, pelas ações fiscais de acordo com as informações oriundas da Subsecretaria de Inspeção do Trabalho do Ministério da Economia, com base no SFITWEB. No mapa ao lado, a escala de cores varia do menor (branco) para o maior número de crianças e adolescentes (vemelho escuro). Note-se que as unidades federativas sem informação são aquelas nas quais não foram realizadas ações de fiscais de combate ao trabalho infantil ou não foram alcançados crianças e adolescentes em situação irregular de trabalho."
+
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          fixed: "/indicadoresestaduais?categorias=nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=sum&pivot=cd_indicador&filtros=in-cd_indicador-'TI_SIT_02'-'TI_SIT_03'-'TI_SIT_04'-'TI_SIT_01',and,eq-nu_competencia-nu_competencia_max"
+          options:
+            formatters:
+              - id: "TI_SIT_02"
+                format: 'inteiro'
+              - id: "TI_SIT_03"
+                format: 'inteiro'
+              - id: "TI_SIT_04"
+                format: 'inteiro'
+              - id: "TI_SIT_01"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Crianças e Adolescentes em Situação Irregular de Trabalho'
+            align: 'left'
+            value: 'fmt_TI_SIT_01'
+          - text: 'Crianças e Adolescentes de até 13 anos'
+            align: 'left'
+            value: 'fmt_TI_SIT_02'
+          - text: 'Crianças e Adolescentes de 14 a 15 anos'
+            align: 'left'
+            value: 'fmt_TI_SIT_03'
+          - text: 'Crianças e Adolescentes de 16 a 17 anos'
+            align: 'left'
+            value: 'fmt_TI_SIT_04'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'TI_SIT_01'
+          colorScale:
+            name: 'Reds'
+        source: 
+          desc_field: "ds_fonte"
