@@ -108,7 +108,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de acidentes de trabalho notificados na unidade federativa para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano)."
+              template: "Em destaque, o número de acidentes de trabalho notificados na unidade federativa para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano). Utilize o filtro abaixo para visualizar o número de acidentes por setor econômico."
           - type: "ranking"
             api:
               template: "/sst/indicadoresestaduais?categorias=rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
@@ -125,19 +125,44 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            api:
+              template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=distinct&ordenacao=ds_cnae_classe_cat&filtros=ne-ds_cnae_classe_cat-'',and,eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
+              args:
+                - named_prop: "idLocalidade"
+                - base_object: "sst_cat"
+                  named_prop: "agr_max_ano_cat"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe_cat"
+              - prop: "label"
+                named_prop: "ds_cnae_classe_cat"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe_cat-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe_cat"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/sst/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/cats?categorias=cd_municipio_ibge_dv,nm_municipio,nm_uf,ano_cat&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
           args:
             - named_prop: "idLocalidade"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
           options:
             calcs:
-              - id: "deviation_cat"
-                function: "get_proportional_indicator_uf"
+              - id: "log_cat"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
             formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
+              - id: "agr_count"
                 format: 'inteiro'
         headers:
           - text: 'Município'
@@ -145,21 +170,15 @@ secoes:
             value: 'nm_municipio'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'ano_cat'
           - text: 'Nº de Notificações de Acidente de Trabalho'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
+            value: 'fmt_agr_count'
         chart_options:
-          id_field: 'cd_mun_ibge_dv'
+          id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'calc_deviation_cat'
+          value_field: 'calc_log_cat'
           colorScale:
             name: "Reds"
-        source:
-          desc_field: "ds_fonte"
 # ====================================================          
       - id: "treemap_acidente_trabalho"
         title: 

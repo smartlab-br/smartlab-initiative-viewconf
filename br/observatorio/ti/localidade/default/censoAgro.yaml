@@ -116,7 +116,7 @@ principais:
         named_prop: 'vl_indicador_txt'
         default: "-"
       - prop: "description"
-        fixed: "Grupo de atividade econômica com maior incidência de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
+        fixed: "Grupo de atividade econômica com maior número de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
       - prop: 'comment'
         template: "({0})"
         args:
@@ -200,6 +200,11 @@ secoes:
           args:
             - named_prop: "cd_uf"
           options:
+            calcs:
+              - id: "log"
+                function: "get_log"
+                fn_args:
+                  - fixed: "CAGRO_TICA01"
             formatters:
               - id: "CAGRO_TICA01"
                 format: 'inteiro'
@@ -225,7 +230,7 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'CAGRO_TICA01'
+          value_field: 'calc_log'
           colorScale:
             name: 'Reds'
         source: 
@@ -322,6 +327,11 @@ secoes:
           args:
             - named_prop: "cd_uf"
           options:
+            calcs:
+              - id: "log"
+                function: "get_log"
+                fn_args:
+                  - fixed: "CAGRO_TICA02"
             formatters:
               - id: "CAGRO_TICA02"
                 format: 'porcentagem'
@@ -345,9 +355,159 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'CAGRO_TICA02'
+          value_field: 'calc_log'
           colorScale:
             name: 'Reds'
+        source: 
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "agro_bubbles_criancas_adolescentes_14_sexo"
+        title: 
+          fixed: "Meninas e meninos com menos de 14 anos ocupados em estabelecimentos agropecuários"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "CAGRO_TICA01"
+            year: 'max'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        # msg_nodata:
+        #   desc: "Em função do elevado Coeficiente de Variação associado aos dados amostrais do Censo 2010, não foi possível disponibilizar as informações referentes ao trabalho de crianças e adolescentes na faixa etária de 10 a 17 anos de idade nesse município. Para maiores informações ver as notas metodológicas na p. 4 do relatório municipal de trabalho decente."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA05"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'MENINOS OCUPADOS COM MENOS DE 14 ANOS'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA07"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'DO TOTAL DE HOMENS OCUPADOS NO SETOR'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA06"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'MENINAS OCUPADAS COM MENOS DE 14 ANOS'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA08"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'DO TOTAL DE MULHERES OCUPADAS NO SETOR'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a quantidade de meninos e meninas com menos de 14 anos de idade ocupados em estabelecimentos agropecuários, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. Estabelecimento agropecuário é toda unidade de produção/exploração dedicada, total ou parcialmente, a atividades agropecuárias, florestais e aquícolas, independentemente de seu tamanho, de sua forma jurídica (se pertence a um produtor, a vários produtores, a uma empresa, a um conjunto de empresas etc.), ou de sua localização (área urbana ou rural), tendo como objetivo a produção, seja para venda (comercialização da produção) ou para subsistência (sustento do produtor ou de sua família). No mapa, apresentam-se as duas perspectivas em diferentes cores. Em verde, o total de meninas com menos de 14 anos de idade ocupadas em estabelecimentos agropecuários e em azul, o total de meninos. O Censo Agropecuário, por suas características metodológicas, não permite obter informações sobre a ocupação de adolescentes na faixa etária de 14 a 17 anos. É importante destacar que a Constituição Brasileira proíbe o trabalho noturno, perigoso ou insalubre a menores de dezoito e de qualquer trabalho a menores de dezesseis anos, salvo na condição de aprendiz, a partir de quatorze anos."
+          - id: "selectlayer"
+            type: "switch-group"
+            class: "mb-3"
+            switches:
+              - id: "CAGRO_TICA06"
+                label: "Meninas"
+                default: true
+                color: "purple"
+              - id: "CAGRO_TICA05"
+                label: "Meninos"
+                default: true
+                color: "green accent-4"
+            event: 'selection'
+
+        chart_type: "MAP_BUBBLES"
+        api:
+          template: "/indicadoresmunicipais?categorias=latitude,longitude,nu_competencia,cd_municipio_ibge_dv,nm_municipio_uf,ds_fonte,cd_indicador,vl_indicador,ds_indicador&calcs=ln_norm_pos_part&ordenacao=-vl_indicador&filtros=in-cd_indicador-'CAGRO_TICA05'-'CAGRO_TICA06',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-999999999,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        chart_options:
+          colorArray: ["rgba(112, 25, 125, 0.7)", "rgba(25, 125, 25, 0.7)"]
+          height_proportion: 1
+          indicadores: ["CAGRO_TICA06","CAGRO_TICA05"]
+          lat: 'latitude'
+          long: 'longitude'
+          clickable: true
+          value_field: "vl_indicador"
+          tooltip_function: 'obsTICensoAgroTooltip'
+          tooltip_list:
+            - text: 'Municipio'
+              align: 'left'
+              value: 'nm_municipio'
+            - text: 'Ano'
+              align: 'left'
+              value: 'nu_competencia'
+            - text: 'Total de cupados menores de 14 anos'
+              value: 'CAGRO_TICA01'
+              format: 'inteiro'
+            - text: 'Total de Meninas'
+              value: 'CAGRO_TICA06'
+              format: 'inteiro'
+            - text: 'Total de Meninos'
+              value: 'CAGRO_TICA05'
+              format: 'inteiro'
+          radius:
+            base: 5000
+            multiplier: 300
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Total'
+            value: 'fmt_vl_indicador'
         source: 
           desc_field: "ds_fonte"
 # ========================================================
@@ -442,6 +602,11 @@ secoes:
           args:
             - named_prop: "cd_uf"
           options:
+            calcs:
+              - id: "log"
+                function: "get_log"
+                fn_args:
+                  - fixed: "CAGRO_TICA02"
             formatters:
               - id: "CAGRO_TICA02"
                 format: 'porcentagem'
@@ -465,7 +630,7 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'CAGRO_TICA02'
+          value_field: 'calc_log'
           colorScale:
             name: 'Reds'
         source: 
@@ -473,7 +638,7 @@ secoes:
 # ========================================================
       - id: "agro_setor"
         title: 
-          fixed: "Grupos de atividades econômicas com maior incidência de crianças e adolescentes com menos de 14 anos de idade ocupados em estabelecimentos agropecuários"
+          fixed: "Grupos de atividades econômicas com maior número de crianças e adolescentes com menos de 14 anos de idade ocupados em estabelecimentos agropecuários"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -496,7 +661,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
@@ -507,11 +672,11 @@ secoes:
                     named_prop: 'vl_indicador_txt'
                     default: "-"
                   - prop: "description"
-                    fixed: "Grupo de atividade econômica com maior incidência de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
+                    fixed: "Grupo de atividade econômica com maior número de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o grupo de atividade econômica (com o respectivo percentual representado) com maior incidência de crianças e adolescentes com menos de 14 anos idade ocupados em estabelecimentos agropecuários, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. Estabelecimento agropecuário é toda unidade de produção/exploração dedicada, total ou parcialmente, a atividades agropecuárias, florestais e aquícolas, independentemente de seu tamanho, de sua forma jurídica (se pertence a um produtor, a vários produtores, a uma empresa, a um conjunto de empresas etc.), ou de sua localização (área urbana ou rural), tendo como objetivo a produção, seja para venda (comercialização da produção) ou para subsistência (sustento do produtor ou de sua família). No gráfico, em destaque os grupos de atividade econômica com maior incidência de crianças e adolescentes com menos de 14 anos idade ocupadas em estabelecimentos agropecuários.  O Censo Agropecuário, por suas características metodológicas, não permite obter informações sobre a ocupação de adolescentes na faixa etária de 14 a 17 anos. É importante destacar que a Constituição Brasileira proíbe o trabalho noturno, perigoso ou insalubre a menores de dezoito e de qualquer trabalho a menores de dezesseis anos, salvo na condição de aprendiz, a partir de quatorze anos."
+              fixed: "Em destaque, o grupo de atividade econômica (com o respectivo percentual representado) com maior número de crianças e adolescentes com menos de 14 anos idade ocupados em estabelecimentos agropecuários, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. Estabelecimento agropecuário é toda unidade de produção/exploração dedicada, total ou parcialmente, a atividades agropecuárias, florestais e aquícolas, independentemente de seu tamanho, de sua forma jurídica (se pertence a um produtor, a vários produtores, a uma empresa, a um conjunto de empresas etc.), ou de sua localização (área urbana ou rural), tendo como objetivo a produção, seja para venda (comercialização da produção) ou para subsistência (sustento do produtor ou de sua família). No gráfico, em destaque os grupos de atividade econômica com maior número de crianças e adolescentes com menos de 14 anos idade ocupadas em estabelecimentos agropecuários.  O Censo Agropecuário, por suas características metodológicas, não permite obter informações sobre a ocupação de adolescentes na faixa etária de 14 a 17 anos. É importante destacar que a Constituição Brasileira proíbe o trabalho noturno, perigoso ou insalubre a menores de dezoito e de qualquer trabalho a menores de dezesseis anos, salvo na condição de aprendiz, a partir de quatorze anos."
 
         chart_type: "BAR"
         api: 
