@@ -15,7 +15,7 @@ principais:
           precision: 1
         default: "Sem Registros"
       - prop: "description"
-        fixed: "Crianças e adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários"
+        fixed: "Crianças/adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários"
       - prop: 'comment'
         template: "({0})"
         args:
@@ -78,7 +78,7 @@ principais:
           precision: 1
         default: "Sem Registros"
       - prop: "description"
-        fixed: "Crianças e adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários - Agricultura familiar"
+        fixed: "Crianças/adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários - Agricultura familiar"
       - prop: 'comment'
         template: "({0})"
         args:
@@ -99,7 +99,7 @@ principais:
           precision: 1
         default: "Sem Registros"
       - prop: "description"
-        fixed: "Crianças e adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários - Agricultura NÃO familiar"
+        fixed: "Crianças/adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários - Agricultura NÃO familiar"
       - prop: 'comment'
         template: "({0})"
         args:
@@ -116,7 +116,7 @@ principais:
         named_prop: 'vl_indicador_txt'
         default: "-"
       - prop: "description"
-        fixed: "Grupo de atividade econômica com maior número de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
+        fixed: "Atividade econômica com maior número de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
       - prop: 'comment'
         template: "({0})"
         args:
@@ -129,7 +129,7 @@ secoes:
 # ========================================================
       - id: "agro_mapa_criancas_adolescentes_14"
         title: 
-          fixed: "Crianças e Adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários"
+          fixed: "Crianças/adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -453,34 +453,6 @@ secoes:
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
-        chart_options:
-          colorArray: ["rgba(112, 25, 125, 0.7)", "rgba(25, 125, 25, 0.7)"]
-          height_proportion: 1
-          indicadores: ["CAGRO_TICA06","CAGRO_TICA05"]
-          lat: 'latitude'
-          long: 'longitude'
-          clickable: true
-          value_field: "vl_indicador"
-          tooltip_function: 'obsTICensoAgroTooltip'
-          tooltip_list:
-            - text: 'Municipio'
-              align: 'left'
-              value: 'nm_municipio'
-            - text: 'Ano'
-              align: 'left'
-              value: 'nu_competencia'
-            - text: 'Total de cupados menores de 14 anos'
-              value: 'CAGRO_TICA01'
-              format: 'inteiro'
-            - text: 'Total de Meninas'
-              value: 'CAGRO_TICA06'
-              format: 'inteiro'
-            - text: 'Total de Meninos'
-              value: 'CAGRO_TICA05'
-              format: 'inteiro'
-          radius:
-            base: 5000
-            multiplier: 100
         headers:
           - text: 'Município'
             align: 'left'
@@ -493,12 +465,65 @@ secoes:
             value: 'ds_indicador'
           - text: 'Total'
             value: 'fmt_vl_indicador'
+        chart_options:
+          colorArray: ["rgba(112, 25, 125, 0.7)", "rgba(25, 125, 25, 0.7)"]
+          height_proportion: 1
+          indicadores: ["CAGRO_TICA06","CAGRO_TICA05"]
+          lat: 'latitude'
+          long: 'longitude'
+          clickable: true
+          value_field: "vl_indicador"
+          tooltip_data:
+            api:
+              template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=sum&pivot=cd_indicador&filtros=in-cd_indicador-'CAGRO_TICA01'-'CAGRO_TICA05'-'CAGRO_TICA06',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidadeTooltip"
+              options:
+                calcs:
+                  - id: "prop_meninos"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: "CAGRO_TICA05"
+                      - named_prop: "CAGRO_TICA01"
+                  - id: "prop_meninas"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: "CAGRO_TICA06"
+                      - named_prop: "CAGRO_TICA01"
+          tooltip_function: 'obsCustomTooltip'
+          tooltip_list:
+            - text: 'Municipio'
+              align: 'left'
+              value: 'nm_municipio'
+            - text: 'Ano'
+              align: 'left'
+              value: 'nu_competencia'
+            - text: 'Total de ocupados menores de 14 anos'
+              value: 'CAGRO_TICA01'
+              format: 'inteiro'
+            - text: 'Total de Meninas'
+              value: 'CAGRO_TICA06'
+              format: 'inteiro'
+            - text: 'Total de Meninos'
+              value: 'CAGRO_TICA05'
+              format: 'inteiro'
+            - text: '% Meninas'
+              value: 'calc_prop_meninas'
+              format: 'porcentagem'
+              multiplier: 100
+            - text: '% Meninos'
+              value: 'calc_prop_meninos'
+              format: 'porcentagem'
+              multiplier: 100
+          radius:
+            base: 5000
+            multiplier: 100
         source: 
           desc_field: "ds_fonte"
 # ========================================================
       - id: "agro_mapa_criancas_adolescentes_14_tipo"
         title: 
-          fixed: "Crianças e Adolescentes com menos de 14 anos ocupados em estabelecimentos da agricultura familiar e não familiar"
+          fixed: "Crianças/adolescentes com menos de 14 anos ocupados em estabelecimentos da agricultura familiar e não familiar"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -616,7 +641,7 @@ secoes:
 # ========================================================
       - id: "agro_setor"
         title: 
-          fixed: "Atividades econômicas com o maior número de crianças e adolescentes ocupados"
+          fixed: "Atividades econômicas com o maior número de crianças/adolescentes ocupados"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -697,7 +722,7 @@ secoes:
 # ========================================================
       - id: "mapa_agro_setor"
         title: 
-          fixed: "Atividades econômicas com o maior número de crianças e adolescentes ocupados"
+          fixed: "Atividades econômicas com o maior número de crianças/adolescentes ocupados"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -743,55 +768,55 @@ secoes:
                 color: "#0288D1"
                 label: "Aquicultura"
                 readonly: true
-              - id: "setor1"
+              - id: "setor2"
                 cls: "xs6"
                 default: true
                 color: "#AD1457"
                 label: "Horticultura e Floricultura"
                 readonly: true
-              - id: "setor1"
+              - id: "setor3"
                 cls: "xs6"
                 default: true
                 color: "#EF6C00"
                 label: "Pecurária"
                 readonly: true
-              - id: "setor1"
+              - id: "setor4"
                 cls: "xs6"
                 default: true
                 color: "#283593"
                 label: "Pesca"
                 readonly: true
-              - id: "setor1"
+              - id: "setor5"
                 cls: "xs6"
                 default: true
                 color: "#388E3C"
                 label: "Lavouras temporárias"
                 readonly: true
-              - id: "setor1"
+              - id: "setor6"
                 cls: "xs6"
                 default: true
                 color: "#7CB342"
                 label: "Lavouras permanentes"
                 readonly: true
-              - id: "setor1"
+              - id: "setor7"
                 cls: "xs6"
                 default: true
                 color: "#5D4037"
                 label: "Sementes e mudas certificadas"
                 readonly: true
-              - id: "setor1"
+              - id: "setor8"
                 cls: "xs6"
                 default: true
                 color: "#00695C"
                 label: "Produção em florestas nativas"
                 readonly: true
-              - id: "setor1"
+              - id: "setor9"
                 cls: "xs6"
                 default: true
                 color: "#0097A7"
                 label: "Produção de florestas plantadas"
                 readonly: true
-              - id: "setor1"
+              - id: "setor10"
                 cls: "xs6"
                 default: true
                 color: "#B0BEC5"
