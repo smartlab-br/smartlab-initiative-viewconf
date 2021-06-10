@@ -198,7 +198,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12'
+                cls: 'xs7'
                 api: 
                   template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
                 args:
@@ -214,7 +214,7 @@ secoes:
                       - named_prop: "agr_sum_vl_indicador"
                         format: "inteiro"
               - relevance: 'high'
-                cls: 'xs12'
+                cls: 'xs7'
                 api: 
                   template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,ge-nu_competencia-2016"
                 args:
@@ -229,13 +229,63 @@ secoes:
                     args:
                       - named_prop: "agr_sum_vl_indicador"
                         format: "inteiro"
+              # - relevance: 'low'
+              #   cls: 'xs7'
+              #   api: 
+              #     fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_br_total&agregacao=count&filtros=eq-cd_indicador-'06_01_09_04',and,eq-nu_competencia-nu_competencia_max,and,lt-vl_indicador-0.6"
+              #     options:
+              #       calcs:
+              #         - id: "perc_idhbaixo"
+
+              #           function: "calc_proportion_ds"
+              #           fn_args:
+              #             - named_prop: "agr_count"
+              #             - named_prop: "rank_br_total"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'calc_perc_idhbaixo'
+              #       default: "-"
+              #       zero: "Nenhum"
+              #       format: "porcentagem"
+              #       multiplier: 100
+              #     - prop: "description"
+              #       template: 'DOS MUNICÍPIOS COM {0} BAIXO OU MUITO BAIXO<br/>{1} de {2} MUNICÍPIOS'
+              #       args:
+              #         - named_prop: "ds_indicador_curto"
+              #         - named_prop: "agr_count"
+              #           format: "inteiro"
+              #         - named_prop: "rank_br_total"
+              #           format: "inteiro"
+              #     - prop: "comment"
+              #       template: "({0}, {1})"
+              #       args:
+              #         - named_prop: "ds_fonte"
+              #         - named_prop: "nu_competencia"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o município com mais vítimas do trabalho resgatadas na série histórica para a unidade geográfica em realce. Na tabela ao lado, apresentam-se os municípios com alta incidência para o período e seus indicadores sociais. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros.<br/><br/>"
+              fixed: "Em destaque, o município com mais vítimas do trabalho resgatadas na série histórica para a unidade geográfica em realce. Na tabela ao lado, apresentam-se alguns indicadores socioeconômicos dos municípios, inclusive das localidades de alta incidência no período considerado. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros. Utilize os filtros abaixo para refinar a pesquisa.<br/><br/>"
         component_type: "DATATABLE"
         api:
-          - fixed: "/indicadoresmunicipais?categorias='neutro'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'POP_DOU_01'"
+          - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador-calc_header_label,'(Quantidade)'-ds_indicador_prefixo,vl_indicador-agr_sum_vl_indicador,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados_5_anos'-'te_sit_trab_resgatados_todas_competencias'&ordenacao=-cd_indicador"
+            options:
+              calcs:
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "ds_indicador_prefixo"
+                - id: "det_value"
+                  function: "get_detail_value"
+                  fn_args:
+                    - named_prop: "class_indicador"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "rank_br"
+                    - named_prop: "rank_uf"
+                    - named_prop: "media_br"
+                    - named_prop: "media_uf"
+          - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,'(Quantidade)'-ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
             options:
               calcs:
                 - id: "header_label"
@@ -287,24 +337,7 @@ secoes:
                     - named_prop: "rank_uf"
                     - named_prop: "media_br"
                     - named_prop: "media_uf"
-          # - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador-calc_header_label,'(Razão)'-ds_indicador_prefixo,vl_indicador-agr_sum_vl_indicador,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados_incidencia_5_anos'"
-          #   options:
-          #     calcs:
-          #       - id: "fmt_value"
-          #         function: "get_formatted_value"
-          #         fn_args:
-          #           - named_prop: "agr_sum_vl_indicador"
-          #           - named_prop: "ds_indicador_prefixo"
-          #       - id: "det_value"
-          #         function: "get_detail_value"
-          #         fn_args:
-          #           - named_prop: "class_indicador"
-          #           - named_prop: "agr_sum_vl_indicador"
-          #           - named_prop: "rank_br"
-          #           - named_prop: "rank_uf"
-          #           - named_prop: "media_br"
-          #           - named_prop: "media_uf"
-          - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,'(Quantidade)'-ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'te_sit_trab_resgatados'"
+          - fixed: "/indicadoresmunicipais?categorias='neutro'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'POP_DOU_01'"
             options:
               calcs:
                 - id: "header_label"
@@ -314,25 +347,10 @@ secoes:
                         template: "{0} ({1})"
                         args:
                           - named_prop: "ds_indicador"
-                          - named_prop: "nu_competencia_max"
-                - id: "fmt_value"
-                  function: "get_formatted_value"
-                  fn_args:
-                    - named_prop: "ds_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "ds_indicador_prefixo"
-                - id: "det_value"
-                  function: "get_detail_value"
-                  fn_args:
-                    - named_prop: "class_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "rank_br"
-                    - named_prop: "rank_uf"
-                    - named_prop: "media_br"
-                    - named_prop: "media_uf"
-          - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador-calc_header_label,'(Quantidade)'-ds_indicador_prefixo,vl_indicador-agr_sum_vl_indicador,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados_5_anos'-'te_sit_trab_resgatados_todas_competencias'&ordenacao=cd_indicador"
-            options:
-              calcs:
+                          - function: "format_scope"
+                            fn_args:
+                              - named_prop: "nu_competencia_max"
+                              - fixed: "year"
                 - id: "fmt_value"
                   function: "get_formatted_value"
                   fn_args:
@@ -463,7 +481,7 @@ secoes:
             item_align: 'center'
         component_options:
           id: "datatable_rgt"
-          title: "Resgatados do Trabalho Escravo"
+          title: "Indicadores Socioeconômicos e Resgates do Trabalho Escravo"
           cls: "xs12 md6 lg4 pa-3"
           pivot: 
             col_fields: ["cd_mun_ibge","nm_municipio","sg_uf"]
@@ -473,8 +491,7 @@ secoes:
             det_value_field: "calc_det_value"
           search_position: "bottom"
         source:
-          desc: "Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil"
-          link: "https://sit.trabalho.gov.br/radar/"
+          desc: "IBGE – PIB dos Municípios e Estimativas da população, Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, PNUD - Atlas do Desenvolvimento Humano no Brasil, ME - RAIS e Novo CAGED"
 # ========================================================
       - id: "sparkline_resgatados_escravo"
         title: 
