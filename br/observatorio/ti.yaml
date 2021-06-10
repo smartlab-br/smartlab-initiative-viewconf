@@ -27,7 +27,7 @@ prevalencia:
     # SEGURO DESEMPREGO - Resgates residentes
     # - fixed: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'te_res'-codigo,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'te_res_idade',and,lt-cast(ds_agreg_primaria as smallint)-18"
     # MAPEAR
-    - fixed: "/ti/mapear?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'mapear'-codigo,cd_indicador&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=count&filtros=eq-1-1" 
+    - fixed: "/ti/mapear?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'mapear'-codigo,cd_indicador&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max" 
     # COTAS APRENDIZES
     - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'aprendizes'-codigo,ds_indicador_radical,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'APRZ_21_001',and,eq-nu_competencia-nu_competencia_max"
 
@@ -45,8 +45,8 @@ prevalencia:
       # value: 'agr_count_cd_municipio_ibge'
       format: "inteiro"
   chart_options:
-    colorArray: ["#303F9F", "#00BCD4", "#9C27B0", "#00C853", "#795548", "#FF9800","#F44336","#03A9F4","#000000"]
-    indicadores: ["censo_2010","censo_agro","prova_brasil","aprendizes","cat_menores","sinan","te_nat","te_res","mapear"]
+    colorArray: ["#303F9F", "#00BCD4", "#9C27B0", "#00C853", "#795548", "#FF9800","#F44336","#03A9F4","#000000","#000000","#000000"]
+    indicadores: ["censo_2010","censo_agro","prova_brasil","aprendizes","cat_menores","sinan","te_nat","te_res","mapear","pnad_infantil","pnad_infantil_perigoso"]
     id_field: 'codigo'
     lat: 'latitude'
     long: 'longitude'
@@ -203,7 +203,7 @@ prevalencia:
           - relevance: 'low'
             rowClass: 'pa-0'
             api: 
-              fixed: "/ti/mapear?categorias=1&agregacao=count"      
+              fixed: "/ti/mapear?categorias=nu_competencia&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max"      
             args:
               - prop: "value"
                 named_prop: 'agr_count'
@@ -212,7 +212,9 @@ prevalencia:
               - prop: "description"
                 fixed: "Pontos em risco de exploração sexual comercial em Rodovias e Estradas Federais<sup>6</sup>"
               - prop: "comment"
-                fixed: "Fonte: Mapear/PRF"
+                template: "Fonte: Mapear/PRF, {0}"
+                args:
+                  - named_prop: "nu_competencia"
         - id: "aprendizes"
           cls: "xs12 blue-title control-top-align"
           default: true
@@ -260,6 +262,37 @@ prevalencia:
                 template: "Fonte: IBGE - Censo Demográfico, {0}"
                 args:
                   - named_prop: "nu_competencia"
+        - id: "pnad_infantil"
+          title: "Em breve"
+          readonly: true
+          cls: "xs12 blue-title control-top-align"
+          default: false
+          color: "indigo darken-2"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            args:
+              - prop: "value"
+                fixed: '1.768.000'
+              - prop: "description"
+                fixed: "CRIANÇAS E ADOLESCENTES EM SITUAÇÃO DE TRABALHO INFANTIL"
+              - prop: "comment"
+                fixed: "Fonte:  IBGE – PNAD Contínua, 2019"
+        - id: "pnad_infantil_perigoso"
+          readonly: true
+          cls: "xs12 blue-title control-top-align"
+          default: false
+          color: "indigo darken-2"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            args:
+              - prop: "value"
+                fixed: '706.000'
+              - prop: "description"
+                fixed: "CRIANÇAS E ADOLESCENTES EM SITUAÇÃO DE TRABALHO INFANTIL PERIGOSO"
+              - prop: "comment"
+                fixed: "Fonte:  IBGE – PNAD Contínua, 2019"
       event: 'selection'
     - type: "text"
       class: "pr-0 pl-2 pb-0 pt-0"
@@ -276,7 +309,7 @@ prevalencia:
       cls: "ma-0 pa-0"
       content:
         cls: "pa-0"
-        fixed: "Entre 1992 e 2015, 5,7 milhões crianças e adolescentes deixaram de trabalhar no Brasil (redução de 68%). Entretanto, ainda há 2,7 milhões de crianças e adolescentes em situação de trabalho infantil no país, 59% meninos e 41% meninas. A maioria dessa população está nas regiões Nordeste (852 mil) e Sudeste (854 mil), seguidas das regiões Sul (432 mil), Norte (311 mil) e Centro-Oeste (223 mil). Todas as regiões apresentam maior incidência de trabalho infantil em atividades que não são agrícolas, exceto a região Norte. A faixa etária de 14 a 17 anos concentra 83,7% dos casos, mas o trabalho infantil entre crianças de cinco a nove anos aumentou 12,3% entre 2014 e 2015, de 70 mil para 79 mil. Conhecer as diferentes formas de manifestação do trabalho infantil no Brasil é relevante para que políticas de repressão e prevenção observem características de cada localidade, sobretudo com foco na realidade de municípios, cenário por excelência da implementação de políticas públicas."
+        fixed: "Entre os anos de 1992 e 2015, cerca de 5,7 milhões de crianças e adolescentes deixaram de trabalhar no Brasil (redução de 68%). Entretanto, segundo dados da PNAD Contínua do IBGE referentes ao ano de 2019, ainda há 1,7 milhões em situação de trabalho infantil no país, sendo 66% de meninos e 34% meninas. Quanto à faixa etária, 21,3% tinham de 5 a 13 anos; 25,0%, 14 e 15 anos e a maioria, 53,7%, tinha 16 e 17 anos de idade. A distribuição do trabalho infantil por cor ou raça revela que 2 de cada 3 crianças e adolescentes eram pretas ou pardas. A pesquisa verificou, de forma inédita e experimental, que havia 706 mil pessoas de 5 a 17 anos de idade trabalhando em ocupações consideradas perigosas (40,0% do total em situação de trabalho infantil). Conhecer as diferentes formas de manifestação do trabalho infantil no Brasil é relevante para que políticas de repressão e prevenção observem características de cada localidade, sobretudo com foco na realidade de municípios, cenário por excelência da implementação de políticas públicas."
   description_right:
     - type: "text"
       cls: "ma-0 pa-0"
@@ -398,12 +431,14 @@ prevalencia:
           minicards:
           - relevance: 'low'
             api: 
-              fixed: "/ti/mapear?categorias=1&agregacao=count"      
+              fixed: "/ti/mapear?categorias=nu_competencia&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max"      
             args:
               - prop: "description"
                 fixed: "Pontos em risco de exploração sexual comercial em Rodovias e Estradas Federais"
               - prop: "comment"
-                fixed: "Fonte: Mapear/PRF"
+                template: "Fonte: Mapear/PRF, {0}"
+                args:
+                  - named_prop: "nu_competencia"
         - id: "aprendizes"
           cls: "xs12 blue-title "
           default: true
@@ -556,7 +591,7 @@ prevalencia:
           color: "black pa-3"
           reactive: true
           api: 
-            fixed: "/ti/mapear?categorias=1&agregacao=count&filtros=eq-1-1"      
+            fixed: "/ti/mapear?categorias=nu_competencia&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max"      
           args:
             - prop: "value"
               named_prop: 'agr_count'
@@ -565,7 +600,9 @@ prevalencia:
             - prop: "description"
               fixed: "Pontos em risco de exploração sexual comercial em Rodovias e Estradas Federais"
             - prop: "comment"
-              fixed: "Fonte: Mapear/PRF"
+              template: "Fonte: Mapear/PRF, {0}"
+              args:
+                - named_prop: "nu_competencia"
         - relevance: "lead"
           cls: "xs12 text-xs-center "
           color: "green accent-4 pa-3"
