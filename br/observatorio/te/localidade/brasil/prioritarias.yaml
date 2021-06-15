@@ -200,7 +200,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs7'
                 api: 
-                  template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+                  fixed: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
                 args:
                   - prop: "value"
                     named_prop: 'nm_municipio_uf'
@@ -213,6 +213,40 @@ secoes:
                     args:
                       - named_prop: "agr_sum_vl_indicador"
                         format: "inteiro"
+              - relevance: 'low'
+                cls: 'xs6'
+                api: 
+                  fixed: "/te/indicadoresnacionais?categorias=vl_indicador&filtros=eq-cd_indicador-'te_perc_idheducacao_nat',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    default: "-"
+                    zero: "Nenhum"
+                    format: "porcentagem"
+                  - prop: "description"
+                    fixed: 'DOS MUNICÍPIOS DA UF COM RESGATADOS NATURAIS TEM IDH MUNICIPAL - EDUCAÇAO BAIXO OU MUITO BAIXO'
+              - relevance: 'low'
+                cls: 'xs6'
+                api: 
+                  fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=count&filtros=eq-cd_indicador-'06_01_09_04',and,eq-nu_competencia-nu_competencia_max,and,lt-vl_indicador-0.6"
+                  options:
+                    calcs:
+                      - id: "perc_idhbaixo"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: "agr_count"
+                          - named_prop: "rank_uf_total"
+                args:
+                  - prop: "value"
+                    named_prop: 'calc_perc_idhbaixo'
+                    default: "-"
+                    zero: "Nenhum"
+                    format: "porcentagem"
+                    multiplier: 100
+                  - prop: "description"
+                    template: 'DOS MUNICÍPIOS DA UF TEM {0} BAIXO OU MUITO BAIXO<br/>'
+                    args:
+                      - named_prop: "ds_indicador_curto"
               - relevance: 'high'
                 cls: 'xs7'
                 api: 
@@ -229,44 +263,61 @@ secoes:
                     args:
                       - named_prop: "agr_sum_vl_indicador"
                         format: "inteiro"
-              # - relevance: 'low'
-              #   cls: 'xs7'
-              #   api: 
-              #     fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_br_total&agregacao=count&filtros=eq-cd_indicador-'06_01_09_04',and,eq-nu_competencia-nu_competencia_max,and,lt-vl_indicador-0.6"
-              #     options:
-              #       calcs:
-              #         - id: "perc_idhbaixo"
+              - relevance: 'low'
+                cls: 'xs7'
+                api: 
+                  fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_br_total&agregacao=count&filtros=eq-cd_indicador-'06_01_09_04',and,eq-nu_competencia-nu_competencia_max,and,lt-vl_indicador-0.6"
+                  options:
+                    calcs:
+                      - id: "perc_idhbaixo"
 
-              #           function: "calc_proportion_ds"
-              #           fn_args:
-              #             - named_prop: "agr_count"
-              #             - named_prop: "rank_br_total"
-              #   args:
-              #     - prop: "value"
-              #       named_prop: 'calc_perc_idhbaixo'
-              #       default: "-"
-              #       zero: "Nenhum"
-              #       format: "porcentagem"
-              #       multiplier: 100
-              #     - prop: "description"
-              #       template: 'DOS MUNICÍPIOS COM {0} BAIXO OU MUITO BAIXO<br/>{1} de {2} MUNICÍPIOS'
-              #       args:
-              #         - named_prop: "ds_indicador_curto"
-              #         - named_prop: "agr_count"
-              #           format: "inteiro"
-              #         - named_prop: "rank_br_total"
-              #           format: "inteiro"
-              #     - prop: "comment"
-              #       template: "({0}, {1})"
-              #       args:
-              #         - named_prop: "ds_fonte"
-              #         - named_prop: "nu_competencia"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: "agr_count"
+                          - named_prop: "rank_br_total"
+                args:
+                  - prop: "value"
+                    named_prop: 'calc_perc_idhbaixo'
+                    default: "-"
+                    zero: "Nenhum"
+                    format: "porcentagem"
+                    multiplier: 100
+                  - prop: "description"
+                    template: 'DOS MUNICÍPIOS COM {0} BAIXO OU MUITO BAIXO<br/>{1} de {2} MUNICÍPIOS'
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+                      - named_prop: "rank_br_total"
+                        format: "inteiro"
+                  # - prop: "comment"
+                  #   template: "({0}, {1})"
+                  #   args:
+                  #     - named_prop: "ds_fonte"
+                  #     - named_prop: "nu_competencia"
           - type: "text"
             title: ""
             content:
               fixed: "Em destaque, o município com mais vítimas do trabalho resgatadas na série histórica para a unidade geográfica em realce. Na tabela ao lado, apresentam-se alguns indicadores socioeconômicos dos municípios, inclusive das localidades de alta incidência no período considerado. Locais de resgate possuem dinamismo produtivo e econômico recente, porém intenso, em que há oferta intermitente de postos de trabalho em ocupações que pagam os menores salários e exigem pouca ou nenhuma qualificação profissional ou educação formal. Isso em geral está aliado a fatores como pobreza, baixa escolaridade, desigualdade e violência, entre outros. Utilize os filtros abaixo para refinar a pesquisa.<br/><br/>"
         component_type: "DATATABLE"
         api:
+          - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia_min,nu_competencia_max,'(Quantidade)'-ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'te_nat'"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "Trabalhadores Resgatados Nascidos no Município ({0}-{1})"
+                        args:
+                          - named_prop: "nu_competencia_min"
+                          - named_prop: "nu_competencia_max"
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "ds_indicador_prefixo"
           - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador-calc_header_label,'(Quantidade)'-ds_indicador_prefixo,vl_indicador-agr_sum_vl_indicador,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados_5_anos'-'te_sit_trab_resgatados_todas_competencias'&ordenacao=-cd_indicador"
             options:
               calcs:
