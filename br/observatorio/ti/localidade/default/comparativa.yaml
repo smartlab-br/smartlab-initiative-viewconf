@@ -26,7 +26,9 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      fixed: "/ti/provabrasil?categorias=nu_ano_prova_brasil,nm_municipio&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_ano_prova_brasil-2017,and,eq-cd_tr_fora-1&ordenacao=-agr_sum_vl_indicador&limit=1"
+      template: "/ti/provabrasil?categorias=nu_ano_prova_brasil,nm_municipio&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_ano_prova_brasil-2017,and,eq-cd_tr_fora-1,and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
+      args:
+        - named_prop: "cd_uf"
     args:
       - prop: "value"
         named_prop: 'nm_municipio'
@@ -42,7 +44,9 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      fixed: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia,nm_municipio,vl_indicador&ordenacao=-vl_indicador&limit=1&filtros=eq-cd_indicador-'CAGRO_TICA01',and,eq-nu_competencia-nu_competencia_max"
+      template: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia,nm_municipio,vl_indicador&ordenacao=-vl_indicador&limit=1&filtros=eq-cd_indicador-'CAGRO_TICA01',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+      args:
+        - named_prop: "cd_uf"
     args:
       - prop: "value"
         named_prop: 'nm_municipio'
@@ -59,7 +63,9 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api: 
-      fixed: "/ti/mapear?categorias=nm_municipio,nu_competencia&agregacao=COUNT&limit=1&ordenacao=-agr_count&filtros=eq-nu_competencia-nu_competencia_max"
+      template: "/ti/mapear?categorias=nm_municipio,nu_competencia&agregacao=COUNT&limit=1&ordenacao=-agr_count&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+      args:
+        - named_prop: "cd_uf"
     args:
       - prop: "value"
         named_prop: 'nm_municipio'
@@ -74,7 +80,7 @@ principais:
 # ========================================================
 secoes:
   - id: 'prioritarias'
-    name: 'Áreas Prioritárias no Brasil'
+    name: 'Áreas Prioritárias na Unidade Federativa'
     cards:
 # ========================================================
       - id: "datatable_infantil"
@@ -101,14 +107,16 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api: 
-                  fixed: "/ti/provabrasil?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_ano_prova_brasil-2017,and,eq-cd_tr_fora-1&ordenacao=-agr_sum_vl_indicador&limit=1"
+                  template: "/ti/provabrasil?categorias=nm_municipio&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_ano_prova_brasil-2017,and,eq-cd_tr_fora-1,and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
-                    named_prop: 'nm_municipio_uf'
+                    named_prop: 'nm_municipio'
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Município com o maior número de estudantes que declararam trabalhar fora de casa'
+                    fixed: 'Município da UF com o maior número de estudantes que declararam trabalhar fora de casa'
                   - prop: "comment"
                     template: 'Total: {0}'
                     args:
@@ -117,14 +125,16 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api: 
-                  fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador&ordenacao=-vl_indicador&limit=1&filtros=eq-cd_indicador-'CAGRO_TICA01',and,eq-nu_competencia-nu_competencia_max"
+                  template: "/indicadoresmunicipais?categorias=nm_municipio,vl_indicador&ordenacao=-vl_indicador&limit=1&filtros=eq-cd_indicador-'CAGRO_TICA01',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
-                    named_prop: 'nm_municipio_uf'
+                    named_prop: 'nm_municipio'
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Município com o maior número de crianças ou adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários'
+                    fixed: 'Município da UF com o maior número de crianças ou adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários'
                   - prop: "comment"
                     template: 'Total: {0}'
                     args:
@@ -136,36 +146,9 @@ secoes:
               fixed: "Com o fim de auxiliar a estruturação e o monitoramento das políticas públicas e ações para promoção dos direitos de crianças e adolescentes e para a prevenção e erradicação do trabalho infantil, os indicadores apresentados ao lado permitem mostrar a multidimensionalidade do fenômeno do trabalho infantil. Do ponto de vista da prevenção, deve-se dar destaque à aprendizagem profissional como um elemento estratégico do processo de transição escola-trabalho, a favorecer grupos etários de adolescentes e jovens com maiores dificuldades de inclusão sócio-produtiva. Quanto aos demais indicadores, os números, sobretudo quando representativos em mais de uma coluna, revelam sinais de que tais localidades demandam ações prioritárias quanto a ações/programas de combate ao trabalho infantil, inclusive em suas piores formas."
         component_type: "DATATABLE"
         api:
-          - fixed: "/indicadoresmunicipais?categorias='neutro'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'POP_DOU_01'"
-            options:
-              calcs:
-                - id: "header_label"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed:
-                        template: "{0} ({1})"
-                        args:
-                          - named_prop: "ds_indicador"
-                          - function: "format_scope"
-                            fn_args:
-                              - named_prop: "nu_competencia_max"
-                              - fixed: "year"
-                - id: "fmt_value"
-                  function: "get_formatted_value"
-                  fn_args:
-                    - named_prop: "ds_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "ds_indicador_prefixo"
-                - id: "det_value"
-                  function: "get_detail_value"
-                  fn_args:
-                    - named_prop: "class_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "rank_br"
-                    - named_prop: "rank_uf"
-                    - named_prop: "media_br"
-                    - named_prop: "media_uf"
-          - fixed: "/indicadoresmunicipais?categorias='bom'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,'(Quantidade)'-ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'APRZ_21_001'-'APRZ_21_009'&ordenacao=ds_indicador_curto&filtros=nn-cd_municipio_ibge_dv"
+          - template: "/indicadoresmunicipais?categorias='bom'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,'(Quantidade)'-ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'APRZ_21_001'-'APRZ_21_009',and,eq-cd_uf-{0}&ordenacao=ds_indicador_curto"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
@@ -193,7 +176,9 @@ secoes:
                     - named_prop: "rank_uf"
                     - named_prop: "media_br"
                     - named_prop: "media_uf"
-          - fixed: "/sst/cats?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,'Acidentes de Trabalho envolvendo Crianças ou Adolescentes'-ds_indicador&agregacao=COUNT&ordenacao=-agr_count&filtros=le-idade_cat-17,and,ne-idade_cat-0,and,nn-cd_municipio_ibge_dv"
+          - template: "/sst/cats?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,'Acidentes de Trabalho envolvendo Crianças ou Adolescentes'-ds_indicador&agregacao=COUNT&ordenacao=-agr_count&filtros=eq-cd_uf-{0},and,le-idade_cat-17,and,ne-idade_cat-0"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
@@ -216,8 +201,9 @@ secoes:
               clone:
                 - id: "agr_count"
                   new_column: "agr_sum_vl_indicador"
-          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_13_00',and,ge-nu_competencia-'{0}',and,nn-cd_municipio_ibge_dv"
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_13_00',and,eq-cd_uf-{0},and,ge-nu_competencia-'{1}'"
             args:
+              - named_prop: "cd_uf"
               - base_object: "sst_sinan"
                 named_prop: "calc_nu_competencia_ultimos_5"
             options:
@@ -239,7 +225,9 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil,and,nn-cd_municipio_ibge_dv'&ordenacao=ds_indicador_curto"
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,eq-cd_uf-{0}&ordenacao=ds_indicador_curto"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
@@ -257,7 +245,9 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/ti/mapear?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,'Pontos de Risco de Exploração Sexual Comercial de Crianças e Adolescente'-ds_indicador,nu_competencia&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-cd_municipio_ibge_dv"
+          - template: "/ti/mapear?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,'Pontos de Risco de Exploração Sexual Comercial de Crianças e Adolescente'-ds_indicador,nu_competencia&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
@@ -277,7 +267,9 @@ secoes:
               clone:
                 - id: "agr_count"
                   new_column: "agr_sum_vl_indicador"
-          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf,vl_indicador-agr_sum_vl_indicador&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'CAGRO_TICA01',and,nn-cd_municipio_ibge_dv"
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'CAGRO_TICA01',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
@@ -303,7 +295,9 @@ secoes:
                     - named_prop: "rank_uf"
                     - named_prop: "media_br"
                     - named_prop: "media_uf"
-          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf,vl_indicador-agr_sum_vl_indicador&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'TI_SIT_01',and,nn-cd_municipio_ibge_dv"
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf,vl_indicador-agr_sum_vl_indicador&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'TI_SIT_01',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
@@ -329,7 +323,9 @@ secoes:
                     - named_prop: "rank_uf"
                     - named_prop: "media_br"
                     - named_prop: "media_uf"
-          - fixed: "/ti/provabrasil?categorias='ruim'-class_indicador,nu_ano_prova_brasil-nu_competencia,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,ds_indicador,'(Quantidade)'-ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM,AVG&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,eq-nu_ano_prova_brasil-2017,and,eq-cd_tr_fora-1,and,nn-cd_municipio_ibge_dv"
+          - template: "/ti/provabrasil?categorias='ruim'-class_indicador,nu_ano_prova_brasil-nu_competencia,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,ds_indicador,'(Quantidade)'-ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM,AVG&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,eq-nu_ano_prova_brasil-2017,and,eq-cd_tr_fora-1,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
@@ -346,7 +342,9 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'JD_CADUN_02'&ordenacao=-cd_indicador"
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'JD_CADUN_02',and,eq-cd_uf-{0}&ordenacao=-cd_indicador"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
@@ -419,7 +417,7 @@ secoes:
           #     - relevance: 'high'
           #       cls: 'xs12 md6'
           #       api: 
-          #         template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
+          #         template: "/te/indicadoresmunicipais?categorias=nm_municipio_uf&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'te_sit_trab_resgatados',and,eq-cd_uf-{0}"
           #         args:
           #           - named_prop: "cd_uf"
           #       args:
@@ -440,7 +438,40 @@ secoes:
               fixed: "Além de informações obtidas do Censo SUAS, os diferentes módulos da Pesquisa de Informações Básicas Municipais (MUNIC) do IBGE abordam aspectos relevantes de ações de promoção da proteção integral de crianças e adolescentes nos municípios brasileiros. Consideradas essas fontes, o conjunto de indicadores ao lado permite ponderar se os municípios se encontram em estado de alerta quanto à estrutura de políticas públicas. Trata-se de dez indicadores selecionados que podem trazer sinais não apenas da necessidade de aprimoramento das políticas e ações em destaque, mas também da possível vulnerabilidade das crianças e adolescentes nessas localidades. A ausência dessas políticas/programas/ações é, indubitavelmente, um alerta de risco."
         component_type: "DATATABLE"
         api:
-          - fixed: "/estadicmunic?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador_spai-cd_indicador,spai_ds_texto-ds_indicador,spai_vl_indicador_txt-agr_sum_vl_indicador,nu_ano_indicador-nu_competencia,'(Sim/Não)'-ds_indicador_prefixo&filtros=eq-nu_ano_indicador-nu_ano_indicador_max,and,in-cd_indicador_spai-'91_06_02_01'-'91_06_02_02'&ordenacao=cd_indicador_spai"
+          - template: "/indicadoresmunicipais?categorias='neutro'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'POP_DOU_01',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "{0} ({1})"
+                        args:
+                          - named_prop: "ds_indicador"
+                          - function: "format_scope"
+                            fn_args:
+                              - named_prop: "nu_competencia_max"
+                              - fixed: "year"
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "ds_indicador_prefixo"
+                - id: "det_value"
+                  function: "get_detail_value"
+                  fn_args:
+                    - named_prop: "class_indicador"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "rank_br"
+                    - named_prop: "rank_uf"
+                    - named_prop: "media_br"
+                    - named_prop: "media_uf"
+          - template: "/estadicmunic?categorias=cd_mun_ibge,nm_municipio,sg_uf,cd_indicador_spai-cd_indicador,spai_ds_texto-ds_indicador,spai_vl_indicador_txt-agr_sum_vl_indicador,nu_ano_indicador-nu_competencia,'(Sim/Não)'-ds_indicador_prefixo&filtros=eq-nu_ano_indicador-nu_ano_indicador_max,and,in-cd_indicador_spai-'91_06_02_01'-'91_06_02_02',and,eq-cd_uf-{0}&ordenacao=cd_indicador_spai"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
@@ -459,7 +490,9 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'06_03_04_26',and,nn-cd_municipio_ibge_dv"
+          - template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'06_03_04_26',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
@@ -476,7 +509,9 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/orgs/assistenciasocial?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,categoria-cd_indicador,categoria-ds_indicador,'(Quantidade)'-ds_indicador_prefixo&agregacao=COUNT"
+          - template: "/orgs/assistenciasocial?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,categoria-cd_indicador,categoria-ds_indicador,'(Quantidade)'-ds_indicador_prefixo&agregacao=COUNT&filtros=eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
             options:
               calcs:
                 - id: "header_label"
