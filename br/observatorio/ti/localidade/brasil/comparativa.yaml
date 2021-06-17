@@ -51,7 +51,7 @@ principais:
       - prop: "description"
         fixed: 'Município da UF com o maior número de crianças ou adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários'
       - prop: "comment"
-        template: '({0}, {1})'
+        template: '({0})'
         args:
           - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
@@ -143,7 +143,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - function: "format_month"
@@ -197,7 +197,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1}-{2})"
+                        template: "{0}<br/>({1}-{2})"
                         args:
                           - named_prop: "ds_indicador"
                           - base_object: "sst_sinan"
@@ -217,7 +217,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1}-{2})"
+                        template: "{0}<br/>({1}-{2})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia_min"
@@ -235,7 +235,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia"
@@ -255,7 +255,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia_max"
@@ -307,7 +307,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia"
@@ -324,7 +324,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia_max"
@@ -388,11 +388,9 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api: 
                   fixed: "/ti/indicadoresestaduais?categorias=vl_indicador_br&filtros=eq-cd_indicador-'censo_suas_pct_mun_sem_creas',and,eq-nu_competencia-nu_competencia_max&limit=1"
-                  args:
-                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador_br'
@@ -400,7 +398,19 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: '% SEM CREAS NO BRASIL'
+                    fixed: 'DOS MUNICÍPIOS SEM CREAS NO BRASIL'
+                  - prop: "comment"
+                    api:
+                      - fixed: "/ti/indicadoresestaduais?categorias=cd_indicador,vl_indicador_br&filtros=eq-cd_indicador-'censo_suas_qtd_mun_sem_creas',and,eq-nu_competencia-nu_competencia_max&limit=1"
+                      - fixed: "/municipios?categorias='total_br'-cd_indicador&agregacao=COUNT"
+                    template: "{0} de {1} municípios"
+                    args:
+                      - id: "censo_suas_qtd_mun_sem_creas"
+                        named_prop: "vl_indicador_br"
+                        format: "inteiro"
+                      - id: "total_br"
+                        named_prop: "agr_count"
+                        format: "inteiro"
           - type: "text"
             title: ""
             content:
@@ -414,7 +424,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - function: "format_scope"
@@ -443,7 +453,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - function: "capitalize_first_letter"
                             fn_args:
@@ -462,7 +472,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - function: "capitalize_first_letter"
                             fn_args:
@@ -481,7 +491,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia_max"
@@ -498,7 +508,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} (2017)"
+                        template: "{0}<br/>(2017)"
                         args:
                           - named_prop: "ds_indicador"
                 - id: "fmt_value"
@@ -556,7 +566,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api: 
                   template: "/ti/indicadoresestaduais?categorias=nm_uf&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'munic_media_pct_sem_politica_acao'&limit=1&ordenacao=-vl_indicador"
                   args:
@@ -574,6 +584,18 @@ secoes:
               fixed: "O conjunto de indicadores ao lado revela o panorama de algumas das deficiências em ações de enfrentamento do trabalho infantil e proteção integral de crianças e de adolescentes, com foco no percentual de municípios em cada unidade federativa que não possuem a ação em destaque, relacionada à estrutura de implementação dessas políticas públicas. Trata-se de indicadores selecionados que podem trazer sinais não apenas da necessidade de aprimoramento das políticas e ações em destaque, mas também da possível vulnerabilidade das crianças e adolescentes em diversos municípios dessas localidades. A ausência dessas políticas/programas/ações é, indubitavelmente, um alerta de risco."
         component_type: "DATATABLE"
         api:
+          - fixed: "/municipios?categorias=cd_uf,nm_uf,sg_uf,'Total de municípios'-calc_header_label,'(Quantidade)'-ds_indicador_prefixo&agregacao=COUNT"
+            options:
+              calcs:
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador"
+                    - named_prop: "agr_count"
+                    - named_prop: "ds_indicador_prefixo"
+              clone:
+                - id: "agr_count"
+                  new_column: "calc_perc_sem"
           - fixed: "/estadicmunic?categorias=cd_uf,nm_uf,sg_uf,cd_indicador_spai-cd_indicador,spai_ds_texto-ds_indicador,total_uf,presenca_total_uf,pct_presenca_uf,nu_ano_indicador-nu_competencia,'(Percentual)'-ds_indicador_prefixo&filtros=eq-nu_ano_indicador-nu_ano_indicador_max,and,in-cd_indicador_spai-'MUNIC_MDHU602'-'MUNIC_MDHU604'-'MUNIC_MDHU609'-'MUNIC_MDHU607'&agregacao=DISTINCT&ordenacao=cd_indicador_spai"
             options:
               calcs:
@@ -591,7 +613,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "% dos municípios da UF SEM {0} ({1})"
+                        template: "% dos municípios da UF SEM {0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia"
@@ -626,7 +648,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "% dos municípios da UF SEM {0} ({1})"
+                        template: "% dos municípios da UF SEM {0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           # - function: "capitalize_first_letter"
@@ -647,41 +669,46 @@ secoes:
                         args:
                           - named_prop: "calc_mun_sem"
                             format: "inteiro"
-          # - fixed: "/ti/indicadoresestaduais?categorias=cd_uf,nm_uf,sg_uf,rank_total_uf-total_uf,'Média % dos indicadores'-ds_indicador,nu_competencia,'(Percentual)'-ds_indicador_prefixo,vl_indicador-calc_perc_sem&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'munic_media_pct_sem_politica_acao'"
-          #   options:
-          #     calcs:
-          #       - id: "header_label"
-          #         function: "applyInterpolReplaceDatasetParam"
-          #         fn_args:
-          #           - fixed:
-          #               template: "{0} ({1})"
-          #               args:
-          #                 - named_prop: "ds_indicador"
-          #                 # - function: "capitalize_first_letter"
-          #                 #   fn_args:
-          #                 #     - named_prop: "ds_indicador"
-          #                 - named_prop: "nu_competencia"
-          #       - id: "fmt_value"
-          #         function: "get_formatted_value"
-          #         fn_args:
-          #           - named_prop: "ds_indicador"
-          #           - named_prop: "calc_perc_sem"
-          #           - named_prop: "ds_indicador_prefixo"
+          - fixed: "/ti/indicadoresestaduais?categorias=cd_uf,nm_uf,sg_uf,'Média % dos indicadores'-calc_header_label,'(Percentual)'-ds_indicador_prefixo,vl_indicador-calc_perc_sem&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'munic_media_pct_sem_politica_acao'"
+            options:
+              calcs:
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador"
+                    - named_prop: "calc_perc_sem"
+                    - named_prop: "ds_indicador_prefixo"
+          - fixed: "/ti/indicadoresestaduais?categorias=cd_uf,nm_uf,sg_uf,ds_indicador,nu_competencia,'(Percentual)'-ds_indicador_prefixo,vl_indicador-calc_perc_sem&filtros=eq-nu_competencia-nu_competencia_max,and,in-cd_indicador-'censo_suas_pct_mun_sem_creas'-'censo_suas_pct_mun_sem_cras'"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "{0}<br/>({1})"
+                        args:
+                          - named_prop: "ds_indicador"
+                          # - function: "capitalize_first_letter"
+                          #   fn_args:
+                          #     - named_prop: "ds_indicador"
+                          - named_prop: "nu_competencia"
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador"
+                    - named_prop: "calc_perc_sem"
+                    - named_prop: "ds_indicador_prefixo"
         headers:
           - text: 'UF'
             align: 'center'
             value: 'nm_uf'
-            item_align: 'center'
-          - text: 'Total de Municípios'
-            align: 'center'
-            value: 'total_uf'
             item_align: 'center'
         component_options:
           id: "datatable_ti_uf"
           title: "Mapeamento de algumas deficiências em ações de enfrentamento do trabalho infantil e proteção integral de crianças e de adolescentes"
           cls: "xs12 md6 lg4 pa-3"
           pivot: 
-            col_fields: ["cd_uf","nm_uf","sg_uf","total_uf"]
+            col_fields: ["cd_uf","nm_uf","sg_uf"]
             layer_field: "calc_header_label"
             fmt_value_field: "calc_fmt_value"
             value_field: "calc_perc_sem"
