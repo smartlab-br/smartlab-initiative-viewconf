@@ -17,7 +17,7 @@ principais:
         template: "({0}, {1})"
         args:
           - fixed: "SIVEP-Gripe/SVS/MS"
-          - fixed: "2020"
+          - fixed: "2020-2021"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -35,7 +35,7 @@ principais:
         template: "({0}, {1})"
         args:
           - fixed: "SIVEP-Gripe/SVS/MS"
-          - fixed: "2020"
+          - fixed: "2020-2021"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -53,7 +53,7 @@ principais:
         template: "({0}, {1})"
         args:
           - fixed: "SIVEP-Gripe/SVS/MS"
-          - fixed: "2020"
+          - fixed: "2020-2021"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -71,7 +71,7 @@ principais:
         template: "({0}, {1})"
         args:
           - fixed: "SIVEP-Gripe/SVS/MS"
-          - fixed: "2020"
+          - fixed: "2020-2021"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -89,7 +89,7 @@ principais:
         template: "({0}, {1})"
         args:
           - fixed: "SIVEP-Gripe/SVS/MS"
-          - fixed: "2020"
+          - fixed: "2020-2021"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -107,7 +107,7 @@ principais:
         template: "({0}, {1})"
         args:
           - fixed: "SIVEP-Gripe/SVS/MS"
-          - fixed: "2020"
+          - fixed: "2020-2021"
 # ========================================================
 secoes:
   - id: 'srag_serie'
@@ -138,7 +138,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  fixed: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-ano_notificacao-2019"
+                  fixed: "/thematic/srag?categorias=ano_notificacao&agregacao=COUNT&filtros=eq-ano_notificacao-2019"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -148,11 +148,11 @@ secoes:
                   - prop: "description"
                     fixed: 'Casos de SRAG'
                   - prop: "comment"
-                    fixed: "2019"
+                    named_prop: "ano_notificacao"
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  template: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-ano_notificacao-2020"
+                  template: "/thematic/srag?categorias=ano_notificacao&agregacao=COUNT&filtros=eq-ano_notificacao-2020"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -162,9 +162,25 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Casos de SRAG até o momento'
+                    fixed: 'Casos de SRAG'
                   - prop: "comment"
-                    fixed: "2020"
+                    named_prop: "ano_notificacao"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=ano_notificacao&agregacao=COUNT&filtros=eq-ano_notificacao-2021"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Casos de SRAG'
+                  - prop: "comment"
+                    named_prop: "ano_notificacao"
           - type: "text"
             title: ""
             content:
@@ -212,7 +228,12 @@ secoes:
               show_x_axis: true
               show_y_axis: true
               legend_field: "ano_prim_sintomas"
-              colorArray: ["#377EB8", "red"]
+              colorScale:
+                type: "fixed"
+                color_array: 
+                  2019: "#377EB8"
+                  2020: "red"
+                  2021: "green"
         source:
           desc: "SIVEP-Gripe/SVS/MS"
           link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
@@ -241,7 +262,21 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  template: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                  fixed: "/thematic/srag?categorias=ano_notificacao&agregacao=COUNT&filtros=eq-ano_notificacao-2019,and,eq-evolucao-'Óbito'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Óbitos por SRAG'
+                  - prop: "comment"
+                    named_prop: "ano_notificacao"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  template: "/thematic/srag?categorias=ano_notificacao&agregacao=COUNT&filtros=eq-ano_notificacao-2020,and,eq-evolucao-'Óbito'"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -253,11 +288,11 @@ secoes:
                   - prop: "description"
                     fixed: 'Óbitos por SRAG'
                   - prop: "comment"
-                    fixed: "2019"
+                    named_prop: "ano_notificacao"
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  template: "/thematic/srag?categorias=1&agregacao=COUNT&filtros=eq-ano_notificacao-2020,and,eq-evolucao-'Óbito'"
+                  template: "/thematic/srag?categorias=ano_notificacao&agregacao=COUNT&filtros=eq-ano_notificacao-2021,and,eq-evolucao-'Óbito'"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -267,9 +302,9 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: 'Óbitos por SRAG até o momento'
+                    fixed: 'Óbitos por SRAG'
                   - prop: "comment"
-                    fixed: "2020"
+                    named_prop: "ano_notificacao"
           - type: "text"
             title: ""
             content:
@@ -317,7 +352,12 @@ secoes:
               show_x_axis: true
               show_y_axis: true
               legend_field: "ano_notificacao"
-              colorArray: ["#377EB8", "red"]
+              colorScale:
+                type: "fixed"
+                color_array: 
+                  2019: "#377EB8"
+                  2020: "red"
+                  2021: "green"
         source:
           desc: "SIVEP-Gripe/SVS/MS"
           link: "https://opendatasus.saude.gov.br/dataset/bd-srag-2020"
@@ -425,7 +465,7 @@ secoes:
                 value: 'fmt_agr_count'
             options:
               id: "srag_classificacao"
-              x: "semana_prim_sintomas"
+              x: "semana_prim_sintomas_inicio"
               y: "agr_count"
               text: "fmt_agr_count"
               orientation: "vertical"
@@ -540,7 +580,7 @@ secoes:
                 value: 'fmt_agr_count'
             options:
               id: "srag_classificacao"
-              x: "semana_notificacao"
+              x: "semana_notificacao_inicio"
               y: "agr_count"
               text: "fmt_agr_count"
               orientation: "vertical"
