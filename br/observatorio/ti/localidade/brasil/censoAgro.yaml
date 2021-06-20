@@ -1,62 +1,126 @@
 principais:
   - relevance: 'lead'
-    cls: 'xs12 md6'
+    cls: 'xs12'
     preloaded:
-      prop: "censo_agro_2017"
+      prop: "centralindicadores"
       function: "slice"
-      id: "agro_menores"
+      id: "CAGRO_TICA01"
       year: 'max'
     args:
       - prop: "value"
-        named_prop: 'tot_ocup_men14'
+        named_prop: 'vl_indicador'
         format: 'inteiro'
         collapse:
           format: 'real'
           precision: 1
         default: "Sem Registros"
       - prop: "description"
-        fixed: "Crianças e adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários"
+        fixed: "Crianças/adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários"
       - prop: 'comment'
-        template: "(IBGE - Censo Agropecuário, Florestal e Aquícola, {0})"
+        template: "({0})"
         args:
-          - named_prop: "nu_competencia"
+          - named_prop: "ds_fonte"
   - relevance: 'lead'
     cls: 'xs12 md6'
     preloaded:
-      prop: "censo_agro_2017"
+      prop: "centralindicadores"
       function: "slice"
-      id: "agro_menores"
+      id: "CAGRO_TICA05"
       year: 'max'
     args:
       - prop: "value"
-        named_prop: 'men_14_parente'
+        named_prop: 'vl_indicador'
         format: 'inteiro'
         collapse:
           format: 'real'
           precision: 1
+        default: "Sem Registros"
       - prop: "description"
-        fixed: "Crianças e adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários com laços de parentesco com o produtor"
+        fixed: "Meninos com menos de 14 anos ocupados em estabelecimentos agropecuários"
       - prop: 'comment'
-        template: "(IBGE - Censo Agropecuário, Florestal e Aquícola, {0})"
+        template: "({0})"
         args:
-          - named_prop: "nu_competencia"
+          - named_prop: "ds_fonte"
   - relevance: 'lead'
     cls: 'xs12 md6'
     preloaded:
-      prop: "censo_agro_2017"
+      prop: "centralindicadores"
       function: "slice"
-      id: "agro_menores"
+      id: "CAGRO_TICA06"
       year: 'max'
     args:
       - prop: "value"
-        named_prop: 'part_com_parentesco'
-        format: 'porcentagem'
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+          precision: 1
+        default: "Sem Registros"
       - prop: "description"
-        fixed: "Porcentagem das Crianças e adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários com laços de parentesco com o produtor"
+        fixed: "Meninas com menos de 14 anos ocupados em estabelecimentos agropecuários"
       - prop: 'comment'
-        template: "(IBGE - Censo Agropecuário, Florestal e Aquícola, {0})"
+        template: "({0})"
         args:
-          - named_prop: "nu_competencia"
+          - named_prop: "ds_fonte"
+  - relevance: 'lead'
+    cls: 'xs12 md6'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "CAGRO_TICA10"
+      year: 'max'
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+          precision: 1
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: "Crianças/adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários - Agricultura familiar"
+      - prop: 'comment'
+        template: "({0})"
+        args:
+          - named_prop: "ds_fonte"
+  - relevance: 'lead'
+    cls: 'xs12 md6'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "CAGRO_TICA09"
+      year: 'max'
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+          precision: 1
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: "Crianças/adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários - Agricultura NÃO familiar"
+      - prop: 'comment'
+        template: "({0})"
+        args:
+          - named_prop: "ds_fonte"
+  - relevance: 'lead'
+    cls: 'xs12'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "CAGRO_TICA13"
+      year: 'max'
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador_txt'
+        default: "-"
+      - prop: "description"
+        fixed: "Atividade econômica com maior número de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
+      - prop: 'comment'
+        template: "({0})"
+        args:
+          - named_prop: "ds_fonte"
 # ========================================================
 secoes:
   - id: "censo_agro"
@@ -65,17 +129,23 @@ secoes:
 # ========================================================
       - id: "agro_mapa_criancas_adolescentes_14"
         title: 
-          fixed: "Crianças e Adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários"
+          fixed: "Crianças/adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários"
         title_comment:
-          template: "{0}, em 2017"
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "CAGRO_TICA01"
+            year: 'max'
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: ""
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
         # msg_nodata:
         #   desc: "Em função do elevado Coeficiente de Variação associado aos dados amostrais do Censo 2010, não foi possível disponibilizar as informações referentes ao trabalho de crianças e adolescentes na faixa etária de 10 a 17 anos de idade nesse município. Para maiores informações ver as notas metodológicas na p. 4 do relatório municipal de trabalho decente."
         description:
@@ -84,13 +154,13 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 preloaded:
-                  prop: "censo_agro_2017"
+                  prop: "centralindicadores"
                   function: "slice"
-                  id: "agro_menores"
-                  year: "max"
+                  id: "CAGRO_TICA01"
+                  year: 'max'
                 args:
                   - prop: "value"
-                    named_prop: 'tot_ocup_men14'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -99,38 +169,41 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 preloaded:
-                  prop: "censo_agro_2017"
+                  prop: "centralindicadores"
                   function: "slice"
-                  id: "agro_menores"
-                  year: "max"
+                  id: "CAGRO_TICA02"
+                  year: 'max'
                 args:
                   - prop: "value"
-                    named_prop: 'perc_tot_14'
+                    named_prop: 'vl_indicador'
                     format: 'porcentagem'
                   - prop: "description"
                     fixed: 'DO TOTAL DE OCUPADOS NO SETOR'
                   - prop: "comment"
                     template: "{0} ocupados no setor, todas as idades"
+                    api:
+                      fixed: "/indicadoresnacionais?categorias=vl_indicador&filtros=eq-cd_indicador-'CAGRO_TICA03'"
                     args:
-                      - named_prop: 'tot_ocupados'
+                      - named_prop: 'vl_indicador'
                         format: 'inteiro'
                         collapse:
                           format: 'real'
+                        default: 0
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de crianças e adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. Estabelecimento agropecuário é toda unidade de produção/exploração dedicada, total ou parcialmente, a atividades agropecuárias, florestais e aquícolas, independentemente de seu tamanho, de sua forma jurídica (se pertence a um produtor, a vários produtores, a uma empresa, a um conjunto de empresas etc.), ou de sua localização (área urbana ou rural), tendo como objetivo a produção, seja para venda (comercialização da produção) ou para subsistência (sustento do produtor ou de sua família). No mapa, a unidade geográfica está em destaque. A escala vai do branco (menor quantidade) para o vermelho (maior quantidade de crianças e adolescentes menores de 14 anos ocupados). É importante destacar que a Constituição Brasileira proíbe o trabalho noturno, perigoso ou insalubre a menores de dezoito e de qualquer trabalho a menores de dezesseis anos, salvo na condição de aprendiz, a partir de quatorze anos."
+              fixed: "Em destaque, o total de crianças e adolescentes com menos de 14 anos ocupados em estabelecimentos agropecuários, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. No mapa, a unidade geográfica está em destaque. A escala vai do branco (menor proporção) para o vermelho (maior proporção de crianças e adolescentes com menos de 14 anos ocupados em relação aos ocupados do setor). O Censo Agropecuário, por suas características metodológicas, não permite obter informações sobre a ocupação de adolescentes na faixa etária de 14 a 17 anos."
 
         chart_type: "MAP_TOPOJSON"
         api: 
-          fixed: "/ti/censoagroestadual?categorias='2017'-nu_competencia,cd_uf,nm_uf,tot_ocupados,tot_ocup_men14,perc_tot_14,men_14_parente,part_com_parentesco,men_14_sem_parente,part_sem_parentesco"
+          fixed: "/indicadoresestaduais?categorias=nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=sum&pivot=cd_indicador&filtros=in-cd_indicador-'CAGRO_TICA01'-'CAGRO_TICA02'-'CAGRO_TICA03',and,eq-nu_competencia-nu_competencia_max"
           options:
             formatters:
-              - id: "tot_ocup_men14"
+              - id: "CAGRO_TICA01"
                 format: 'inteiro'
-              - id: "tot_ocupados"
+              - id: "CAGRO_TICA03"
                 format: 'inteiro'
-              - id: "perc_tot_14"
+              - id: "CAGRO_TICA02"
                 format: 'porcentagem'
         headers:
           - text: 'UF'
@@ -139,29 +212,37 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Total de ocupados no setor'
-            align: 'left'
-            value: 'fmt_tot_ocupados'
           - text: 'Total de ocupados menores de 14 anos'
             align: 'left'
-            value: 'fmt_tot_ocup_men14'
+            value: 'fmt_CAGRO_TICA01'
+          - text: 'Total de ocupados no setor'
+            align: 'left'
+            value: 'fmt_CAGRO_TICA03'
           - text: '% ocupados menores de 14 anos'
-            value: 'fmt_perc_tot_14'
+            value: 'fmt_CAGRO_TICA02'
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
-          value_field: 'tot_ocup_men14'
+          value_field: 'CAGRO_TICA01'
           colorScale:
             name: 'Reds'
+        source: 
+          desc_field: "ds_fonte"
 # ========================================================
-      - id: "agro_mapa_criancas_adolescentes_14_parentes"
+      - id: "agro_mapa_criancas_adolescentes_14_sexo"
         title: 
-          fixed: "Crianças e Adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários, segundo laços de parentesco com o produtor"
+          fixed: "Meninas e meninos com menos de 14 anos ocupados em estabelecimentos agropecuários"
         title_comment:
-          template: "{0}, em 2017"
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "CAGRO_TICA01"
+            year: 'max'
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -175,76 +256,74 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 preloaded:
-                  prop: "censo_agro_2017"
+                  prop: "centralindicadores"
                   function: "slice"
-                  id: "agro_menores"
-                  year: "max"
+                  id: "CAGRO_TICA05"
+                  year: 'max'
                 args:
                   - prop: "value"
-                    named_prop: 'men_14_parente'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                   - prop: "description"
-                    fixed: 'COM PARENTESCO'
+                    fixed: 'MENINOS OCUPADOS COM MENOS DE 14 ANOS'
               - relevance: 'high'
                 cls: 'xs12 md6'
                 preloaded:
-                  prop: "censo_agro_2017"
+                  prop: "centralindicadores"
                   function: "slice"
-                  id: "agro_menores"
-                  year: "max"
+                  id: "CAGRO_TICA07"
+                  year: 'max'
                 args:
                   - prop: "value"
-                    named_prop: 'part_com_parentesco'
+                    named_prop: 'vl_indicador'
                     format: 'porcentagem'
                   - prop: "description"
-                    fixed: 'DO TOTAL'
-              - relevance: 'low'
+                    fixed: 'DO TOTAL DE HOMENS OCUPADOS NO SETOR'
+              - relevance: 'high'
                 cls: 'xs12 md6'
                 preloaded:
-                  prop: "censo_agro_2017"
+                  prop: "centralindicadores"
                   function: "slice"
-                  id: "agro_menores"
-                  year: "max"
+                  id: "CAGRO_TICA06"
+                  year: 'max'
                 args:
                   - prop: "value"
-                    named_prop: 'men_14_sem_parente'
+                    named_prop: 'vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                   - prop: "description"
-                    fixed: 'SEM PARENTESCO'
-              - relevance: 'low'
+                    fixed: 'MENINAS OCUPADAS COM MENOS DE 14 ANOS'
+              - relevance: 'high'
                 cls: 'xs12 md6'
                 preloaded:
-                  prop: "censo_agro_2017"
+                  prop: "centralindicadores"
                   function: "slice"
-                  id: "agro_menores"
-                  year: "max"
+                  id: "CAGRO_TICA08"
+                  year: 'max'
                 args:
                   - prop: "value"
-                    named_prop: 'part_sem_parentesco'
+                    named_prop: 'vl_indicador'
                     format: 'porcentagem'
                   - prop: "description"
-                    fixed: 'DO TOTAL'
+                    fixed: 'DO TOTAL DE MULHERES OCUPADAS NO SETOR'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o total de crianças e adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários com e sem laços de parentesco com o produtor, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. Estabelecimento agropecuário é toda unidade de produção/exploração dedicada, total ou parcialmente, a atividades agropecuárias, florestais e aquícolas, independentemente de seu tamanho, de sua forma jurídica (se pertence a um produtor, a vários produtores, a uma empresa, a um conjunto de empresas etc.), ou de sua localização (área urbana ou rural), tendo como objetivo a produção, seja para venda (comercialização da produção) ou para subsistência (sustento do produtor ou de sua família). No mapa, apresentam-se as diferenças quantitativas entre as diferentes unidades federativas. A escala vai do branco (menor quantidade) para o vermelho (maior quantidade de laços de parentesco com produtores). É importante destacar que a Constituição Brasileira proíbe o trabalho noturno, perigoso ou insalubre a menores de dezoito e de qualquer trabalho a menores de dezesseis anos, salvo na condição de aprendiz, a partir de quatorze anos."
+              fixed: "Em destaque, a quantidade de meninos e meninas com menos de 14 anos de idade ocupados em estabelecimentos agropecuários, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. No mapa, a unidade geográfica está em destaque. A escala vai do branco (menor percentual de meninos e meninas trabalhando em relação à quantidade de homens e mulheres ocupados) para o vermelho (maior percentual de meninos e meninas trabalhando em relação à quantidade de homens e mulheres ocupados). O Censo Agropecuário, por suas características metodológicas, não permite obter informações sobre a ocupação de adolescentes na faixa etária de 14 a 17 anos."
 
         chart_type: "MAP_TOPOJSON"
         api: 
-          fixed: "/ti/censoagroestadual?categorias='2017'-nu_competencia,cd_uf,nm_uf,tot_ocupados,tot_ocup_men14,perc_tot_14,men_14_parente,part_com_parentesco,men_14_sem_parente,part_sem_parentesco"
+          fixed: "/indicadoresestaduais?categorias=nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=sum&pivot=cd_indicador&filtros=in-cd_indicador-'CAGRO_TICA02'-'CAGRO_TICA07'-'CAGRO_TICA08',and,eq-nu_competencia-nu_competencia_max"
           options:
             formatters:
-              - id: "men_14_parente"
-                format: 'inteiro'
-              - id: "part_com_parentesco"
+              - id: "CAGRO_TICA02"
                 format: 'porcentagem'
-              - id: "men_14_sem_parente"
-                format: 'inteiro'
-              - id: "part_sem_parentesco"
+              - id: "CAGRO_TICA07"
+                format: 'porcentagem'
+              - id: "CAGRO_TICA08"
                 format: 'porcentagem'
         headers:
           - text: 'UF'
@@ -253,21 +332,536 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
-          - text: 'Total de ocupados menores de 14 anos - com parentesco com o produtor'
-            align: 'left'
-            value: 'fmt_men_14_parente'
-          - text: '% ocupados menores de 14 anos com parentesco com o produtor'
-            value: 'fmt_part_com_parentesco'
-          - text: 'Total de ocupados menores de 14 anos - sem parentesco com o produtor'
-            align: 'left'
-            value: 'fmt_men_14_sem_parente'
-          - text: '% ocupados menores de 14 anos sem parentesco com o produtor'
-            value: 'fmt_part_sem_parentesco'
+          - text: '% de ocupados menores de 14 anos'
+            value: 'fmt_CAGRO_TICA02'
+          - text: '% de meninos na ocupação masculina do setor'
+            value: 'fmt_CAGRO_TICA07'
+          - text: '% de meninas na ocupação feminina do setor'
+            value: 'fmt_CAGRO_TICA08'
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
-          value_field: 'men_14_parente'
+          value_field: 'CAGRO_TICA02'
           colorScale:
             name: 'Reds'
+        source: 
+          desc_field: "ds_fonte"
 # ========================================================
-          
+      - id: "agro_bubbles_criancas_adolescentes_14_sexo"
+        title: 
+          fixed: "Meninas e meninos com menos de 14 anos ocupados em estabelecimentos agropecuários"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "CAGRO_TICA01"
+            year: 'max'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        # msg_nodata:
+        #   desc: "Em função do elevado Coeficiente de Variação associado aos dados amostrais do Censo 2010, não foi possível disponibilizar as informações referentes ao trabalho de crianças e adolescentes na faixa etária de 10 a 17 anos de idade nesse município. Para maiores informações ver as notas metodológicas na p. 4 do relatório municipal de trabalho decente."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA05"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'MENINOS OCUPADOS COM MENOS DE 14 ANOS'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA07"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'DO TOTAL DE HOMENS OCUPADOS NO SETOR'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA06"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'MENINAS OCUPADAS COM MENOS DE 14 ANOS'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA08"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'DO TOTAL DE MULHERES OCUPADAS NO SETOR'
+            event: 'selection'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a quantidade de meninos e meninas com menos de 14 anos de idade ocupados em estabelecimentos agropecuários, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. No mapa, apresentam-se as duas perspectivas em diferentes cores. Em verde, o total de meninas com menos de 14 anos de idade ocupadas em estabelecimentos agropecuários e em azul, o total de meninos. O Censo Agropecuário, por suas características metodológicas, não permite obter informações sobre a ocupação de adolescentes na faixa etária de 14 a 17 anos."
+          - id: "selectlayer"
+            type: "switch-group"
+            class: "mb-3"
+            switches:
+              - id: "CAGRO_TICA06"
+                label: "Meninas"
+                default: true
+                color: "purple"
+              - id: "CAGRO_TICA05"
+                label: "Meninos"
+                default: true
+                color: "green accent-4"
+            event: 'selection'
+
+        chart_type: "MAP_BUBBLES"
+        api:
+          fixed: "/indicadoresmunicipais?categorias=latitude,longitude,nu_competencia,cd_municipio_ibge_dv,nm_municipio_uf,ds_fonte,cd_indicador,vl_indicador,ds_indicador&calcs=ln_norm_pos_part&ordenacao=-vl_indicador&filtros=in-cd_indicador-'CAGRO_TICA05'-'CAGRO_TICA06',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Total'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          colorArray: ["rgba(112, 25, 125, 0.7)", "rgba(25, 125, 25, 0.7)"]
+          height_proportion: 2
+          indicadores: ["CAGRO_TICA06","CAGRO_TICA05"]
+          lat: 'latitude'
+          long: 'longitude'
+          clickable: true
+          value_field: "vl_indicador"
+          tooltip_data:
+            api:
+              template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=sum&pivot=cd_indicador&filtros=in-cd_indicador-'CAGRO_TICA01'-'CAGRO_TICA05'-'CAGRO_TICA06',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "tooltipLocalidade"
+              options:
+                calcs:
+                  - id: "prop_meninos"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: "CAGRO_TICA05"
+                      - named_prop: "CAGRO_TICA01"
+                  - id: "prop_meninas"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: "CAGRO_TICA06"
+                      - named_prop: "CAGRO_TICA01"
+          tooltip_function: 'obsCustomTooltip'
+          tooltip_list:
+            - text: 'Municipio'
+              align: 'left'
+              value: 'nm_municipio'
+            - text: 'Ano'
+              align: 'left'
+              value: 'nu_competencia'
+            - text: 'Total de ocupados menores de 14 anos'
+              value: 'CAGRO_TICA01'
+              format: 'inteiro'
+            - text: 'Total de Meninas'
+              value: 'CAGRO_TICA06'
+              format: 'inteiro'
+            - text: 'Total de Meninos'
+              value: 'CAGRO_TICA05'
+              format: 'inteiro'
+            - text: '% Meninas'
+              value: 'calc_prop_meninas'
+              format: 'porcentagem'
+              multiplier: 100
+            - text: '% Meninos'
+              value: 'calc_prop_meninos'
+              format: 'porcentagem'
+              multiplier: 100
+          radius:
+            base: 5000
+            multiplier: 100
+        source: 
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "agro_mapa_criancas_adolescentes_14_tipo"
+        title: 
+          fixed: "Crianças/adolescentes com menos de 14 anos ocupados em estabelecimentos da agricultura familiar e não familiar"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "CAGRO_TICA01"
+            year: 'max'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        # msg_nodata:
+        #   desc: "Em função do elevado Coeficiente de Variação associado aos dados amostrais do Censo 2010, não foi possível disponibilizar as informações referentes ao trabalho de crianças e adolescentes na faixa etária de 10 a 17 anos de idade nesse município. Para maiores informações ver as notas metodológicas na p. 4 do relatório municipal de trabalho decente."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA10"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'OCUPADOS COM MENOS DE 14 ANOS NA AGRICULTURA FAMILIAR'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA12"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'DO TOTAL DE OCUPADOS NA AGRICULTURA FAMILIAR'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA09"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'OCUPADOS COM MENOS DE 14 ANOS NA AGRICULTURA NÃO FAMILIAR'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA11"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'DO TOTAL DE OCUPADOS NA AGRICULTURA NÃO FAMILIAR'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o total de crianças e adolescentes com menos de 14 anos de idade ocupados em estabelecimentos agropecuários da agricultura familiar e não familiar, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. Agricultura familiar se refere ao estabelecido no Decreto nº 9.064, de 31 de maio de 2017. Sendo agricultura não familiar, os demais estabelecimentos agropecuários. No mapa, a unidade geográfica está em destaque. A escala vai do branco (menor percentual) para o vermelho (maior percentual de crianças e adolescentes com menos de 14 anos de idade trabalhando em relação ao total de ocupados em cada tipo de agricultura).  O Censo Agropecuário, por suas características metodológicas, não permite obter informações sobre a ocupação de adolescentes na faixa etária de 14 a 17 anos. É importante destacar que a legislação brasileira proíbe o trabalho noturno, perigoso ou insalubre a menores de dezoito e de qualquer trabalho a menores de dezesseis anos, salvo na condição de aprendiz, a partir de 14 anos."
+
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          fixed: "/indicadoresestaduais?categorias=nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=sum&pivot=cd_indicador&filtros=in-cd_indicador-'CAGRO_TICA02'-'CAGRO_TICA05'-'CAGRO_TICA06'-'CAGRO_TICA11'-'CAGRO_TICA12',and,eq-nu_competencia-nu_competencia_max"
+          options:
+            formatters:
+              - id: "CAGRO_TICA02"
+                format: 'porcentagem'
+              - id: "CAGRO_TICA11"
+                format: 'porcentagem'
+              - id: "CAGRO_TICA12"
+                format: 'porcentagem'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: '% de ocupados menores de 14 anos'
+            value: 'fmt_CAGRO_TICA02'
+          - text: '% de ocupados menores de 14 anos na agricultura familiar'
+            value: 'fmt_CAGRO_TICA12'
+          - text: '% de ocupados menores de 14 anos na agricultura não familiar'
+            value: 'fmt_CAGRO_TICA11'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'CAGRO_TICA02'
+          colorScale:
+            name: 'Reds'
+        source: 
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "agro_setor"
+        title: 
+          fixed: "Atividades econômicas com o maior número de crianças/adolescentes ocupados"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "CAGRO_TICA01"
+            year: 'max'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        # msg_nodata:
+        #   desc: "Em função do elevado Coeficiente de Variação associado aos dados amostrais do Censo 2010, não foi possível disponibilizar as informações referentes ao trabalho de crianças e adolescentes na faixa etária de 10 a 17 anos de idade nesse município. Para maiores informações ver as notas metodológicas na p. 4 do relatório municipal de trabalho decente."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA13"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_txt'
+                    default: "-"
+                  - prop: "description"
+                    fixed: "Atividade econômica com maior número de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o grupo de atividade econômica com os maiores números de crianças e adolescentes com menos de 14 anos idade ocupados em estabelecimentos agropecuários, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. No gráfico,os três principais grupos de atividades econômicas com os maiores números de crianças e adolescentes com menos de 14 anos idade ocupados. O Censo Agropecuário, por suas características metodológicas, não permite obter informações sobre a ocupação de adolescentes na faixa etária de 14 a 17 anos. É importante destacar que a Constituição Brasileira proíbe o trabalho noturno, perigoso ou insalubre a menores de dezoito e de qualquer trabalho a menores de dezesseis anos, salvo na condição de aprendiz, a partir de quatorze anos."
+
+        chart_type: "BAR"
+        api: 
+          - fixed: "/indicadoresnacionais?categorias='2º'-posicao,cd_indicador,nu_competencia,ds_fonte,vl_indicador_txt,66-vl_indicador&filtros=eq-cd_indicador-'CAGRO_TICA14',and,eq-nu_competencia-nu_competencia_max"
+          - fixed: "/indicadoresnacionais?categorias='1º'-posicao,cd_indicador,nu_competencia,ds_fonte,vl_indicador_txt,100-vl_indicador&filtros=eq-cd_indicador-'CAGRO_TICA13',and,eq-nu_competencia-nu_competencia_max"
+          - fixed: "/indicadoresnacionais?categorias='3º'-posicao,cd_indicador,nu_competencia,ds_fonte,vl_indicador_txt,45-vl_indicador&filtros=eq-cd_indicador-'CAGRO_TICA15',and,eq-nu_competencia-nu_competencia_max"
+        api_options:
+          calcs:
+            - id: "bar_description"
+              function: "applyInterpolReplaceDatasetParam"
+              fn_args:
+                - fixed:
+                    template: "{0} - {1}"
+                    args:
+                      - named_prop: "posicao"
+                      - named_prop: "vl_indicador_txt"
+
+        headers:
+          - text: 'Posição'
+            value: 'posicao'
+          - text: 'Atividade Econômica'
+            value: 'vl_indicador_txt'
+        chart_options:
+          id: "cd_indicador"
+          x: "vl_indicador_txt"
+          y: "vl_indicador"
+          text: "calc_bar_description"
+          orientation: "vertical"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          colorScale:
+            name: "BuGn"
+            type: "singleHue"
+            levels: 4
+            order: 'desc'
+        source: 
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "mapa_agro_setor"
+        title: 
+          fixed: "Atividades econômicas com o maior número de crianças/adolescentes ocupados"
+        title_comment:
+          template: "{0}, em {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "CAGRO_TICA01"
+            year: 'max'
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        # msg_nodata:
+        #   desc: "Em função do elevado Coeficiente de Variação associado aos dados amostrais do Censo 2010, não foi possível disponibilizar as informações referentes ao trabalho de crianças e adolescentes na faixa etária de 10 a 17 anos de idade nesse município. Para maiores informações ver as notas metodológicas na p. 4 do relatório municipal de trabalho decente."
+        description:
+          - id: "ranking_list_setores"
+            type: "ranking_list"
+            sectionClass: "pb-2 pt-2"
+            rankings:
+              - title: "Atividades econômicas com maior número de crianças e adolescentes ocupados"
+                look: "minicard"
+                cls: "xs12"
+                api: 
+                  fixed: "/indicadoresnacionais?categorias=ds_fonte,vl_indicador_txt,vl_indicador&filtros=in-cd_indicador-'CAGRO_TICA13'-'CAGRO_TICA14'-'CAGRO_TICA15',and,eq-nu_competencia-nu_competencia_max&ordenacao=cd_indicador"
+                args:
+                  - prop: 'localidade'
+                    named_prop: "vl_indicador_txt"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, os três principais grupos de atividades econômicas com os maiores números de crianças e adolescentes com menos de 14 anos idade ocupados em estabelecimentos agropecuários, de acordo com o Censo Agropecuário, Florestal e Aquícola 2017, que traz dados relevantes sobre as características e a produção de todos os estabelecimentos agropecuários do Brasil. No mapa, a unidade geográfica está em destaque. Pela cor é possível identificar clusters de municípios de acordo com os grupamentos de atividades com maior ocupação infantil. O Censo Agropecuário, por suas características metodológicas, não permite obter informações sobre a ocupação de adolescentes na faixa etária de 14 a 17 anos. É importante destacar que a Constituição Brasileira proíbe o trabalho noturno, perigoso ou insalubre a menores de dezoito e de qualquer trabalho a menores de dezesseis anos, salvo na condição de aprendiz, a partir de quatorze anos."
+          - id: "selectlayer"
+            type: "legend-list"
+            cls: "pl-2 pt-2 pb-3"
+            title: "Legenda"
+            items:
+              - id: "setor1"
+                cls: "pa-1 xs6"
+                color: "#0288D1"
+                label: "Aquicultura"
+              - id: "setor2"
+                cls: "pa-1 xs6"
+                default: true
+                color: "#AD1457"
+                label: "Horticultura e Floricultura"
+              - id: "setor3"
+                cls: "pa-1 xs6"
+                color: "#EF6C00"
+                label: "Pecurária"
+              - id: "setor4"
+                cls: "pa-1 xs6"
+                color: "#283593"
+                label: "Pesca"
+              - id: "setor5"
+                cls: "pa-1 xs6"
+                color: "#388E3C"
+                label: "Lavouras temporárias"
+              - id: "setor6"
+                cls: "pa-1 xs6"
+                color: "#7CB342"
+                label: "Lavouras permanentes"
+              - id: "setor7"
+                cls: "pa-1 xs6"
+                color: "#5D4037"
+                label: "Sementes e mudas certificadas"
+              - id: "setor8"
+                cls: "pa-1 xs6"
+                color: "#00695C"
+                label: "Produção em florestas nativas"
+              - id: "setor9"
+                cls: "pa-1 xs6"
+                color: "#0097A7"
+                label: "Produção de florestas plantadas"
+              - id: "setor10"
+                cls: "pa-1 xs6"
+                color: "#B0BEC5"
+                label: "Dado indisponível"
+
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          fixed: "/indicadoresestaduais?categorias=nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=sum&pivot=cd_indicador&filtros=in-cd_indicador-'CAGRO_TICA13'-'CAGRO_TICA14'-'CAGRO_TICA15',and,eq-nu_competencia-nu_competencia_max"
+          options:
+            calcs:
+              - id: "setor_1"
+                function: "get_sector_censoagro"
+                fn_args:
+                  - named_prop: "CAGRO_TICA13"
+              - id: "setor_2"
+                function: "get_sector_censoagro"
+                fn_args:
+                  - named_prop: "CAGRO_TICA14"
+              - id: "setor_3"
+                function: "get_sector_censoagro"
+                fn_args:
+                  - named_prop: "CAGRO_TICA15"
+        headers:
+          - text: 'UF'
+            value: 'nm_uf'
+          - text: 'Ano'
+            value: 'nu_competencia'
+          - text: '1ª Atividade Econômica com maior número de ocupados com menos de 14 anos'
+            value: 'calc_setor_1'
+          - text: '2ª Atividade Econômica com maior número de ocupados com menos de 14 anos'
+            value: 'calc_setor_2'
+          - text: '3ª Atividade Econômica com maior número de ocupados com menos de 14 anos'
+            value: 'calc_setor_3'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'CAGRO_TICA13'
+          colorScale: 
+            type: "fixed"
+            # color_array: 
+            #   "Aquicultura": "#0277BD" #light-blue darken-3
+            #   "Horticultura e Floricultura": "#AD1457" #pink darken-3
+            #   "Pecurária": "#EF6C00" #orange darken-3
+            #   "Pesca": "#283593" #indigo darken-3
+            #   "Lavouras temporárias": "#388E3C" #green darken-2
+            #   "Lavouras permanentes": "#689F38" #light-green darken-2
+            #   "Sementes e mudas certificadas": "#5D4037" #brown darken-2
+            #   "Produção em florestas nativas": "#00796B" #teal darken-2
+            #   "Produção de florestas plantadas": "#0097A7" #cyan darken-2
+            #   "Dado indisponível": "#455A64" #blue-grey darken-2
+            color_array: 
+              1: "#0288D1" #light-blue darken-2
+              2: "#AD1457" #pink darken-3
+              3: "#EF6C00" #orange darken-3
+              4: "#283593" #indigo darken-3
+              5: "#388E3C" #green darken-2
+              6: "#7CB342" #light-green darken-1
+              7: "#5D4037" #brown darken-2
+              8: "#00695C" #teal darken-3
+              9: "#0097A7" #cyan darken-2
+              0: "#B0BEC5" #blue-grey lighten-3
+        source: 
+          desc_field: "ds_fonte"
+
+
