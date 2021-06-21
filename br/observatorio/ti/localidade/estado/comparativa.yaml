@@ -55,7 +55,7 @@ principais:
       - prop: "description"
         fixed: 'Município da UF com o maior número de crianças ou adolescentes menores de 14 anos ocupados em estabelecimentos agropecuários'
       - prop: "comment"
-        template: '({0}, {1})'
+        template: '({0})'
         args:
           - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
@@ -155,7 +155,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - function: "format_month"
@@ -185,7 +185,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} - CAT ({1}-{2})"
+                        template: "{0} - CAT<br/>({1}-{2})"
                         args:
                           - named_prop: "ds_indicador"
                           - base_object: "sst_cat"
@@ -212,7 +212,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1}-{2})"
+                        template: "{0}<br/>({1}-{2})"
                         args:
                           - named_prop: "ds_indicador"
                           - base_object: "sst_sinan"
@@ -234,7 +234,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1}-{2})"
+                        template: "{0}<br/>({1}-{2})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia_min"
@@ -254,7 +254,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia"
@@ -276,7 +276,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia_max"
@@ -332,7 +332,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia"
@@ -351,7 +351,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia_max"
@@ -415,7 +415,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12 md6'
+                cls: 'xs12'
                 api: 
                   template: "/ti/indicadoresestaduais?categorias=vl_indicador&filtros=eq-cd_indicador-'censo_suas_pct_mun_sem_creas',and,eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max"
                   args:
@@ -427,7 +427,21 @@ secoes:
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: '% SEM CREAS NA UF'
+                    fixed: 'DOS MUNICÍPIOS SEM CREAS NA UF'
+                  - prop: "comment"
+                    api:
+                      - template: "/ti/indicadoresestaduais?categorias=cd_indicador,vl_indicador&filtros=eq-cd_indicador-'censo_suas_qtd_mun_sem_creas',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                        args:
+                          - named_prop: "cd_uf"
+                      - template: "/municipios?categorias='total_uf'-cd_indicador,cd_uf,nm_uf&agregacao=COUNT&filtros=eq-cd_uf-{0}"
+                        args:
+                          - named_prop: "cd_uf"
+                    template: "{0} de {1} municípios"
+                    args:
+                      - id: "censo_suas_qtd_mun_sem_creas"
+                        named_prop: "vl_indicador"
+                      - id: "total_uf"
+                        named_prop: "agr_count"
           - type: "text"
             title: ""
             content:
@@ -443,7 +457,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - function: "format_scope"
@@ -474,7 +488,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - function: "capitalize_first_letter"
                             fn_args:
@@ -495,7 +509,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - function: "capitalize_first_letter"
                             fn_args:
@@ -516,7 +530,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} ({1})"
+                        template: "{0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           - named_prop: "nu_competencia_max"
@@ -535,7 +549,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0} (2017)"
+                        template: "{0}<br/>(2017)"
                         args:
                           - named_prop: "ds_indicador"
                 - id: "fmt_value"
