@@ -144,6 +144,27 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
+          - id: "select_cerest"
+            type: "select"
+            label: "CEREST Regional"
+            api:
+              - fixed: "/indicadoresmunicipais?categorias=nm_cerest&filtros=nl-cd_uf_cerest&limit=1"
+              - template: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "nm_cerest"
+              - prop: "label"
+                named_prop: "nm_cerest"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-nm_cerest-'{0}'"
+                api:
+                  args:
+                    - named_prop: "nm_cerest"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"

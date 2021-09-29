@@ -165,6 +165,27 @@ secoes:
                 api:
                   args:
                     - named_prop: "ds_cnae_classe"
+          - id: "select_cerest"
+            type: "select"
+            label: "CEREST Regional"
+            api:
+              - fixed: "/sst/beneficios?categorias=nm_cerest&filtros=nl-cd_uf_cerest&limit=1"
+              - template: "/sst/beneficios?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0}"
+                args:
+                  - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "nm_cerest"
+              - prop: "label"
+                named_prop: "nm_cerest"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-nm_cerest-'{0}'"
+                api:
+                  args:
+                    - named_prop: "nm_cerest"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
