@@ -1,0 +1,88 @@
+# ====================================================          
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresmunicipais?categorias=nm_municipio_cerest&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: "nm_municipio_cerest"
+      - prop: "description"
+        fixed: "CEREST REGIONAL DO MUNICÍPIO"
+# ====================================================          
+secoes:
+  - id: "cerest_unico"
+    name: ""
+    cards:
+# ====================================================          
+      - id: "mapa_cerests"
+        title: 
+          fixed: "Áreas de Abrangência dos CERESTs Regionais"
+        title_comment:
+          template: "{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=nm_municipio_cerest&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: "nm_municipio_cerest"
+                  - prop: "description"
+                    fixed: "CEREST REGIONAL DO MUNICÍPIO"
+          - type: "text"
+            title: ""
+            content:
+              template: "Áreas de atuação dos CERESTs Regionais"
+          - id: "select_cerest"
+            type: "select"
+            label: "CEREST Regional"
+            api:
+              - template: "/sst/cats?categorias=nm_cerest&filtros=nl-cd_uf_cerest,and,eq-cd_uf-{0}&limit=1"
+                args:
+                  - named_prop: "cd_uf"
+              - template: "/sst/cats?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0}"
+                args:
+                  - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "nm_cerest"
+              - prop: "label"
+                named_prop: "nm_cerest"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-nm_cerest-'{0}'"
+                api:
+                  args:
+                    - named_prop: "nm_cerest"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,nm_cerest,cd_municipio_ibge_dv_cerest&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'CEREST Responsável'
+            align: 'left'
+            value: 'nm_cerest'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'cd_municipio_ibge_dv_cerest'
+          colorScale:
+            type: "categorical"
+            name: "Set3"
