@@ -144,3 +144,418 @@ secoes:
           colorScale:
             type: "categorical"
             name: "Set3"
+# ====================================================          
+      - id: "mapa_acidente_trabalho_cerest"
+        title: 
+          fixed: "Distribuição Geográfica dos Acidentes de Trabalho (CAT)"
+        title_comment:
+          template: "{0}, {1}"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
+                          Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
+                          Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - named_prop: 'cd_indicador'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia'
+        description:
+          - id: "select_cerest"
+            type: "select"
+            label: "CEREST Regional"
+            default:
+              base_object: "cerest"
+              named_prop: "nm_cerest"
+            api:
+              - fixed: "/indicadoresmunicipais?categorias=nm_cerest&filtros=nl-cd_uf_cerest&limit=1"
+              - template: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "nm_cerest"
+              - prop: "label"
+                named_prop: "nm_cerest"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-nm_cerest-'{0}'"
+                api:
+                  args:
+                    - named_prop: "nm_cerest"
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            parent: "select_cerest"
+            label: "Setor Econômico"
+            api:
+              template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=distinct&ordenacao=ds_cnae_classe_cat&filtros=ne-ds_cnae_classe_cat-'',and,eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
+              args:
+                - named_prop: "cd_uf"
+                - base_object: "sst_cat"
+                  named_prop: "agr_max_ano_cat"
+            api_reactive:
+              template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=distinct&ordenacao=ds_cnae_classe_cat&filtros=ne-ds_cnae_classe_cat-'',and,eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf,and,eq-nm_cerest-'{2}'"
+              args:
+                - named_prop: "cd_uf"
+                - base_object: "sst_cat"
+                  named_prop: "agr_max_ano_cat"
+                - named_prop: "nm_cerest"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe_cat"
+              - prop: "label"
+                named_prop: "ds_cnae_classe_cat"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe_cat-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe_cat"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                reactive: true
+                api:
+                  template: "/sst/cats?categorias=nm_uf,ano_cat&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
+                  args:
+                    - named_prop: "cd_uf"
+                    - base_object: "sst_cat"
+                      named_prop: "agr_max_ano_cat"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Total de Acidentes'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de acidentes de trabalho notificados na Unidade Federativa para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano). Utilize os filtros acima para visualizar o número de acidentes por CEREST Regional e/ou setor econômico."
+
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/sst/cats?categorias=cd_municipio_ibge_dv,nm_municipio,nm_uf,ano_cat,nm_cerest&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
+          args:
+            - named_prop: "cd_uf"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
+          options:
+            calcs:
+              - id: "log_cat"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'ano_cat'
+          - text: 'Nº de Notificações de Acidente de Trabalho'
+            value: 'fmt_agr_count'
+          - text: 'CEREST Responsável'
+            align: 'left'
+            value: 'nm_cerest'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_log_cat'
+          colorScale:
+            name: "Reds"
+# ==========================================================
+      - id: "mapa_b91_cerest"
+        title: 
+          fixed: "Concessão de Benefícios Previdenciários Acidentários (B91)"
+        title_comment:
+          template: "{0}, {1}"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - named_prop: 'cd_indicador'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia'
+        description:
+          - id: "select_cerest"
+            type: "select"
+            label: "CEREST Regional"
+            default:
+              base_object: "cerest"
+              named_prop: "nm_cerest"
+            api:
+              - fixed: "/indicadoresmunicipais?categorias=nm_cerest&filtros=nl-cd_uf_cerest&limit=1"
+              - template: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "nm_cerest"
+              - prop: "label"
+                named_prop: "nm_cerest"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-nm_cerest-'{0}'"
+                api:
+                  args:
+                    - named_prop: "nm_cerest"
+          - id: "select_cid_b91"
+            type: "select"
+            multiple: true
+            label: "Categoria CID"
+            parent: "select_cerest"
+            api:
+              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
+              args:
+                - named_prop: "cd_uf"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            api_reactive:
+              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1},and,eq-nm_cerest-'{2}'"
+              args:
+                - named_prop: "cd_uf"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+                - named_prop: "nm_cerest"
+            args:
+              - prop: "id"
+                named_prop: "cd_agrupamento_categoria_cid"
+              - prop: "label"
+                named_prop: "cd_agrupamento_categoria_cid"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+                api:
+                  args:
+                    - named_prop: "cd_agrupamento_categoria_cid"
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            parent: "select_cerest"
+            api:
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe&filtros=ne-ds_cnae_classe-'',and,eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
+              args:
+                - named_prop: "cd_uf"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            api_reactive:
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe&filtros=ne-ds_cnae_classe-'',and,eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1},and,eq-nm_cerest-'{2}'"
+              args:
+                - named_prop: "cd_uf"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+                - named_prop: "nm_cerest"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe"
+              - prop: "label"
+                named_prop: "ds_cnae_classe"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                reactive: true
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Total de B91'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) na unidade federativa para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano). Utilize os filtros acima para combinar as perspectivas."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
+          args:
+            - named_prop: "idLocalidade"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+          options:
+            calcs:
+              - id: "deviation_b91"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'ano_beneficio'
+          - text: 'Qtde de Benefícios B91 - Auxílio-doença por acidente de trabalho'
+            value: 'fmt_agr_count'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_b91'
+          colorScale:
+            name: "Reds"
+        # source:
+        #   desc_field: "ds_fonte"
+# ====================================================          
+      - id: "mapa_sinan_total_notif_cerest"
+        title: 
+          fixed: "Distribuição Geográfica das Notificações Relacionadas ao Trabalho (SINAN)"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "06_05_10_00"
+            year: "max"
+          args:
+            - named_prop: "nm_uf"
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "O Sistema de Informação de Agravos de Notificação - Sinan é alimentado, principalmente, pela notificação e investigação de casos de doenças e agravos que constam da lista nacional de doenças de notificação compulsória (Portaria de Consolidação nº 4, de 28 de Setembro de 2017, anexo V - Capítulo I), mas é facultado a estados e municípios incluir outros problemas de saúde importantes em sua região, como varicela no estado de Minas Gerais ou difilobotríase no município de São Paulo. Sua utilização efetiva permite a realização do diagnóstico dinâmico da ocorrência de um evento na população, podendo fornecer subsídios para explicações causais dos agravos de notificação compulsória, além de vir a indicar riscos aos quais as pessoas estão sujeitas, contribuindo assim, para a identificação da realidade epidemiológica de determinada área geográfica. O seu uso sistemático, de forma descentralizada, contribui para a democratização da informação, permitindo que todos os profissionais de saúde tenham acesso à informação e as tornem disponíveis para a comunidade. É, portanto, um instrumento relevante para auxiliar o planejamento da saúde, definir prioridades de intervenção, além de permitir que seja avaliado o impacto das intervenções.<br/>
+                      Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "06_05_10_00"
+                year: "max"
+              args:
+                - named_prop: 'ds_indicador_radical'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia_min'
+                - named_prop: 'nu_competencia_max'
+        description:
+          - id: "select_cerest"
+            type: "select"
+            label: "CEREST Regional"
+            default:
+              base_object: "cerest"
+              named_prop: "nm_cerest"
+            api:
+              - fixed: "/indicadoresmunicipais?categorias=nm_cerest&filtros=nl-cd_uf_cerest&limit=1"
+              - template: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "nm_cerest"
+              - prop: "label"
+                named_prop: "nm_cerest"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-nm_cerest-'{0}'"
+                api:
+                  args:
+                    - named_prop: "nm_cerest"
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                reactive: true
+                api:
+                  template: "/indicadoresmunicipais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'06_05_10_00'"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Total de Casos Notificados'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre Notificações Relacionadas ao Trabalho no Sistema de Informação de Agravos de Notificação (SINAN). Nesta versão, somente foram consideradas as doenças e agravos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério da Saúde. O total inclui os seguintes casos: Acidente de Trabalho Grave, Câncer Relacionado ao Trabalho, Dermatoses Ocupacionais, Acidente de Trabalho com Exposição a Material Biológico, Intoxicação Exógena Relacionada ao Trabalho, LER/DORT, Perda Auditiva Induzida por Ruído (PAIR) Relacionada ao Trabalho, Pneumoconioses Relacionadas ao Trabalho, Transtornos Mentais Relacionados ao Trabalho e Acidente de Trabalho Grave envolvendo Crianças e Adolescentes (0 a 17 anos). No gráfico a seguir, a escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Utilize o filtro acima para visualizar o número de notificações por CEREST Regional."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            calcs:
+              - id: "deviation_sinan"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+              - id: "rank_br"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_radical'
+          - text: 'Qtde de Notificações'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation_sinan'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
