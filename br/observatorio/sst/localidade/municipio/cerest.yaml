@@ -1,15 +1,42 @@
 # ====================================================          
+params:
+  - name: "sst_beneficio"
+    api:
+      fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+      options:
+        calcs:
+          - id: "ano_beneficio_anterior"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - named_prop: "agr_max_ano_beneficio"
+              - fixed: 1
+  - name: "sst_cat"
+    api:
+      fixed: "/sst/cats?categorias=1&valor=ano_cat&agregacao=MIN,MAX"
+      options:
+        calcs:
+          - id: "ano_cat_anterior"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - named_prop: "agr_max_ano_cat"
+              - fixed: 1
+  - name: "cerest"
+    api:
+      template: "/indicadoresmunicipais?categorias=nm_cerest&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+      args:
+        - named_prop: "idLocalidade"
+# ====================================================          
 principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresmunicipais?categorias=nm_municipio_cerest&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+      template: "/indicadoresmunicipais?categorias=nm_cerest&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
       args:
         - named_prop: "idLocalidade"
     args:
       - prop: "value"
-        named_prop: "nm_municipio_cerest"
+        named_prop: "nm_cerest"
       - prop: "description"
         fixed: "CEREST REGIONAL DO MUNICÍPIO"
 # ====================================================          
@@ -32,12 +59,12 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresmunicipais?categorias=nm_municipio_cerest&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+                  template: "/indicadoresmunicipais?categorias=nm_cerest&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
                   args:
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
-                    named_prop: "nm_municipio_cerest"
+                    named_prop: "nm_cerest"
                   - prop: "description"
                     fixed: "CEREST REGIONAL DO MUNICÍPIO"
           - type: "text"
@@ -48,9 +75,9 @@ secoes:
             type: "select"
             label: "CEREST Regional"
             api:
-              - template: "/sst/cats?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0}"
-                args:
-                  - named_prop: "cd_uf"
+              template: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=DISTINCT&filtros=eq-cd_uf_cerest-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - named_prop: "cd_uf"
             args:
               - prop: "id"
                 named_prop: "nm_cerest"
@@ -86,7 +113,7 @@ secoes:
 # ====================================================          
       - id: "mapa_acidente_trabalho_cerest"
         title: 
-          fixed: "Distribuição Geográfica dos Acidentes de Trabalho (CAT) na Unidade Federativa"
+          fixed: "Distribuição Geográfica dos Acidentes de Trabalho (CAT) por CEREST Regional"
         title_comment:
           api: 
             template: "/municipios?categorias=nm_uf&filtros=eq-cd_municipio_ibge_dv-{0}"
@@ -119,7 +146,7 @@ secoes:
               named_prop: "nm_cerest"
             api:
               - fixed: "/indicadoresmunicipais?categorias=nm_cerest&filtros=nl-cd_uf_cerest&limit=1"
-              - template: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"
+              - template: "/sst/cats?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0}"
                 args:
                   - named_prop: "cd_uf"
             args:
@@ -188,15 +215,17 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de acidentes de trabalho notificados na Unidade Federativa para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano). Utilize os filtros acima para visualizar o número de acidentes por CEREST Regional e/ou setor econômico."
+              fixed: "Em destaque, o número de acidentes de trabalho notificados no CEREST Regional selecionado, para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano). Utilize os filtros acima para visualizar o número de acidentes por CEREST Regional e/ou setor econômico."
 
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/sst/cats?categorias=cd_municipio_ibge_dv,nm_municipio,nm_uf,ano_cat,nm_cerest&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
+          template: "/sst/cats?categorias=cd_municipio_ibge_dv,nm_municipio,nm_uf,ano_cat,nm_cerest&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf,and,eq-nm_cerest-'{2}'"
           args:
             - named_prop: "cd_uf"
             - base_object: "sst_cat"
               named_prop: "agr_max_ano_cat"
+            - base_object: "cerest"
+              named_prop: "nm_cerest"
           options:
             calcs:
               - id: "log_cat"
@@ -206,6 +235,12 @@ secoes:
             formatters:
               - id: "agr_count"
                 format: 'inteiro'
+        apiBase: 
+          template: "/sst/cats?categorias=cd_municipio_ibge_dv,nm_municipio,nm_uf,ano_cat,nm_cerest&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
+          args:
+            - named_prop: "cd_uf"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
         headers:
           - text: 'Município'
             align: 'left'
@@ -227,7 +262,7 @@ secoes:
 # ==========================================================
       - id: "mapa_b91_cerest"
         title: 
-          fixed: "Concessão de Benefícios Previdenciários Acidentários (B91) na Unidade Federativa"
+          fixed: "Concessão de Benefícios Previdenciários Acidentários (B91) por CEREST Regional"
         title_comment:
           api: 
             template: "/municipios?categorias=nm_uf&filtros=eq-cd_municipio_ibge_dv-{0}"
@@ -258,7 +293,7 @@ secoes:
               named_prop: "nm_cerest"
             api:
               - fixed: "/indicadoresmunicipais?categorias=nm_cerest&filtros=nl-cd_uf_cerest&limit=1"
-              - template: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"
+              - template: "/sst/beneficios?categorias=nm_cerest&agregacao=distinct&ordenacao=nm_cerest&filtros=eq-cd_uf_cerest-{0}"
                 args:
                   - named_prop: "cd_uf"
             args:
@@ -358,14 +393,16 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) na unidade federativa para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano). Utilize os filtros acima para combinar as perspectivas."
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) no CEREST Regional selecionado, para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano). Utilize os filtros acima para combinar as perspectivas."
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
+          template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1},and,eq-nm_cerest-'{2}'"
           args:
             - named_prop: "cd_uf"
             - base_object: "sst_beneficio"
               named_prop: "agr_max_ano_beneficio"
+            - base_object: "cerest"
+              named_prop: "nm_cerest"
           options:
             calcs:
               - id: "deviation_b91"
@@ -375,6 +412,12 @@ secoes:
             formatters:
               - id: "agr_count"
                 format: 'inteiro'
+        apiBase: 
+          template: "/sst/beneficios?categorias=cd_municipio_ibge_dv,nm_municipio,ano_beneficio&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
+          args:
+            - named_prop: "cd_uf"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
         headers:
           - text: 'Município'
             align: 'left'
@@ -395,7 +438,7 @@ secoes:
 # ====================================================          
       - id: "mapa_sinan_total_notif_cerest"
         title: 
-          fixed: "Distribuição Geográfica das Notificações Relacionadas ao Trabalho (SINAN) na Unidade Federativa"
+          fixed: "Distribuição Geográfica das Notificações Relacionadas ao Trabalho (SINAN) por CEREST Regional"
         title_comment:
           template: "{0}, {1}"
           preloaded:
@@ -470,9 +513,11 @@ secoes:
               fixed: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre Notificações Relacionadas ao Trabalho no Sistema de Informação de Agravos de Notificação (SINAN). Nesta versão, somente foram consideradas as doenças e agravos monitorados com ênfase pela Vigilância em Saúde do Trabalhador do Ministério da Saúde. O total inclui os seguintes casos: Acidente de Trabalho Grave, Câncer Relacionado ao Trabalho, Dermatoses Ocupacionais, Acidente de Trabalho com Exposição a Material Biológico, Intoxicação Exógena Relacionada ao Trabalho, LER/DORT, Perda Auditiva Induzida por Ruído (PAIR) Relacionada ao Trabalho, Pneumoconioses Relacionadas ao Trabalho, Transtornos Mentais Relacionados ao Trabalho e Acidente de Trabalho Grave envolvendo Crianças e Adolescentes (0 a 17 anos). No gráfico a seguir, a escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Utilize o filtro acima para visualizar o número de notificações por CEREST Regional."
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max,and,eq-nm_cerest-'{1}'"
           args:
             - named_prop: "cd_uf"
+            - base_object: "cerest"
+              named_prop: "nm_cerest"
           options:
             calcs:
               - id: "deviation_sinan"
@@ -482,6 +527,10 @@ secoes:
                 format: 'inteiro'
               - id: "rank_br"
                 format: 'inteiro'
+        apiBase: 
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
         headers:
           - text: 'Município'
             align: 'left'
