@@ -1,0 +1,586 @@
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - AUXÍLIO-DOENÇA POR ACIDENTE DO TRABALHO (B91)"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "06_05_10_00"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        named_prop: "ds_indicador_radical"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+# ========================================================
+secoes:
+  - id: 'prioritarias'
+    name: 'Áreas Prioritárias'
+    cards:
+# ========================================================
+      - id: "sparkline_sst_municipios"
+        title: 
+          fixed: "Municípios prioritários"
+        title_comment:
+          fixed: "Brasil"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/sst/indicadoresmunicipais?categorias=nm_municipio_uf,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'sst_cat_total'"
+                args:
+                  - prop: "value"
+                    named_prop: 'nm_municipio_uf'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Município com mais acidentes de trabalho<br/>({0} a {1})'
+                    args:
+                      - named_prop: 'nu_competencia_min'
+                      - named_prop: 'nu_competencia_max'
+                  - prop: "comment"
+                    template: 'Total de Acidentes: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'06_05_10_00'"
+                args:
+                  - prop: "value"
+                    named_prop: 'nm_municipio_uf'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Município com mais notificações SINAN<br/>({0} a {1})'
+                    args:
+                      - named_prop: 'nu_competencia_min'
+                      - named_prop: 'nu_competencia_max'
+                  - prop: "comment"
+                    template: 'Total de Notificações: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/sst/indicadoresmunicipais?categorias=nm_municipio_uf,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91'"
+                args:
+                  - prop: "value"
+                    named_prop: 'nm_municipio_uf'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Município com mais afastamentos B91<br/>({0} a {1})'
+                    args:
+                      - named_prop: 'nu_competencia_min'
+                      - named_prop: 'nu_competencia_max'
+                  - prop: "comment"
+                    template: 'Total de Concessões B91: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/sst/indicadoresmunicipais?categorias=nm_municipio_uf,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'31'"
+                args:
+                  - prop: "value"
+                    named_prop: 'nm_municipio_uf'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Município com mais afastamentos B31<br/>({0} a {1})'
+                    args:
+                      - named_prop: 'nu_competencia_min'
+                      - named_prop: 'nu_competencia_max'
+                  - prop: "comment"
+                    template: 'Total de Concessões B31: {0}'
+                    args:
+                      - named_prop: "agr_sum_vl_indicador"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, ...<br/><br/>"
+          - id: "select_cerest"
+            type: "select"
+            label: "CEREST Regional"
+            default:
+              base_object: "cerest"
+              named_prop: "nm_cerest"
+            api:
+              fixed: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=DISTINCT&filtros=eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+            args:
+              - prop: "id"
+                named_prop: "nm_cerest"
+              - prop: "label"
+                named_prop: "nm_cerest"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-nm_cerest-'{0}'"
+                api:
+                  args:
+                    - named_prop: "nm_cerest"
+        component_type: "SPARKLINES"
+        api:
+          - fixed: "/sst/cats?categorias=cd_municipio_ibge,nm_municipio,sg_uf,'cat'-cd_indicador,ano_cat-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge"
+          - fixed: "/sst/beneficios?categorias=cd_municipio_ibge,nm_municipio,sg_uf,'beneficio_91'-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_especie_beneficio-91"
+          - fixed: "/sst/beneficios?categorias=cd_municipio_ibge,nm_municipio,sg_uf,'beneficio_31'-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_especie_beneficio-31"
+          - fixed: "/indicadoresmunicipais?categorias=cd_municipio_ibge,nm_municipio,sg_uf,'sinan'-cd_indicador,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_10_00'"
+            options:
+              clone:
+                - id: "agr_sum_vl_indicador"
+                  new_column: "agr_count"
+        headers:
+          - text: 'Município'
+            align: 'center'
+            value: 'nm_municipio'
+            item_align: 'center'
+          - text: 'UF'
+            align: 'center'
+            value: 'sg_uf'
+            item_align: 'center'
+          - text: 'Total CAT'
+            align: 'center'
+            value: 'total_cat'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline CAT'
+            align: 'center'
+            width: '20%'
+            value: 'last_value_cat'
+            item_align: 'center'
+            type: 'spark'
+            series: 'cat'
+            bgColor: '#F44336'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total B91'
+            align: 'center'
+            value: 'total_beneficio_91'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline B91'
+            align: 'center'
+            width: '20%'
+            value: 'last_value_beneficio_91'
+            item_align: 'center'
+            type: 'spark'
+            series: 'beneficio_91'
+            bgColor: '#03A9F4'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total B31'
+            align: 'center'
+            value: 'total_beneficio_31'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline B31'
+            align: 'center'
+            width: '20%'
+            value: 'last_value_beneficio_31'
+            item_align: 'center'
+            type: 'spark'
+            series: 'beneficio_31'
+            bgColor: '#0D47A1'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total SINAN'
+            align: 'center'
+            value: 'total_sinan'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline SINAN'
+            align: 'center'
+            width: '20%'
+            value: 'last_value_sinan'
+            item_align: 'center'
+            type: 'spark'
+            series: 'sinan'
+            bgColor: '#c800c8'
+            stroke: 2
+            item_align: 'center'
+        component_options:
+          id: "sparklines_freq_sst_municipios"
+          title: "Municípios"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "cd_municipio_ibge"
+          value_field: "agr_count"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "INSS/CATWEB, INSS/BENEFÍCIOS e MS - SINAN"
+# ========================================================
+      - id: "sparkline_sst_cnae"
+        title: 
+          fixed: "Setores Econômicos prioritários"
+        title_comment:
+          fixed: "Brasil"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=COUNT&filtros=ne-ds_cnae_classe_cat-'Indefinido',and,ne-ds_cnae_classe_cat-''&ordenacao=-agr_count&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cnae_classe_cat'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Setor EconÔmico com mais acidentes de trabalho<br/>({0} a {1})'
+                    args:
+                      - base_object: 'sst_cat'
+                        named_prop: 'agr_min_ano_cat'
+                      - base_object: 'sst_cat'
+                        named_prop: 'agr_max_ano_cat'
+                  - prop: "comment"
+                    template: 'Total de Acidentes: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_especie_beneficio-91,and,ne-ds_cnae_classe-''&ordenacao=-agr_count&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cnae_classe'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Setor Econômico com mais afastamentos B91<br/>({0} a {1})'
+                    args:
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_min_ano_beneficio'
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_max_ano_beneficio'
+                  - prop: "comment"
+                    template: 'Total de Concessões B91: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,ne-ds_cnae_classe-''&ordenacao=-agr_count&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cnae_classe'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Setor Econômico com mais afastamentos B31<br/>({0} a {1})'
+                    args:
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_min_ano_beneficio'
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_max_ano_beneficio'
+                  - prop: "comment"
+                    template: 'Total de Concessões B31: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, ...<br/><br/>"
+          - id: "select_cerest"
+            type: "select"
+            label: "CEREST Regional"
+            default:
+              base_object: "cerest"
+              named_prop: "nm_cerest"
+            api:
+              fixed: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=DISTINCT&filtros=eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+            args:
+              - prop: "id"
+                named_prop: "nm_cerest"
+              - prop: "label"
+                named_prop: "nm_cerest"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-nm_cerest-'{0}'"
+                api:
+                  args:
+                    - named_prop: "nm_cerest"
+        component_type: "SPARKLINES"
+        api:
+          - fixed: "/sst/cats?categorias=ds_cnae_classe_cat-cnae,'cat'-cd_indicador,ano_cat-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,ne-ds_cnae_classe_cat-'Indefinido',and,ne-ds_cnae_classe_cat-''"
+          - fixed: "/sst/beneficios?categorias=ds_cnae_classe-cnae,'beneficio_91'-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_especie_beneficio-91,and,ne-ds_cnae_classe-''"
+          - fixed: "/sst/beneficios?categorias=ds_cnae_classe-cnae,'beneficio_31'-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_especie_beneficio-31,and,ne-ds_cnae_classe-''"
+        headers:
+          - text: 'Setor Econômico'
+            align: 'center'
+            value: 'cnae'
+            item_align: 'center'
+          - text: 'Total CAT'
+            align: 'center'
+            value: 'total_cat'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline CAT'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_cat'
+            item_align: 'center'
+            type: 'spark'
+            series: 'cat'
+            bgColor: '#F44336'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total B91'
+            align: 'center'
+            value: 'total_beneficio_91'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline B91'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_beneficio_91'
+            item_align: 'center'
+            type: 'spark'
+            series: 'beneficio_91'
+            bgColor: '#03A9F4'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total B31'
+            align: 'center'
+            value: 'total_beneficio_31'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline B31'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_beneficio_31'
+            item_align: 'center'
+            type: 'spark'
+            series: 'beneficio_31'
+            bgColor: '#0D47A1'
+            stroke: 2
+            item_align: 'center'
+        component_options:
+          id: "sparklines_freq_sst_cnae"
+          title: "Setores Econômicos"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "cnae"
+          value_field: "agr_count"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "INSS/CATWEB e INSS/BENEFÍCIOS"
+# ========================================================
+      - id: "sparkline_sst_cbo"
+        title: 
+          fixed: "Ocupações prioritárias"
+        title_comment:
+          fixed: "Brasil"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/sst/cats?categorias=ds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-''&ordenacao=-agr_count&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cbo'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Ocupação com mais acidentes de trabalho<br/>({0} a {1})'
+                    args:
+                      - base_object: 'sst_cat'
+                        named_prop: 'agr_min_ano_cat'
+                      - base_object: 'sst_cat'
+                        named_prop: 'agr_max_ano_cat'
+                  - prop: "comment"
+                    template: 'Total de Acidentes: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=eq-cd_especie_beneficio-91,and,ne-ds_cbo2002-''&ordenacao=-agr_count&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cbo2002'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Ocupação com mais afastamentos B91<br/>({0} a {1})'
+                    args:
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_min_ano_beneficio'
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_max_ano_beneficio'
+                  - prop: "comment"
+                    template: 'Total de Concessões B91: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,ne-ds_cbo2002-''&ordenacao=-agr_count&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cbo2002'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Ocupação com mais afastamentos B31<br/>({0} a {1})'
+                    args:
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_min_ano_beneficio'
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_max_ano_beneficio'
+                  - prop: "comment"
+                    template: 'Total de Concessões B31: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, ...<br/><br/>"
+          - id: "select_cerest"
+            type: "select"
+            label: "CEREST Regional"
+            default:
+              base_object: "cerest"
+              named_prop: "nm_cerest"
+            api:
+              fixed: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=DISTINCT&filtros=eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+            args:
+              - prop: "id"
+                named_prop: "nm_cerest"
+              - prop: "label"
+                named_prop: "nm_cerest"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-nm_cerest-'{0}'"
+                api:
+                  args:
+                    - named_prop: "nm_cerest"
+        component_type: "SPARKLINES"
+        api:
+          - fixed: "/sst/cats?categorias=ds_cbo-cbo,'cat'-cd_indicador,ano_cat-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,ne-ds_cbo-''"
+          - fixed: "/sst/beneficios?categorias=ds_cbo2002-cbo,'beneficio_91'-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_especie_beneficio-91,and,ne-ds_cbo2002-''"
+          - fixed: "/sst/beneficios?categorias=ds_cbo2002-cbo,'beneficio_31'-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_especie_beneficio-31,and,ne-ds_cbo2002-''"
+        headers:
+          - text: 'Ocupações'
+            align: 'center'
+            value: 'cbo'
+            item_align: 'center'
+          - text: 'Total CAT'
+            align: 'center'
+            value: 'total_cat'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline CAT'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_cat'
+            item_align: 'center'
+            type: 'spark'
+            series: 'cat'
+            bgColor: '#F44336'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total B91'
+            align: 'center'
+            value: 'total_beneficio_91'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline B91'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_beneficio_91'
+            item_align: 'center'
+            type: 'spark'
+            series: 'beneficio_91'
+            bgColor: '#03A9F4'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total B31'
+            align: 'center'
+            value: 'total_beneficio_31'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline B31'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_beneficio_31'
+            item_align: 'center'
+            type: 'spark'
+            series: 'beneficio_31'
+            bgColor: '#0D47A1'
+            stroke: 2
+            item_align: 'center'
+        component_options:
+          id: "sparklines_freq_sst_cnae"
+          title: "Ocupações"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "cbo"
+          value_field: "agr_count"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "INSS/CATWEB e INSS/BENEFÍCIOS"
