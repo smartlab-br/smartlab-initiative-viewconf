@@ -4,44 +4,60 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresmunicipais?categorias=rank_uf_total&agregacao=count&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max,and,nl-cd_municipio_ibge_dv_cerest"
-      args:
-        - named_prop: "cd_uf"
+      - template: "/indicadoresmunicipais?categorias='total_municipios'-cd_indicador,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max&limit=1"
+        args:
+          - named_prop: "cd_uf"
+      - template: "/indicadoresmunicipais?categorias='cerest'-cd_indicador,rank_uf_total&agregacao=count&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max,and,nl-cd_municipio_ibge_dv_cerest"
+        args:
+          - named_prop: "cd_uf"
     args:
       - prop: "value"
+        id: "cerest"
         function: 'calc_percentage'
         fn_args:
-          - named_prop: "agr_count"
-          - named_prop: "rank_uf_total"
+            - named_prop: "agr_count"
+            - named_prop: "rank_uf_total"
         format: "porcentagem"
+        default: "Nenhum"
       - prop: "description"
         fixed: "DOS MUNICÍPIOS NÃO COBERTOS POR CEREST REGIONAL"
       - prop: "comment"
         template: "{0} de {1} MUNICÍPIOS"
         args:
-          - named_prop: 'agr_count'
-          - named_prop: 'rank_uf_total'
+          - id: "cerest"
+            named_prop: "agr_count"
+            default: 0
+          - id: "total_municipios"
+            named_prop: "rank_uf_total"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresmunicipais?categorias=rank_uf_total&agregacao=count&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max,and,nn-cd_municipio_ibge_dv_cerest"
-      args:
-        - named_prop: "cd_uf"
+      - template: "/indicadoresmunicipais?categorias='total_municipios'-cd_indicador,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max&limit=1"
+        args:
+          - named_prop: "cd_uf"
+      - template: "/indicadoresmunicipais?categorias='cerest'-cd_indicador,rank_uf_total&agregacao=count&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max,and,nn-cd_municipio_ibge_dv_cerest"
+        args:
+          - named_prop: "cd_uf"
     args:
       - prop: "value"
+        id: "cerest"
         function: 'calc_percentage'
         fn_args:
-          - named_prop: "agr_count"
-          - named_prop: "rank_uf_total"
+            - named_prop: "agr_count"
+            - named_prop: "rank_uf_total"
         format: "porcentagem"
+        default: "Nenhum"
       - prop: "description"
         fixed: "DOS MUNICÍPIOS COBERTOS POR CEREST REGIONAL"
       - prop: "comment"
         template: "{0} de {1} MUNICÍPIOS"
         args:
-          - named_prop: 'agr_count'
-          - named_prop: 'rank_uf_total'
+          - id: "cerest"
+            named_prop: "agr_count"
+            default: 0
+          - id: "total_municipios"
+            named_prop: "rank_uf_total"
 # ====================================================          
 secoes:
   - id: "cerest_unico"
@@ -62,15 +78,19 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  template: "/indicadoresmunicipais?categorias=rank_uf_total&agregacao=count&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max,and,nl-cd_municipio_ibge_dv_cerest"
-                  args:
-                    - named_prop: "cd_uf"
+                  - template: "/indicadoresmunicipais?categorias='total_municipios'-cd_indicador,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max&limit=1"
+                    args:
+                      - named_prop: "cd_uf"
+                  - template: "/indicadoresmunicipais?categorias='cerest'-cd_indicador,rank_uf_total&agregacao=count&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max,and,nl-cd_municipio_ibge_dv_cerest"
+                    args:
+                      - named_prop: "cd_uf"
                 args:
                   - prop: "value"
+                    id: "cerest"
                     function: 'calc_percentage'
                     fn_args:
-                      - named_prop: "agr_count"
-                      - named_prop: "rank_uf_total"
+                        - named_prop: "agr_count"
+                        - named_prop: "rank_uf_total"
                     format: "porcentagem"
                     default: "Nenhum"
                   - prop: "description"
@@ -78,20 +98,27 @@ secoes:
                   - prop: "comment"
                     template: "{0} de {1} MUNICÍPIOS"
                     args:
-                      - named_prop: 'agr_count'
-                      - named_prop: 'rank_uf_total'
+                      - id: "cerest"
+                        named_prop: "agr_count"
+                        default: 0
+                      - id: "total_municipios"
+                        named_prop: "rank_uf_total"
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  template: "/indicadoresmunicipais?categorias=rank_uf_total&agregacao=count&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max,and,nn-cd_municipio_ibge_dv_cerest"
-                  args:
-                    - named_prop: "cd_uf"
+                  - template: "/indicadoresmunicipais?categorias='total_municipios'-cd_indicador,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max&limit=1"
+                    args:
+                      - named_prop: "cd_uf"
+                  - template: "/indicadoresmunicipais?categorias='cerest'-cd_indicador,rank_uf_total&agregacao=count&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max,and,nn-cd_municipio_ibge_dv_cerest"
+                    args:
+                      - named_prop: "cd_uf"
                 args:
                   - prop: "value"
+                    id: "cerest"
                     function: 'calc_percentage'
                     fn_args:
-                      - named_prop: "agr_count"
-                      - named_prop: "rank_uf_total"
+                        - named_prop: "agr_count"
+                        - named_prop: "rank_uf_total"
                     format: "porcentagem"
                     default: "Nenhum"
                   - prop: "description"
@@ -99,8 +126,11 @@ secoes:
                   - prop: "comment"
                     template: "{0} de {1} MUNICÍPIOS"
                     args:
-                      - named_prop: 'agr_count'
-                      - named_prop: 'rank_uf_total'
+                      - id: "cerest"
+                        named_prop: "agr_count"
+                        default: 0
+                      - id: "total_municipios"
+                        named_prop: "rank_uf_total"
           - type: "text"
             title: ""
             content:
