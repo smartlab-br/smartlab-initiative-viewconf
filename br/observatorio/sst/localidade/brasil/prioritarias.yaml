@@ -74,83 +74,61 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  fixed: "/sst/indicadoresmunicipais?categorias=nm_municipio_uf,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'sst_cat_total'"
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'nm_municipio_uf'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
                   - prop: "description"
-                    template: 'Município com mais acidentes de trabalho<br/>({0} a {1})'
+                    fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES"
+                  - prop: 'comment'
+                    template: "({0}, {1})"
                     args:
-                      - named_prop: 'nu_competencia_min'
-                      - named_prop: 'nu_competencia_max'
-                  - prop: "comment"
-                    template: 'Total de Acidentes: {0}'
+                      - named_prop: "ds_fonte"
+                      - named_prop: "nu_competencia"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - AUXÍLIO-DOENÇA POR ACIDENTE DO TRABALHO (B91)"
+                  - prop: 'comment'
+                    template: "({0}, {1})"
                     args:
-                      - named_prop: "agr_sum_vl_indicador"
-                        format: "inteiro"
-              # - relevance: 'high'
-              #   cls: 'xs12 md6'
-              #   api:
-              #     fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'06_05_10_00'"
-              #   args:
-              #     - prop: "value"
-              #       named_prop: 'nm_municipio_uf'
-              #       default: "Sem Registros"
-              #       zero: "Nenhum"
-              #     - prop: "description"
-              #       template: 'Município com mais notificações SINAN<br/>({0} a {1})'
-              #       args:
-              #         - named_prop: 'nu_competencia_min'
-              #         - named_prop: 'nu_competencia_max'
-              #     - prop: "comment"
-              #       template: 'Total de Notificações: {0}'
-              #       args:
-              #         - named_prop: "agr_sum_vl_indicador"
-              #           format: "inteiro"
-              # - relevance: 'high'
-              #   cls: 'xs12 md6'
-              #   api:
-              #     fixed: "/sst/indicadoresmunicipais?categorias=nm_municipio_uf,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91'"
-              #   args:
-              #     - prop: "value"
-              #       named_prop: 'nm_municipio_uf'
-              #       default: "Sem Registros"
-              #       zero: "Nenhum"
-              #     - prop: "description"
-              #       template: 'Município com mais afastamentos B91<br/>({0} a {1})'
-              #       args:
-              #         - named_prop: 'nu_competencia_min'
-              #         - named_prop: 'nu_competencia_max'
-              #     - prop: "comment"
-              #       template: 'Total de Concessões B91: {0}'
-              #       args:
-              #         - named_prop: "agr_sum_vl_indicador"
-              #           format: "inteiro"
-              # - relevance: 'high'
-              #   cls: 'xs12 md6'
-              #   api:
-              #     fixed: "/sst/indicadoresmunicipais?categorias=nm_municipio_uf,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&ordenacao=-agr_sum_vl_indicador&limit=1&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'31'"
-              #   args:
-              #     - prop: "value"
-              #       named_prop: 'nm_municipio_uf'
-              #       default: "Sem Registros"
-              #       zero: "Nenhum"
-              #     - prop: "description"
-              #       template: 'Município com mais afastamentos B31<br/>({0} a {1})'
-              #       args:
-              #         - named_prop: 'nu_competencia_min'
-              #         - named_prop: 'nu_competencia_max'
-              #     - prop: "comment"
-              #       template: 'Total de Concessões B31: {0}'
-              #       args:
-              #         - named_prop: "agr_sum_vl_indicador"
-              #           format: "inteiro"
+                      - named_prop: "ds_fonte"
+                      - named_prop: "nu_competencia"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "06_05_10_00"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    named_prop: "ds_indicador_radical"
+                  - prop: 'comment'
+                    template: "({0}, {1})"
+                    args:
+                      - named_prop: "ds_fonte"
+                      - named_prop: "nu_competencia"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, ...<br/><br/>"
+              fixed: "Em destaque, os números absolutos (totais) de notificações acidentárias e afastamentos registrados no Brasil. Ao lado, a evolução histórica para diferentes localidades.<br/><br/>"
           - id: "select_cerest"
             type: "select"
             label: "CEREST Regional"
@@ -190,11 +168,6 @@ secoes:
             align: 'center'
             value: 'sg_uf'
             item_align: 'center'
-          - text: 'Total CAT'
-            align: 'center'
-            value: 'total_cat'
-            item_align: 'center'
-            format: 'inteiro'
           - text: 'Smartline CAT'
             align: 'center'
             width: '20%'
@@ -204,9 +177,9 @@ secoes:
             series: 'cat'
             bgColor: '#F44336'
             stroke: 2
-          - text: 'Total B91'
+          - text: 'Pico CAT'
             align: 'center'
-            value: 'total_beneficio_91'
+            value: 'fmt_higher_value_cat'
             item_align: 'center'
             format: 'inteiro'
           - text: 'Smartline B91'
@@ -218,9 +191,9 @@ secoes:
             series: 'beneficio_91'
             bgColor: '#03A9F4'
             stroke: 2
-          - text: 'Total B31'
+          - text: 'Pico B91'
             align: 'center'
-            value: 'total_beneficio_31'
+            value: 'fmt_higher_value_beneficio_91'
             item_align: 'center'
             format: 'inteiro'
           - text: 'Smartline B31'
@@ -232,9 +205,9 @@ secoes:
             series: 'beneficio_31'
             bgColor: '#0D47A1'
             stroke: 2
-          - text: 'Total SINAN'
+          - text: 'Pico B31'
             align: 'center'
-            value: 'total_sinan'
+            value: 'fmt_higher_value_beneficio_31'
             item_align: 'center'
             format: 'inteiro'
           - text: 'Smartline SINAN'
@@ -246,6 +219,11 @@ secoes:
             series: 'sinan'
             bgColor: '#c800c8'
             stroke: 2
+          - text: 'Pico SINAN'
+            align: 'center'
+            value: 'fmt_higher_value_sinan'
+            item_align: 'center'
+            format: 'inteiro'
         component_options:
           id: "sparklines_freq_sst_municipios"
           title: "Municípios"
