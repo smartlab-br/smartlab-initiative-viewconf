@@ -4,7 +4,47 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018'"
+      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,eq-vl_indicador-0"
+      args:
+        - named_prop: "cd_uf"
+      options:
+        calcs:
+          - id: "perc_nao_possui"
+            function: "calc_proportion_ds"
+            fn_args:
+              - named_prop: 'agr_count'
+              - named_prop: 'rank_uf_total'
+          - id: "perc_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - fixed: 1
+              - named_prop: 'calc_perc_nao_possui'
+          - id: "qtde_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - named_prop: "rank_uf_total"
+              - named_prop: 'agr_count'
+    args:
+      - prop: "value"
+        named_prop: "calc_perc_possui"
+        format: 'porcentagem'
+        multiplier: 100
+      - prop: "description"
+        template: "dos municípios tem {0}"
+        args:
+          - named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "{0} municípios de {1}<br/>({2}, {3})"
+        args:
+          - named_prop: "calc_qtde_possui"
+          - named_prop: "rank_uf_total"
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018'"
       args:
         - named_prop: "cd_uf"
     args:
@@ -14,7 +54,7 @@ principais:
         collapse:
           format: 'real'
       - prop: "description"
-        fixed: "Crianças e adolescentes sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
+        named_prop: "ds_indicador_curto"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -24,7 +64,47 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'c5_CREAS_1'"
+      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'c5_CREAS_1',and,eq-vl_indicador-0"
+      args:
+        - named_prop: "cd_uf"
+      options:
+        calcs:
+          - id: "perc_nao_possui"
+            function: "calc_proportion_ds"
+            fn_args:
+              - named_prop: 'agr_count'
+              - named_prop: 'rank_uf_total'
+          - id: "perc_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - fixed: 1
+              - named_prop: 'calc_perc_nao_possui'
+          - id: "qtde_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - named_prop: "rank_uf_total"
+              - named_prop: 'agr_count'
+    args:
+      - prop: "value"
+        named_prop: "calc_perc_possui"
+        format: 'porcentagem'
+        multiplier: 100
+      - prop: "description"
+        template: "dos municípios tem {0}"
+        args:
+          - named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "{0} municípios de {1}<br/>({2}, {3})"
+        args:
+          - named_prop: "calc_qtde_possui"
+          - named_prop: "rank_uf_total"
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'c5_CREAS_1'"
       args:
         - named_prop: "cd_uf"
     args:
@@ -34,7 +114,7 @@ principais:
         collapse:
           format: 'real'
       - prop: "description"
-        fixed: "Crianças ou adolescentes até 15 anos em trabalho infantil com acompanhamento pelo PAEFI no CREAS"
+        named_prop: "ds_indicador_curto"
       - prop: 'comment'
         template: "({0}, {1})"
         args:
@@ -79,19 +159,55 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "g1_CREAS_018"
-                  year: "max"
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018'"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                   - prop: "description"
-                    fixed: "Crianças e adolescentes sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
+                    named_prop: "ds_indicador_curto"
           - type: "text"
             title: ""
             content:
@@ -107,6 +223,10 @@ secoes:
                 function: "get_log"
                 fn_args:
                   - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value"
+                fn_args:
+                  - named_prop: "vl_indicador"
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
@@ -124,9 +244,12 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'calc_log_valor'
+          value_field: 'calc_possui'
           colorScale:
-            name: "Reds"
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
         source:
           desc_field: "ds_fonte"
 # ====================================================          
@@ -164,7 +287,44 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'c5_CREAS_1'"
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'c5_CREAS_1',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'c5_CREAS_1'"
                   args:
                     - named_prop: "cd_uf"
                 args:
@@ -174,7 +334,7 @@ secoes:
                     collapse:
                       format: 'real'
                   - prop: "description"
-                    fixed: "Crianças ou adolescentes até 15 anos em trabalho infantil com acompanhamento pelo PAEFI no CREAS"
+                    named_prop: "ds_indicador_curto"
           - type: "text"
             title: ""
             content:
@@ -190,6 +350,10 @@ secoes:
                 function: "get_log"
                 fn_args:
                   - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value"
+                fn_args:
+                  - named_prop: "vl_indicador"
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
@@ -207,9 +371,12 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'calc_log_valor'
+          value_field: 'calc_possui'
           colorScale:
-            name: "Reds"
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
         source:
           desc_field: "ds_fonte"
 # ====================================================          
@@ -247,7 +414,44 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'e2_CentroPOP'"
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'e2_CentroPOP',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'e2_CentroPOP'"
                   args:
                     - named_prop: "cd_uf"
                 args:
@@ -257,7 +461,7 @@ secoes:
                     collapse:
                       format: 'real'
                   - prop: "description"
-                    fixed: "Crianças ou adolescentes até 15 anos em trabalho infantil identificadas pelo Serviço Especializado em Abordagem Social do Centro POP"
+                    named_prop: "ds_indicador_curto"
               - relevance: 'low'
                 cls: 'xs12'
                 preloaded:
@@ -293,6 +497,10 @@ secoes:
                 function: "get_log"
                 fn_args:
                   - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value"
+                fn_args:
+                  - named_prop: "vl_indicador"
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
@@ -310,9 +518,12 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'calc_log_valor'
+          value_field: 'calc_possui'
           colorScale:
-            name: "Reds"
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
         source:
           desc_field: "ds_fonte"
 # ====================================================          
@@ -350,7 +561,44 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'k2_CREAS'"
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'k2_CREAS',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'k2_CREAS'"
                   args:
                     - named_prop: "cd_uf"
                 args:
@@ -360,7 +608,7 @@ secoes:
                     collapse:
                       format: 'real'
                   - prop: "description"
-                    fixed: "Crianças ou adolescentes até 15 anos em trabalho infantil identificadas pelo Serviço Especializado em Abordagem Social do CREAS"
+                    named_prop: "ds_indicador_curto"
               - relevance: 'low'
                 cls: 'xs12'
                 preloaded:
@@ -396,6 +644,10 @@ secoes:
                 function: "get_log"
                 fn_args:
                   - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value"
+                fn_args:
+                  - named_prop: "vl_indicador"
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
@@ -413,9 +665,12 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'calc_log_valor'
+          value_field: 'calc_possui'
           colorScale:
-            name: "Reds"
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
         source:
           desc_field: "ds_fonte"
 # ====================================================          
@@ -453,7 +708,44 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'b5_CRAS'"
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'b5_CRAS',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'b5_CRAS'"
                   args:
                     - named_prop: "cd_uf"
                 args:
@@ -463,7 +755,7 @@ secoes:
                     collapse:
                       format: 'real'
                   - prop: "description"
-                    fixed: "Famílias com crianças e adolescentes em trabalho infantil com acompanhamento pelo PAIF no CRAS"
+                    named_prop: "ds_indicador_curto"
               - relevance: 'low'
                 cls: 'xs12'
                 preloaded:
@@ -499,6 +791,10 @@ secoes:
                 function: "get_log"
                 fn_args:
                   - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value"
+                fn_args:
+                  - named_prop: "vl_indicador"
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
@@ -516,9 +812,12 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'calc_log_valor'
+          value_field: 'calc_possui'
           colorScale:
-            name: "Reds"
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
         source:
           desc_field: "ds_fonte"
 # ====================================================          
@@ -556,7 +855,44 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'b3_CREAS'"
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'b3_CREAS',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'b3_CREAS'"
                   args:
                     - named_prop: "cd_uf"
                 args:
@@ -566,7 +902,7 @@ secoes:
                     collapse:
                       format: 'real'
                   - prop: "description"
-                    fixed: "Famílias com crianças e adolescentes no PETI com acompanhamento pelo PAEFI no CREAS"
+                    named_prop: "ds_indicador_curto"
               - relevance: 'low'
                 cls: 'xs12'
                 preloaded:
@@ -602,6 +938,10 @@ secoes:
                 function: "get_log"
                 fn_args:
                   - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value"
+                fn_args:
+                  - named_prop: "vl_indicador"
             formatters:
               - id: "vl_indicador"
                 format: 'inteiro'
@@ -619,8 +959,11 @@ secoes:
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'calc_log_valor'
+          value_field: 'calc_possui'
           colorScale:
-            name: "Reds"
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
         source:
           desc_field: "ds_fonte"
