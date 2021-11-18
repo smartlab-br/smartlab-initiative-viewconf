@@ -611,6 +611,182 @@ secoes:
         source:
           desc: "INSS/CATWEB e INSS/BENEFÍCIOS"
 # ========================================================
+      - id: "sparkline_sst_cid"
+        title:
+          fixed: "Setores Econômicos prioritários na Unidade Federativa"
+        title_comment:
+          api:
+            template: "/municipios?categorias=nm_uf&filtros=eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          template: "{0}"
+          args:
+            - named_prop: "nm_uf"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-ds_cnae_classe_cat-'Indefinido',and,ne-ds_cnae_classe_cat-''&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cnae_classe_cat'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Setor EconÔmico na UF com mais acidentes de trabalho<br/>({0} a {1})'
+                    args:
+                      - base_object: 'sst_cat'
+                        named_prop: 'agr_min_ano_cat'
+                      - base_object: 'sst_cat'
+                        named_prop: 'agr_max_ano_cat'
+                  - prop: "comment"
+                    template: 'Total de Acidentes: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,ne-ds_cnae_classe-''&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cnae_classe'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Setor Econômico na UF com mais afastamentos B91<br/>({0} a {1})'
+                    args:
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_min_ano_beneficio'
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_max_ano_beneficio'
+                  - prop: "comment"
+                    template: 'Total de Concessões B91: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_especie_beneficio-31,and,ne-ds_cnae_classe-''&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cnae_classe'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    template: 'Setor Econômico na UF com mais afastamentos B31<br/>({0} a {1})'
+                    args:
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_min_ano_beneficio'
+                      - base_object: 'sst_beneficio'
+                        named_prop: 'agr_max_ano_beneficio'
+                  - prop: "comment"
+                    template: 'Total de Concessões B31: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, os setores com o maiores números absolutos (totais) de notificações acidentárias e afastamentos registrados para a Unidade Federativa do município selecionado. Ao lado, a evolução histórica desses números para diferentes setores econômicos. Utilize os filtros para selecionar os números referentes a circunscrições de Centros de Referência em Saúde do Trabalhador (Cerest) regionais.<br/><br/>"
+          - id: "select_cerest"
+            type: "select"
+            label: "CEREST Regional"
+            default:
+              base_object: "cerest"
+              named_prop: "nm_cerest"
+            api:
+              template: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=DISTINCT&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max&ordenacao=nm_cerest"
+              args:
+                - named_prop: "cd_uf"
+            args:
+              - prop: "id"
+                named_prop: "nm_cerest"
+              - prop: "label"
+                named_prop: "nm_cerest"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,eq-nm_cerest-'{0}'"
+                api:
+                  args:
+                    - named_prop: "nm_cerest"
+        component_type: "SPARKLINES"
+        api:
+          - template: "/sst/cats?categorias=ds_cnae_classe_cat-cnae,'cat'-cd_indicador,ano_cat-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_uf-{0},and,ne-ds_cnae_classe_cat-'Indefinido',and,ne-ds_cnae_classe_cat-''"
+            args:
+              - named_prop: "cd_uf"
+          - template: "/sst/beneficios?categorias=ds_cnae_classe-cnae,'beneficio_91'-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_uf-{0},and,eq-cd_especie_beneficio-91,and,ne-ds_cnae_classe-''"
+            args:
+              - named_prop: "cd_uf"
+          - template: "/sst/beneficios?categorias=ds_cnae_classe-cnae,'beneficio_31'-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_uf-{0},and,eq-cd_especie_beneficio-31,and,ne-ds_cnae_classe-''"
+            args:
+              - named_prop: "cd_uf"
+        headers:
+          - text: 'Setor Econômico'
+            align: 'center'
+            value: 'cnae'
+            item_align: 'center'
+          - text: 'Smartline CAT'
+            align: 'center'
+            width: '25%'
+            value: 'last_value_cat'
+            item_align: 'center'
+            type: 'spark'
+            series: 'cat'
+            bgColor: '#F44336'
+            stroke: 2
+          - text: 'Variação CAT'
+            align: 'center'
+            value: 'fmt_last_rate_cat'
+            item_align: 'center'
+          - text: 'Smartline B91'
+            align: 'center'
+            width: '25%'
+            value: 'last_value_beneficio_91'
+            item_align: 'center'
+            type: 'spark'
+            series: 'beneficio_91'
+            bgColor: '#03A9F4'
+            stroke: 2
+          - text: 'Variação B91'
+            align: 'center'
+            value: 'fmt_last_rate_beneficio_91'
+            item_align: 'center'
+          - text: 'Smartline B31'
+            align: 'center'
+            width: '25%'
+            value: 'last_value_beneficio_31'
+            item_align: 'center'
+            type: 'spark'
+            series: 'beneficio_31'
+            bgColor: '#0D47A1'
+            stroke: 2
+          - text: 'Variação B31'
+            align: 'center'
+            value: 'fmt_last_rate_beneficio_31'
+            item_align: 'center'
+        component_options:
+          id: "sparklines_freq_sst_cnae"
+          title: "Setores Econômicos"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "cnae"
+          value_field: "agr_count"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "INSS/CATWEB e INSS/BENEFÍCIOS"
+# ========================================================
       - id: "sparkline_sst_incidencia"
         title:
           fixed: "Municípios prioritários quanto a Incidência de Notificações de Acidentes de Trabalho e Afastamentos B91"
@@ -757,3 +933,310 @@ secoes:
           search_position: "bottom"
         source:
           desc: "INSS e RAIS (vínculos CLT)"
+# ========================================================
+      - id: "sparkline_cat_cid"
+        title: 
+          fixed: "Notificações de Acidente de Trabalho por Capítulo CID na Unidade Federativa"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            template: "/municipios?categorias=nm_uf&filtros=eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - named_prop: "nm_uf"
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/sst/cats?categorias=ds_cap_ci&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_uf-{0},and,ne-ds_cap_ci-'Indefinido',and,ne-ds_cap_ci-''&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cap_ci'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Capítulo CID com mais acidentes notificados'
+                  - prop: "comment"
+                    template: 'Total de Acidentes: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o capítulo CID com mais notificações de acidentes de trabalho notificados na série histórica para a unidade federativa do município em realce. Na tabela ao lado, apresentam-se os capítulos CID com alta incidência para o período selecionado abaixo. <br/><br/>"
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
+            args:
+              - prop: "min"
+                named_prop: "agr_min_nu_competencia"
+              - prop: "max"
+                named_prop: "agr_max_nu_competencia"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-ano_cat-{0},and,le-ano_cat-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        component_type: "SPARKLINES"
+        api:
+          template: "/sst/cats?categorias=ds_cap_ci-cap_cid,'cat'-cd_indicador,ano_cat-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_uf-{0},and,ne-ds_cap_ci-'Indefinido',and,ne-ds_cap_ci-''"
+          args:
+            - named_prop: "cd_uf"
+        headers:
+          - text: 'Capítulo CID'
+            align: 'center'
+            value: 'cap_cid'
+            item_align: 'center'
+          - text: 'Total'
+            align: 'center'
+            value: 'total_cat'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_cat'
+            item_align: 'center'
+            type: 'spark'
+            series: 'cat'
+            bgColor: '#F44336'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Ano de Pico'
+            align: 'center'
+            value: 'fmt_higher_value_cat'
+            item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_cat'
+          #   item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_last_5_cat'
+          #   item_align: 'center'
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_2_value_cat'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_value_cat'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Variação'
+            align: 'center'
+            value: 'fmt_last_rate_cat'
+            item_align: 'center'
+        component_options:
+          id: "sparklines_cnae_freq_rgt"
+          title: "Notificações de Acidentes de Trabalho por Capítulo CID"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "cap_cid"
+          value_field: "agr_count"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "INSS/CATWEB"
+# ========================================================
+      - id: "sparkline_beneficio_cid"
+        title: 
+          fixed: "Afastamentos por Agravo na Unidade Federativa"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            template: "/municipios?categorias=nm_uf&filtros=eq-cd_municipio_ibge_dv-{0}"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - named_prop: "nm_uf"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'Indefinido',and,ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'cd_agrup_categoria_cid_agravo'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Tipo de agravo com mais Afastamentos B91'
+                  - prop: "comment"
+                    template: 'Total de Afastamentos B91: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'Indefinido',and,ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-31&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'cd_agrup_categoria_cid_agravo'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Tipo de agravo com mais Afastamentos B31'
+                  - prop: "comment"
+                    template: 'Total de Afastamentos B31: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, os motivos (por tipo de agravo, acidente ou doença) mais frequentes dos afastamentos acidentários (B91) e não acidentários (B31) na série histórica para a unidade federativa do município em realce. Na tabela ao lado, apresentam-se os tipos de agravo com alta incidência para o período selecionado abaixo. <br/><br/>"
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+            args:
+              - prop: "min"
+                named_prop: "agr_min_ano_beneficio"
+              - prop: "max"
+                named_prop: "agr_max_ano_beneficio"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        component_type: "SPARKLINES"
+        api:
+          template: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo,cd_especie_beneficio-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'Indefinido',and,ne-cd_agrup_categoria_cid_agravo-'',and,in-cd_especie_beneficio-31-91"
+          args:
+            - named_prop: "cd_uf"
+        headers:
+          - text: 'Tipo de Agravo'
+            align: 'center'
+            value: 'cd_agrup_categoria_cid_agravo'
+            item_align: 'center'
+          - text: 'Smartline B91'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_91'
+            item_align: 'center'
+            type: 'spark'
+            series: '91'
+            bgColor: '#03A9F4'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total B91'
+            align: 'center'
+            value: 'total_91'
+            item_align: 'center'
+            format: 'inteiro'
+          # - text: 'Ano de Pico'
+          #   align: 'center'
+          #   value: 'fmt_higher_value_91'
+          #   item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_91'
+          #   item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_last_5_91'
+          #   item_align: 'center'
+          # - text: 'Ano'
+          #   align: 'center'
+          #   value: 'last_2_value_91'
+          #   item_align: 'center'
+          #   format: "inteiro"
+          # - text: 'Ano'
+          #   align: 'center'
+          #   value: 'last_value_91'
+          #   item_align: 'center'
+          #   format: "inteiro"
+          - text: 'Variação B91'
+            align: 'center'
+            value: 'fmt_last_rate_91'
+            item_align: 'center'
+          - text: 'Smartline B31'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_91'
+            item_align: 'center'
+            type: 'spark'
+            series: '31'
+            bgColor: '#0D47A1'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total B31'
+            align: 'center'
+            value: 'total_91'
+            item_align: 'center'
+            format: 'inteiro'
+          # - text: 'Ano de Pico'
+          #   align: 'center'
+          #   value: 'fmt_higher_value_91'
+          #   item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_91'
+          #   item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_last_5_91'
+          #   item_align: 'center'
+          # - text: 'Ano'
+          #   align: 'center'
+          #   value: 'last_2_value_91'
+          #   item_align: 'center'
+          #   format: "inteiro"
+          # - text: 'Ano'
+          #   align: 'center'
+          #   value: 'last_value_91'
+          #   item_align: 'center'
+          #   format: "inteiro"
+          - text: 'Variação B31'
+            align: 'center'
+            value: 'fmt_last_rate_31'
+            item_align: 'center'
+        component_options:
+          id: "sparklines_beneficio_agravo"
+          title: "Afastamento por Agravo"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "cd_agrup_categoria_cid_agravo"
+          value_field: "agr_count"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "INSS/BENEFÍCIOS"
