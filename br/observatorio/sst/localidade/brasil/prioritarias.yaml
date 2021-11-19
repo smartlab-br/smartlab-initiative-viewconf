@@ -128,7 +128,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, os números absolutos (totais) de notificações acidentárias e afastamentos registrados para o Brasil. Ao lado, a evolução histórica para diferentes localidades.<br/><br/>"
+              fixed: "Em destaque, os números absolutos (totais) de notificações acidentárias e afastamentos registrados para o Brasil. Na tabela, a evolução histórica para diferentes localidades.<br/><br/>"
           - id: "select_cerest"
             type: "select"
             label: "CEREST Regional"
@@ -306,7 +306,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, os setores com o maiores números absolutos (totais) de notificações acidentárias e afastamentos registrados para o Brasil. Ao lado, a evolução histórica desses números para diferentes setores econômicos. Utilize os filtros para selecionar os números referentes a circunscrições de Centros de Referência em Saúde do Trabalhador (Cerest) regionais.<br/><br/>"
+              fixed: "Em destaque, os setores com o maiores números absolutos (totais) de notificações acidentárias e afastamentos registrados para o Brasil. Na tabela, a evolução histórica desses números para diferentes setores econômicos. Utilize os filtros para selecionar os números referentes a circunscrições de Centros de Referência em Saúde do Trabalhador (Cerest) regionais.<br/><br/>"
           - id: "select_cerest"
             type: "select"
             label: "CEREST Regional"
@@ -462,7 +462,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, as ocupações com os maiores números absolutos (totais) de notificações acidentárias e afastamentos registrados para o Brasil. Ao lado, a evolução histórica desses números para diferentes ocupações. Utilize os filtros para selecionar os números referentes a circunscrições de Centros de Referência em Saúde do Trabalhador (Cerest) regionais.<br/><br/>"
+              fixed: "Em destaque, as ocupações com os maiores números absolutos (totais) de notificações acidentárias e afastamentos registrados para o Brasil. Na tabela, a evolução histórica desses números para diferentes ocupações. Utilize os filtros para selecionar os números referentes a circunscrições de Centros de Referência em Saúde do Trabalhador (Cerest) regionais.<br/><br/>"
           - id: "select_cerest"
             type: "select"
             label: "CEREST Regional"
@@ -679,3 +679,294 @@ secoes:
           search_position: "bottom"
         source:
           desc: "INSS e RAIS (vínculos CLT)"
+# ========================================================
+      - id: "sparkline_cat_cid"
+        title: 
+          fixed: "Notificações de Acidente de Trabalho por Capítulo CID"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          args:
+            - base_object: "sst_cat"
+              named_prop: "agr_min_ano_cat"
+            - base_object: "sst_cat"
+              named_prop: "agr_max_ano_cat"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  fixed: "/sst/cats?categorias=ds_cap_ci&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,ne-ds_cap_ci-'Indefinido',and,ne-ds_cap_ci-''&ordenacao=-agr_count&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'ds_cap_ci'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Capítulo CID com mais acidentes notificados'
+                  - prop: "comment"
+                    template: 'Total de Acidentes: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o capítulo CID com mais notificações de acidentes de trabalho (CAT) na série histórica para a unidade federativa do município selecionado. Na tabela, apresenta-se, para o período selecionado, a série histórica dos registros de acordo com os capítulos da Classificação Internacional de Doenças (CID-10).<br/><br/>"
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
+            args:
+              - prop: "min"
+                named_prop: "agr_min_nu_competencia"
+              - prop: "max"
+                named_prop: "agr_max_nu_competencia"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-ano_cat-{0},and,le-ano_cat-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        component_type: "SPARKLINES"
+        api:
+          fixed: "/sst/cats?categorias=ds_cap_ci-cap_cid,'cat'-cd_indicador,ano_cat-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,ne-ds_cap_ci-'Indefinido',and,ne-ds_cap_ci-''"
+        headers:
+          - text: 'Capítulo CID'
+            align: 'center'
+            value: 'cap_cid'
+            item_align: 'center'
+          - text: 'Total'
+            align: 'center'
+            value: 'total_cat'
+            item_align: 'center'
+            format: 'inteiro'
+          - text: 'Smartline'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_cat'
+            item_align: 'center'
+            type: 'spark'
+            series: 'cat'
+            bgColor: '#F44336'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Ano de Pico'
+            align: 'center'
+            value: 'fmt_higher_value_cat'
+            item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_cat'
+          #   item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_last_5_cat'
+          #   item_align: 'center'
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_2_value_cat'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Ano'
+            align: 'center'
+            value: 'last_value_cat'
+            item_align: 'center'
+            format: "inteiro"
+          - text: 'Variação'
+            align: 'center'
+            value: 'fmt_last_rate_cat'
+            item_align: 'center'
+        component_options:
+          id: "sparklines_cnae_freq_rgt"
+          title: "Notificações de Acidentes de Trabalho por Capítulo CID"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "cap_cid"
+          value_field: "agr_count"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "INSS/CATWEB"
+# ========================================================
+      - id: "sparkline_beneficio_agravo"
+        title: 
+          fixed: "Afastamentos Acidentários e Não Acidentários por Grupos de Agravos"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,ne-cd_agrupamento_categoria_cid-'Indefinido',and,ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-91&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'cd_agrupamento_categoria_cid'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Grupo de Agravo com mais Afastamentos B91'
+                  - prop: "comment"
+                    template: 'Total de Afastamentos B91: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+              - relevance: 'high'
+                cls: 'xs12'
+                api: 
+                  template: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,ne-cd_agrupamento_categoria_cid-'Indefinido',and,ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-31&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: "cd_uf"
+                args:
+                  - prop: "value"
+                    named_prop: 'cd_agrupamento_categoria_cid'
+                    default: "Sem Registros"
+                    zero: "Nenhum"
+                  - prop: "description"
+                    fixed: 'Grupo de Agravo com mais Afastamentos B31'
+                  - prop: "comment"
+                    template: 'Total de Afastamentos B31: {0}'
+                    args:
+                      - named_prop: "agr_count"
+                        format: "inteiro"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, os grupos de agravos com mais afastamentos acidentários(B91) e não acidentários(B31). Na tabela, mostra-se nos gráficos a evolução de casos de afastamentos acidentários e não acidentários de acordo com o tipo de ocorrência, apresentada mediante simplificação textual da Classificação Internacional de Doenças, quer para facilitar a compreensão, quer para destacar algumas ocorrências de maior gravidade. Acrescenta-se, ainda, a informação a respeito da variação percentual nos últimos dois anos considerados. Utilize o filtro dos anos para modificar o período de interesse.<br/><br/>"
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+            args:
+              - prop: "min"
+                named_prop: "agr_min_ano_beneficio"
+              - prop: "max"
+                named_prop: "agr_max_ano_beneficio"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        component_type: "SPARKLINES"
+        api:
+          fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid,cd_especie_beneficio-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_municipio_ibge,and,ne-cd_agrupamento_categoria_cid-'Indefinido',and,ne-cd_agrupamento_categoria_cid-'',and,in-cd_especie_beneficio-31-91"
+        headers:
+          - text: 'Tipo de Agravo'
+            align: 'center'
+            value: 'cd_agrupamento_categoria_cid'
+            item_align: 'center'
+          - text: 'Smartline B91'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_91'
+            item_align: 'center'
+            type: 'spark'
+            series: '91'
+            bgColor: '#03A9F4'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total B91'
+            align: 'center'
+            value: 'total_91'
+            item_align: 'center'
+            format: 'inteiro'
+          # - text: 'Ano de Pico'
+          #   align: 'center'
+          #   value: 'fmt_higher_value_91'
+          #   item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_91'
+          #   item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_last_5_91'
+          #   item_align: 'center'
+          # - text: 'Ano'
+          #   align: 'center'
+          #   value: 'last_2_value_91'
+          #   item_align: 'center'
+          #   format: "inteiro"
+          # - text: 'Ano'
+          #   align: 'center'
+          #   value: 'last_value_91'
+          #   item_align: 'center'
+          #   format: "inteiro"
+          - text: 'Variação B91'
+            align: 'center'
+            value: 'fmt_last_rate_91'
+            item_align: 'center'
+          - text: 'Smartline B31'
+            align: 'center'
+            width: '26%'
+            value: 'last_value_31'
+            item_align: 'center'
+            type: 'spark'
+            series: '31'
+            bgColor: '#0D47A1'
+            stroke: 2
+            item_align: 'center'
+          - text: 'Total B31'
+            align: 'center'
+            value: 'total_31'
+            item_align: 'center'
+            format: 'inteiro'
+          # - text: 'Ano de Pico'
+          #   align: 'center'
+          #   value: 'fmt_higher_value_91'
+          #   item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_91'
+          #   item_align: 'center'
+          # - text: 'Número de Anos de Incidência'
+          #   align: 'center'
+          #   width: '10%'
+          #   value: 'series_length_last_5_91'
+          #   item_align: 'center'
+          # - text: 'Ano'
+          #   align: 'center'
+          #   value: 'last_2_value_91'
+          #   item_align: 'center'
+          #   format: "inteiro"
+          # - text: 'Ano'
+          #   align: 'center'
+          #   value: 'last_value_91'
+          #   item_align: 'center'
+          #   format: "inteiro"
+          - text: 'Variação B31'
+            align: 'center'
+            value: 'fmt_last_rate_31'
+            item_align: 'center'
+        component_options:
+          id: "sparklines_beneficio_agravo"
+          title: "Afastamento por Grupos de Agravos"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "cd_agrupamento_categoria_cid"
+          value_field: "agr_count"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "INSS/BENEFÍCIOS"
