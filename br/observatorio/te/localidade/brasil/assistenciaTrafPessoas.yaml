@@ -1,0 +1,439 @@
+# ===================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_br_total&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,eq-vl_indicador-0"
+      options:
+        calcs:
+          - id: "perc_nao_possui"
+            function: "calc_proportion_ds"
+            fn_args:
+              - named_prop: 'agr_count'
+              - named_prop: 'rank_br_total'
+          - id: "perc_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - fixed: 1
+              - named_prop: 'calc_perc_nao_possui'
+          - id: "qtde_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - named_prop: "rank_br_total"
+              - named_prop: 'agr_count'
+    args:
+      - prop: "value"
+        named_prop: "calc_perc_possui"
+        format: 'porcentagem'
+        multiplier: 100
+      - prop: "description"
+        template: "dos municípios tem {0}"
+        args:
+          - named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "{0} municípios de {1}<br/>({2}, {3})"
+        args:
+          - named_prop: "calc_qtde_possui"
+          - named_prop: "rank_br_total"
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_br_total&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_18sup',and,eq-vl_indicador-0"
+      options:
+        calcs:
+          - id: "perc_nao_possui"
+            function: "calc_proportion_ds"
+            fn_args:
+              - named_prop: 'agr_count'
+              - named_prop: 'rank_br_total'
+          - id: "perc_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - fixed: 1
+              - named_prop: 'calc_perc_nao_possui'
+          - id: "qtde_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - named_prop: "rank_br_total"
+              - named_prop: 'agr_count'
+    args:
+      - prop: "value"
+        named_prop: "calc_perc_possui"
+        format: 'porcentagem'
+        multiplier: 100
+      - prop: "description"
+        template: "dos municípios tem {0}"
+        args:
+          - named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "{0} municípios de {1}<br/>({2}, {3})"
+        args:
+          - named_prop: "calc_qtde_possui"
+          - named_prop: "rank_br_total"
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+# ===================================================
+secoes:
+  - id: "trafico_pessoas_unico"
+    name: ""
+    cards:
+# ====================================================          
+      - id: "card_trafico_criancas"
+        title: 
+          fixed: "Crianças e adolescentes sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
+        title_comment:
+          template: "Brasil, {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "g1_CREAS_018"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl6'
+                api:
+                  fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_br_total&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,eq-vl_indicador-0"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_br_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_br_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_br_total"
+          - type: "text"
+            title: ""
+            content:
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "g1_CREAS_018"
+                year: "max"
+              template: "Em destaque, o panorama nacional da existência de {0}.
+                      No mapa, identificam-se as unidades federativas em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. A escala de cores varia do branco (sem municípios com casos informados ou registrados) ao vermelho (mais municípios com casos registrados)."
+              args:
+                - named_prop: "ds_indicador_completo"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_uf,nm_uf,sg_uf,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,eq-vl_indicador-0"
+          options:
+            calcs:
+              - id: "perc_nao_possui"
+                function: "calc_proportion_ds"
+                fn_args:
+                  - named_prop: 'agr_count'
+                  - named_prop: 'rank_uf_total'
+              - id: "perc_possui"
+                function: "calc_subtraction_ds"
+                fn_args:
+                  - fixed: 1
+                  - named_prop: 'calc_perc_nao_possui'
+              - id: "qtde_possui"
+                function: "calc_subtraction_ds"
+                fn_args:
+                  - named_prop: "rank_uf_total"
+                  - named_prop: 'agr_count'
+              - id: "desc_qtde_possui"
+                function: "concat_values"
+                fn_args:
+                  - named_prop: "calc_qtde_possui"
+                  - fixed: " município(s) de "
+                  - named_prop: 'rank_uf_total'
+            formatters:
+              - id: "calc_perc_possui"
+                format: "porcentagem"
+                multiplier: 100
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Porcentagem de municípios'
+            value: 'fmt_calc_perc_possui'
+          - text: 'Número de municípios'
+            value: 'calc_desc_qtde_possui'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_perc_possui'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "card_trafico_maiores"
+        # type: "multiple-charts"
+        title: 
+          fixed: "Jovens e adultos sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
+        title_comment:
+          template: "Brasil, {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "g1_CREAS_18sup"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
+        #                   Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
+        #                   Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+        #       api:
+        #         fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+        #       args:
+        #         - named_prop: 'cd_indicador'
+        #         - named_prop: 'ds_fonte'
+        #         - named_prop: 'nu_competencia'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl6'
+                api:
+                  fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_br_total&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_18sup',and,eq-vl_indicador-0"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_br_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_br_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_br_total"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o panorama nacional da existência de jovens (18 a 24 anos) e adultos (acima de 24 anos) sobreviventes de tráfico de pessoas com acompanhamento pelo Serviço de Proteção e Atendimento Especializado a Famílias e Indivíduos (PAEFI) no Centro de Referência Especializado de Assistência Social (CREAS).
+                      No mapa, identificam-se as unidades federativas em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. A escala de cores varia do branco (sem municípios com casos informados ou registrados) ao vermelho (mais municípios com casos registrados)."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_uf,nm_uf,sg_uf,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_18sup',and,eq-vl_indicador-0"
+          options:
+            calcs:
+              - id: "perc_nao_possui"
+                function: "calc_proportion_ds"
+                fn_args:
+                  - named_prop: 'agr_count'
+                  - named_prop: 'rank_uf_total'
+              - id: "perc_possui"
+                function: "calc_subtraction_ds"
+                fn_args:
+                  - fixed: 1
+                  - named_prop: 'calc_perc_nao_possui'
+              - id: "qtde_possui"
+                function: "calc_subtraction_ds"
+                fn_args:
+                  - named_prop: "rank_uf_total"
+                  - named_prop: 'agr_count'
+              - id: "desc_qtde_possui"
+                function: "concat_values"
+                fn_args:
+                  - named_prop: "calc_qtde_possui"
+                  - fixed: " município(s) de "
+                  - named_prop: 'rank_uf_total'
+            formatters:
+              - id: "calc_perc_possui"
+                format: "porcentagem"
+                multiplier: 100
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Porcentagem de municípios'
+            value: 'fmt_calc_perc_possui'
+          - text: 'Número de municípios'
+            value: 'calc_desc_qtde_possui'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_perc_possui'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "card_trafico_sobreviventes"
+        # type: "multiple-charts"
+        title: 
+          fixed: "Sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
+        title_comment:
+          template: "Brasil, {0}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "g1_CREAS"
+            year: "max"
+          args:
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
+        #                   Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
+        #                   Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+        #       api:
+        #         fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+        #       args:
+        #         - named_prop: 'cd_indicador'
+        #         - named_prop: 'ds_fonte'
+        #         - named_prop: 'nu_competencia'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl6'
+                api:
+                  fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_br_total&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS',and,eq-vl_indicador-0"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_br_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_br_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_br_total"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o panorama nacional da existência de sobreviventes de tráfico de pessoas com acompanhamento pelo Serviço de Proteção e Atendimento Especializado a Famílias e Indivíduos (PAEFI) no Centro de Referência Especializado de Assistência Social (CREAS).
+                      No mapa, identificam-se as unidades federativas em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. A escala de cores varia do branco (sem municípios com casos informados ou registrados) ao vermelho (mais municípios com casos registrados)."
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=cd_uf,nm_uf,sg_uf,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_18sup',and,eq-vl_indicador-0"
+          options:
+            calcs:
+              - id: "perc_nao_possui"
+                function: "calc_proportion_ds"
+                fn_args:
+                  - named_prop: 'agr_count'
+                  - named_prop: 'rank_uf_total'
+              - id: "perc_possui"
+                function: "calc_subtraction_ds"
+                fn_args:
+                  - fixed: 1
+                  - named_prop: 'calc_perc_nao_possui'
+              - id: "qtde_possui"
+                function: "calc_subtraction_ds"
+                fn_args:
+                  - named_prop: "rank_uf_total"
+                  - named_prop: 'agr_count'
+              - id: "desc_qtde_possui"
+                function: "concat_values"
+                fn_args:
+                  - named_prop: "calc_qtde_possui"
+                  - fixed: " município(s) de "
+                  - named_prop: 'rank_uf_total'
+            formatters:
+              - id: "calc_perc_possui"
+                format: "porcentagem"
+                multiplier: 100
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Porcentagem de municípios'
+            value: 'fmt_calc_perc_possui'
+          - text: 'Número de municípios'
+            value: 'calc_desc_qtde_possui'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_perc_possui'
+          colorScale:
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"

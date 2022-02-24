@@ -1,0 +1,1017 @@
+# ===================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,eq-vl_indicador-0"
+      args:
+        - named_prop: "cd_uf"
+      options:
+        calcs:
+          - id: "perc_nao_possui"
+            function: "calc_proportion_ds"
+            fn_args:
+              - named_prop: 'agr_count'
+              - named_prop: 'rank_uf_total'
+          - id: "perc_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - fixed: 1
+              - named_prop: 'calc_perc_nao_possui'
+          - id: "qtde_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - named_prop: "rank_uf_total"
+              - named_prop: 'agr_count'
+    args:
+      - prop: "value"
+        named_prop: "calc_perc_possui"
+        format: 'porcentagem'
+        multiplier: 100
+      - prop: "description"
+        template: "dos municípios tem {0}"
+        args:
+          - named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "{0} municípios de {1}<br/>({2}, {3})"
+        args:
+          - named_prop: "calc_qtde_possui"
+          - named_prop: "rank_uf_total"
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   api:
+  #     template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018'"
+  #     args:
+  #       - named_prop: "cd_uf"
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'agr_sum_vl_indicador'
+  #       format: 'inteiro'
+  #       collapse:
+  #         format: 'real'
+  #     - prop: "description"
+  #       named_prop: "ds_indicador_curto"
+  #     - prop: 'comment'
+  #       template: "({0}, {1})"
+  #       args:
+  #         - named_prop: "ds_fonte"
+  #         - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'c5_CREAS_1',and,eq-vl_indicador-0"
+      args:
+        - named_prop: "cd_uf"
+      options:
+        calcs:
+          - id: "perc_nao_possui"
+            function: "calc_proportion_ds"
+            fn_args:
+              - named_prop: 'agr_count'
+              - named_prop: 'rank_uf_total'
+          - id: "perc_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - fixed: 1
+              - named_prop: 'calc_perc_nao_possui'
+          - id: "qtde_possui"
+            function: "calc_subtraction_ds"
+            fn_args:
+              - named_prop: "rank_uf_total"
+              - named_prop: 'agr_count'
+    args:
+      - prop: "value"
+        named_prop: "calc_perc_possui"
+        format: 'porcentagem'
+        multiplier: 100
+      - prop: "description"
+        template: "dos municípios tem {0}"
+        args:
+          - named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "{0} municípios de {1}<br/>({2}, {3})"
+        args:
+          - named_prop: "calc_qtde_possui"
+          - named_prop: "rank_uf_total"
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   api:
+  #     template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'c5_CREAS_1'"
+  #     args:
+  #       - named_prop: "cd_uf"
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'agr_sum_vl_indicador'
+  #       format: 'inteiro'
+  #       collapse:
+  #         format: 'real'
+  #     - prop: "description"
+  #       named_prop: "ds_indicador_curto"
+  #     - prop: 'comment'
+  #       template: "({0}, {1})"
+  #       args:
+  #         - named_prop: "ds_fonte"
+  #         - named_prop: "nu_competencia"
+# ===================================================
+secoes:
+  - id: "trafico_criancas_unico"
+    name: ""
+    cards:
+# ====================================================          
+      - id: "card_trafico_criancas"
+        # type: "multiple-charts"
+        title: 
+          fixed: "Crianças e adolescentes sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "g1_CREAS_018"
+            year: "max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
+        #                   Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
+        #                   Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+        #       api:
+        #         fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+        #       args:
+        #         - named_prop: 'cd_indicador'
+        #         - named_prop: 'ds_fonte'
+        #         - named_prop: 'nu_competencia'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl6'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              # - relevance: 'high'
+              #   cls: 'xs12'
+              #   api:
+              #     template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018'"
+              #     args:
+              #       - named_prop: "cd_uf"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'agr_sum_vl_indicador'
+              #       format: 'inteiro'
+              #       collapse:
+              #         format: 'real'
+              #     - prop: "description"
+              #       named_prop: "ds_indicador_curto"
+          - type: "text"
+            title: ""
+            content:
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "g1_CREAS_018"
+                year: "max"
+              template: "Em destaque, a situação da UF em relação aos municípios de seu âmbito nos quais se apurou haver {0}.
+                      No mapa, identificam-se os municípios em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. As cores variam entre o cinza (sem casos informados ou registrados) e o vermelho (localidades em que foram identificados registros)."
+              args:
+                - named_prop: "ds_indicador_completo"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'g1_CREAS_018',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "log_valor"
+                function: "get_log"
+                fn_args:
+                  - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value_ds"
+                fn_args:
+                  - named_prop: "vl_indicador"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Existe'
+            value: 'calc_possui'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_possui'
+          colorScale:
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "card_trab_infantil"
+        # type: "multiple-charts"
+        title: 
+          fixed: "Crianças ou adolescentes até 15 anos em trabalho infantil com acompanhamento pelo PAEFI no CREAS"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "c5_CREAS_1"
+            year: "max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
+        #                   Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
+        #                   Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+        #       api:
+        #         fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+        #       args:
+        #         - named_prop: 'cd_indicador'
+        #         - named_prop: 'ds_fonte'
+        #         - named_prop: 'nu_competencia'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl6'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'c5_CREAS_1',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              # - relevance: 'high'
+              #   cls: 'xs12'
+              #   api:
+              #     template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'c5_CREAS_1'"
+              #     args:
+              #       - named_prop: "cd_uf"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'agr_sum_vl_indicador'
+              #       format: 'inteiro'
+              #       collapse:
+              #         format: 'real'
+              #     - prop: "description"
+              #       named_prop: "ds_indicador_curto"
+          - type: "text"
+            title: ""
+            content:
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "c5_CREAS_1"
+                year: "max"
+              template: "Em destaque, a situação da UF em relação aos municípios de seu âmbito nos quais se apurou haver {0}.
+                      No mapa, identificam-se os municípios em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. As cores variam entre o cinza (sem casos informados ou registrados) e o vermelho (localidades em que foram identificados registros)."
+              args:
+                - named_prop: "ds_indicador_completo"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'c5_CREAS_1',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "log_valor"
+                function: "get_log"
+                fn_args:
+                  - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value_ds"
+                fn_args:
+                  - named_prop: "vl_indicador"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Existe'
+            value: 'calc_possui'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_possui'
+          colorScale:
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "card_trab_infantil_pop"
+        # type: "multiple-charts"
+        title: 
+          fixed: "Crianças ou adolescentes até 15 anos em trabalho infantil identificadas pelo Serviço Especializado em Abordagem Social do Centro POP"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "e2_CentroPOP"
+            year: "max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
+        #                   Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
+        #                   Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+        #       api:
+        #         fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+        #       args:
+        #         - named_prop: 'cd_indicador'
+        #         - named_prop: 'ds_fonte'
+        #         - named_prop: 'nu_competencia'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl6'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'e2_CentroPOP',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              # - relevance: 'high'
+              #   cls: 'xs12'
+              #   api:
+              #     template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'e2_CentroPOP'"
+              #     args:
+              #       - named_prop: "cd_uf"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'agr_sum_vl_indicador'
+              #       format: 'inteiro'
+              #       collapse:
+              #         format: 'real'
+              #     - prop: "description"
+              #       named_prop: "ds_indicador_curto"
+              - relevance: 'low'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_CADUN_01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "({0}, {1})"
+                    args:
+                      - named_prop: "ds_fonte"
+                      - named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "e2_CentroPOP"
+                year: "max"
+              template: "Em destaque, a situação da UF em relação aos municípios de seu âmbito nos quais se apurou haver {0}.
+                      No mapa, identificam-se os municípios em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. As cores variam entre o cinza (sem casos informados ou registrados) e o vermelho (localidades em que foram identificados registros)."
+              args:
+                - named_prop: "ds_indicador_completo"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'e2_CentroPOP',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "log_valor"
+                function: "get_log"
+                fn_args:
+                  - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value_ds"
+                fn_args:
+                  - named_prop: "vl_indicador"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Existe'
+            value: 'calc_possui'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_possui'
+          colorScale:
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "card_trab_infantil_creas"
+        # type: "multiple-charts"
+        title: 
+          fixed: "Crianças ou adolescentes até 15 anos em trabalho infantil identificadas pelo Serviço Especializado em Abordagem Social do CREAS"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "k2_CREAS"
+            year: "max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
+        #                   Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
+        #                   Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+        #       api:
+        #         fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+        #       args:
+        #         - named_prop: 'cd_indicador'
+        #         - named_prop: 'ds_fonte'
+        #         - named_prop: 'nu_competencia'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl6'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'k2_CREAS',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              # - relevance: 'high'
+              #   cls: 'xs12'
+              #   api:
+              #     template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'k2_CREAS'"
+              #     args:
+              #       - named_prop: "cd_uf"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'agr_sum_vl_indicador'
+              #       format: 'inteiro'
+              #       collapse:
+              #         format: 'real'
+              #     - prop: "description"
+              #       named_prop: "ds_indicador_curto"
+              - relevance: 'low'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_CADUN_01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "({0}, {1})"
+                    args:
+                      - named_prop: "ds_fonte"
+                      - named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "k2_CREAS"
+                year: "max"
+              template: "Em destaque, a situação da UF em relação aos municípios de seu âmbito nos quais se apurou haver {0}.
+                      No mapa, identificam-se os municípios em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. As cores variam entre o cinza (sem casos informados ou registrados) e o vermelho (localidades em que foram identificados registros)."
+              args:
+                - named_prop: "ds_indicador_completo"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'k2_CREAS',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "log_valor"
+                function: "get_log"
+                fn_args:
+                  - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value_ds"
+                fn_args:
+                  - named_prop: "vl_indicador"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Existe'
+            value: 'calc_possui'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_possui'
+          colorScale:
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "card_familias_trab_infantil"
+        # type: "multiple-charts"
+        title: 
+          fixed: "Famílias com crianças e adolescentes em trabalho infantil com acompanhamento pelo PAIF no CRAS"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "b5_CRAS"
+            year: "max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
+        #                   Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
+        #                   Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+        #       api:
+        #         fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+        #       args:
+        #         - named_prop: 'cd_indicador'
+        #         - named_prop: 'ds_fonte'
+        #         - named_prop: 'nu_competencia'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl6'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'b5_CRAS',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              # - relevance: 'high'
+              #   cls: 'xs12'
+              #   api:
+              #     template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'b5_CRAS'"
+              #     args:
+              #       - named_prop: "cd_uf"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'agr_sum_vl_indicador'
+              #       format: 'inteiro'
+              #       collapse:
+              #         format: 'real'
+              #     - prop: "description"
+              #       named_prop: "ds_indicador_curto"
+              - relevance: 'low'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_CADUN_01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "({0}, {1})"
+                    args:
+                      - named_prop: "ds_fonte"
+                      - named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "b5_CRAS"
+                year: "max"
+              template: "Em destaque, a situação da UF em relação aos municípios de seu âmbito nos quais se apurou haver {0}.
+                      No mapa, identificam-se os municípios em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. As cores variam entre o cinza (sem casos informados ou registrados) e o vermelho (localidades em que foram identificados registros)."
+              args:
+                - named_prop: "ds_indicador_completo"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'b5_CRAS',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "log_valor"
+                function: "get_log"
+                fn_args:
+                  - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value_ds"
+                fn_args:
+                  - named_prop: "vl_indicador"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Existe'
+            value: 'calc_possui'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_possui'
+          colorScale:
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "card_familias_trab_infantil_creas"
+        # type: "multiple-charts"
+        title: 
+          fixed: "Famílias com crianças e adolescentes no PETI com acompanhamento pelo PAEFI no CREAS"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "b3_CREAS"
+            year: "max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
+        #                   Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
+        #                   Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+        #       api:
+        #         fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+        #       args:
+        #         - named_prop: 'cd_indicador'
+        #         - named_prop: 'ds_fonte'
+        #         - named_prop: 'nu_competencia'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl6'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'b3_CREAS',and,eq-vl_indicador-0"
+                  args:
+                    - named_prop: "cd_uf"
+                  options:
+                    calcs:
+                      - id: "perc_nao_possui"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_count'
+                          - named_prop: 'rank_uf_total'
+                      - id: "perc_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - fixed: 1
+                          - named_prop: 'calc_perc_nao_possui'
+                      - id: "qtde_possui"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_uf_total"
+                          - named_prop: 'agr_count'
+                args:
+                  - prop: "value"
+                    named_prop: "calc_perc_possui"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    template: "dos municípios tem {0}"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "{0} municípios de {1}"
+                    args:
+                      - named_prop: "calc_qtde_possui"
+                      - named_prop: "rank_uf_total"
+              # - relevance: 'high'
+              #   cls: 'xs12'
+              #   api:
+              #     template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'b3_CREAS'"
+              #     args:
+              #       - named_prop: "cd_uf"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: 'agr_sum_vl_indicador'
+              #       format: 'inteiro'
+              #       collapse:
+              #         format: 'real'
+              #     - prop: "description"
+              #       named_prop: "ds_indicador_curto"
+              - relevance: 'low'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "JD_CADUN_01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    template: "({0}, {1})"
+                    args:
+                      - named_prop: "ds_fonte"
+                      - named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "b3_CREAS"
+                year: "max"
+              template: "Em destaque, a situação da UF em relação aos municípios de seu âmbito nos quais se apurou haver {0}.
+                      No mapa, identificam-se os municípios em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. As cores variam entre o cinza (sem casos informados ou registrados) e o vermelho (localidades em que foram identificados registros)."
+              args:
+                - named_prop: "ds_indicador_completo"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'b3_CREAS',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "log_valor"
+                function: "get_log"
+                fn_args:
+                  - fixed: "vl_indicador"
+              - id: "possui"
+                function: "get_flag_value_ds"
+                fn_args:
+                  - named_prop: "vl_indicador"
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Existe'
+            value: 'calc_possui'
+        chart_options:
+          id_field: 'cd_municipio_ibge_dv'
+          topo_key: "codarea"
+          value_field: 'calc_possui'
+          colorScale:
+            type: "fixed"
+            color_array: 
+              'Não': "#BCBCBC"
+              'Sim': "#E32F27"
+        source:
+          desc_field: "ds_fonte"

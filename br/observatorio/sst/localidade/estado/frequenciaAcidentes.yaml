@@ -150,7 +150,7 @@ secoes:
                     - named_prop: "ds_cnae_classe_cat"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/sst/cats?categorias=cd_municipio_ibge_dv,nm_municipio,nm_uf,ano_cat&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
+          template: "/sst/cats?categorias=cd_municipio_ibge_dv,nm_municipio,nm_uf,ano_cat, nm_cerest&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
           args:
             - named_prop: "idLocalidade"
             - base_object: "sst_cat"
@@ -173,6 +173,9 @@ secoes:
             value: 'ano_cat'
           - text: 'Nº de Notificações de Acidente de Trabalho'
             value: 'fmt_agr_count'
+          - text: 'CEREST Responsável'
+            align: 'left'
+            value: 'nm_cerest'
         chart_options:
           id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
@@ -210,6 +213,10 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  args:
+                    - named_prop: "idLocalidade"
+                api_reactive:
                   template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
                   args:
                     - named_prop: "idLocalidade"
