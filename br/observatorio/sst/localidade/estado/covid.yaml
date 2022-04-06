@@ -156,7 +156,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Afastamentos por CID B34 ou U07 no país'
+                    fixed: 'Afastamentos por CID B34 ou U07 na UF'
           - type: "text"
             title: ""
             content:
@@ -241,19 +241,13 @@ secoes:
                       Considera-se, em especial, além do código U07 (Covid-19) da Classificação Internacional de Doenças (CID), o código B34 (Doenças por vírus, de localização não especificada), em especial as subcategorias B342 (Infecção por coronavírus de localização não especificada) e B349 (Infecção viral não especificada). O código U07 foi incluído na Classificação Internacional de Doenças após a descoberta do novo vírus. A hipótese que os dados sugerem, além do tempo necessário ao diagnóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34 (em especial os códigos B34.2 e B34.9), até então nunca ou apenas raramente haviam sido utilizados para comunicações de acidentes de trabalho e afastamentos previdenciários."
         chart_type: "BAR"
         api: 
-          - template: "/sst/beneficios?categorias='{0} a {1}'-ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,lt-ano_beneficio-{2},and,eq-cd_uf-{3}"
+          - template: "/sst/beneficios?categorias='{0} a 2019'-ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,lt-ano_beneficio-2020,and,eq-cd_uf-{1}"
             args:
               - base_object: "sst_beneficio"
                 named_prop: "agr_min_ano_beneficio"
-              - base_object: "sst_beneficio"
-                named_prop: "calc_ano_beneficio_anterior"
-              - base_object: "sst_beneficio"
-                named_prop: "agr_max_ano_beneficio"
               - named_prop: "idLocalidade"
-          - template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+          - template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,ge-ano_beneficio-2020,and,eq-cd_uf-{0}"
             args:
-              - base_object: "sst_beneficio"
-                named_prop: "agr_max_ano_beneficio"
               - named_prop: "idLocalidade"
         api_options:
             formatters:
@@ -275,23 +269,16 @@ secoes:
           show_y_axis: false
           hide_legend: true
           color: "#238B45"
-          # colorScale:
-          #   name: "Greens"
-          #   type: "singleHue"
-          #   levels: 4
-          #   order: 'desc'
 # =====================================================
       - id: "treemap_benef_cbo"
         type: "multiple-charts"
         title: 
           fixed: "Ocupações (CBO) dos Afastamentos Previdenciários por CID B34 ou U07"
         title_comment:
-          template: "{0}, {1}"
+          template: "{0}, 2020 e 2021"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_max_ano_beneficio"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -301,12 +288,10 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12'
+                cls: 'xs12 md6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cbo2002&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,ne-ds_cbo2002-'',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cbo2002&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,ne-ds_cbo2002-'',and,eq-ano_beneficio-2020,and,eq-cd_uf-{0}&ordenacao=-agr_count&limit=1"
                   args:
-                    - base_object: "sst_beneficio"
-                      named_prop: "agr_max_ano_beneficio"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -317,6 +302,25 @@ secoes:
                     default: "Sem Registros"
                   - prop: "description"
                     named_prop: "ds_cbo2002"
+                  - prop: "comment"
+                    named_prop: "ano_beneficio"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cbo2002&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,ne-ds_cbo2002-'',and,eq-ano_beneficio-2021,and,eq-cd_uf-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    named_prop: "ds_cbo2002"
+                  - prop: "comment"
+                    named_prop: "ano_beneficio"
               # - relevance: 'high'
               #   cls: 'xs6'
               #   api:
@@ -345,10 +349,8 @@ secoes:
             multiple: true
             label: "Setor Econômico"
             api:
-              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,ne-ds_cnae_classe-'',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,ne-ds_cnae_classe-'',and,in-ano_beneficio-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
                 - named_prop: "idLocalidade"
             args:
               - prop: "id"
@@ -364,9 +366,41 @@ secoes:
                   args:
                     - named_prop: "ds_cnae_classe"
         charts:
+          # - id: "treemap_benef_cbo_pre"
+          #   cls: "xs12 md6"
+          #   title: 'Ocupações (CBO) dos Afastamentos Previdenciários por CID B34 ou U07 em 2018 e 2019 - pré pandemia'
+          # #   footnote: 
+          # #     template: "Ocupações- B91 ({0}-{1})"
+          # #     args:
+          # #       - base_object: "sst_beneficio"
+          # #         named_prop: "agr_min_ano_beneficio"
+          # #       - base_object: "sst_beneficio"
+          # #         named_prop: "agr_max_ano_beneficio"
+          #   type: "TREEMAP"
+          #   api: 
+          #     fixed: "/sst/beneficios?categorias=ano_beneficio,ds_cbo2002&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,ne-ds_cbo2002-'',and,in-ano_beneficio-2018-2019"
+          #     options:
+          #         formatters:
+          #           - id: "agr_count"
+          #             format: 'inteiro'
+          #   headers:
+          #     - text: 'Ocupação'
+          #       align: 'left'
+          #       value: 'ds_cbo2002'
+          #     - text: 'Ano'
+          #       value: 'ano_beneficio'
+          #     - text: 'Qtde'
+          #       value: 'fmt_agr_count'
+          #   options:
+          #     id: "ds_cbo2002"
+          #     size: "agr_count"
+          #     text: "ds_cbo2002"
+          #     hide_legend: true
+          #     colorScale:
+          #       name: "Blues"
           - id: "treemap_benef_cbo"
             cls: "xs12"
-            title: 'Ocupações (CBO) dos Afastamentos Previdenciários por CID B34 ou U07'
+            title: 'Ocupações (CBO) dos Afastamentos Previdenciários por CID B34 ou U07 em 2020 e 2021 - período da pandemia'
           #   footnote: 
           #     template: "Ocupações- B91 ({0}-{1})"
           #     args:
@@ -376,10 +410,8 @@ secoes:
           #         named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              template: "/sst/beneficios?categorias=ano_beneficio,ds_cbo2002&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,ne-ds_cbo2002-'',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+              template: "/sst/beneficios?categorias=ano_beneficio,ds_cbo2002&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,ne-ds_cbo2002-'',and,in-ano_beneficio-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -400,57 +432,19 @@ secoes:
               hide_legend: true
               colorScale:
                 name: "Reds"
-          # - id: "treemap_benef_cbo_b31"
-          #   cls: "xs12 md6"
-          #   title: 'Ocupações (CBO) dos Afastamentos Previdenciários B31 por CID B34 ou U07'
-          #   # footnote: 
-          #   #   template: "Ocupações- B31 ({0}-{1})"
-          #   #   args:
-          #   #     - base_object: "sst_beneficio"
-          #   #       named_prop: "agr_min_ano_beneficio"
-          #   #     - base_object: "sst_beneficio"
-          #   #       named_prop: "agr_max_ano_beneficio"
-          #   type: "TREEMAP"
-          #   api: 
-          #     template: "/sst/beneficios?categorias=ano_beneficio,ds_cbo2002&agregacao=COUNT&filtros=in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{0},and,ne-ds_cbo2002-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1}"
-          #     args:
-          #       - named_prop: "idLocalidade"
-          #       - base_object: "sst_beneficio"
-          #         named_prop: "agr_max_ano_beneficio"
-          #     options:
-          #         formatters:
-          #           - id: "agr_count"
-          #             format: 'inteiro'
-          #   headers:
-          #     - text: 'Ocupação'
-          #       align: 'left'
-          #       value: 'ds_cbo2002'
-          #     - text: 'Ano'
-          #       value: 'ano_beneficio'
-          #     - text: 'Qtde'
-          #       value: 'fmt_agr_count'
-          #   options:
-          #     id: "ds_cbo2002"
-          #     size: "agr_count"
-          #     text: "ds_cbo2002"
-          #     hide_legend: true
-          #     colorScale:
-          #       name: "Blues"
 #==================================================================================================
       - id: "bene_headline"
         type: "headline"
         title:
-          fixed: "Afastamentos Previdenciários - Comparações entre 2019 e 2020, ano do início da pandemia Covid-19"
+          fixed: "Afastamentos Previdenciários - Comparação entre período pré-pandemia e período da pandemia do Covid-19"
 # # =====================================================
 #       - id: "beneficios_tipo_doenca"
 #         type: "multiple-charts"
 #         title: 
 #           fixed: "Afastamentos conforme os Tipos de Doença"
 #         title_comment:
-#           template: "{0}, de {1} e {2}"
+#           template: "Brasil, de {0} e {1}"
 #           args:
-#             - base_object: "localidade"
-#               named_prop: "nm_localidade"
 #             - base_object: "sst_beneficio"
 #               named_prop: "calc_ano_beneficio_anterior"
 #             - base_object: "sst_beneficio"
@@ -466,11 +460,10 @@ secoes:
 #               - relevance: 'high'
 #                 cls: 'xs12 sm6'
 #                 api:
-#                   template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+#                   template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0}"
 #                   args:
 #                     - base_object: "sst_beneficio"
 #                       named_prop: "calc_ano_beneficio_anterior"
-#                     - named_prop: "idLocalidade"
 #                 args:
 #                   - prop: "value"
 #                     named_prop: 'agr_count'
@@ -485,11 +478,10 @@ secoes:
 #               - relevance: 'high'
 #                 cls: 'xs12 sm6'
 #                 api:
-#                   template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+#                   template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0}"
 #                   args:
 #                     - base_object: "sst_beneficio"
 #                       named_prop: "agr_max_ano_beneficio"
-#                     - named_prop: "idLocalidade"
 #                 args:
 #                   - prop: "value"
 #                     named_prop: 'agr_count'
@@ -504,11 +496,10 @@ secoes:
 #               - relevance: 'high'
 #                 cls: 'xs12 sm6'
 #                 api:
-#                   template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{1}"
+#                   template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,in-cd_categoria_cid_beneficio-'B34'-'U07'"
 #                   args:
 #                     - base_object: "sst_beneficio"
 #                       named_prop: "calc_ano_beneficio_anterior"
-#                     - named_prop: "idLocalidade"
 #                 args:
 #                   - prop: "value"
 #                     named_prop: 'agr_count'
@@ -523,11 +514,10 @@ secoes:
 #               - relevance: 'high'
 #                 cls: 'xs12 sm6'
 #                 api:
-#                   template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{1}"
+#                   template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,in-cd_categoria_cid_beneficio-'B34'-'U07'"
 #                   args:
 #                     - base_object: "sst_beneficio"
 #                       named_prop: "agr_max_ano_beneficio"
-#                     - named_prop: "idLocalidade"
 #                 args:
 #                   - prop: "value"
 #                     named_prop: 'agr_count'
@@ -566,11 +556,10 @@ secoes:
 #                   named_prop: "calc_ano_cat_anterior"
 #             type: "TREEMAP"
 #             api: 
-#               template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+#               template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-ano_beneficio-{0}"
 #               args:
 #                 - base_object: "sst_beneficio"
 #                   named_prop: "calc_ano_beneficio_anterior"
-#                 - named_prop: "idLocalidade"
 #               options:
 #                   formatters:
 #                     - id: "agr_count"
@@ -580,7 +569,7 @@ secoes:
 #                 align: 'left'
 #                 value: 'cd_agp_cat_cid_agrv_det_doenca'
 #               - text: 'Ano'
-#                 value: 'ano_cat'
+#                 value: 'ano_beneficio'
 #               - text: 'Qtde'
 #                 value: 'fmt_agr_count'
 #             options:
@@ -599,11 +588,10 @@ secoes:
 #                   named_prop: "agr_max_ano_beneficio"
 #             type: "TREEMAP"
 #             api: 
-#               template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+#               template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-ano_beneficio-{0}"
 #               args:
 #                 - base_object: "sst_beneficio"
 #                   named_prop: "agr_max_ano_beneficio"
-#                 - named_prop: "idLocalidade"
 #               options:
 #                   formatters:
 #                     - id: "agr_count"
@@ -613,7 +601,7 @@ secoes:
 #                 align: 'left'
 #                 value: 'cd_agp_cat_cid_agrv_det_doenca'
 #               - text: 'Ano'
-#                 value: 'ano_cat'
+#                 value: 'ano_beneficio'
 #               - text: 'Qtde'
 #                 value: 'fmt_agr_count'
 #             options:
@@ -628,14 +616,10 @@ secoes:
         title: 
           fixed: "Afastamentos por Ocupação"
         title_comment:
-          template: "{0}, de {1} e {2}"
+          template: "{0}, de 2018 a 2021"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "sst_beneficio"
-              named_prop: "calc_ano_beneficio_anterior"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_max_ano_beneficio"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -647,10 +631,8 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+                  template: "/sst/beneficios?categorias=1&agregacao=COUNT&filtros=in-ano_beneficio-2018-2019,and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_beneficio"
-                      named_prop: "calc_ano_beneficio_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -662,14 +644,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de concessões de benefício'
                   - prop: "comment"
-                    named_prop: "ano_beneficio"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+                  template: "/sst/beneficios?categorias=1&agregacao=COUNT&filtros=in-ano_beneficio-2020-2021,and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_beneficio"
-                      named_prop: "agr_max_ano_beneficio"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -681,14 +661,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de concessões de benefício'
                   - prop: "comment"
-                    named_prop: "ano_beneficio"
+                    fixed: "2020-2021"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/beneficios?categorias=1&agregacao=COUNT&filtros=in-ano_beneficio-2018-2019,and,in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_beneficio"
-                      named_prop: "calc_ano_beneficio_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -700,14 +678,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de concessões de benefício CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_beneficio"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/beneficios?categorias=1&agregacao=COUNT&filtros=in-ano_beneficio-2020-2021,and,in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_beneficio"
-                      named_prop: "agr_max_ano_beneficio"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -719,7 +695,7 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de concessões de benefício CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_beneficio"
+                    fixed: "2020-2021"
           - type: "text"
             title: ""
             content:
@@ -739,18 +715,16 @@ secoes:
         charts:
           - id: "treemap_bene_cbo_anterior"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Afastamentos por Ocupação ({0})"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
+            title: 'Afastamentos por Ocupação em 2018 e 2019 - pré pandemia'
+            # footnote: 
+            #   template: "Afastamentos por Ocupação ({0})"
+            #   args:
+            #     - base_object: "sst_cat"
+            #       named_prop: "calc_ano_cat_anterior"
             type: "TREEMAP"
             api: 
-              template: "/sst/beneficios?categorias=ano_beneficio,ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+              template: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,in-ano_beneficio-2018-2019,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_beneficio"
-                  named_prop: "calc_ano_beneficio_anterior"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -760,8 +734,6 @@ secoes:
               - text: 'Ocupação'
                 align: 'left'
                 value: 'ds_cbo2002'
-              - text: 'Ano'
-                value: 'ano_beneficio'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -772,18 +744,11 @@ secoes:
                 name: "YlOrRd"
           - id: "treemap_bene_cbo_atual"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Afastamentos por Ocupação ({0} - ano de início da pandemia Covid-19)"
-              args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
+            title: 'Afastamentos por Ocupação em 2020 e 2021 - período da pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/beneficios?categorias=ano_beneficio,ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+              template: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,in-ano_beneficio-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -793,8 +758,6 @@ secoes:
               - text: 'Tipo de Doença'
                 align: 'left'
                 value: 'ds_cbo2002'
-              - text: 'Ano'
-                value: 'ano_beneficio'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -809,14 +772,10 @@ secoes:
         title: 
           fixed: "Afastamentos por Atividade Econômica"
         title_comment:
-          template: "{0}, de {1} e {2}"
+          template: "{0}, de 2018 a 2021"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "sst_beneficio"
-              named_prop: "calc_ano_beneficio_anterior"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_max_ano_beneficio"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -828,10 +787,8 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+                  template: "/sst/beneficios?categorias=1&agregacao=COUNT&filtros=in-ano_beneficio-2018-2019,and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_beneficio"
-                      named_prop: "calc_ano_beneficio_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -843,14 +800,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de concessões de benefício'
                   - prop: "comment"
-                    named_prop: "ano_beneficio"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+                  template: "/sst/beneficios?categorias=1&agregacao=COUNT&filtros=in-ano_beneficio-2020-2021,and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_beneficio"
-                      named_prop: "agr_max_ano_beneficio"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -862,14 +817,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de concessões de benefício'
                   - prop: "comment"
-                    named_prop: "ano_beneficio"
+                    fixed: "2020-2021"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/beneficios?categorias=1&agregacao=COUNT&filtros=in-ano_beneficio-2018-2019,and,in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_beneficio"
-                      named_prop: "calc_ano_beneficio_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -881,14 +834,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de concessões de benefício CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_beneficio"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-ano_beneficio-{0},and,in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/beneficios?categorias=1&agregacao=COUNT&filtros=in-ano_beneficio-2020-2021,and,in-cd_categoria_cid_beneficio-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_beneficio"
-                      named_prop: "agr_max_ano_beneficio"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -900,7 +851,7 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de concessões de benefício CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_beneficio"
+                    fixed: "2020-2021"
           - type: "text"
             title: ""
             content:
@@ -920,18 +871,11 @@ secoes:
         charts:
           - id: "treemap_bene_cnae_anterior"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Afastamentos por Aticidade Econômica ({0})"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
+            title: 'Afastamentos por Atividade Econômica em 2018 e 2019 - pré pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/beneficios?categorias=ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,in-ano_beneficio-2018-2019,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_beneficio"
-                  named_prop: "calc_ano_beneficio_anterior"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -941,8 +885,6 @@ secoes:
               - text: 'Atividade Econômica'
                 align: 'left'
                 value: 'ds_cnae_classe'
-              - text: 'Ano'
-                value: 'ano_beneficio'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -953,18 +895,11 @@ secoes:
                 name: "YlOrRd"
           - id: "treemap_bene_cnae_atual"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Afastamentos por Atividade Econômica ({0} - ano de início da pandemia Covid-19)"
-              args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
+            title: 'Afastamentos por Atividade Econômica em 2020 e 2021 - período da pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/beneficios?categorias=ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,eq-ano_beneficio-{0},and,eq-cd_uf-{1}"
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,in-ano_beneficio-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -1024,7 +959,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 no país'
+                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 na UF'
           - type: "text"
             title: ""
             content:
@@ -1098,7 +1033,7 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 no país'
+                    fixed: 'Notificações de Acidente de Trabalho por CID B34 ou U07 na UF'
                   - prop: "comment"
                     named_prop: 'ano_cat'
                     default: ''
@@ -1109,19 +1044,11 @@ secoes:
                       Considera-se, em especial, além do código U07 (Covid-19) da Classificação Internacional de Doenças (CID), o código B34 (Doenças por vírus, de localização não especificada), em especial as subcategorias B342 (Infecção por coronavírus de localização não especificada) e B349 (Infecção viral não especificada). O código U07 foi incluído na Classificação Internacional de Doenças após a descoberta do novo vírus. A hipótese que os dados sugerem, além do tempo necessário ao diagnóstico, é a de que, dada a falta de orientação/taxonomia precisa quanto à notificação, os registros foram feitos com o uso de CIDs existentes, alguns dos quais, a exemplo do B34 (em especial os códigos B34.2 e B34.9), até então nunca ou apenas raramente haviam sido utilizados para comunicações de acidentes de trabalho e afastamentos previdenciários."
         chart_type: "BAR"
         api: 
-          - template: "/sst/cats?categorias='{0} a {1}'-ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,lt-ano_cat-{2},and,eq-cd_uf-{3}"
+          - template: "/sst/cats?categorias='{0} a 2019'-ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,lt-ano_cat-2020,and,eq-cd_uf-{0}"
             args:
-              - base_object: "sst_cat"
-                named_prop: "agr_min_ano_cat"
-              - base_object: "sst_cat"
-                named_prop: "calc_ano_cat_anterior"
-              - base_object: "sst_cat"
-                named_prop: "agr_max_ano_cat"
               - named_prop: "idLocalidade"
-          - template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+          - template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,ge-ano_cat-2020,and,eq-cd_uf-{0}"
             args:
-              - base_object: "sst_cat"
-                named_prop: "agr_max_ano_cat"
               - named_prop: "idLocalidade"
         api_options:
             formatters:
@@ -1148,12 +1075,10 @@ secoes:
         title: 
           fixed: "Ocupações (CBO) das Notificações de Acidentes de Trabalho por CID B34 ou U07"
         title_comment:
-          template: "{0}, {1}"
+          template: "{0}, 2020 e 2021"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "sst_cat"
-              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1165,11 +1090,9 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,ne-ds_cbo-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,ne-ds_cbo-'',and,eq-ano_cat-2020,and,eq-cd_uf-{0}&ordenacao=-agr_count&limit=1"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "agr_max_ano_cat"
-                    - named_prop: "idLocalidade"
+                    - named_prop: 'idLocalidade'
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -1179,6 +1102,25 @@ secoes:
                     default: "Sem Registros"
                   - prop: "description"
                     named_prop: "ds_cbo"
+                  - prop: "comment"
+                    named_prop: "ano_cat"
+              - relevance: 'high'
+                cls: 'xs6'
+                api:
+                  template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,ne-ds_cbo-'',and,eq-ano_cat-2021,and,eq-cd_uf-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - named_prop: 'idLocalidade'
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    named_prop: "ds_cbo"
+                  - prop: "comment"
+                    named_prop: "ano_cat"
           - type: "text"
             title: ""
             content:
@@ -1189,10 +1131,8 @@ secoes:
             multiple: true
             label: "Setor Econômico"
             api:
-              template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=distinct&ordenacao=ds_cnae_classe_cat&filtros=in-cd_cid3-'B34'-'U07',and,ne-ds_cnae_classe_cat-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=distinct&ordenacao=ds_cnae_classe_cat&filtros=in-cd_cid3-'B34'-'U07',and,ne-ds_cnae_classe_cat-'',and,in-ano_cat-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
                 - named_prop: "idLocalidade"
             args:
               - prop: "id"
@@ -1209,10 +1149,8 @@ secoes:
                     - named_prop: "ds_cnae_classe_cat"
         chart_type: "TREEMAP"
         api: 
-          template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,ne-ds_cbo-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+          template: "/sst/cats?categorias=ds_cbo&agregacao=COUNT&filtros=in-cd_cid3-'B34'-'U07',and,ne-ds_cbo-'',and,in-ano_cat-2020-2021,and,eq-cd_uf-{0}"
           args:
-            - base_object: "sst_cat"
-              named_prop: "agr_max_ano_cat"
             - named_prop: "idLocalidade"
           options:
               formatters:
@@ -1222,8 +1160,6 @@ secoes:
           - text: 'Ocupação'
             align: 'left'
             value: 'ds_cbo'
-          - text: 'Ano'
-            value: 'ano_cat'
           - text: 'Qtde'
             value: 'fmt_agr_count'
         chart_options:
@@ -1233,25 +1169,21 @@ secoes:
           hide_legend: true
           colorScale:
             name: "Reds"
-  #==================================================================================================
+#==================================================================================================
       - id: "cat_headline_comp"
         type: "headline"
         title:
-          fixed: "Notificações de Acidentes de Trabalho (CAT) - Comparações entre 2019 e 2020, ano do início da pandemia Covid-19"
+          fixed: "Notificações de Acidentes de Trabalho (CAT) - Comparação entre período pré-pandemia e período da pandemia do Covid-19"
 # =====================================================
       - id: "cat_piramide_idade_sexo"
         type: "multiple-charts"
         title: 
           fixed: "Acidentes de trabalho por idade e sexo"
         title_comment:
-          template: "{0}, de {1} e {2}"
+          template: "{0}, de 2018 a 2021"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "sst_cat"
-              named_prop: "calc_ano_cat_anterior"
-            - base_object: "sst_cat"
-              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1263,10 +1195,8 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-{0},and,eq-cd_uf-{1}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2018-2019,and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1278,11 +1208,11 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de Acidentes de Trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2020-2021,and,eq-cd_uf-{0}"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -1295,14 +1225,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2020-2021"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-ano_cat-2018-2019,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1314,14 +1242,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-ano_cat-2020-2021,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "agr_max_ano_cat"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1333,7 +1259,7 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2020-2021"
           - type: "text"
             title: ""
             content:
@@ -1353,18 +1279,11 @@ secoes:
         charts:
           - id: "bar_piramide_anterior"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Idade e Sexo ({0})"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
+            title: 'Acidentes de Trabalho por Idade e Sexo em 2018 e 2019 - pré pandemia'
             type: "BAR"
             api: 
-              template: "/sst/cats?categorias=idade_cat,cd_tipo_sexo_empregado_cat&agregacao=count&filtros=ne-cd_tipo_sexo_empregado_cat-'Não informado',and,ne-cd_tipo_sexo_empregado_cat-'',and,ne-idade_cat-0,and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=idade_cat,cd_tipo_sexo_empregado_cat&agregacao=count&filtros=ne-cd_tipo_sexo_empregado_cat-'Não informado',and,ne-cd_tipo_sexo_empregado_cat-'',and,ne-idade_cat-0,and,in-ano_cat-2018-2019,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
                 - named_prop: "idLocalidade"
               options:
                 calcs:
@@ -1412,18 +1331,11 @@ secoes:
                   'Feminino': "#238B45"
           - id: "bar_piramide_atual"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Idade e Sexo ({0} - ano de início da pandemia Covid-19)"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
+            title: 'Acidentes de Trabalho por Idade e Sexo em 2020 e 2021 - pré pandemia'
             type: "BAR"
             api: 
-              template: "/sst/cats?categorias=idade_cat,cd_tipo_sexo_empregado_cat&agregacao=count&filtros=ne-cd_tipo_sexo_empregado_cat-'Não informado',and,ne-cd_tipo_sexo_empregado_cat-'',and,ne-idade_cat-0,and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=idade_cat,cd_tipo_sexo_empregado_cat&agregacao=count&filtros=ne-cd_tipo_sexo_empregado_cat-'Não informado',and,ne-cd_tipo_sexo_empregado_cat-'',and,ne-idade_cat-0,and,in-ano_cat-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
                 - named_prop: "idLocalidade"
               options:
                 calcs:
@@ -1475,14 +1387,10 @@ secoes:
         title: 
           fixed: "Acidentes de trabalho por Ocupação"
         title_comment:
-          template: "{0}, de {1} e {2}"
+          template: "{0}, de 2018 a 2021"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "sst_cat"
-              named_prop: "calc_ano_cat_anterior"
-            - base_object: "sst_cat"
-              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1494,10 +1402,8 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-{0},and,eq-cd_uf-{1}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2018-2019,and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1509,13 +1415,13 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de Acidentes de Trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2020-2021,and,eq-cd_uf-{0}"
                   args:
-                    - named_prop: "idLocalidade" 
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -1526,14 +1432,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2020-2021"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-ano_cat-2018-2019,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1545,14 +1449,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-ano_cat-2020-2021,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "agr_max_ano_cat"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1564,7 +1466,7 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2020-2021"
           - type: "text"
             title: ""
             content:
@@ -1584,18 +1486,11 @@ secoes:
         charts:
           - id: "treemap_cbo_anterior"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Ocupação ({0})"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
+            title: 'Acidentes de Trabalho por Ocupação em 2018 e 2019 - pré pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-'',and,in-ano_cat-2018-2019,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -1605,8 +1500,6 @@ secoes:
               - text: 'Ocupação'
                 align: 'left'
                 value: 'ds_cbo'
-              - text: 'Ano'
-                value: 'ano_cat'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -1617,18 +1510,11 @@ secoes:
                 name: "YlOrRd"
           - id: "treemap_cbo_atual"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Ocupação ({0} - ano de início da pandemia Covid-19)"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
+            title: 'Acidentes de Trabalho por Ocupação em 2020 e 2021 - período da pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/cats?categorias=ano_cat,ds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_cbo&agregacao=COUNT&filtros=ne-ds_cbo-'',and,in-ano_cat-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -1638,8 +1524,6 @@ secoes:
               - text: 'Ocupação'
                 align: 'left'
                 value: 'ds_cbo'
-              - text: 'Ano'
-                value: 'ano_cat'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -1654,14 +1538,10 @@ secoes:
         title: 
           fixed: "Acidentes de trabalho por Agente Causador"
         title_comment:
-          template: "{0}, de {1} e {2}"
+          template: "{0}, de 2018 a 2021"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "sst_cat"
-              named_prop: "calc_ano_cat_anterior"
-            - base_object: "sst_cat"
-              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1673,10 +1553,8 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-{0},and,eq-cd_uf-{1}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2018-2019,and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1688,11 +1566,11 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de Acidentes de Trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2020-2021,and,eq-cd_uf-{0}"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -1705,14 +1583,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2020-2021"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-ano_cat-2018-2019,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1724,14 +1600,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-ano_cat-2020-2021,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "agr_max_ano_cat"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1743,7 +1617,7 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2020-2021"
           - type: "text"
             title: ""
             content:
@@ -1763,18 +1637,11 @@ secoes:
         charts:
           - id: "treemap_agente_anterior"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Agente Causador ({0})"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
+            title: 'Acidentes de Trabalho por Agente Causador em 2018 e 2019 - pré pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/cats?categorias=ano_cat,ds_agente_causador&agregacao=COUNT&filtros=ne-ds_agente_causador-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_agente_causador&agregacao=COUNT&filtros=ne-ds_agente_causador-'',and,in-ano_cat-2018-2019,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -1784,8 +1651,6 @@ secoes:
               - text: 'Agente Causador'
                 align: 'left'
                 value: 'ds_agente_causador'
-              - text: 'Ano'
-                value: 'ano_cat'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -1796,18 +1661,11 @@ secoes:
                 name: "YlOrRd"
           - id: "treemap_agente_atual"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Agente Causador ({0} - ano de início da pandemia Covid-19)"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
+            title: 'Acidentes de Trabalho por Agente Causador em 2020 e 2021 - período da pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/cats?categorias=ano_cat,ds_agente_causador&agregacao=COUNT&filtros=ne-ds_agente_causador-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_agente_causador&agregacao=COUNT&filtros=ne-ds_agente_causador-'',and,in-ano_cat-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -1817,8 +1675,6 @@ secoes:
               - text: 'Agente Causador'
                 align: 'left'
                 value: 'ds_agente_causador'
-              - text: 'Ano'
-                value: 'ano_cat'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -1833,14 +1689,10 @@ secoes:
         title: 
           fixed: "Acidentes de trabalho por Grupo de Agente Causador"
         title_comment:
-          template: "{0}, de {1} e {2}"
+          template: "{0}, de 2018 a 2021"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "sst_cat"
-              named_prop: "calc_ano_cat_anterior"
-            - base_object: "sst_cat"
-              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1852,10 +1704,8 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-{0},and,eq-cd_uf-{1}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2018-2019,and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1867,11 +1717,11 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de Acidentes de Trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2020-2021,and,eq-cd_uf-{0}"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -1884,14 +1734,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2020-2021"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-ano_cat-2018-2019,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1903,14 +1751,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-ano_cat-2020-2021,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "agr_max_ano_cat"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -1922,7 +1768,7 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2020-2021"
           - type: "text"
             title: ""
             content:
@@ -1942,18 +1788,11 @@ secoes:
         charts:
           - id: "treemap_grupo_agente_anterior"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Grupo de Agente Causador ({0})"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
+            title: 'Acidentes de Trabalho por Grupo de Agente Causador em 2018 e 2019 - pré pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/cats?categorias=ano_cat,ds_grupo_agcausadores_cat&agregacao=COUNT&filtros=ne-ds_grupo_agcausadores_cat-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_grupo_agcausadores_cat&agregacao=COUNT&filtros=ne-ds_grupo_agcausadores_cat-'',and,in-ano_cat-2018-2019,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -1963,8 +1802,6 @@ secoes:
               - text: 'Grupo de Agente Causador'
                 align: 'left'
                 value: 'ds_grupo_agcausadores_cat'
-              - text: 'Ano'
-                value: 'ano_cat'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -1975,18 +1812,11 @@ secoes:
                 name: "YlOrRd"
           - id: "treemap_grupo_agente_atual"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Grupo de Agente Causador ({0} - ano de início da pandemia Covid-19)"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
+            title: 'Acidentes de Trabalho por Grupo de Agente Causador em 2020 e 2021 - período da pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/cats?categorias=ano_cat,ds_grupo_agcausadores_cat&agregacao=COUNT&filtros=ne-ds_grupo_agcausadores_cat-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_grupo_agcausadores_cat&agregacao=COUNT&filtros=ne-ds_grupo_agcausadores_cat-'',and,in-ano_cat-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -1996,8 +1826,6 @@ secoes:
               - text: 'Grupo de Agente Causador'
                 align: 'left'
                 value: 'ds_grupo_agcausadores_cat'
-              - text: 'Ano'
-                value: 'ano_cat'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -2012,14 +1840,10 @@ secoes:
         title: 
           fixed: "Acidentes de trabalho por Natureza da Lesão"
         title_comment:
-          template: "{0}, de {1} e {2}"
+          template: "{0}, de 2018 a 2021"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "sst_cat"
-              named_prop: "calc_ano_cat_anterior"
-            - base_object: "sst_cat"
-              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -2031,10 +1855,8 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-{0},and,eq-cd_uf-{1}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2018-2019,and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -2046,11 +1868,11 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de Acidentes de Trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2020-2021,and,eq-cd_uf-{0}"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -2063,14 +1885,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2020-2021"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-ano_cat-2018-2019,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -2082,14 +1902,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-ano_cat-2020-2021,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "agr_max_ano_cat"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -2101,7 +1919,7 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2020-2021"
           - type: "text"
             title: ""
             content:
@@ -2121,18 +1939,11 @@ secoes:
         charts:
           - id: "treemap_natureza_anterior"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Natureza da Lesão ({0})"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
+            title: 'Acidentes de Trabalho por Natureza da Lesão em 2018 e 2019 - pré pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/cats?categorias=ano_cat,ds_natureza_lesao&agregacao=COUNT&filtros=ne-ds_natureza_lesao-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT&filtros=ne-ds_natureza_lesao-'',and,in-ano_cat-2018-2019,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -2142,8 +1953,6 @@ secoes:
               - text: 'Natureza da Lesão'
                 align: 'left'
                 value: 'ds_natureza_lesao'
-              - text: 'Ano'
-                value: 'ano_cat'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -2154,18 +1963,11 @@ secoes:
                 name: "YlOrRd"
           - id: "treemap_natureza_atual"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Natureza da Lesão ({0} - ano de início da pandemia Covid-19)"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
+            title: 'Acidentes de Trabalho por Natureza da Lesão em 2020 e 2021 - período da pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/cats?categorias=ano_cat,ds_natureza_lesao&agregacao=COUNT&filtros=ne-ds_natureza_lesao-'',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_natureza_lesao&agregacao=COUNT&filtros=ne-ds_natureza_lesao-'',and,in-ano_cat-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -2175,8 +1977,6 @@ secoes:
               - text: 'Natureza da Lesão'
                 align: 'left'
                 value: 'ds_natureza_lesao'
-              - text: 'Ano'
-                value: 'ano_cat'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -2191,14 +1991,10 @@ secoes:
         title: 
           fixed: "Acidentes de trabalho por Setor Econômico"
         title_comment:
-          template: "{0}, de {1} e {2}"
+          template: "{0}, de 2018 a 2021"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "sst_cat"
-              named_prop: "calc_ano_cat_anterior"
-            - base_object: "sst_cat"
-              named_prop: "agr_max_ano_cat"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -2210,10 +2006,8 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-{0},and,eq-cd_uf-{1}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2018-2019,and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -2225,11 +2019,11 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de Acidentes de Trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,in-nu_competencia-2020-2021,and,eq-cd_uf-{0}"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -2242,14 +2036,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho'
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    fixed: "2020-2021"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=1&agregacao=COUNT&filtros=in-ano_cat-2018-2019,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "calc_ano_cat_anterior"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -2261,14 +2053,12 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2018-2019"
               - relevance: 'high'
                 cls: 'xs12 sm6'
                 api:
-                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{1}"
+                  template: "/sst/cats?categorias=ano_cat&agregacao=COUNT&filtros=in-ano_cat-2020-2021,and,in-cd_cid3-'B34'-'U07',and,eq-cd_uf-{0}"
                   args:
-                    - base_object: "sst_cat"
-                      named_prop: "agr_max_ano_cat"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
@@ -2280,7 +2070,7 @@ secoes:
                   - prop: "description"
                     fixed: 'Total de acidentes de trabalho CID B34 ou U07'
                   - prop: "comment"
-                    named_prop: "ano_cat"
+                    fixed: "2020-2021"
           - type: "text"
             title: ""
             content:
@@ -2300,18 +2090,11 @@ secoes:
         charts:
           - id: "treemap_cnae_anterior"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Setor Econômico ({0})"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
+            title: 'Acidentes de Trabalho por Setor Econômico em 2018 e 2019 - pré pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/cats?categorias=ano_cat,ds_cnae_classe_cat&agregacao=COUNT&filtros=ne-ds_cnae_classe_cat-'',and,ne-ds_cnae_classe_cat-'Indefinido',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=COUNT&filtros=ne-ds_cnae_classe_cat-'',and,ne-ds_cnae_classe_cat-'Indefinido',and,in-ano_cat-2019-2018"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "calc_ano_cat_anterior"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -2321,8 +2104,6 @@ secoes:
               - text: 'Setor Econômico'
                 align: 'left'
                 value: 'ds_cnae_classe_cat'
-              - text: 'Ano'
-                value: 'ano_cat'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
@@ -2333,18 +2114,11 @@ secoes:
                 name: "YlOrRd"
           - id: "treemap_cnae_atual"
             cls: "xs12 md6"
-            # title: 'Acidentes de Trabalho por Idade e Sexo ()'
-            footnote: 
-              template: "Acidentes de Trabalho por Setor Econômico ({0} - ano de início da pandemia Covid-19)"
-              args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
+            title: 'Acidentes de Trabalho por Setor Econômico em 2020 e 2021 - período da pandemia'
             type: "TREEMAP"
             api: 
-              template: "/sst/cats?categorias=ano_cat,ds_cnae_classe_cat&agregacao=COUNT&filtros=ne-ds_cnae_classe_cat-'',and,ne-ds_cnae_classe_cat-'Indefinido',and,eq-ano_cat-{0},and,eq-cd_uf-{1}"
+              template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=COUNT&filtros=ne-ds_cnae_classe_cat-'',and,ne-ds_cnae_classe_cat-'Indefinido',and,in-ano_cat-2020-2021,and,eq-cd_uf-{0}"
               args:
-                - base_object: "sst_cat"
-                  named_prop: "agr_max_ano_cat"
                 - named_prop: "idLocalidade"
               options:
                   formatters:
@@ -2354,8 +2128,6 @@ secoes:
               - text: 'Setor Econômico'
                 align: 'left'
                 value: 'ds_cnae_classe_cat'
-              - text: 'Ano'
-                value: 'ano_cat'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:

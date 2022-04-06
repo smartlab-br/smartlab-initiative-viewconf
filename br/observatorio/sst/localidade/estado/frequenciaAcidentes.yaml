@@ -414,7 +414,7 @@ secoes:
           color: "#238B45"
           removed_text_list: ["(SPAI_REC)"]
         source:
-          desc: "INSS (2000-2017, AEAT; 2018-2020, CATWEB)"
+          desc: "INSS (2000-2017, AEAT; a partir de 2018, CATWEB)"
 # ===================================================
       - id: "bar_cat_obito"
         title: 
@@ -534,22 +534,21 @@ secoes:
           color: "#238B45"
           removed_text_list: ["(SPAI_REC)"]
         source:
-          desc: "INSS (2000-2017, AEAT; 2018-2020, CATWEB)"
+          desc: "INSS (2000-2017, AEAT; a partir de 2018, CATWEB)"
 # ====================================================          
       - id: "bar_subnotificacao"
         title: 
           fixed: "Estimativa de Subnotificação de Acidentes de Trabalho (CAT)"
         title_comment:
-          template: "{0}, de {1} a {2}"
+          template: "{0}, de 2012 a {1}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "09_01_01_88"
+            id: "09_01_05_88_ret"
             year: "max"
           args:
             - named_prop: "nm_uf"
-            - fixed: "2007"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "nu_competencia"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -562,7 +561,7 @@ secoes:
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
-                id: ["09_01_01_00","09_01_01_88"]
+                id: ["09_01_01_00","09_01_01_88_ret"]
                 year: "max"
               args:
                 - id: "09_01_01_00"
@@ -573,31 +572,34 @@ secoes:
                   named_prop: 'nu_competencia_min'
                 - id: "09_01_01_00"
                   named_prop: 'nu_competencia_max'
-                - id: "09_01_01_88"
+                - id: "09_01_05_88_ret"
                   named_prop: 'ds_indicador_radical'
-                - id: "09_01_01_88"
+                - id: "09_01_05_88_ret"
                   named_prop: 'ds_fonte'
-                - id: "09_01_01_88"
+                - id: "09_01_05_88_ret"
                   named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: ["09_01_01_88","09_01_05_88"]
-                  year: "max"
+                api:
+                  - template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,nu_competencia&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+                    args:
+                      - named_prop: "idLocalidade"
+                  - template: "/indicadoresestaduais?categorias=cd_indicador,vl_indicador,nu_competencia&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_05_88_ret',and,eq-nu_competencia-nu_competencia_max"
+                    args:
+                      - named_prop: "idLocalidade"
+                api_options:
                   combine:
                   - id: "perc_sub"
                     desc: "Porcentagem de subnotificação"
                     format: 'porcentagem'
                     function: 'calc_percentage'
                     fn_args:
-                      - id: "09_01_05_88"
+                      - id: "09_01_05_88_ret"
                         named_prop: "vl_indicador"
-                      - id: "09_01_01_88"
+                      - id: "sst_cat_total"
                         named_prop: "vl_indicador"
                 args:
                   - prop: "value"
@@ -612,11 +614,10 @@ secoes:
                     named_prop: 'nu_competencia'
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_01_88"
-                  year: "max"
+                api:
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,nu_competencia&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -633,7 +634,7 @@ secoes:
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "09_01_05_88"
+                  id: "09_01_05_88_ret"
                   year: "max"
                 args:
                   - prop: "value"
@@ -652,14 +653,21 @@ secoes:
               fixed: "Em destaque, para a perspectiva geográfica selecionada, apresenta-se uma estimativa de subnotificação para acidentes de trabalho que resultaram em afastamento previdenciário, considerando que muitos registros de acidentes são gerados no momento da concessão do benefício, sem correspondente emissão anterior na forma da lei. Em razão da inexistência de outra métrica para os casos em que não há afastamento do trabalho, esta é, por aproximação, a melhor forma de estimar subnotificaçõse também nesses casos. No gráfico ao lado, o comportamento dos registros com comunicações emitidas e sem comunicações emitidas na série histórica."
         chart_type: "BAR"
         api: 
-          - template: "/indicadoresestaduais?categorias=cd_uf,ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_uf-{0},and,in-cd_indicador-'09_01_05_00'-'09_01_01_00',and,ge-nu_competencia-'2007'"
+          - template: "/indicadoresestaduais?categorias=cd_uf,ds_indicador_radical-ds_indicador,nu_competencia,vl_indicador,cd_indicador,'Total de Acidentes'-grupo,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_01_00',and,ge-nu_competencia-'2012'"
             args:
               - named_prop: "idLocalidade"
             options:
               formatters:
                 - id: "vl_indicador"
                   format: 'inteiro'
-          - template: "/indicadoresestaduais?categorias=cd_uf,ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_uf-{0},and,in-cd_indicador-'09_01_05_88'-'09_01_01_88',and,eq-nu_competencia-nu_competencia_max"
+          - template: "/indicadoresestaduais?categorias=cd_uf,ds_indicador,nu_competencia,vl_indicador,cd_indicador,'Acidentes sem CAT emitido'-grupo,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_05_88_ret',and,ge-nu_competencia-'2012'"
+            args:
+              - named_prop: "idLocalidade"
+            options:
+              formatters:
+                - id: "vl_indicador"
+                  format: 'inteiro'
+          - template: "/sst/indicadoresestaduais?categorias=cd_uf,ds_indicador,nu_competencia,vl_indicador,cd_indicador,'Total de Acidentes'-grupo,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
             args:
               - named_prop: "idLocalidade"
             options:
@@ -669,20 +677,20 @@ secoes:
         headers:
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'ds_indicador'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
           - text: 'Qtde'
             value: 'fmt_vl_indicador'
         chart_options:
-          id: "ds_agreg_primaria"
+          id: "grupo"
           x: "nu_competencia"
           y: "vl_indicador"
           orientation: "vertical"
           text: "fmt_vl_indicador"
           hide_legend: false
-          legend_field: "ds_agreg_primaria"
+          legend_field: "grupo"
           show_x_axis: true
           show_y_axis: false
           removed_text_list: ["(SPAI_REC)"]
@@ -693,4 +701,4 @@ secoes:
             order: 'desc'
               #color: "#238B45"  #  "#66C2A4"
         source:
-          desc: "INSS - 2000-2017 (AEAT), 2018 (CATWEB)"
+          desc: "INSS - 2000-2017 (AEAT), a partir de 2018 (CATWEB)"
