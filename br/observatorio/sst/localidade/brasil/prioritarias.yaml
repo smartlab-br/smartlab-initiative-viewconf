@@ -63,6 +63,184 @@ secoes:
     name: 'Áreas Prioritárias'
     cards:
 # ========================================================
+      - id: "sparkline_sst_ufs"
+        title:
+          fixed: "Unidades Federativas Prioritárias - Notificações e Afastamentos"
+        title_comment:
+          fixed: "Brasil"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,sg_uf&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'sg_uf'
+                    # format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                  - prop: "description"
+                    template: "UF COM MAIOR NÚMERO DE ACIDENTES<br/>{0} NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT)"
+                    args:
+                      - named_prop: "vl_indicador"
+                        format: "inteiro"
+                  - prop: 'comment'
+                    template: "({0}, {1})"
+                    args:
+                      - named_prop: "ds_fonte"
+                      - named_prop: "nu_competencia"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,sg_uf&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'sg_uf'
+                    # format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                  - prop: "description"
+                    template: "UF COM MAIOR NÚMERO DE CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO<br/> {0} CONCESSÕES DE AUXÍLIO-DOENÇA POR ACIDENTE DO TRABALHO (B91)"
+                    args:
+                      - named_prop: "vl_indicador"
+                        format: "inteiro"
+                  - prop: 'comment'
+                    template: "({0}, {1})"
+                    args:
+                      - named_prop: "ds_fonte"
+                      - named_prop: "nu_competencia"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/indicadoresestaduais?categorias=vl_indicador,cd_indicador,sg_uf,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'06_05_10_00',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'sg_uf'
+                    # format: 'inteiro'
+                    # collapse:
+                    #   format: 'real'
+                  - prop: "description"
+                    template: "UF COM MAIOR NÚMERO DE NOTIFICAÇÕES RELACIONADAS AO TRABALHO NO SINAN<br/>{0} NOTIFICAÇÕES"
+                    args:
+                      - named_prop: "vl_indicador"
+                        format: "inteiro"
+                  - prop: 'comment'
+                    template: "({0}, {1})"
+                    args:
+                      - named_prop: "ds_fonte"
+                      - named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, as unidades federativas com o maior número de notificações no último ano registrado para comunicações de acidentes de trabalho, benefícios previdenciários e notificações no Sistema de Informação de Agravos de Notificação (SINAN). Na tabela ao lado, a evolução histórica para diferentes Unidades Federativas."
+          # - id: "select_cerest"
+          #   type: "select"
+          #   label: "CEREST Regional"
+          #   default:
+          #     base_object: "cerest"
+          #     named_prop: "nm_cerest"
+          #   api:
+          #     fixed: "/indicadoresmunicipais?categorias=nm_cerest&agregacao=DISTINCT&filtros=eq-cd_indicador-'POP_DOU_01',and,eq-nu_competencia-nu_competencia_max"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "nm_cerest"
+          #     - prop: "label"
+          #       named_prop: "nm_cerest"
+          #   selection:
+          #     event: "selection"
+          #     rules:
+          #       filter: ",and,eq-nm_cerest-'{0}'"
+          #       api:
+          #         args:
+          #           - named_prop: "nm_cerest"
+        component_type: "SPARKLINES"
+        api:
+          - fixed: "/sst/cats?categorias=cd_uf,sg_uf,'cat'-cd_indicador,ano_cat-nu_competencia&agregacao=COUNT&filtros=nn-cd_uf"
+          - fixed: "/sst/beneficios?categorias=cd_uf,sg_uf,'beneficio_91'-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_uf,and,eq-cd_especie_beneficio-91"
+          - fixed: "/sst/beneficios?categorias=cd_uf,sg_uf,'beneficio_31'-cd_indicador,ano_beneficio-nu_competencia&agregacao=COUNT&filtros=nn-cd_uf,and,eq-cd_especie_beneficio-31"
+          - fixed: "/indicadoresmunicipais?categorias=cd_uf,sg_uf,'sinan'-cd_indicador,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_10_00'"
+            options:
+              clone:
+                - id: "agr_sum_vl_indicador"
+                  new_column: "agr_count"
+        headers:
+          # - text: 'Município'
+          #   align: 'center'
+          #   value: 'nm_municipio'
+          #   item_align: 'center'
+          - text: 'UF'
+            align: 'center'
+            value: 'sg_uf'
+            item_align: 'center'
+          - text: 'Smartline CAT'
+            align: 'center'
+            width: '20%'
+            value: 'last_value_cat'
+            item_align: 'center'
+            type: 'spark'
+            series: 'cat'
+            bgColor: '#F44336'
+            stroke: 2
+          - text: 'Variação CAT'
+            align: 'center'
+            value: 'fmt_last_rate_cat'
+            item_align: 'center'
+          - text: 'Smartline B91'
+            align: 'center'
+            width: '20%'
+            value: 'last_value_beneficio_91'
+            item_align: 'center'
+            type: 'spark'
+            series: 'beneficio_91'
+            bgColor: '#03A9F4'
+            stroke: 2
+          - text: 'Variação B91'
+            align: 'center'
+            value: 'fmt_last_rate_beneficio_91'
+            item_align: 'center'
+          - text: 'Smartline B31'
+            align: 'center'
+            width: '20%'
+            value: 'last_value_beneficio_31'
+            item_align: 'center'
+            type: 'spark'
+            series: 'beneficio_31'
+            bgColor: '#0D47A1'
+            stroke: 2
+          - text: 'Variação B31'
+            align: 'center'
+            value: 'fmt_last_rate_beneficio_31'
+            item_align: 'center'
+          - text: 'Smartline SINAN'
+            align: 'center'
+            width: '20%'
+            value: 'last_value_sinan'
+            item_align: 'center'
+            type: 'spark'
+            series: 'sinan'
+            bgColor: '#c800c8'
+            stroke: 2
+          - text: 'Variação SINAN'
+            align: 'center'
+            value: 'fmt_last_rate_sinan'
+            item_align: 'center'
+        component_options:
+          id: "sparklines_freq_sst_municipios"
+          title: "Unidades Federativas"
+          cls: "xs12 md6 lg4 pa-3"
+          id_field: "cd_uf"
+          value_field: "agr_count"
+          series_field: "cd_indicador"
+          category_field: "nu_competencia"
+          search_position: "bottom"
+        source:
+          desc: "INSS/CATWEB, INSS/BENEFÍCIOS e MS - SINAN"
+# ========================================================
+
+
+# ========================================================
       - id: "sparkline_sst_municipios"
         title:
           fixed: "Municípios prioritários"
