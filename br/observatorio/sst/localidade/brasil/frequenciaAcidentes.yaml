@@ -298,7 +298,7 @@ secoes:
           hide_legend: true
           color: "#238B45"
         source:
-          desc: "INSS (2000-2017, AEAT; 2018-2020, CATWEB)"
+          desc: "INSS (2000-2017, AEAT; a partir de 2018, CATWEB)"
 # ===================================================
       - id: "bar_cat_obito"
         title: 
@@ -391,21 +391,20 @@ secoes:
           hide_legend: true
           color: "#238B45"
         source:
-          desc: "INSS (2000-2017, AEAT; 2018-2020, CATWEB)"
+          desc: "INSS (2000-2017, AEAT; a partir de 2018, CATWEB)"
 # ====================================================          
       - id: "bar_subnotificacao"
         title: 
           fixed: "Estimativa de Subnotificação de Acidentes de Trabalho (CAT)"
         title_comment:
-          template: "Brasil, de {0} a {1}"
+          template: "Brasil, de 2012 a {0}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "09_01_01_88"
+            id: "09_01_05_88_ret"
             year: "max"
           args:
-            - fixed: "2007"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "nu_competencia"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -414,11 +413,11 @@ secoes:
                           Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
                           Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
                           Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}<br/>
-                          Nome: {4}<br/>Fonte: {5}<br/>Ano: {6}"
+                          Nome: {4}<br/>Fonte: {5}<br/>Ano: {6} a {7}"
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
-                id: ["09_01_01_00","09_01_01_88"]
+                id: ["09_01_01_00","09_01_05_88_ret"]
                 year: "max"
               args:
                 - id: "09_01_01_00"
@@ -429,31 +428,32 @@ secoes:
                   named_prop: 'nu_competencia_min'
                 - id: "09_01_01_00"
                   named_prop: 'nu_competencia_max'
-                - id: "09_01_01_88"
+                - id: "09_01_05_88_ret"
                   named_prop: 'ds_indicador_radical'
-                - id: "09_01_01_88"
+                - id: "09_01_05_88_ret"
                   named_prop: 'ds_fonte'
-                - id: "09_01_01_88"
+                - id: "09_01_05_88_ret"
+                  named_prop: 'nu_competencia_min'
+                - id: "09_01_05_88_ret"
                   named_prop: 'nu_competencia_max'
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: ["09_01_01_88","09_01_05_88"]
-                  year: "max"
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'09_01_05_88_ret',and,eq-nu_competencia-nu_competencia_max"
+                api_options:
                   combine:
                   - id: "perc_sub"
                     desc: "Porcentagem de subnotificação"
                     format: 'porcentagem'
                     function: 'calc_percentage'
                     fn_args:
-                      - id: "09_01_05_88"
+                      - id: "09_01_05_88_ret"
                         named_prop: "vl_indicador"
-                      - id: "09_01_01_88"
+                      - id: "sst_cat_total"
                         named_prop: "vl_indicador"
                 args:
                   - prop: "value"
@@ -468,11 +468,8 @@ secoes:
                     named_prop: 'nu_competencia'
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "09_01_01_88"
-                  year: "max"
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=vl_indicador,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -489,7 +486,7 @@ secoes:
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "09_01_05_88"
+                  id: "09_01_05_88_ret"
                   year: "max"
                 args:
                   - prop: "value"
@@ -505,36 +502,46 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, para a perspectiva geográfica selecionada, apresenta-se uma estimativa de subnotificação para acidentes de trabalho que resultaram em afastamento previdenciário, considerando que muitos registros de acidentes são gerados no momento da concessão do benefício, sem correspondente emissão anterior na forma da lei. Em razão da inexistência de outra métrica para os casos em que não há afastamento do trabalho, esta é, por aproximação, a melhor forma de estimar subnotificaçõse também nesses casos. No gráfico ao lado, o comportamento dos registros com comunicações emitidas e sem comunicações emitidas na série histórica."
+              fixed: "Em destaque, para a perspectiva geográfica selecionada, apresenta-se uma estimativa de subnotificação para acidentes de trabalho que resultaram em afastamento previdenciário, considerando que muitos registros de acidentes são gerados no momento da concessão do benefício, sem correspondente emissão anterior na forma da lei. Esta é, por aproximação, uma forma de estimar subnotificações em casos de afastamentos. No gráfico ao lado, o comportamento dos registros com comunicações emitidas e sem comunicações emitidas na série histórica.<br/>Note-se que a métrica é um indicador por aproximação. Deve-se ponderar que, no caso de incidência do Nexo Técnico Epidemiológico (NTEP), não há penalização pela não emissão da CAT, e o contencioso administrativo eventualmente iniciado tem efeito suspensivo. Desse modo, a informação é útil para apurar uma tendência geral que vem se mantendo ao longo do tempo, mas é importante avaliar o contexto."
         chart_type: "BAR"
         api: 
-          - fixed: "/indicadoresnacionais?categorias=ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=in-cd_indicador-'09_01_05_00'-'09_01_01_00',and,ge-nu_competencia-'2007'"
+          - fixed: "/indicadoresnacionais?categorias=ds_indicador_radical-ds_indicador,nu_competencia,vl_indicador,cd_indicador,'Total de Acidentes'-grupo,ds_fonte&filtros=eq-cd_indicador-'09_01_01_00',and,ge-nu_competencia-'2012'"
             options:
               formatters:
                 - id: "vl_indicador"
                   format: 'inteiro'
-          - fixed: "/indicadoresnacionais?categorias=ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=in-cd_indicador-'09_01_05_88'-'09_01_01_88',and,eq-nu_competencia-nu_competencia_max"
+          - fixed: "/indicadoresnacionais?categorias=ds_indicador,nu_competencia,vl_indicador,cd_indicador,'Acidentes sem CAT emitido'-grupo,ds_fonte&filtros=eq-cd_indicador-'09_01_05_88_ret',and,ge-nu_competencia-'2012'"
             options:
               formatters:
                 - id: "vl_indicador"
                   format: 'inteiro'
+          - fixed: "/sst/indicadoresnacionais?categorias=ds_indicador,nu_competencia,vl_indicador,cd_indicador,'Total de Acidentes'-grupo,ds_fonte&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+            options:
+              formatters:
+                - id: "vl_indicador"
+                  format: 'inteiro'
+          # - fixed: "/indicadoresnacionais?categorias=ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=in-cd_indicador-'09_01_05_88'-'09_01_01_88',and,eq-nu_competencia-nu_competencia_max"
+          #   options:
+          #     formatters:
+          #       - id: "vl_indicador"
+          #         format: 'inteiro'
         headers:
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'ds_indicador'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
           - text: 'Qtde'
             value: 'fmt_vl_indicador'
         chart_options:
-          id: "ds_agreg_primaria"
+          id: "grupo"
           x: "nu_competencia"
           y: "vl_indicador"
           orientation: "vertical"
           text: "fmt_vl_indicador"
           hide_legend: false
-          legend_field: "ds_agreg_primaria"
+          legend_field: "grupo"
           show_x_axis: true
           show_y_axis: false
           removed_text_list: ["(SPAI_REC)"]
@@ -545,4 +552,4 @@ secoes:
             order: 'desc'
               #color: "#238B45"  #  "#66C2A4"
         source:
-          desc: "INSS - 2000-2017 (AEAT), 2018 (CATWEB)"
+          desc: "INSS - 2012-2021 (CATWEB)"
