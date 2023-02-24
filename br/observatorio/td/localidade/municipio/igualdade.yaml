@@ -641,6 +641,113 @@ secoes:
           desc_field: "ds_fonte"
 
 # ========================================================
+      - id: "mapa_vinculos_pcd2"
+        title: 
+          fixed: "Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)"
+        title_comment:
+          template: "{0}, em {1}"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "rais_agr"
+              named_prop: "agr_max_rais_agr_ano_nu"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/raisagr?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_deficiencia_id-'SIM'"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "rais_agr"
+                      named_prop: "agr_max_rais_agr_ano_nu"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "PCD com empregos CLT"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/raisagr?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1}"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "rais_agr"
+                      named_prop: "agr_max_rais_agr_ano_nu"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Total geral de postos de trabalho formal"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência (PCD). No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/rais_agr?categorias='rais'-rais&agregacao=max&valor=rais_agr_ano_nu"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "agr_max_rais_agr_ano_nu"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "agr_max_rais_agr_ano_nu"
+                - named_prop: "calc_proximo_ano"
+
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/raisagr?categorias=rais_agr_mun_ibge_cd-cd_mun_igbe,rais_agr_mun_ds,rais_agr_ano_nu'Vículo de Empredo de Pessoas com Deficiência (CLT)'-ds_indicador,'ME - RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_uf_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1}"
+          args:
+            - named_prop: "cd_uf"
+            - base_object: "rais_agr"
+              named_prop: "agr_max_rais_agr_ano_nu"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_log"
+                args_fn:
+                  - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
+            formatters:
+              - id: "agr_sum_rais_agr_vinc_3112_qt"
+                format: 'inteiro'
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'rais_agr_mun_ds'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Ano'
+            align: 'left'
+            value: 'rais_agr_ano_nu'
+          - text: 'Valor'
+            value: 'fmt_agr_sum_rais_agr_vinc_3112_qt'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
       - id: "bar_rendimentos_sexo_raca"
         title: 
           fixed: "Disparidade de Remuneração dos Trabalhadores pela Perspectiva Interseccional (Sexo e Raça/Cor) nos setores formal e informal"
