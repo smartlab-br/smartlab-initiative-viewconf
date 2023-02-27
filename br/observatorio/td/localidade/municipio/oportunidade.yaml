@@ -1518,7 +1518,7 @@ secoes:
 # ========================================================
       - id: "bar_aprendizes"
         title: 
-          fixed: "Aprendizes"
+          fixed: "Aprendizes - RETIRAR"
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
@@ -1604,13 +1604,13 @@ secoes:
           fixed: "Aprendizes"
         title_comment:
           template: "{0}, de {1} a {2}"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "rais_agr"
-              named_prop: "agr_max_rais_agr_ano_nu"
-            - base_object: "rais_agr"
-              named_prop: "agr_min_rais_agr_ano_nu"
+            - named_prop: "agr_min_rais_agr_ano_nu"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           # - type: "text"
           #   title: "Sobre a métrica"
@@ -1628,7 +1628,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md7'
                 api:
-                  template: "/raisagr?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_vinculo_tp-'APR',and,eq-rais_agr_ano_nu-{1}"
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_vinculo_tp-'APR',and,eq-rais_agr_ano_nu-{1}"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "rais_agr"
@@ -1646,14 +1646,18 @@ secoes:
             title: ""
             content:
               template: "Em destaque, de acordo com a Relação Anual de Informações Sociais, a quantidade de aprendizes em {0}. No gráfico, a evolução do número de contratos de aprendizagem existentes na série histórica da RAIS, de {1} a {0}. A aprendizagem é uma importante oportunidade de formação profissional em atividades formais e mais seguras."
+              api:
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
               args:
-                - base_object: "rais_agr"
-                  named_prop: "agr_max_rais_agr_ano_nu"
-                - base_object: "rais_agr"
-                  named_prop: "agr_min_rais_agr_ano_nu"
+                - named_prop: "agr_max_rais_agr_ano_nu"
+                - named_prop: "agr_min_rais_agr_ano_nu"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Para mais informações, visite o <a class='accent--text' href='/trabalhoinfantil' target='_blank'>Observatório da Prevenção e da Erradicação do Trabalho Infantil.</a>"
         chart_type: "BAR"
         api:
-          template: "/raisagr?categorias='Aprendizes'-ds_indicador,'ME - RAIS'-ds_fonte,rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_vinculo_tp-'APR'"
+          template: "/thematic/raisagrmun?categorias='Aprendizes'-ds_indicador,'ME/RAIS'-ds_fonte,rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_vinculo_tp-'APR'"
           args:
             - named_prop: "idLocalidade"
           options:

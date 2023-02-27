@@ -512,7 +512,7 @@ secoes:
 # ========================================================
       - id: "mapa_vinculos_pcd"
         title: 
-          fixed: "Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)"
+          fixed: "Vínculos de Emprego Formal de Pessoas com Deficiência (PCD) - RETIRAR"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -646,11 +646,12 @@ secoes:
           fixed: "Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)"
         title_comment:
           template: "{0}, em {1}"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - base_object: "rais_agr"
-              named_prop: "agr_max_rais_agr_ano_nu"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -662,7 +663,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  template: "/raisagr?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_deficiencia_id-'SIM'"
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_deficiencia_id-'SIM'"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "rais_agr"
@@ -679,7 +680,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  template: "/raisagr?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1}"
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1}"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "rais_agr"
@@ -699,7 +700,7 @@ secoes:
             content:
               template: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência (PCD). No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/rais_agr?categorias='rais'-rais&agregacao=max&valor=rais_agr_ano_nu"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
@@ -714,7 +715,7 @@ secoes:
 
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/raisagr?categorias=rais_agr_mun_ibge_cd-cd_mun_igbe,rais_agr_mun_ds,rais_agr_ano_nu'Vículo de Empredo de Pessoas com Deficiência (CLT)'-ds_indicador,'ME - RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_uf_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1}"
+          template: "/thematic/raisagrmun?categorias=rais_agr_mun_ibge_cd-cd_mun_igbe,rais_agr_mun_ibge_ds,rais_agr_ano_nu,'Vículo de Emprego de Pessoas com Deficiência (CLT)'-ds_indicador,'ME/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_uf_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1}"
           args:
             - named_prop: "cd_uf"
             - base_object: "rais_agr"
@@ -731,7 +732,7 @@ secoes:
         headers:
           - text: 'Município'
             align: 'left'
-            value: 'rais_agr_mun_ds'
+            value: 'rais_agr_mun_ibge_ds'
           - text: 'Indicador'
             align: 'left'
             value: 'ds_indicador'

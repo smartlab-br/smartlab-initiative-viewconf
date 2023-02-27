@@ -827,7 +827,7 @@ secoes:
 # ========================================================
       - id: "bar_aprendizes"
         title: 
-          fixed: "Aprendizes"
+          fixed: "Aprendizes - RETIRAR"
         title_comment:
           template: "{0}, de {1} a {2}"
           api: 
@@ -904,6 +904,93 @@ secoes:
           y: "vl_indicador"
           orientation: "vertical"
           text: "fmt_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          color: "#238B45"
+          hide_legend: true
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "bar_aprendizes2"
+        title: 
+          fixed: "Aprendizes"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_rais_agr_ano_nu"
+            - named_prop: "agr_max_rais_agr_ano_nu"
+        info:
+          # - type: "text"
+          #   title: "Sobre a métrica"
+          #   content:
+          #     fixed: "Com o intuito de mensurar a parcela de crianças e adolescentes com 14 a 17 anos de idade que correspondia à condição de aprendiz, são utilizados os microdados da RAIS para a construção da série temporal."
+          - type: "text"
+            title: "Observação Importante"
+            content:
+              fixed: "No mês de junho de 1999, a 87ª Reunião da Conferência Internacional do Trabalho (CIT) aprovou por unanimidade a Convenção sobre a Proibição das Piores Formas de Trabalho Infantil e a Ação Imediata para a sua Eliminação, 1999 (nº 182), da Organização Internacional do Trabalho (OIT). Até agosto de 2018, um expressivo contingente de 181 países (cerca de 98,0% dos 185 Estados-Membros da OIT) tinha ratificado a referida Convenção, proporção sem precedentes em quase um século de história da Organização. O Brasil ratificou a Convenção nº 182 em 2 de fevereiro de 2000.<br/>
+                      <b>Vale destacar que o Brasil também ratificou, em 28 de junho de 2001, a Convenção sobre a Idade Mínima para Admissão a Emprego, 1973 (nº 138) e estabeleceu na legislação nacional a proibição do trabalho infantil até os 16 anos, exceto na condição de aprendiz a partir dos 14 anos.</b> Esta Convenção, adotada pela OIT em 28 de junho de 1973, foi ratificada por 171 dos seus 185 Estados-Membros, o correspondente a 92,4% do total.<br/>
+                      Importante também observar que de acordo com Objetivo 8 – Trabalho Decente e Crescimento Econômico - dos Objetivos de Desenvolvimento Sustentável da ONU (Agenda 2030), a meta 8,7 estabelece: Tomar medidas imediatas e eficazes para erradicar o trabalho forçado, acabar com a escravidão moderna e o tráfico de pessoas, e assegurar a proibição e eliminação das piores formas de trabalho infantil, incluindo recrutamento e utilização de crianças-soldado, e até 2025 acabar com o trabalho infantil em todas as suas formas."
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Para mais informações, visite o <a class='accent--text' href='/trabalhoinfantil' target='_blank'>Observatório da Prevenção e da Erradicação do Trabalho Infantil.</a>"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                api:
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_vinculo_tp-'APR',and,eq-rais_agr_ano_nu-{1}"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "rais_agr"
+                      named_prop: "agr_max_rais_agr_ano_nu"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                    format: 'inteiro'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Total no município'
+                  - prop: "comment"
+                    named_prop: 'rais_agr_ano_nu'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, de acordo com a Relação Anual de Informações Sociais, a quantidade de aprendizes em {0}. No gráfico, a evolução do número de contratos de aprendizagem existentes na série histórica da RAIS, de {1} a {0}. A aprendizagem é uma importante oportunidade de formação profissional em atividades formais e mais seguras."
+              api:
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
+              args:
+                - named_prop: "agr_max_rais_agr_ano_nu"
+                - named_prop: "agr_min_rais_agr_ano_nu"
+        chart_type: "BAR"
+        api:
+          template: "/thematic/raisagrmun?categorias='Aprendizes'-ds_indicador,'ME/RAIS'-ds_fonte,rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_vinculo_tp-'APR'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_sum_rais_agr_vinc_3112_qt"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Ano'
+            align: 'left'
+            value: 'rais_agr_ano_nu'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_rais_agr_vinc_3112_qt'
+        chart_options:
+          id: "rais_agr_ano_nu"
+          x: "rais_agr_ano_nu"
+          y: "agr_sum_rais_agr_vinc_3112_qt"
+          orientation: "vertical"
+          text: "fmt_agr_sum_rais_agr_vinc_3112_qt"
           show_x_axis: true
           show_y_axis: false
           color: "#238B45"
