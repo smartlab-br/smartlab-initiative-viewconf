@@ -91,7 +91,7 @@ secoes:
 # ========================================================
       - id: "bar_remuneracao_trabalhadores_sexo"
         title: 
-          fixed: "Remuneração Média de Homens e Mulheres no Setor Formal"
+          fixed: "Remuneração Média de Homens e Mulheres no Setor Formal - RETIRAR"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -238,6 +238,177 @@ secoes:
         source:
           desc_field: "ds_fonte"
 
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_sexo2"
+        title: 
+          fixed: "Remuneração Média de Homens e Mulheres no Setor Formal"
+        title_comment:
+          template: "{0}, em {1}"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_max_rais_agr_ano_nu"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_3112_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1}"
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_3112_crem_qt'
+                api_options:
+                  combine:
+                    - id: "disparidade_abs"
+                      desc: "Disparidade de Rendimentos de homens e mulheres"
+                      function: 'calc_subtraction'
+                      fn_args:
+                        - id: "Homens"
+                          named_prop: "calc_salario_medio"
+                        - id: "Mulheres"
+                          named_prop: "calc_salario_medio"
+                args:
+                  - id: "disparidade_abs"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'monetario'
+                    collapse:
+                      format: 'monetario'
+                  # - prop: "value"
+                  #   named_prop: 'vl_indicador'
+                  #   format: 'monetario'
+                  #   collapse:
+                  #     format: 'monetario'
+                  #   default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'Disparidade de Rendimentos'
+                  - prop: "comment"
+                    fixed: "No setor formal"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_3112_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1}"
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_3112_crem_qt'
+                api_options:
+                  combine:
+                    - id: "equivalencia_perc"
+                      desc: "Equivalência de salários entre homens e mulheres"
+                      function: 'calc_percentage'
+                      fn_args:
+                        - id: "Mulheres"
+                          named_prop: "calc_salario_medio"
+                        - id: "Homens"
+                          named_prop: "calc_salario_medio"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'EQUIVALÊNCIA EM % DO RENDIMENTO MÉDIO'
+                  - prop: "comment"
+                    fixed: "No setor formal"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a disparidade e a equivalência percentual entre os rendimentos de mulheres e homens, considerados vínculos de emprego (CLT) e de natureza administrativa de acordo com a perspectiva geográfica selecionada. A disparidade foi calculada subtraindo-se o valor médio mensal pago às mulheres do valor médio mensal pago aos homens . No caso da equivalência percentual, dividiu-se o valor pago em média às mulheres pelo valor pago em média aos homens, obtendo-se o percentual do rendimento médio masculino mensal que equivale ao rendimento médio feminino mensal. Complementarmente, o gráfico ao lado apresenta uma perspectiva comparada entre os valores de rendimento médio para homens e mulheres na economia formal. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              api:
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "agr_max_rais_agr_ano_nu"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: "agr_max_rais_agr_ano_nu"
+                - named_prop: "calc_proximo_ano"
+        chart_type: "BAR"
+        api:
+          template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador,'ME/RAIS'-ds_fonte&agregacao=sum,sum&valor=rais_agr_vinc_3112_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1}"
+          args:
+            - named_prop: "idLocalidade"
+            - base_object: "rais_agr"
+              named_prop: "agr_max_rais_agr_ano_nu"
+          options:
+            calcs:
+              - id: "salario_medio"
+                function: "calc_proportion_ds"
+                fn_args:
+                  - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                  - named_prop: 'agr_sum_rais_agr_vinc_3112_crem_qt'
+              - id: "bar_description"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed: 
+                      template: "{0} - {1}"
+                      args:
+                        - named_prop: "cd_indicador"
+                        - named_prop: "calc_salario_medio"
+                          format: 'monetario'
+                          collapse:
+                            format: 'monetario'
+                          uiTags: false
+            formatters:
+              - id: "calc_salario_medio"
+                format: 'monetario'
+                uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'cd_indicador'
+          - text: 'Ano'
+            align: 'left'
+            value: 'rais_agr_ano_nu'
+          - text: 'Remuneração Média'
+            value: 'fmt_calc_salario_medio'
+        chart_options:
+          id: "cd_indicador"
+          x: "cd_indicador"
+          y: "calc_salario_medio"
+          orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          colorScale:
+            name: "BuGn"
+            type: "singleHue"
+            levels: 4
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
 # ========================================================
       - id: "bar_remuneracao_trabalhadores_sexo_raca"
         title: 
