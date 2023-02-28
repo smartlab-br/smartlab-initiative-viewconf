@@ -412,7 +412,7 @@ secoes:
 # ========================================================
       - id: "bar_remuneracao_trabalhadores_sexo_raca"
         title: 
-          fixed: "Diferenças de Remuneração pela Perspectiva Interseccional (Sexo e Raça/Cor) no setor formal"
+          fixed: "Diferenças de Remuneração pela Perspectiva Interseccional (Sexo e Raça/Cor) no setor formal - RETIRAR"
         title_comment:
           template: "{0}, em {1}"
           preloaded:
@@ -580,6 +580,259 @@ secoes:
           show_y_axis: false
           hide_legend: true
           order_field: "vl_indicador"
+          colorScale:
+            name: "YlGn"
+            type: "singleHue"
+            levels: 7
+            order: 'desc'
+        source:
+          desc_field: "ds_fonte"
+
+# ========================================================
+      - id: "bar_remuneracao_trabalhadores_sexo_raca2"
+        title: 
+          fixed: "Diferenças de Remuneração pela Perspectiva Interseccional (Sexo e Raça/Cor) no setor formal"
+        title_comment:
+          template: "{0}, em {1}"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_max_rais_agr_ano_nu"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum,sum&valor=rais_agr_vinc_3112_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_sexo_ds-'Homens',and,eq-rais_agr_raca_ds-'BRANCA' "
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_3112_crem_qt'
+                args:
+                  - prop: "value"
+                    fixed: '100%'
+                    # format: 'monetario'
+                    # collapse:
+                    #   format: 'monetario'
+                    uiTags: false
+                  - prop: "description"
+                    fixed: 'Homens brancos'
+                  # - prop: "comment"
+                  #   template: 'Remuneração média: {0}'
+                  #   args:
+                  #     - named_prop: "calc_salario_medio"
+                  #       format: "monetario"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_3112_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_raca_ds-'BRANCA' "
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_3112_crem_qt'
+                api_options:
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "Mulheres"
+                        named_prop: "calc_salario_medio"
+                      - id: "Homens"
+                        named_prop: "calc_salario_medio"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres brancas'
+                  # - prop: "comment"
+                  #   template: 'Remuneração média: {0}'
+                  #   args:
+                  #     - id: "Mulheres"
+                  #       named_prop: "calc_salario_medio"
+                  #       format: "monetario"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_raca_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_3112_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_sexo_ds-'Homens'"
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_3112_crem_qt'
+                api_options:
+                  combine:
+                  - id: "equivalencia_perc"
+                    desc: "Equivalência de salários"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "PRETA"
+                        named_prop: "calc_salario_medio"
+                      - id: "BRANCA"
+                        named_prop: "calc_salario_medio"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Homens negros'
+                  # - prop: "comment"
+                  #   template: 'Remuneração média: {0}'
+                  #   args:
+                  #     - id: "PRETA"
+                  #       named_prop: "calc_salario_medio"
+                  #       format: "monetario"
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'HOMEM_BRANCO'-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_3112_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_sexo_ds-'Homens',and,eq-rais_agr_raca_ds-'BRANCA'"
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_3112_crem_qt'
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'MULHER_PRETA'-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_3112_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_sexo_ds-'Mulheres',and,eq-rais_agr_raca_ds-'PRETA'"
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_3112_crem_qt'
+                api_options:
+                  combine:
+                    - id: "equivalencia_perc"
+                      desc: "Equivalência de salários"
+                      function: 'calc_percentage'
+                      fn_args:
+                        - id: "MULHER_PRETA"
+                          named_prop: "calc_salario_medio"
+                        - id: "HOMEM_BRANCO"
+                          named_prop: "calc_salario_medio"
+                args:
+                  - id: "equivalencia_perc"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    collapse:
+                      format: 'porcentagem'
+                  - prop: "description"
+                    fixed: 'Mulheres negras'
+                  # - prop: "comment"
+                  #   template: 'Remuneração média: {0}'
+                  #   args:
+                  #     - id: "MULHER_PRETA"
+                  #       named_prop: "calc_salario_medio"
+                  #       format: "monetario"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Os números em destaque mostram a diferença relativa (percentual) de rendimentos mensais da população ocupada no setor formal, celetista (CLT) e estatuários, com enfoque interseccional para grupos de sexo e raça/cor, para a perspectiva geográfica selecionada. Em destaque o percentual da remuneração recebida pelos diferentes grupos (mulheres brancas, homens negros e mulheres negras) em relação ao rendimento médio mensal de homens brancos, utilizado como valor de referência (100%). No gráfico ao lado, de forma complementar comparam-se os valores nominais dos rendimentos médios entre esses grupos. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível), do Ministério da Economia. "
+              api:
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
+              args:
+                - named_prop: "agr_max_rais_agr_ano_nu"
+
+        chart_type: "BAR"
+        api:
+          - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds,rais_agr_raca_ds,'ME/RAIS'-ds_fonte&agregacao=sum,sum&valor=rais_agr_vinc_3112_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+            args:
+              - named_prop: "idLocalidade"
+              - base_object: "rais_agr"
+                named_prop: "agr_max_rais_agr_ano_nu"
+            options:
+              calcs:
+                - id: "salario_medio"
+                  function: "calc_proportion_ds"
+                  fn_args:
+                    - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                    - named_prop: 'agr_sum_rais_agr_vinc_3112_crem_qt'
+                - id: "classificacao"
+                  function: "format_gender_color_ds"
+                  fn_args:
+                    - named_prop: "rais_agr_sexo_ds"
+                    - named_prop: "rais_agr_raca_ds"
+                - id: "bar_description"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0} - {1}"
+                        args:
+                          - named_prop: "calc_classificacao"
+                          - named_prop: "calc_salario_medio"
+                            format: 'monetario'
+                            collapse:
+                              format: 'monetario'
+                            uiTags: false
+              formatters:
+                - id: "calc_salario_medio"
+                  format: 'monetario'
+                  uiTags: false
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'calc_classificacao'
+          - text: 'Ano'
+            align: 'left'
+            value: 'rais_agr_ano_nu'
+          - text: 'Remuneração Média'
+            value: 'fmt_calc_salario_medio'
+        chart_options:
+          id: "calc_classificacao"
+          y: "calc_classificacao"
+          x: "calc_salario_medio"
+          # orientation: "vertical"
+          text: "calc_bar_description"
+          show_x_axis: false
+          show_y_axis: false
+          hide_legend: true
+          order_field: "calc_salario_medio"
           colorScale:
             name: "YlGn"
             type: "singleHue"
@@ -886,7 +1139,7 @@ secoes:
 
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/thematic/raisagrmun?categorias=rais_agr_mun_ibge_cd-cd_mun_igbe,rais_agr_mun_ibge_ds,rais_agr_ano_nu,'Vículo de Emprego de Pessoas com Deficiência (CLT)'-ds_indicador,'ME/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_uf_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1}"
+          template: "/thematic/raisagrmun?categorias=rais_agr_mun_ibge_cd-cd_mun_ibge,rais_agr_mun_ibge_ds,rais_agr_ano_nu,'Vínculo de Emprego de Pessoas com Deficiência (CLT)'-ds_indicador,'ME/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_uf_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_deficiencia_id-'SIM'"
           args:
             - named_prop: "cd_uf"
             - base_object: "rais_agr"
@@ -895,8 +1148,8 @@ secoes:
             calcs:
               - id: "deviation"
                 function: "get_log"
-                args_fn:
-                  - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
+                fn_args:
+                  - fixed: "agr_sum_rais_agr_vinc_3112_qt"
             formatters:
               - id: "agr_sum_rais_agr_vinc_3112_qt"
                 format: 'inteiro'
