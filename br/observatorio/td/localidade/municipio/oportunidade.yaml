@@ -1400,9 +1400,9 @@ secoes:
         source:
           desc: "ME – Novo CAGED "
 # ====================================================          
-      - id: "bar_serie_empregos_formais"
+      - id: "bar_serie_empregos_formais_td"
         title: 
-          fixed: "Número de Empregos Celetistas – CLT"
+          fixed: "Número de Empregos Celetistas – CLT - RETIRAR"
         title_comment:
           template: "{0}, {1} a {2}"
           preloaded:
@@ -1512,6 +1512,94 @@ secoes:
           show_y_axis: false
           hide_legend: true
           color: "#238B45"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "bar_serie_empregos_formais"
+        title: 
+          fixed: "Número de Empregos Celetistas – CLT"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_rais_agr_ano_nu"
+            - named_prop: "agr_max_rais_agr_ano_nu"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
+        #       preloaded:
+        #         prop: "centralindicadores"
+        #         function: "slice"
+        #         id: "02_04_02_00"
+        #         year: "max"
+        #       args:
+        #         - named_prop: 'ds_indicador_radical'
+        #         - named_prop: 'ds_fonte'
+        #         - named_prop: 'nu_competencia_min'
+        #         - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'EMPREGOS'
+                  - prop: "comment"
+                    named_prop: 'rais_agr_ano_nu'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de vínculos de emprego em 31 de dezembro de {0} e, ao lado, a evolução da série histórica desses dados."
+              api:
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
+              args:
+                - named_prop: 'agr_max_rais_agr_ano_nu'
+        chart_type: "BAR"
+        api:
+          template: "/thematic/raisagrmun?categorias='Empregados Formais (CLT)'-ds_indicador,'ME/RAIS'-ds_fonte,rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_sum_rais_agr_vinc_3112_qt"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Ano'
+            align: 'left'
+            value: 'rais_agr_ano_nu'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_rais_agr_vinc_3112_qt'
+        chart_options:
+          id: "rais_agr_ano_nu"
+          x: "rais_agr_ano_nu"
+          y: "agr_sum_rais_agr_vinc_3112_qt"
+          orientation: "vertical"
+          text: "fmt_agr_sum_rais_agr_vinc_3112_qt"
+          show_x_axis: true
+          show_y_axis: false
+          color: "#238B45"
+          hide_legend: true
         source:
           desc_field: "ds_fonte"
 
