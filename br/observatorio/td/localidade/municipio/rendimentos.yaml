@@ -3,27 +3,6 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "JD_RAIS_04"
-      year: "max"
-    args:
-      - prop: "value"
-        named_prop: 'vl_indicador'
-        format: 'monetario'
-        collapse:
-          format: 'monetario'
-      - prop: "description"
-        fixed: "Remuneração Média no Setor Formal da Economia - RETIRAR"
-      - prop: 'comment'
-        template: "({0}, {1})"
-        args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
     api:
       template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1}"
       args:
@@ -52,27 +31,6 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "JD_RAIS_44_ESTATUTARIO"
-      year: "max"
-    args:
-      - prop: "value"
-        named_prop: 'vl_indicador'
-        format: 'monetario'
-        collapse:
-          format: 'monetario'
-      - prop: "description"
-        fixed: "Rendimento médio mensal no setor formal - Vínculos Administrativos - RETIRAR"
-      - prop: 'comment'
-        template: "({0}, {1})"
-        args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
     api:
       template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,in-rais_agr_vinculo_tp-'EST'-'ADM'"
       args:
@@ -98,27 +56,6 @@ principais:
         template: "(ME/RAIS, {0})"
         args:
           - named_prop: "rais_agr_ano_nu"
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "JD_RAIS_44_CLT"
-      year: "max"
-    args:
-      - prop: "value"
-        named_prop: 'vl_indicador'
-        format: 'monetario'
-        collapse:
-          format: 'monetario'
-      - prop: "description"
-        fixed: "Rendimento médio mensal no setor formal - Vínculos de Emprego - RETIRAR"
-      - prop: 'comment'
-        template: "({0}, {1})"
-        args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -211,128 +148,15 @@ secoes:
   - id: "rendimentos_unica"
     name: ""
     cards:
-# ========================================================
-      - id: "mapa_remuneracao_media"
-        title: 
-          fixed: "Remuneração Média no Setor Formal da Economia (Empregos Celetistas e Estatutários) - RETIRAR"
-        title_comment:
-          template: "{0}, em {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_04"
-            year: "max"
-          args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_04"
-                  year: 'max'
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Rendimento médio mensal"
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, para a perspectiva geográfica selecionada, o rendimento mensal do trabalho formal, considerados vínculos de emprego (CLT) e de natureza administrativa.  No mapa, apresenta-se a perspectiva comparativa das localidades. A escala de cores varia do branco (menor remuneração) para o azul (maior remuneração média mensal). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
-              api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
-                options:
-                  calcs:
-                    - id: "proximo_ano"
-                      function: "calc_addition_ids_ds"
-                      fn_args:
-                        - named_prop: "nu_competencia_max"
-                        - fixed: 1
-                        - fixed: 1
-              args:
-                - named_prop: "nu_competencia_max"
-                - named_prop: "calc_proximo_ano"
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "JD_RAIS_04"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
-        chart_type: "MAP_TOPOJSON"
-        api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'JD_RAIS_04',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation"
-                function: "get_proportional_indicator_uf"
-            formatters:
-              - id: "vl_indicador"
-                format: 'monetario'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio_uf'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation'
-        source:
-          desc_field: "ds_fonte"
 
 # ========================================================
-      - id: "mapa_remuneracao_media2"
+      - id: "mapa_remuneracao_media_td"
         title: 
           fixed: "Rendimento médio mensal no setor formal - Vínculos Celetistas e Estatutários"
         title_comment:
           template: "{0}, em {1}"
           api:
-            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu&filtros=le-rais_agr_ano_nu-2019"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -374,7 +198,7 @@ secoes:
             content:
               template: "Em destaque, para a perspectiva geográfica selecionada, o rendimento mensal do trabalho formal, considerados vínculos de emprego (CLT) e de natureza administrativa.  No mapa, apresenta-se a perspectiva comparativa das localidades. A escala de cores varia do branco (menor remuneração) para o azul (maior remuneração média mensal). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu&filtros=le-rais_agr_ano_nu-2019"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
@@ -427,127 +251,13 @@ secoes:
           desc_field: "ds_fonte"
 
 # ========================================================
-      - id: "mapa_remuneracao_media_adm"
-        title: 
-          fixed: "Remuneração média no emprego estatutário - RETIRAR"
-        title_comment:
-          template: "{0}, em {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_44_ESTATUTARIO"
-            year: "max"
-          args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_44_ESTATUTARIO"
-                  year: 'max'
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Rendimento médio mensal"
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, para a perspectiva geográfica selecionada, o rendimento mensal do trabalho formal, considerados apenas os vínculos no serviço público de natureza administrativa (estatutária).  No mapa, apresenta-se a perspectiva comparativa das localidades. A escala de cores varia do branco (menor remuneração) para o azul (maior remuneração média mensal). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
-              api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
-                options:
-                  calcs:
-                    - id: "proximo_ano"
-                      function: "calc_addition_ids_ds"
-                      fn_args:
-                        - named_prop: "nu_competencia_max"
-                        - fixed: 1
-                        - fixed: 1
-              args:
-                - named_prop: "nu_competencia_max"
-                - named_prop: "calc_proximo_ano"
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "JD_RAIS_44_ESTATUTARIO"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
-        chart_type: "MAP_TOPOJSON"
-        api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'JD_RAIS_44_ESTATUTARIO',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation"
-                function: "get_proportional_indicator_uf"
-            formatters:
-              - id: "vl_indicador"
-                format: 'monetario'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio_uf'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation'
-        source:
-          desc_field: "ds_fonte"
-
-# ========================================================
-      - id: "mapa_remuneracao_media_adm2"
+      - id: "mapa_remuneracao_media_adm_td"
         title: 
           fixed: "Rendimento médio mensal no setor formal - Vínculos Administrativos"
         title_comment:
           template: "{0}, em {1}"
           api:
-            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu&filtros=le-rais_agr_ano_nu-2019"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -589,7 +299,7 @@ secoes:
             content:
               template: "Em destaque, para a perspectiva geográfica selecionada, o rendimento mensal do trabalho formal, considerados apenas os vínculos no serviço público de natureza administrativa (estatutária).  No mapa, apresenta-se a perspectiva comparativa das localidades. A escala de cores varia do branco (menor remuneração) para o azul (maior remuneração média mensal). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu&filtros=le-rais_agr_ano_nu-2019"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
@@ -643,127 +353,13 @@ secoes:
           desc_field: "ds_fonte"
 
 # ========================================================
-      - id: "mapa_remuneracao_media_clt"
-        title: 
-          fixed: "Rendimento médio mensal no setor formal - Vínculos de Emprego - RETIRAR"
-        title_comment:
-          template: "{0}, em {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_44_CLT"
-            year: "max"
-          args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_44_CLT"
-                  year: 'max'
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'monetario'
-                    collapse:
-                      format: 'monetario'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Rendimento médio mensal"
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, para a perspectiva geográfica selecionada, o rendimento mensal do trabalho formal, considerados apenas os vínculos de emprego (CLT), excluídos os vínculos de natureza administrativa ou estatutária.  No mapa, apresenta-se a perspectiva comparativa das localidades. A escala de cores varia do branco (menor remuneração) para o azul (maior remuneração média mensal). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
-              api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
-                options:
-                  calcs:
-                    - id: "proximo_ano"
-                      function: "calc_addition_ids_ds"
-                      fn_args:
-                        - named_prop: "nu_competencia_max"
-                        - fixed: 1
-                        - fixed: 1
-              args:
-                - named_prop: "nu_competencia_max"
-                - named_prop: "calc_proximo_ano"
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "JD_RAIS_44_CLT"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
-        chart_type: "MAP_TOPOJSON"
-        api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_uf,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'JD_RAIS_44_CLT',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation"
-                function: "get_proportional_indicator_uf"
-            formatters:
-              - id: "vl_indicador"
-                format: 'monetario'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio_uf'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation'
-        source:
-          desc_field: "ds_fonte"
-
-# ========================================================
-      - id: "mapa_remuneracao_media_clt2"
+      - id: "mapa_remuneracao_media_clt_td"
         title: 
           fixed: "Rendimento médio mensal no setor formal - Vínculos de Emprego"
         title_comment:
           template: "{0}, em {1}"
           api:
-            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu&filtros=le-rais_agr_ano_nu-2019"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -805,7 +401,7 @@ secoes:
             content:
               template: "Em destaque, para a perspectiva geográfica selecionada, o rendimento mensal do trabalho formal, considerados apenas os vínculos de emprego (CLT), excluídos os vínculos de natureza administrativa ou estatutária.  No mapa, apresenta-se a perspectiva comparativa das localidades. A escala de cores varia do branco (menor remuneração) para o azul (maior remuneração média mensal). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu&filtros=le-rais_agr_ano_nu-2019"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
