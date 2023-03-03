@@ -106,7 +106,26 @@ secoes:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              fixed: "Sem observações adicionais. Vide descrição."
+              fixed: "É importante notar que houve na série histórica alterações no valor do salário mínimo, a saber: 
+              <table class='table-info'>
+              <th>ANO</th><th>VIGÊNCIA</th><th>VALOR</th><th>ATO LEGAL</th><th>PERCENTUAL</th>
+              <tr><td>2023</td><td>01/2023</td><td>R$ 1302</td><td>MP 1.143/2022</td><td>7,5%</td></tr>
+              <tr><td>2022</td><td>01/2022</td><td>R$ 1212</td><td>MP 1.091/2021</td><td>10,18%</td></tr>
+              <tr><td>2021</td><td>01/2021</td><td>R$ 1100</td><td>Lei 14.158/2021</td><td>5,26%</td></tr>
+              <tr><td>2020</td><td>01/2020</td><td>R$ 1045</td><td>Lei 14.013/2020</td><td>0,58%</td></tr>
+              <tr><td>2020</td><td>01/2020</td><td>R$ 1039</td><td>MP 916/2019</td><td>4,11%</td></tr>
+              <tr><td>2019</td><td>01/2019</td><td>R$ 998</td><td>Dec 9.661/2019</td><td>4,61%</td></tr>
+              <tr><td>2018</td><td>01/2018</td><td>R$ 954</td><td>Dec 9.255/2017</td><td>1,81%</td></tr>
+              <tr><td>2017</td><td>01/2017</td><td>R$ 937</td><td>Dec 8.948/2016</td><td>6,48%</td></tr>
+              <tr><td>2016</td><td>01/2016</td><td>R$ 880</td><td>Dec 8.618/2015</td><td>11,68%</td></tr>
+              <tr><td>2015</td><td>01/2015</td><td>R$ 788</td><td>Dec 8.381/2014</td><td>8,84%</td></tr>
+              <tr><td>2014</td><td>01/2014</td><td>R$ 724</td><td>Dec 8.166/2013</td><td>6,78%</td></tr>
+              <tr><td>2013</td><td>01/2013</td><td>R$ 678</td><td>Dec 7.872/2012</td><td>9,00%</td></tr>
+              <tr><td>2012</td><td>01/2012</td><td>R$ 622</td><td>Dec 7.655/2011</td><td>14,13%</td></tr>
+              <tr><td>2011</td><td>01/2011</td><td>R$ 545</td><td>Lei 12.382/2011</td><td>0,93%</td></tr>
+              <tr><td>2011</td><td>01/2010</td><td>R$ 540</td><td>MP 516/2010</td><td>5,88%</td></tr>
+              <tr><td>2010</td><td>01/2010</td><td>R$ 510</td><td>Lei 12.255/2010</td><td>9,68%</td></tr>
+              </table>"
         description:
           - type: "minicards"
             cards:
@@ -294,7 +313,7 @@ secoes:
                   named_prop: "agr_min_rais_agr_ano_nu"
             type: "BAR"
             api:
-              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador,'ME/RAIS'-ds_fonte&agregacao=sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm&ordenacao=rais_agr_sexo_ds&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1}"
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador,'ME/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&ordenacao=rais_agr_sexo_ds&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1}"
               args:
                 - named_prop: "idLocalidade"
                 - base_object: "rais_agr"
@@ -311,19 +330,24 @@ secoes:
                     fn_args:
                       - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
                       - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
                   - id: "bar_description"
                     function: "applyInterpolReplaceDatasetParam"
                     fn_args:
                       - fixed: 
-                          template: "{0} - {1} salários mínimos"
+                          template: "{0} - {1} salários mínimos ({2})"
                           args:
                             - named_prop: "cd_indicador"
-                            # - named_prop: "calc_salario_medio"
-                            #   format: 'monetario'
-                            #   collapse:
-                            #     format: 'monetario'
                             - named_prop: "calc_salario_medio_sm"
                               format: 'real'
+                            - named_prop: "calc_salario_medio"
+                              format: 'monetario'
+                              collapse:
+                                format: 'monetario'
                 formatters:
                   - id: "calc_salario_medio"
                     format: 'monetario'
@@ -341,6 +365,8 @@ secoes:
                 value: 'fmt_calc_salario_medio_sm'
               - text: 'Remuneração Média'
                 value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
             options:
               id: "cd_indicador"
               x: "cd_indicador"
@@ -366,7 +392,7 @@ secoes:
                   named_prop: "agr_max_rais_agr_ano_nu"
             type: "BAR"
             api:
-              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador,'ME/RAIS'-ds_fonte&agregacao=sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm&ordenacao=rais_agr_sexo_ds&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1}"
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador,'ME/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&ordenacao=rais_agr_sexo_ds&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1}"
               args:
                 - named_prop: "idLocalidade"
                 - base_object: "rais_agr"
@@ -383,19 +409,24 @@ secoes:
                     fn_args:
                       - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
                       - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
                   - id: "bar_description"
                     function: "applyInterpolReplaceDatasetParam"
                     fn_args:
                       - fixed: 
-                          template: "{0} - {1} salários mínimos"
+                          template: "{0} - {1} salários mínimos ({2})"
                           args:
                             - named_prop: "cd_indicador"
-                            # - named_prop: "calc_salario_medio"
-                            #   format: 'monetario'
-                            #   collapse:
-                            #     format: 'monetario'
                             - named_prop: "calc_salario_medio_sm"
                               format: 'real'
+                            - named_prop: "calc_salario_medio"
+                              format: 'monetario'
+                              collapse:
+                                format: 'monetario'
                 formatters:
                   - id: "calc_salario_medio"
                     format: 'monetario'
@@ -413,6 +444,8 @@ secoes:
                 value: 'fmt_calc_salario_medio_sm'
               - text: 'Remuneração Média'
                 value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
             options:
               id: "cd_indicador"
               x: "cd_indicador"
@@ -447,7 +480,26 @@ secoes:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              fixed: "Sem observações adicionais. Vide descrição."
+              fixed: "É importante notar que houve na série histórica alterações no valor do salário mínimo, a saber: 
+              <table class='table-info'>
+              <th>ANO</th><th>VIGÊNCIA</th><th>VALOR</th><th>ATO LEGAL</th><th>PERCENTUAL</th>
+              <tr><td>2023</td><td>01/2023</td><td>R$ 1302</td><td>MP 1.143/2022</td><td>7,5%</td></tr>
+              <tr><td>2022</td><td>01/2022</td><td>R$ 1212</td><td>MP 1.091/2021</td><td>10,18%</td></tr>
+              <tr><td>2021</td><td>01/2021</td><td>R$ 1100</td><td>Lei 14.158/2021</td><td>5,26%</td></tr>
+              <tr><td>2020</td><td>01/2020</td><td>R$ 1045</td><td>Lei 14.013/2020</td><td>0,58%</td></tr>
+              <tr><td>2020</td><td>01/2020</td><td>R$ 1039</td><td>MP 916/2019</td><td>4,11%</td></tr>
+              <tr><td>2019</td><td>01/2019</td><td>R$ 998</td><td>Dec 9.661/2019</td><td>4,61%</td></tr>
+              <tr><td>2018</td><td>01/2018</td><td>R$ 954</td><td>Dec 9.255/2017</td><td>1,81%</td></tr>
+              <tr><td>2017</td><td>01/2017</td><td>R$ 937</td><td>Dec 8.948/2016</td><td>6,48%</td></tr>
+              <tr><td>2016</td><td>01/2016</td><td>R$ 880</td><td>Dec 8.618/2015</td><td>11,68%</td></tr>
+              <tr><td>2015</td><td>01/2015</td><td>R$ 788</td><td>Dec 8.381/2014</td><td>8,84%</td></tr>
+              <tr><td>2014</td><td>01/2014</td><td>R$ 724</td><td>Dec 8.166/2013</td><td>6,78%</td></tr>
+              <tr><td>2013</td><td>01/2013</td><td>R$ 678</td><td>Dec 7.872/2012</td><td>9,00%</td></tr>
+              <tr><td>2012</td><td>01/2012</td><td>R$ 622</td><td>Dec 7.655/2011</td><td>14,13%</td></tr>
+              <tr><td>2011</td><td>01/2011</td><td>R$ 545</td><td>Lei 12.382/2011</td><td>0,93%</td></tr>
+              <tr><td>2011</td><td>01/2010</td><td>R$ 540</td><td>MP 516/2010</td><td>5,88%</td></tr>
+              <tr><td>2010</td><td>01/2010</td><td>R$ 510</td><td>Lei 12.255/2010</td><td>9,68%</td></tr>
+              </table>"
         description:
           - type: "minicards"
             cards:
@@ -698,7 +750,7 @@ secoes:
                   named_prop: "agr_min_rais_agr_ano_nu"
             type: "BAR"
             api:
-              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds,rais_agr_raca_ds,'ME/RAIS'-ds_fonte&agregacao=sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds,rais_agr_raca_ds,'ME/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
               args:
                 - named_prop: "idLocalidade"
                 - base_object: "rais_agr"
@@ -715,6 +767,11 @@ secoes:
                     fn_args:
                       - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
                       - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
                   - id: "classificacao"
                     function: "format_gender_color_ds"
                     fn_args:
@@ -724,11 +781,15 @@ secoes:
                     function: "applyInterpolReplaceDatasetParam"
                     fn_args:
                       - fixed: 
-                          template: "{0} - {1} salários mínimos"
+                          template: "{0} - {1} salários mínimos ({2})"
                           args:
                             - named_prop: "calc_classificacao"
                             - named_prop: "calc_salario_medio_sm"
                               format: 'real'
+                            - named_prop: "calc_salario_medio"
+                              format: 'monetario'
+                              collapse:
+                                format: 'monetario'
                 formatters:
                   - id: "calc_salario_medio"
                     format: 'monetario'
@@ -746,6 +807,8 @@ secoes:
                 value: 'fmt_calc_salario_medio_sm'
               - text: 'Remuneração Média'
                 value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
             options:
               id: "calc_classificacao"
               y: "calc_classificacao"
@@ -772,7 +835,7 @@ secoes:
                   named_prop: "agr_max_rais_agr_ano_nu"
             type: "BAR"
             api:
-              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds,rais_agr_raca_ds,'ME/RAIS'-ds_fonte&agregacao=sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds,rais_agr_raca_ds,'ME/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
               args:
                 - named_prop: "idLocalidade"
                 - base_object: "rais_agr"
@@ -789,6 +852,11 @@ secoes:
                     fn_args:
                       - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
                       - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
                   - id: "classificacao"
                     function: "format_gender_color_ds"
                     fn_args:
@@ -798,11 +866,15 @@ secoes:
                     function: "applyInterpolReplaceDatasetParam"
                     fn_args:
                       - fixed: 
-                          template: "{0} - {1} salários mínimos"
+                          template: "{0} - {1} salários mínimos ({2})"
                           args:
                             - named_prop: "calc_classificacao"
                             - named_prop: "calc_salario_medio_sm"
                               format: 'real'
+                            - named_prop: "calc_salario_medio"
+                              format: 'monetario'
+                              collapse:
+                                format: 'monetario'
                 formatters:
                   - id: "calc_salario_medio"
                     format: 'monetario'
@@ -820,10 +892,12 @@ secoes:
                 value: 'fmt_calc_salario_medio_sm'
               - text: 'Remuneração Média'
                 value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
             options:
               id: "calc_classificacao"
               y: "calc_classificacao"
-              x: "calc_salario_medio"
+              x: "calc_salario_medio_sm"
               # orientation: "vertical"
               text: "calc_bar_description"
               show_x_axis: false
@@ -1035,6 +1109,161 @@ secoes:
           id_field: 'cd_mun_ibge'
           topo_key: "codarea"
           value_field: 'calc_deviation'
+        source:
+          desc_field: "ds_fonte"
+
+# ====================================================          
+      - id: "bar_serie_empregos_formais_pcd"
+        title: 
+          fixed: "Série Histórica de Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)"
+        title_comment:
+          template: "{0}, {1} a {2}"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "agr_min_rais_agr_ano_nu"
+            - named_prop: "agr_max_rais_agr_ano_nu"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}"
+        #       preloaded:
+        #         prop: "centralindicadores"
+        #         function: "slice"
+        #         id: "02_04_02_00"
+        #         year: "max"
+        #       args:
+        #         - named_prop: 'ds_indicador_radical'
+        #         - named_prop: 'ds_fonte'
+        #         - named_prop: 'nu_competencia_min'
+        #         - named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_deficiencia_id-'SIM'"
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_min_rais_agr_ano_nu"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'EMPREGOS PCD'
+                  - prop: "comment"
+                    named_prop: 'rais_agr_ano_nu'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_deficiencia_id-'SIM'"
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'EMPREGOS PCD'
+                  - prop: "comment"
+                    named_prop: 'rais_agr_ano_nu'
+              - relevance: 'low'
+                cls: 'xs12 md6'
+                api:
+                  - template: "/thematic/raisagrmun?categorias='min'-cd_indicador,rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_deficiencia_id-'SIM'"
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_min_rais_agr_ano_nu"
+                  - template: "/thematic/raisagrmun?categorias='max'-cd_indicador,rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_deficiencia_id-'SIM'"
+                    args:
+                      - named_prop: "idLocalidade"
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                api_options:
+                  combine:
+                    - id: "perc_diferenca"
+                      desc: "Diferença Percentual ano min/ano max"
+                      function: 'calc_percentage'
+                      fn_args:
+                        - id: "min"
+                          named_prop: "agr_sum_rais_agr_vinc_3112_qt"
+                        - id: "max"
+                          named_prop: "agr_sum_rais_agr_vinc_3112_qt"
+                args:
+                  - id: "perc_diferenca"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: 'Diferença entre {0} e {1}'
+                    args:
+                      - id: "min"
+                        named_prop: "rais_agr_ano_nu"
+                      - id: "max"
+                        named_prop: "rais_agr_ano_nu"
+
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência (PCD) no primeiro e último ano da série histórica considerada. No gráfico, apresenta-se a evolução ao longo dos anos. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} a {1} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {2}."
+              api:
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
+                options:
+                  calcs:
+                    - id: "proximo_ano"
+                      function: "calc_addition_ids_ds"
+                      fn_args:
+                        - named_prop: "agr_max_rais_agr_ano_nu"
+                        - fixed: 1
+                        - fixed: 1
+              args:
+                - named_prop: 'agr_min_rais_agr_ano_nu'
+                - named_prop: 'agr_max_rais_agr_ano_nu'
+                - named_prop: 'calc_proximo_ano'
+        chart_type: "BAR"
+        api:
+          template: "/thematic/raisagrmun?categorias='Vínculos de Emprego de Pessoas com Deficiência (CLT)'-ds_indicador,'ME/RAIS'-ds_fonte,rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_mun_ibge_cd-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_deficiencia_id-'SIM'"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            formatters:
+              - id: "agr_sum_rais_agr_vinc_3112_qt"
+                format: 'inteiro'
+        headers:
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador'
+          - text: 'Ano'
+            align: 'left'
+            value: 'rais_agr_ano_nu'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_rais_agr_vinc_3112_qt'
+        chart_options:
+          id: "rais_agr_ano_nu"
+          x: "rais_agr_ano_nu"
+          y: "agr_sum_rais_agr_vinc_3112_qt"
+          orientation: "vertical"
+          text: "fmt_agr_sum_rais_agr_vinc_3112_qt"
+          show_x_axis: true
+          show_y_axis: false
+          color: "#238B45"
+          hide_legend: true
         source:
           desc_field: "ds_fonte"
 
