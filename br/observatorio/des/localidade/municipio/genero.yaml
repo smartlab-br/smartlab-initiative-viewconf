@@ -1673,20 +1673,24 @@ secoes:
 
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/thematic/raisagrmun?categorias=rais_agr_mun_ibge_cd-cd_mun_ibge,rais_agr_mun_ibge_ds,rais_agr_sexo_ds-cd_indicador,rais_agr_ano_nu,'ME/RAIS'-ds_fonte&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
-          # template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
-          args:
-            - named_prop: "cd_uf"
-            - base_object: "rais_agr"
-              named_prop: "agr_max_rais_agr_ano_nu"
-          options:
+          - template: "/thematic/raisagrmun?categorias=rais_agr_mun_ibge_cd-cd_mun_ibge,rais_agr_mun_ibge_ds,rais_agr_sexo_ds-cd_indicador,rais_agr_ano_nu,'ME/RAIS'-ds_fonte&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_uf_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+            # template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+            args:
+              - named_prop: "cd_uf"
+              - base_object: "rais_agr"
+                named_prop: "agr_max_rais_agr_ano_nu"
+            options:
               calcs:
                 - id: "salario_medio"
                   function: "calc_proportion_ds"
                   fn_args:
                     - named_prop: 'agr_sum_rais_agr_massa_salarial'
                     - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+              clone:
+                - id: "calc_salario_medio"
+                  new_column: "vl_indicador"
         api_options:
+          place_id_field: "cd_mun_ibge"
           combine:
             - id: "equivalencia_perc"
               desc: "Equivalência de salários entre homens e mulheres"
@@ -1696,12 +1700,17 @@ secoes:
                   named_prop: "calc_salario_medio"
                 - id: "Homens"
                   named_prop: "calc_salario_medio"
-          # cast:
-          #   col_fields: ["cd_mun_ibge", ""] 
-          #   value_field: ""
-          #   layer_field:
-
-            
+          cast:
+            col_fields: ["cd_mun_ibge", "rais_agr_mun_ibge_ds","rais_agr_ano_nu","ds_fonte"] 
+            value_field: "vl_indicador"
+            layer_field: "cd_indicador"
+          formatters:
+            - id: "Homens"
+              format: 'monetario'
+            - id: "Mulheres"
+              format: 'monetario'
+            - id: "equivalencia_perc"
+              format: 'porcentagem'
         headers:
           - text: 'Município'
             align: 'left'
@@ -1709,12 +1718,18 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'rais_agr_ano_nu'
-          - text: 'Valor'
-            value: 'calc_equivalencia_perc'
+          - text: 'Salário Médio Homens'
+            value: 'fmt_Homens'
+          - text: 'Salário Médio Mulheres'
+            value: 'fmt_Mulheres'
+          - text: 'Disparidade'
+            value: 'fmt_equivalencia_perc'
         chart_options:
           id_field: 'cd_mun_ibge'
           topo_key: "codarea"
-          value_field: 'calc_deviation'
+          value_field: 'equivalencia_perc'
+          colorScale:
+            name: 'Reds'
         source:
           desc_field: "ds_fonte"
 
