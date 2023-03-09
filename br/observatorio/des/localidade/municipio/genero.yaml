@@ -1510,37 +1510,51 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
-                    args:
-                      - named_prop: "idLocalidade"
-                      - base_object: "rais_agr"
-                        named_prop: "agr_min_rais_agr_ano_nu"
-                    options:
-                      calcs:
-                        - id: "salario_medio"
-                          function: "calc_proportion_ds"
-                          fn_args:
-                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
-                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "rais_agr"
+                      named_prop: "agr_min_rais_agr_ano_nu"
+                  options:
+                    combine:
+                      - id: "total_vinculos"
+                        desc: "Total de vínculos"
+                        function: 'calc_addition'
+                        named_prop: 'qtd_vinculos'
+                        fn_args:
+                          - id: "Mulheres"
+                            named_prop: "agr_sum_rais_agr_vinc_medios_crem_qt"
+                          - id: "Homens"
+                            named_prop: "agr_sum_rais_agr_vinc_medios_crem_qt"
+                    calcs:
+                      - id: "salario_medio"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                          - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
                 api_options:
+                  place_id_field: "cd_mun_ibge"
                   combine:
-                    - id: "equivalencia_perc"
-                      desc: "Equivalência de salários entre homens e mulheres"
-                      function: 'calc_percentage'
+                    - id: "diferenca_perc"
+                      desc: "Diferença de salários entre homens e mulheres"
+                      function: 'calc_percentage_difference'
                       fn_args:
-                        - id: "Mulheres"
-                          named_prop: "calc_salario_medio"
                         - id: "Homens"
                           named_prop: "calc_salario_medio"
+                        - id: "Mulheres"
+                          named_prop: "calc_salario_medio"
+                        - id: "total_vinculos"
+                          named_prop: "qtd_vinculos"
+                        - fixed: 10
                 args:
-                  - id: "equivalencia_perc"
+                  - id: "diferenca_perc"
                     prop: "value"
                     named_prop: 'vl_indicador'
                     format: 'porcentagem'
                     collapse:
                       format: 'porcentagem'
                   - prop: "description"
-                    fixed: "DISPARIDADE ENTRE <BR/> HOMENS E MULHERES <BR/> (CLT)"
+                    fixed: "DIFERENÇA ENTRE <BR/> HOMENS E MULHERES <BR/> (CLT)"
                   - prop: "comment"
                     named_prop: "rais_agr_ano_nu"
               - relevance: 'high'
@@ -1552,6 +1566,16 @@ secoes:
                       - base_object: "rais_agr"
                         named_prop: "agr_max_rais_agr_ano_nu"
                     options:
+                      combine:
+                        - id: "total_vinculos"
+                          desc: "Total de vínculos"
+                          function: 'calc_addition'
+                          named_prop: 'qtd_vinculos'
+                          fn_args:
+                            - id: "Mulheres"
+                              named_prop: "agr_sum_rais_agr_vinc_medios_crem_qt"
+                            - id: "Homens"
+                              named_prop: "agr_sum_rais_agr_vinc_medios_crem_qt"
                       calcs:
                         - id: "salario_medio"
                           function: "calc_proportion_ds"
@@ -1559,24 +1583,28 @@ secoes:
                             - named_prop: 'agr_sum_rais_agr_massa_salarial'
                             - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
                 api_options:
+                  place_id_field: "cd_mun_ibge"
                   combine:
-                    - id: "equivalencia_perc"
-                      desc: "Equivalência de salários entre homens e mulheres"
-                      function: 'calc_percentage'
+                    - id: "diferenca_perc"
+                      desc: "Diferença de salários entre homens e mulheres"
+                      function: 'calc_percentage_difference'
                       fn_args:
-                        - id: "Mulheres"
-                          named_prop: "calc_salario_medio"
                         - id: "Homens"
                           named_prop: "calc_salario_medio"
+                        - id: "Mulheres"
+                          named_prop: "calc_salario_medio"
+                        - id: "total_vinculos"
+                          named_prop: "qtd_vinculos"
+                        - fixed: 10
                 args:
-                  - id: "equivalencia_perc"
+                  - id: "diferenca_perc"
                     prop: "value"
                     named_prop: 'vl_indicador'
                     format: 'porcentagem'
                     collapse:
                       format: 'porcentagem'
                   - prop: "description"
-                    fixed: "DISPARIDADE ENTRE <BR/> HOMENS E MULHERES <BR/> (CLT)"
+                    fixed: "DIFERENÇA ENTRE <BR/> HOMENS E MULHERES <BR/> (CLT)"
                   - prop: "comment"
                     named_prop: "rais_agr_ano_nu"
               
@@ -1589,6 +1617,16 @@ secoes:
                       - base_object: "rais_agr"
                         named_prop: "agr_min_rais_agr_ano_nu"
                     options:
+                      combine:
+                        - id: "total_vinculos"
+                          desc: "Total de vínculos"
+                          function: 'calc_addition'
+                          named_prop: 'qtd_vinculos'
+                          fn_args:
+                            - id: "Mulheres"
+                              named_prop: "agr_sum_rais_agr_vinc_medios_crem_qt"
+                            - id: "Homens"
+                              named_prop: "agr_sum_rais_agr_vinc_medios_crem_qt"
                       calcs:
                         - id: "salario_medio"
                           function: "calc_proportion_ds"
@@ -1596,17 +1634,21 @@ secoes:
                             - named_prop: 'agr_sum_rais_agr_massa_salarial'
                             - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
                 api_options:
+                  place_id_field: "cd_mun_ibge"
                   combine:
-                    - id: "equivalencia_perc"
-                      desc: "Equivalência de salários entre homens e mulheres"
-                      function: 'calc_percentage'
+                    - id: "diferenca_perc"
+                      desc: "Diferença de salários entre homens e mulheres"
+                      function: 'calc_percentage_difference'
                       fn_args:
-                        - id: "Mulheres"
-                          named_prop: "calc_salario_medio"
                         - id: "Homens"
                           named_prop: "calc_salario_medio"
+                        - id: "Mulheres"
+                          named_prop: "calc_salario_medio"
+                        - id: "total_vinculos"
+                          named_prop: "qtd_vinculos"
+                        - fixed: 10
                 args:
-                  - id: "equivalencia_perc"
+                  - id: "diferenca_perc"
                     prop: "value"
                     named_prop: 'vl_indicador'
                     format: 'porcentagem'
@@ -1625,6 +1667,16 @@ secoes:
                       - base_object: "rais_agr"
                         named_prop: "agr_max_rais_agr_ano_nu"
                     options:
+                      combine:
+                        - id: "total_vinculos"
+                          desc: "Total de vínculos"
+                          function: 'calc_addition'
+                          named_prop: 'qtd_vinculos'
+                          fn_args:
+                            - id: "Mulheres"
+                              named_prop: "agr_sum_rais_agr_vinc_medios_crem_qt"
+                            - id: "Homens"
+                              named_prop: "agr_sum_rais_agr_vinc_medios_crem_qt"
                       calcs:
                         - id: "salario_medio"
                           function: "calc_proportion_ds"
@@ -1632,17 +1684,21 @@ secoes:
                             - named_prop: 'agr_sum_rais_agr_massa_salarial'
                             - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
                 api_options:
+                  place_id_field: "cd_mun_ibge"
                   combine:
-                    - id: "equivalencia_perc"
-                      desc: "Equivalência de salários entre homens e mulheres"
-                      function: 'calc_percentage'
+                    - id: "diferenca_perc"
+                      desc: "Diferença de salários entre homens e mulheres"
+                      function: 'calc_percentage_difference'
                       fn_args:
-                        - id: "Mulheres"
-                          named_prop: "calc_salario_medio"
                         - id: "Homens"
                           named_prop: "calc_salario_medio"
+                        - id: "Mulheres"
+                          named_prop: "calc_salario_medio"
+                        - id: "total_vinculos"
+                          named_prop: "qtd_vinculos"
+                        - fixed: 10
                 args:
-                  - id: "equivalencia_perc"
+                  - id: "diferenca_perc"
                     prop: "value"
                     named_prop: 'vl_indicador'
                     format: 'porcentagem'
@@ -1656,50 +1712,120 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, para a perspectiva geográfica selecionada, a disparidade e a equivalência percentual entre os rendimentos de mulheres e homens em cargos de direção (posições de liderança), consideradas duas perspectivas: a do vínculo de emprego (CLT) e a geral, com todos os vínculos formais. A disparidade foi calculada subtraindo-se o valor médio pago às mulheres do valor médio pago aos homens mensalmente. A equivalência percentual foi obtida pela divisão do valor pago em média às mulheres pelo valor pago em média aos homens, com o que se obteve o percentual do rendimento masculino que equivale ao rendimento feminino. O gráfico ao lado compara diversas unidades geográficas com base na diferença salarial entre homens e mulheres em cargos de direção, considerados todos os vínculos formais. A escala de cores varia do branco (menor diferença) para o vermelho (maior diferença entre homens e mulheres). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              template: "Em destaque, para a perspectiva geográfica selecionada, a diferença percentual entre os rendimentos de mulheres e homens em cargos de direção (posições de liderança), consideradas duas perspectivas: a do vínculo de emprego (CLT) e a geral, com todos os vínculos formais. O gráfico ao lado compara diversas unidades geográficas com base nessa na diferença percentual, considerados todos os vínculos formais. A escala de cores varia do branco (menor diferença) para o vermelho (maior diferença entre homens e mulheres). As localidades a respeito das quais não há informações suficientes para o cálculo são apontadas em cinza. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}.<br/>
+                        Segundo a lei brasileira (461 CLT), trabalho de igual valor é o de igual produtividade e com a mesma perfeição técnica, entre pessoas cuja diferença de tempo de serviço para o mesmo empregador não seja superior a quatro anos e a diferença de tempo na função não seja superior a dois anos. Desse modo, os números apresentados permitem uma análise parcial do cenário, que requer a consideração de outras variáveis. Para facilitar essas pesquisas quanto à igualdade de oportunidades, os filtros abaixo permitem selecionar perfis ocupacionais específicos."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
+          - id: "select_cbo_grupo"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Grupo"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_pri_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_pri_ds&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,nn-rais_agr_cbo_subgrupo_pri_ds,and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+              args:
+                - named_prop: "idLocalidade"
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            args:
+              - prop: "id"
+                named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+              - prop: "label"
+                named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-rais_agr_cbo_subgrupo_pri_ds-'{0}'"
+                api:
+                  args:
+                    - named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+          - id: "select_cbo_subgrupo"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Subgrupo"
+            parent: "select_cbo_grupo"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_ds&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,nn-rais_agr_cbo_subgrupo_ds,and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+              args:
+                - named_prop: "idLocalidade"
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            api_reactive:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_ds&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_cbo_subgrupo_pri_ds-'{2}',and,nn-rais_agr_cbo_subgrupo_ds,and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+              args:
+                - named_prop: "idLocalidade"
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+                - named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+            args:
+              - prop: "id"
+                named_prop: "rais_agr_cbo_subgrupo_ds"
+              - prop: "label"
+                named_prop: "rais_agr_cbo_subgrupo_ds"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-rais_agr_cbo_subgrupo_ds-'{0}'"
+                api:
+                  args:
+                    - named_prop: "rais_agr_cbo_subgrupo_ds"
 
         chart_type: "MAP_TOPOJSON"
         api:
-          - template: "/thematic/raisagrmun?categorias=rais_agr_mun_ibge_cd-cd_mun_ibge,rais_agr_mun_ibge_ds,rais_agr_sexo_ds-cd_indicador,rais_agr_ano_nu,'ME/RAIS'-ds_fonte&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_uf_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
-            # template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_mun_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
-            args:
-              - named_prop: "cd_uf"
-              - base_object: "rais_agr"
-                named_prop: "agr_max_rais_agr_ano_nu"
-            options:
-              calcs:
-                - id: "salario_medio"
-                  function: "calc_proportion_ds"
-                  fn_args:
-                    - named_prop: 'agr_sum_rais_agr_massa_salarial'
-                    - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
-              clone:
-                - id: "calc_salario_medio"
-                  new_column: "vl_indicador"
+          template: "/thematic/raisagrmun?categorias=rais_agr_mun_ibge_cd-cd_mun_ibge,rais_agr_mun_ibge_ds,rais_agr_sexo_ds-cd_indicador,rais_agr_ano_nu,'ME/RAIS'-ds_fonte&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_uf_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,eq-rais_agr_cargodir_id-'SIM',and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+          args:
+            - named_prop: "cd_uf"
+            - base_object: "rais_agr"
+              named_prop: "agr_max_rais_agr_ano_nu"
+          options:
+            place_id_field: "cd_mun_ibge"
+            combine:
+              - id: "total_vinculos"
+                desc: "Total de vínculos"
+                function: 'calc_addition'
+                named_prop: 'qtd_vinculos'
+                fn_args:
+                  - id: "Mulheres"
+                    named_prop: "agr_sum_rais_agr_vinc_medios_crem_qt"
+                  - id: "Homens"
+                    named_prop: "agr_sum_rais_agr_vinc_medios_crem_qt"
+            calcs:
+              - id: "salario_medio"
+                function: "calc_proportion_ds"
+                fn_args:
+                  - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                  - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+            clone:
+              - id: "calc_salario_medio"
+                new_column: "vl_indicador"
         api_options:
           place_id_field: "cd_mun_ibge"
           combine:
-            - id: "equivalencia_perc"
+            - id: "diferenca_perc"
               desc: "Equivalência de salários entre homens e mulheres"
-              function: 'calc_percentage'
+              function: 'calc_percentage_difference'
               fn_args:
-                - id: "Mulheres"
-                  named_prop: "calc_salario_medio"
                 - id: "Homens"
                   named_prop: "calc_salario_medio"
+                - id: "Mulheres"
+                  named_prop: "calc_salario_medio"
+                - id: "total_vinculos"
+                  named_prop: "qtd_vinculos"
+                - fixed: 10
           cast:
             col_fields: ["cd_mun_ibge", "rais_agr_mun_ibge_ds","rais_agr_ano_nu","ds_fonte"] 
             value_field: "vl_indicador"
@@ -1709,8 +1835,9 @@ secoes:
               format: 'monetario'
             - id: "Mulheres"
               format: 'monetario'
-            - id: "equivalencia_perc"
+            - id: "diferenca_perc"
               format: 'porcentagem'
+              null_value: 'Não há dados disponíveis para a comparação'
         headers:
           - text: 'Município'
             align: 'left'
@@ -1722,12 +1849,12 @@ secoes:
             value: 'fmt_Homens'
           - text: 'Salário Médio Mulheres'
             value: 'fmt_Mulheres'
-          - text: 'Disparidade'
-            value: 'fmt_equivalencia_perc'
+          - text: 'Diferença'
+            value: 'fmt_diferenca_perc'
         chart_options:
           id_field: 'cd_mun_ibge'
           topo_key: "codarea"
-          value_field: 'equivalencia_perc'
+          value_field: 'diferenca_perc'
           colorScale:
             name: 'Reds'
         source:
