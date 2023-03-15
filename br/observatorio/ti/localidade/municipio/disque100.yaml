@@ -6,10 +6,16 @@ principais:
       template: "/indicadoresmunicipais?categorias=nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,eq-cd_mun_ibge-{0}"
       args:
         - named_prop: "idLocalidade"
+      options:
+        calcs:
+          - id: 'faixa_vl_indicador'
+            function: 'get_bin'
+            fn_args:
+              - named_prop: 'agr_sum_vl_indicador'
+              - fixed: [10,100,500,1000,5000,10000,15000,20000]
     args:
       - prop: "value"
-        named_prop: 'agr_sum_vl_indicador'
-        format: 'inteiro'
+        named_prop: 'calc_faixa_vl_indicador'
       - prop: "description"
         fixed: "Total de ocorrências registradas no Disque 100"
       - prop: "comment"
@@ -61,10 +67,16 @@ secoes:
                   template: "/indicadoresmunicipais?categorias=1&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil',and,eq-cd_mun_ibge-{0}"
                   args:
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: 'faixa_vl_indicador'
+                        function: 'get_bin'
+                        fn_args:
+                          - named_prop: 'agr_sum_vl_indicador'
+                          - fixed: [10,100,500,1000,5000,10000,15000,20000]
                 args:
                   - prop: "value"
-                    named_prop: "agr_sum_vl_indicador"
-                    format: 'inteiro'
+                    named_prop: "calc_faixa_vl_indicador"
                   - prop: "description"
                     fixed: "DENÚNCIAS DE TRABALHO INFANTIL"
           - type: "text"
