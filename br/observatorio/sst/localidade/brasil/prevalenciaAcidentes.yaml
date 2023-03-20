@@ -3,11 +3,8 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "10_13_01_01"
-      year: "max"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'sst_cat_incidencia',and,eq-nu_competencia-nu_competencia_max"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -17,19 +14,17 @@ principais:
           format: 'real'
       - prop: "description"
         # named_prop: "ds_indicador_radical"
-        fixed: "CASOS A CADA 10.000 TRABALHADORES<br/>Prevalência de Acidentes de Trabalho"
+        fixed: "CASOS A CADA 10.000 TRABALHADORES<br/>Incidência de Acidentes de Trabalho"
       - prop: 'comment'
-        template: "({0})"
+        template: "({0}, {1})"
         args:
+          - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "10_13_01_02"
-      year: "max"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'sst_cat_incidencia_obito',and,eq-nu_competencia-nu_competencia_max"
     args:
       - prop: "value"
         named_prop: 'vl_indicador'
@@ -41,8 +36,10 @@ principais:
         # named_prop: "ds_indicador_radical"
         fixed: "CASOS A CADA 100.000 TRABALHADORES<br/>Mortalidade no Trabalho"
       - prop: 'comment'
-        template: "({0})"
+      - prop: 'comment'
+        template: "({0}, {1})"
         args:
+          - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
 # ====================================================          
 secoes:
@@ -52,16 +49,13 @@ secoes:
 # ===============================================
       - id: "bar_cats_priori_ufs"
         title: 
-          fixed: "Maiores Prevalências nas UFs de Notificações de Acidentes de Trabalho"
+          fixed: "Maiores Incidências nas UFs de Notificações de Acidentes de Trabalho"
         title_comment:
           template: "Brasil, {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_13_01_01"
-            year: "max"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_incidencia'&limit=1"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -72,11 +66,8 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_13_01_01"
-                  year: "max"
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'sst_cat_incidencia',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -86,14 +77,14 @@ secoes:
                       format: 'real'
                   - prop: "description"
                     # named_prop: "ds_indicador_radical"
-                    fixed: "CASOS A CADA 10.000 TRABALHADORES<br/>Prevalência de Acidentes de Trabalho"
+                    fixed: "CASOS A CADA 10.000 TRABALHADORES<br/>Incidência de Acidentes de Trabalho"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, informações sobre Prevalência de Notificações de Acidentes de Trabalho em número de casos a cada 10 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se as 10 unidades federativas com as maiores prevalências para o ano considerado."
+              fixed: "Em destaque, informações sobre Incidência Anual de Notificações de Acidentes de Trabalho em número de casos a cada 10 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se as 10 unidades federativas com as maiores incidências para o ano considerado."
         chart_type: "BAR"
         api:
-          fixed: "/indicadoresestaduais?categorias=nm_uf,cd_uf,sg_uf,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'10_13_01_01'&ordenacao=rank_br&limit=10"
+          fixed: "/sst/indicadoresestaduais?categorias=nm_uf,cd_uf,sg_uf,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'sst_cat_incidencia'&ordenacao=rank_br&limit=10"
           options:
             calcs:
               - id: "rankUF"
@@ -123,7 +114,7 @@ secoes:
             value: 'fmt_vl_indicador'
           - text: 'Rank Brasil'
             value: 'rank_br'
-        footnote: "UFs - Prevalências de Notificações de Acidentes de Trabalho - Casos a cada 10.000 trabalhadores expostos ao risco"
+        footnote: "UFs - Incidência de Notificações de Acidentes de Trabalho - Casos a cada 10.000 trabalhadores expostos ao risco"
         chart_options:
           id: "cd_uf"
           x: "calc_rankUF"
@@ -140,16 +131,13 @@ secoes:
 # ====================================================          
       - id: "bar_priori_municipios"
         title: 
-          fixed: "Maiores Prevalências nos Municípios de Notificações de Acidentes de Trabalho"
+          fixed: "Maiores Incidências nos Municípios de Notificações de Acidentes de Trabalho"
         title_comment:
           template: "Brasil, {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_13_01_01"
-            year: "max"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_incidencia'&limit=1"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -160,11 +148,8 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_13_01_01"
-                  year: "max"
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'sst_cat_incidencia',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -174,14 +159,14 @@ secoes:
                       format: 'real'
                   - prop: "description"
                     # named_prop: "ds_indicador_radical"
-                    fixed: "CASOS A CADA 10.000 TRABALHADORES<br/>Prevalência de Acidentes de Trabalho"
+                    fixed: "CASOS A CADA 10.000 TRABALHADORES<br/>Incidência de Acidentes de Trabalho"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, informações sobre Prevalência de Notificações de Acidentes de Trabalho em número de casos a cada 10 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se os 10 municípios com as maiores prevalências para o ano considerado."
+              fixed: "Em destaque, informações sobre Incidência de Notificações de Acidentes de Trabalho em número de casos a cada 10 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se os 10 municípios com as maiores incidências para o ano considerado."
         chart_type: "BAR"
         api:
-          fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,sg_uf,cd_mun_ibge,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'10_13_01_01'&ordenacao=rank_br&limit=10"
+          fixed: "/sst/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,sg_uf,cd_mun_ibge,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'sst_cat_incidencia'&ordenacao=rank_br&limit=10"
           options:
             calcs:
               - id: "rankMun"
@@ -211,7 +196,7 @@ secoes:
             value: 'fmt_vl_indicador'
           - text: 'Rank Brasil'
             value: 'rank_br'
-        footnote: "Municípios - Prevalências de Notificações de Acidentes de Trabalho - Casos a cada 10.000 trabalhadores expostos ao risco"
+        footnote: "Municípios - Incidência de Notificações de Acidentes de Trabalho - Casos a cada 10.000 trabalhadores expostos ao risco"
         chart_options:
           id: "cd_mun_ibge"
           x: "calc_rankMun"
@@ -230,8 +215,8 @@ secoes:
         title: 
           fixed: "Prevalência de Acidentes de Trabalho - Série Histórica"
         card_template: "tPrevalenciaBarSerieHistoricaBrasil"
-        datasource: "indicadoresnacionais"
-        cd_indicador: "10_13_01_01"
+        datasource: "sst/indicadoresnacionais"
+        cd_indicador: "sst_cat_incidencia"
         coefficient: "vl_indicador-10000-10 mil"
         term: "ocorrencia-casos"
 # ====================================================          
@@ -239,23 +224,20 @@ secoes:
         title: 
           fixed: "Prevalência de Acidentes de Trabalho - Distribuição Geográfica"
         card_template: "tPrevalenciaTopoJsonBrasil"
-        datasource: "indicadoresestaduais"
-        cd_indicador: "10_13_01_01"
+        datasource: "sst/indicadoresestaduais"
+        cd_indicador: "sst_cat_incidencia"
         coefficient: "vl_indicador-10000-10 mil,vl_indicador_br-10000-10 mil"
         term: "ocorrencia-casos"
 # ===============================================
       - id: "bar_cats_mortes_priori_ufs"
         title: 
-          fixed: "Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) Maiores Prevalências nas UFs"
+          fixed: "Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) Maiores Incidências nas UFs"
         title_comment:
           template: "Brasil, {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_13_01_02"
-            year: "max"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_incidencia'&limit=1"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -266,11 +248,8 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_13_01_02"
-                  year: "max"
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'sst_cat_incidencia_obito',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -284,10 +263,10 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, informações sobre Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) em número de casos a cada 100 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se as 10 unidades federativas com as maiores prevalências para o ano considerado."
+              fixed: "Em destaque, informações sobre Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) em número de casos a cada 100 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se as 10 unidades federativas com as maiores incidências para o ano considerado."
         chart_type: "BAR"
         api:
-          fixed: "/indicadoresestaduais?categorias=nm_uf,cd_uf,sg_uf,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'10_13_01_02'&ordenacao=rank_br&limit=10"
+          fixed: "/sst/indicadoresestaduais?categorias=nm_uf,cd_uf,sg_uf,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'sst_cat_incidencia_obito'&ordenacao=rank_br&limit=10"
           options:
             calcs:
               - id: "rankUF"
@@ -334,7 +313,7 @@ secoes:
 # # ====================================================          
 #       - id: "bar_cats_mortes_priori_municipios"
 #         title: 
-#           fixed: "Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) - Maiores Prevalências nos Municípios"
+#           fixed: "Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) - Maiores incidências nos Municípios"
 #         title_comment:
 #           template: "Brasil, {0}"
 #           preloaded:
@@ -372,7 +351,7 @@ secoes:
 #           - type: "text"
 #             title: ""
 #             content:
-#               fixed: "Em destaque, informações sobre Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) em número de casos a cada 100 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se os 10 municípios com as maiores prevalências para o ano considerado."
+#               fixed: "Em destaque, informações sobre Mortalidade no Trabalho (Acidentes de Trabalho com Morte - CAT) em número de casos a cada 100 mil trabalhadores com carteira assinada. Não estão incluídos servidores públicos de regime estatutário ou trabalhadores informais. No gráfico a seguir, apresentam-se os 10 municípios com as maiores incidências para o ano considerado."
 #         chart_type: "BAR"
 #         api:
 #           fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,cd_uf,sg_uf,cd_mun_ibge,vl_indicador,rank_br,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'10_13_01_02'&ordenacao=rank_br&limit=10"
@@ -423,8 +402,8 @@ secoes:
         title: 
           fixed: "Mortalidade no Trabalho (Acidentes de Trabalho com Morte) - Série Histórica"
         card_template: "tPrevalenciaBarSerieHistoricaBrasil"
-        datasource: "indicadoresnacionais"
-        cd_indicador: "10_13_01_02"
+        datasource: "sst/indicadoresnacionais"
+        cd_indicador: "sst_cat_incidencia_obito"
         coefficient: "vl_indicador-100000-100 mil"
         term: "ocorrencia-casos"
 # ====================================================          
@@ -432,7 +411,7 @@ secoes:
         title: 
           fixed: "Mortalidade no Trabalho (Acidentes de Trabalho com Morte) - Distribuição Geográfica"
         card_template: "tPrevalenciaTopoJsonBrasil"
-        datasource: "indicadoresestaduais"
-        cd_indicador: "10_13_01_02"
+        datasource: "sst/indicadoresestaduais"
+        cd_indicador: "sst_cat_incidencia_obito"
         coefficient: "vl_indicador-100000-100 mil,vl_indicador_br-100000-100 mil"
         term: "ocorrencia-casos"
