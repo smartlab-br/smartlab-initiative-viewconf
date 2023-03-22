@@ -18,5 +18,6 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
 
 
 httpd = HTTPServer(('localhost', 8000), CORSRequestHandler)
+print('Do not forget to set GIT_VIEWCONF_TAG_URL as http://localhost:8000/ in your .env file')
 print('Running viewconf server on localhost:8000')
 httpd.serve_forever()
