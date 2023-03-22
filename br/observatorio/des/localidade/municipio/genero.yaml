@@ -1899,12 +1899,13 @@ secoes:
         title: 
           fixed: "Remuneração dos Trabalhadores em Cargos de Direção por Sexo"
         title_comment:
-          template: "{0}, em {1}"
+          template: "{0}, em {1} e {2}"
           api:
-            fixed: "/thematic/raisagrmun?categorias=1&agregacao=max&valor=rais_agr_ano_nu"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
+            - named_prop: "agr_min_rais_agr_ano_nu"
             - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
@@ -1972,17 +1973,17 @@ secoes:
             content:
               template: "Em destaque, o valor médio da remuneração de trabalhadoras e trabalhadores que ocupam cargos de direção com vínculos de emprego celetista e com vínculos administrativos ou estatutários, mostrando, por sexo, a diferença entre o rendimento médio de homens e mulheres em posição de liderança por tipo de vínculo. No gráfico ao lado, comparam-se os valores entre homens e mulheres, em cargos de direção, distinguindo-se os respectivos rendimentos por sexo, e por tipo de vínculo. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
               
         charts:
