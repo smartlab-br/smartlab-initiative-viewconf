@@ -3,15 +3,14 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "JD_RAIS_39"
-      year: "max"
+    api:
+      - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_deficiencia_id-'SIM'"
+        args:
+          - base_object: "rais_agr"
+            named_prop: "agr_max_rais_agr_ano_nu"
     args:
       - prop: "value"
-        id: "JD_RAIS_39"
-        named_prop: 'vl_indicador'
+        named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
         format: 'inteiro'
         collapse:
           format: 'real'
@@ -22,27 +21,33 @@ principais:
         template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - named_prop: "rais_agr_ano_nu"
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      fixed: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=in-cd_indicador-'JD_RAIS_41'-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
-      options:
-        combine:
+      - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'vinc_pcd_qt'-cd_indicador,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_deficiencia_id-'SIM'"
+        args:
+          - base_object: "rais_agr"
+            named_prop: "agr_max_rais_agr_ano_nu"
+      - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'vinc_todos_qt'-cd_indicador,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+        args:
+          - base_object: "rais_agr"
+            named_prop: "agr_max_rais_agr_ano_nu"
+    api_options:
+      combine:
         - id: "pct_pcd"
           desc: "Vínculos Formais PCD sobre o total de empregos formais"
           function: 'calc_percentage_val1'
-          named_prop: "agr_sum_vl_indicador"
           fn_args:
-            - id: "JD_RAIS_41"
-              named_prop: "agr_sum_vl_indicador"
-            - id: "JD_RAIS_02"
-              named_prop: "agr_sum_vl_indicador"
+            - id: "vinc_pcd_qt"
+              named_prop: "agr_sum_rais_agr_vinc_3112_qt"
+            - id: "vinc_todos_qt"
+              named_prop: "agr_sum_rais_agr_vinc_3112_qt"
     args:
       - id: "pct_pcd"
         prop: "value"
-        named_prop: 'agr_sum_vl_indicador'
+        named_prop: 'vl_indicador'
         format: 'porcentagem'
         default: "Sem Registros"
       - prop: "description"
@@ -50,21 +55,28 @@ principais:
       - prop: 'comment'
         template: "({0}, {1})"
         args:
-          - id: "JD_RAIS_41"
+          - id: "vinc_todos_qt"
             named_prop: "ds_fonte"
-          - id: "JD_RAIS_41"
-            named_prop: "nu_competencia"
+          - id: "vinc_todos_qt"
+            named_prop: "rais_agr_ano_nu"
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "JD_RAIS_06"
-      year: 'max'
+    api:
+      - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_deficiencia_id-'SIM'"
+        args:
+          - base_object: "rais_agr"
+            named_prop: "agr_max_rais_agr_ano_nu"
+        options:
+          calcs:
+            - id: "salario_medio"
+              function: "calc_proportion_ds"
+              fn_args:
+                - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
     args:
       - prop: "value"
-        named_prop: 'vl_indicador'
+        named_prop: 'calc_salario_medio'
         format: 'monetario'
         collapse:
           format: 'monetario'
@@ -75,7 +87,7 @@ principais:
         template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - named_prop: "rais_agr_ano_nu"
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
@@ -110,13 +122,10 @@ secoes:
           fixed: "Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)"
         title_comment:
           template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_39"
-            year: "max"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -127,14 +136,14 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_39"
-                  year: 'max'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_deficiencia_id-'SIM'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -144,10 +153,13 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  fixed: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -160,47 +172,52 @@ secoes:
             content:
               template: "Em destaque, o número de vínculos empregatícios formais preenchidos por Pessoas com Deficiência (PCD). No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
+
         chart_type: "MAP_TOPOJSON"
         api:
-          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_indicador-'JD_RAIS_39',and,eq-nu_competencia-nu_competencia_max"
-          options:
-            calcs:
-              - id: "deviation"
-                function: "get_proportional_indicator_uf"
-                fn_args:
-                  - fixed: 'vl_indicador'
-                  - fixed: 'media_br'
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
+          - template: "/thematic/raisagrmun?categorias=rais_agr_uf_ibge_cd-cd_uf_ibge,rais_agr_uf_ibge_ds,rais_agr_ano_nu,'Vínculos de Emprego Formal de Pessoas com Deficiência (PCD)'-ds_indicador_radical,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_deficiencia_id-'SIM'"
+            args:
+              - base_object: "rais_agr"
+                named_prop: "agr_max_rais_agr_ano_nu"
+            options:
+              calcs:
+                - id: "deviation_uf"
+                  function: "get_log"
+                  fn_args:
+                    - fixed: "agr_sum_rais_agr_vinc_3112_qt"
+              formatters:
+                - id: "agr_sum_rais_agr_vinc_3112_qt"
+                  format: 'inteiro'
         headers:
-          - text: 'Unidade Federativa'
+          - text: 'UF'
             align: 'left'
-            value: 'nm_uf'
+            value: 'rais_agr_uf_ibge_ds'
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'ds_indicador_radical' 
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'rais_agr_ano_nu'
           - text: 'Valor'
-            value: 'fmt_vl_indicador'
+            value: 'fmt_agr_sum_rais_agr_vinc_3112_qt'
         chart_options:
-          id_field: 'cd_uf'
+          id_field: 'cd_uf_ibge'
           topo_key: "codigo"
-          value_field: 'calc_deviation'
+          value_field: 'calc_deviation_uf'
+          colorScale:
+            name: 'RBlueseds'
         source:
           desc_field: "ds_fonte"
 
@@ -210,13 +227,10 @@ secoes:
           fixed: "Vínculos Formais de Pessoas com Deficiência (PCD) sobre o total de empregos formais, inclusive Administração Pública"
         title_comment:
           template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_41"
-            year: "max"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -228,86 +242,91 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  fixed: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=in-cd_indicador-'JD_RAIS_41'-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
-                  options:
-                    combine:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'vinc_pcd_qt'-cd_indicador,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,eq-rais_agr_deficiencia_id-'SIM'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'vinc_todos_qt'-cd_indicador,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                api_options:
+                  combine:
                     - id: "pct_pcd"
                       desc: "Vínculos Formais PCD sobre o total de empregos formais"
                       function: 'calc_percentage_val1'
-                      named_prop: "agr_sum_vl_indicador"
                       fn_args:
-                        - id: "JD_RAIS_41"
-                          named_prop: "agr_sum_vl_indicador"
-                        - id: "JD_RAIS_02"
-                          named_prop: "agr_sum_vl_indicador"
+                        - id: "vinc_pcd_qt"
+                          named_prop: "agr_sum_rais_agr_vinc_3112_qt"
+                        - id: "vinc_todos_qt"
+                          named_prop: "agr_sum_rais_agr_vinc_3112_qt"
                 args:
                   - id: "pct_pcd"
                     prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                    named_prop: 'vl_indicador'
                     format: 'porcentagem'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Vínculos Formais de Pessoas com Deficiência sobre o total de empregos formais'
+                    fixed: "VÍNCULOS FORMAIS PCD SOBRE O TOTAL DE EMPREGOS FORMAIS"
 
           - type: "text"
             title: ""
             content:
               template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre vínculos formais de pessoas com deficiência (PCD) sobre o total de empregos formais, inclusive administração pública(percentual). A escala de cores varia do menor percentual (branco) para o maior percentual (azul escuro). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
 
         chart_type: "MAP_TOPOJSON"
         api:
-          fixed: "/indicadoresestaduais?categorias=cd_uf,cd_indicador,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=in-cd_indicador-'JD_RAIS_41'-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
-          options:
-            place_id_field: "cd_uf"
-            combine:
+          - template: "/thematic/raisagrmun?categorias=rais_agr_uf_ibge_cd-cd_uf_ibge,rais_agr_uf_ibge_ds,rais_agr_ano_nu,rais_agr_deficiencia_id-cd_indicador,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,nn-rais_agr_uf_ibge_sg,and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT'"
+            args:
+              - base_object: "rais_agr"
+                named_prop: "agr_max_rais_agr_ano_nu"
+        api_options:
+          place_id_field: "cd_uf_ibge"
+          combine:
             - id: "pct_pcd"
               desc: "Vínculos Formais PCD sobre o total de empregos formais"
               function: 'calc_percentage_val1'
               fn_args:
-                - id: "JD_RAIS_41"
-                  named_prop: "vl_indicador"
-                - id: "JD_RAIS_02"
-                  named_prop: "vl_indicador"
-            slice: 
-              id: ["pct_pcd"]
-            calcs:
-              - id: "deviation_map_value"
-                function: "get_proportional_indicator_uf"
-                fn_args:
-                  - fixed: "vl_indicador"
-                  - fixed: "media_br"
-            formatters:
-              - id: "vl_indicador"
-                format: 'porcentagem'
+                - id: "SIM"
+                  named_prop: "agr_sum_rais_agr_vinc_3112_qt"
+                - id: "NÃO"
+                  named_prop: "agr_sum_rais_agr_vinc_3112_qt"
+          cast:
+            col_fields: ["cd_uf_ibge", "rais_agr_uf_ibge_ds","rais_agr_ano_nu","ds_fonte"] 
+            value_field: "vl_indicador"
+            layer_field: "cd_indicador"
+          formatters:
+            - id: "pct_pcd"
+              format: 'porcentagem'
         headers:
           - text: 'UF'
             align: 'left'
-            value: 'nm_uf'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'rais_agr_uf_ibge_ds'
+          # - text: 'Indicador'
+          #   align: 'left'
+          #   value: 'ds_indicador'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
-          - text: 'Porcentagem'
-            value: 'fmt_vl_indicador'
+            value: 'rais_agr_ano_nu'
+          - text: 'Vínculos PCD sobre o total de empregos formais'
+            value: 'fmt_pct_pcd'
         chart_options:
-          id_field: 'cd_uf'
+          id_field: 'cd_uf_ibge'
           topo_key: "codigo"
-          value_field: 'vl_indicador'
+          value_field: 'pct_pcd'
         source:
           desc_field: "ds_fonte"
 
@@ -317,13 +336,10 @@ secoes:
           fixed: "Vínculos Formais de Pessoas com Deficiência (PCD), Inclusive na Administração Pública"
         title_comment:
           template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_41"
-            year: "max"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -334,14 +350,14 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_41"
-                  year: 'max'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_deficiencia_id-'SIM'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -351,10 +367,13 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  fixed: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0}"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -367,47 +386,50 @@ secoes:
             content:
               template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre vínculos formais de pessoas com deficiência (PCD), inclusive administração pública. A escala de cores varia da menor quantidade (branco) para a maior quantidade (azul escuro). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
+                
         chart_type: "MAP_TOPOJSON"
         api:
-          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_indicador-'JD_RAIS_41',and,eq-nu_competencia-nu_competencia_max"
-          options:
-            calcs:
-              - id: "deviation"
-                function: "get_proportional_indicator_uf"
-                fn_args:
-                  - fixed: 'vl_indicador'
-                  - fixed: 'media_br'
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
+          - template: "/thematic/raisagrmun?categorias=rais_agr_uf_ibge_cd-cd_uf_ibge,rais_agr_uf_ibge_ds,rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,nn-rais_agr_uf_ibge_sg,and,eq-rais_agr_deficiencia_id-'SIM'"
+            args:
+              - base_object: "rais_agr"
+                named_prop: "agr_max_rais_agr_ano_nu"
+            options:
+              calcs:
+                - id: "deviation_uf"
+                  function: "get_log"
+                  fn_args:
+                    - fixed: "agr_sum_rais_agr_vinc_3112_qt"
+              formatters:
+                - id: "agr_sum_rais_agr_vinc_3112_qt"
+                  format: 'inteiro'
         headers:
-          - text: 'Unidade Federativa'
+          - text: 'Município'
             align: 'left'
-            value: 'nm_uf'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'rais_agr_uf_ibge_ds'
+          # - text: 'Indicador'
+          #   align: 'left'
+          #   value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
+            value: 'rais_agr_ano_nu'
+          - text: 'Vínculos formais PCD'
+            value: 'fmt_agr_sum_rais_agr_vinc_3112_qt'
         chart_options:
-          id_field: 'cd_uf'
+          id_field: 'cd_uf_ibge'
           topo_key: "codigo"
-          value_field: 'calc_deviation'
+          value_field: 'calc_deviation_uf'
         source:
           desc_field: "ds_fonte"
 
@@ -417,13 +439,10 @@ secoes:
           fixed: "Vínculos Formais de Pessoas com Deficiência (PCD) na Administração Pública"
         title_comment:
           template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_40"
-            year: "max"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -434,14 +453,14 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_40"
-                  year: 'max'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_deficiencia_id-'SIM',and,in-rais_agr_vinculo_tp-'ADM'-'EST'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -451,10 +470,13 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  fixed: "/indicadoresestaduais?categorias=cd_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'JD_RAIS_02',and,eq-nu_competencia-nu_competencia_max"
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0}"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
+                    named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -467,47 +489,50 @@ secoes:
             content:
               template: "Em destaque, para a perspectiva geográfica selecionada e no período indicado, informações sobre vínculos formais de pessoas com deficiência (PCD) na administração pública. A escala de cores varia da menor quantidade (branco) para a maior quantidade (azul escuro). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
+
         chart_type: "MAP_TOPOJSON"
         api:
-          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_indicador-'JD_RAIS_40',and,eq-nu_competencia-nu_competencia_max"
-          options:
-            calcs:
-              - id: "deviation"
-                function: "get_proportional_indicator_uf"
-                fn_args:
-                  - fixed: 'vl_indicador'
-                  - fixed: 'media_br'
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
+          - template: "/thematic/raisagrmun?categorias=rais_agr_uf_ibge_cd-cd_uf_ibge,rais_agr_uf_ibge_ds,rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,nn-rais_agr_uf_ibge_sg,and,eq-rais_agr_deficiencia_id-'SIM',and,in-rais_agr_vinculo_tp-'ADM'-'EST'"
+            args:
+              - base_object: "rais_agr"
+                named_prop: "agr_max_rais_agr_ano_nu"
+            options:
+              calcs:
+                - id: "deviation_uf"
+                  function: "get_log"
+                  fn_args:
+                    - fixed: "agr_sum_rais_agr_vinc_3112_qt"
+              formatters:
+                - id: "agr_sum_rais_agr_vinc_3112_qt"
+                  format: 'inteiro'
         headers:
-          - text: 'Unidade Federativa'
+          - text: 'UF'
             align: 'left'
-            value: 'nm_uf'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'rais_agr_uf_ibge_ds'
+          # - text: 'Indicador'
+          #   align: 'left'
+          #   value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
+            value: 'rais_agr_ano_nu'
+          - text: 'Vínculos formais PCD na Administração Pública'
+            value: 'fmt_agr_sum_rais_agr_vinc_3112_qt'
         chart_options:
-          id_field: 'cd_uf'
+          id_field: 'cd_uf_ibge'
           topo_key: "codigo"
-          value_field: 'calc_deviation'
+          value_field: 'calc_deviation_uf'
         source:
           desc_field: "ds_fonte"
 
@@ -517,13 +542,10 @@ secoes:
           fixed: "Remuneração dos Trabalhadores com Deficiência (PCD) no Mercado Formal"
         title_comment:
           template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_06"
-            year: "max"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -534,30 +556,44 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_06"
-                  year: 'max'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_deficiencia_id-'SIM'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'calc_salario_medio'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Remuneração Média PCD"
+                    fixed: 'Remuneração média PCD'
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_04"
-                  year: 'max'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_uf_ibge_ds&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0}"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'calc_salario_medio'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
@@ -571,64 +607,63 @@ secoes:
             content:
               template: "Em destaque, o valor da remuneração média (em R$) das PCD no mercado formal de trabalho, considerando-se o conjunto dos seguintes vínculos: celetistas (com carteira assinada), estatutários, temporários e avulsos. No mapa, apresenta-se a perspectiva comparativa entre diferentes unidades geográficas. A escala de cores varia do branco (menor valor) para o azul (maior valor). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
 
         chart_type: "MAP_TOPOJSON"
         api:
-          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,nu_competencia,ds_indicador_radical,vl_indicador,media_br,ds_fonte&filtros=eq-cd_indicador-'JD_RAIS_06',and,eq-nu_competencia-nu_competencia_max"
+          template: "/thematic/raisagrmun?categorias=rais_agr_uf_ibge_cd-cd_uf_ibge,rais_agr_uf_ibge_ds,rais_agr_ano_nu,'MTE/RAIS'-ds_fonte&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,nn-rais_agr_uf_ibge_sg,and,eq-rais_agr_deficiencia_id-'SIM'"
+          args:
+            - base_object: "rais_agr"
+              named_prop: "agr_max_rais_agr_ano_nu"
           options:
             calcs:
-              - id: "deviation"
-                function: "get_proportional_indicator_uf"
+              - id: "salario_medio"
+                function: "calc_proportion_ds"
                 fn_args:
-                  - fixed: "vl_indicador"
-                  - fixed: "media_br"
+                  - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                  - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
             formatters:
-              - id: "vl_indicador"
+              - id: "calc_salario_medio"
                 format: 'monetario'
         headers:
-          - text: 'UF'
+          - text: 'Município'
             align: 'left'
-            value: 'nm_uf'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'rais_agr_uf_ibge_ds'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
+            value: 'rais_agr_ano_nu'
+          - text: 'Remuneração média PCD'
+            value: 'fmt_calc_salario_medio'
         chart_options:
-          id_field: 'cd_uf'
+          id_field: 'cd_uf_ibge'
           topo_key: "codigo"
-          value_field: 'calc_deviation'
+          value_field: 'calc_salario_medio'
         source:
           desc_field: "ds_fonte"
 
 # ========================================================
       - id: "bar_remuneracao_desagregada"
+        type: "multiple-charts"
         title: 
           fixed: "Remuneração Média das PCD no Mercado Formal, por tipo de deficiência"
         title_comment:
-          template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_06"
-            year: "max"
+          template: "Brasil, em {0} e {1}"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "agr_min_rais_agr_ano_nu"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -639,31 +674,44 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_06"
-                  year: 'max'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_deficiencia_id-'SIM'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'calc_salario_medio'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
-                    precision: 0
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "Remuneração Média PCD"
+                    fixed: 'Remuneração média PCD'
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_04"
-                  year: 'max'
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_uf_ibge_ds&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0}"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'calc_salario_medio'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
@@ -678,68 +726,233 @@ secoes:
             content:
               template: "Em destaque, o valor da remuneração média (em R$) das PCD no mercado formal de trabalho. No gráfico ao lado, são apresentadas os valores das remunerações médias das PCD segundo os diversos tipos de deficiência. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
-        chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['JD_RAIS_09_AUDITIVA','JD_RAIS_09_FISICA', 'JD_RAIS_09_MENTAL', 'JD_RAIS_09_MULTIPLA', 'JD_RAIS_09_REABILITADO', 'JD_RAIS_09_VISUAL']
-            year: "max"
-            options:
-              calcs:
-                - id: "bar_description"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed: 
-                        template: "{0} - {1}"
-                        args:
-                          - named_prop: "ds_agreg_primaria"
-                          - named_prop: "vl_indicador"
-                            format: 'monetario'
-                            collapse:
+          
+          - id: "select_cbo_grupo"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Grupo"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_pri_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_pri_ds&filtros=eq-rais_agr_ano_nu-{0},and,nn-rais_agr_cbo_subgrupo_pri_ds,and,eq-rais_agr_deficiencia_id-'SIM'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            args:
+              - prop: "id"
+                named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+              - prop: "label"
+                named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-rais_agr_cbo_subgrupo_pri_ds-'{0}'"
+                api:
+                  args:
+                    - named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+          - id: "select_cbo_subgrupo"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Subgrupo"
+            parent: "select_cbo_grupo"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_ds&filtros=eq-rais_agr_ano_nu-{0},and,nn-rais_agr_cbo_subgrupo_ds,and,eq-rais_agr_deficiencia_id-'SIM'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            api_reactive:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_ds&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_cbo_subgrupo_pri_ds-'{1}',and,nn-rais_agr_cbo_subgrupo_ds,and,eq-rais_agr_deficiencia_id-'SIM'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+                - named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+            args:
+              - prop: "id"
+                named_prop: "rais_agr_cbo_subgrupo_ds"
+              - prop: "label"
+                named_prop: "rais_agr_cbo_subgrupo_ds"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-rais_agr_cbo_subgrupo_ds-'{0}'"
+                api:
+                  args:
+                    - named_prop: "rais_agr_cbo_subgrupo_ds"
+
+        charts:
+          - id: "rem_pcd_ano_min"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Remuneração Média das PCD no Mercado Formal, por tipo de deficiência - {0}"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_min_rais_agr_ano_nu"
+            type: "BAR"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_deficiencia_ds,'MTE/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_deficiencia_id-'SIM'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_min_rais_agr_ano_nu"
+              options:
+                calcs:
+                  - id: "salario_medio"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "salario_medio_sm"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1} salários mínimos ({2})"
+                          args:
+                            - named_prop: "rais_agr_deficiencia_ds"
+                            - named_prop: "calc_salario_medio_sm"
+                              format: 'real'
+                            - named_prop: "calc_salario_medio"
                               format: 'monetario'
-                            uiTags: false
-              formatters:
-                - id: "vl_indicador"
-                  format: 'monetario'
-                  uiTags: false
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id: "cd_indicador"
-          y: "ds_agreg_primaria"
-          x: "vl_indicador"
-          # orientation: "vertical"
-          text: "calc_bar_description"
-          show_x_axis: false
-          show_y_axis: false
-          hide_legend: true
-          order_field: "vl_indicador"
-          colorScale:
-            name: "YlOrBr"
-            type: "singleHue"
-            levels: 9
-            order: 'desc'
-        source:
-          desc_field: "ds_fonte"
+                              collapse:
+                                format: 'monetario'
+                formatters:
+                  - id: "calc_salario_medio"
+                    format: 'monetario'
+                    uiTags: false
+                  - id: "calc_salario_medio_sm"
+                    format: 'real'
+            headers:
+              - text: 'Deficiência'
+                align: 'left'
+                value: 'rais_agr_deficiencia_ds'
+              - text: 'Ano'
+                align: 'left'
+                value: 'rais_agr_ano_nu'
+              - text: 'Remuneração em Salários Mínimos'
+                value: 'fmt_calc_salario_medio_sm'
+              - text: 'Remuneração Média'
+                value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
+            options:
+              id: "rais_agr_deficiencia_ds"
+              y: "rais_agr_deficiencia_ds"
+              x: "calc_salario_medio_sm"
+              # orientation: "vertical"
+              text: "calc_bar_description"
+              show_x_axis: false
+              show_y_axis: false
+              hide_legend: true
+              order_field: "calc_salario_medio_sm"
+              colorScale:
+                name: "YlOrBr"
+                type: "singleHue"
+                levels: 9
+                order: 'desc'
+            source:
+              desc_field: "ds_fonte"
+              
+          - id: "rem_pcd_ano_max"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Remuneração Média das PCD no Mercado Formal, por tipo de deficiência - {0}"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            type: "BAR"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_deficiencia_ds,'MTE/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_deficiencia_id-'SIM'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+              options:
+                calcs:
+                  - id: "salario_medio"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "salario_medio_sm"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1} salários mínimos ({2})"
+                          args:
+                            - named_prop: "rais_agr_deficiencia_ds"
+                            - named_prop: "calc_salario_medio_sm"
+                              format: 'real'
+                            - named_prop: "calc_salario_medio"
+                              format: 'monetario'
+                              collapse:
+                                format: 'monetario'
+                formatters:
+                  - id: "calc_salario_medio"
+                    format: 'monetario'
+                    uiTags: false
+                  - id: "calc_salario_medio_sm"
+                    format: 'real'
+            headers:
+              - text: 'Deficiência'
+                align: 'left'
+                value: 'rais_agr_deficiencia_ds'
+              - text: 'Ano'
+                align: 'left'
+                value: 'rais_agr_ano_nu'
+              - text: 'Remuneração em Salários Mínimos'
+                value: 'fmt_calc_salario_medio_sm'
+              - text: 'Remuneração Média'
+                value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
+            options:
+              id: "rais_agr_deficiencia_ds"
+              y: "rais_agr_deficiencia_ds"
+              x: "calc_salario_medio_sm"
+              # orientation: "vertical"
+              text: "calc_bar_description"
+              show_x_axis: false
+              show_y_axis: false
+              hide_legend: true
+              order_field: "calc_salario_medio_sm"
+              colorScale:
+                name: "YlOrBr"
+                type: "singleHue"
+                levels: 9
+                order: 'desc'
+            source:
+              desc_field: "ds_fonte"
 
 # ========================================================
       - id: "mapa_desocupação_população_deficiência_severa"
