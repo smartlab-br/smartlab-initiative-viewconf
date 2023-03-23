@@ -3,14 +3,21 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "JD_RAIS_30_PRETA"
-      year: "max"
+    api:
+      - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_raca_ds-'PRETA'"
+        args:
+          - base_object: "rais_agr"
+            named_prop: "agr_max_rais_agr_ano_nu"
+        options:
+          calcs:
+            - id: "salario_medio"
+              function: "calc_proportion_ds"
+              fn_args:
+                - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
     args:
       - prop: "value"
-        named_prop: 'vl_indicador'
+        named_prop: 'calc_salario_medio'
         format: 'monetario'
         collapse:
           format: 'monetario'
@@ -18,21 +25,27 @@ principais:
       - prop: "description"
         fixed: 'Remuneração média de negros'
       - prop: 'comment'
-        template: "({0}, {1})"
+        template: "(MTE/RAIS, {0})"
         args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - named_prop: "rais_agr_ano_nu"
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "JD_RAIS_27_MULHER_NEGRA"
-      year: "max"
+    api:
+      - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_raca_ds-'PRETA',and,eq-rais_agr_sexo_ds-'Mulheres'"
+        args:
+          - base_object: "rais_agr"
+            named_prop: "agr_max_rais_agr_ano_nu"
+        options:
+          calcs:
+            - id: "salario_medio"
+              function: "calc_proportion_ds"
+              fn_args:
+                - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
     args:
       - prop: "value"
-        named_prop: 'vl_indicador'
+        named_prop: 'calc_salario_medio'
         format: 'monetario'
         collapse:
           format: 'monetario'
@@ -40,10 +53,9 @@ principais:
       - prop: "description"
         fixed: 'Remuneração média de mulheres negras'
       - prop: 'comment'
-        template: "({0}, {1})"
+        template: "(MTE/RAIS, {0})"
         args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - named_prop: "rais_agr_ano_nu"
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
@@ -144,308 +156,768 @@ secoes:
 
 # ========================================================
       - id: "bar_remuneracao_trabalhadores_raca"
+        type: "multiple-charts"
         title: 
           fixed: "Remuneração Média de Trabalhadores por Raça/Cor"
         title_comment:
           template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_30_BRANCA"
-            year: "max"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              fixed: "Sem observações adicionais. Vide descrição."
+              fixed: "É importante notar que houve na série histórica alterações no valor do salário mínimo, a saber: 
+              <table class='table-info'>
+              <th>ANO</th><th>VIGÊNCIA</th><th>VALOR</th><th>ATO LEGAL</th><th>PERCENTUAL</th>
+              <tr><td>2023</td><td>01/2023</td><td>R$ 1302</td><td>MP 1.143/2022</td><td>7,5%</td></tr>
+              <tr><td>2022</td><td>01/2022</td><td>R$ 1212</td><td>MP 1.091/2021</td><td>10,18%</td></tr>
+              <tr><td>2021</td><td>01/2021</td><td>R$ 1100</td><td>Lei 14.158/2021</td><td>5,26%</td></tr>
+              <tr><td>2020</td><td>01/2020</td><td>R$ 1045</td><td>Lei 14.013/2020</td><td>0,58%</td></tr>
+              <tr><td>2020</td><td>01/2020</td><td>R$ 1039</td><td>MP 916/2019</td><td>4,11%</td></tr>
+              <tr><td>2019</td><td>01/2019</td><td>R$ 998</td><td>Dec 9.661/2019</td><td>4,61%</td></tr>
+              <tr><td>2018</td><td>01/2018</td><td>R$ 954</td><td>Dec 9.255/2017</td><td>1,81%</td></tr>
+              <tr><td>2017</td><td>01/2017</td><td>R$ 937</td><td>Dec 8.948/2016</td><td>6,48%</td></tr>
+              <tr><td>2016</td><td>01/2016</td><td>R$ 880</td><td>Dec 8.618/2015</td><td>11,68%</td></tr>
+              <tr><td>2015</td><td>01/2015</td><td>R$ 788</td><td>Dec 8.381/2014</td><td>8,84%</td></tr>
+              <tr><td>2014</td><td>01/2014</td><td>R$ 724</td><td>Dec 8.166/2013</td><td>6,78%</td></tr>
+              <tr><td>2013</td><td>01/2013</td><td>R$ 678</td><td>Dec 7.872/2012</td><td>9,00%</td></tr>
+              <tr><td>2012</td><td>01/2012</td><td>R$ 622</td><td>Dec 7.655/2011</td><td>14,13%</td></tr>
+              <tr><td>2011</td><td>01/2011</td><td>R$ 545</td><td>Lei 12.382/2011</td><td>0,93%</td></tr>
+              <tr><td>2011</td><td>01/2010</td><td>R$ 540</td><td>MP 516/2010</td><td>5,88%</td></tr>
+              <tr><td>2010</td><td>01/2010</td><td>R$ 510</td><td>Lei 12.255/2010</td><td>9,68%</td></tr>
+              </table>"
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  template: "/indicadoresnacionais?categorias=vl_indicador,ds_agreg_primaria&filtros=in-cd_indicador-'JD_RAIS_30_BRANCA'-'JD_RAIS_30_AMARELA'-'JD_RAIS_30_INDIGENA'-'JD_RAIS_30_PARDA'-'JD_RAIS_30_PRETA'&ordenacao=-vl_indicador&limit=1"
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_raca_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                      order_field: "-calc_salario_medio"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'calc_salario_medio'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
-                    uiTags: false
+                    default: "Sem Registros"
                   - prop: "description"
-                    named_prop: 'ds_agreg_primaria'
+                    named_prop: '-cd_indicador'
                   - prop: "comment"
-                    fixed: 'Maior remuneração média'
+                    template: 'Maior remuneração média<br/>{0}'
+                    args:
+                      - id: 'BRANCA'
+                        named_prop: 'rais_agr_ano_nu'
 
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  template: "/indicadoresnacionais?categorias=vl_indicador,ds_agreg_primaria&filtros=in-cd_indicador-'JD_RAIS_30_BRANCA'-'JD_RAIS_30_AMARELA'-'JD_RAIS_30_INDIGENA'-'JD_RAIS_30_PARDA'-'JD_RAIS_30_PRETA'&ordenacao=vl_indicador&limit=1"
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_raca_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                      order_field: "calc_salario_medio"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'calc_salario_medio'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
-                    uiTags: false
+                    default: "Sem Registros"
                   - prop: "description"
-                    named_prop: 'ds_agreg_primaria'
+                    named_prop: '-cd_indicador'
                   - prop: "comment"
-                    fixed: 'Menor remuneração média'
+                    template: 'Menor remuneração média<br/>{0}'
+                    args:
+                      - id: 'BRANCA'
+                        named_prop: 'rais_agr_ano_nu'
 
           - type: "text"
             title: ""
             content:
               template: "Em destaque, o valor médio da remuneração dos trabalhadores, por raça/cor, de maior e menor renda, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os valores para os cinco coortes de raça/cor, conforme definidos pelo IBGE. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
+          - id: "select_cargodirecao"
+            cls: "align-end pb-0"
+            type: "check"
+            label: "Em cargos de direção"
+            value: false
+            color: "black"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-rais_agr_cargodir_id-'SIM'"
+                filter_text: "Em cargos de direção"
+          - id: "select_cbo_grupo"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Grupo"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_pri_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_pri_ds&filtros=eq-rais_agr_uf_ibge_cd-{0},and,eq-rais_agr_ano_nu-{1},and,nn-rais_agr_cbo_subgrupo_pri_ds"
+              args:
+                - named_prop: "idLocalidade"
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            args:
+              - prop: "id"
+                named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+              - prop: "label"
+                named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-rais_agr_cbo_subgrupo_pri_ds-'{0}'"
+                api:
+                  args:
+                    - named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+          - id: "select_cbo_subgrupo"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Subgrupo"
+            parent: "select_cbo_grupo"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_ds&filtros=eq-rais_agr_ano_nu-{0},and,nn-rais_agr_cbo_subgrupo_ds"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            api_reactive:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_ds&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_cbo_subgrupo_pri_ds-'{1}',and,nn-rais_agr_cbo_subgrupo_ds"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+                - named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+            args:
+              - prop: "id"
+                named_prop: "rais_agr_cbo_subgrupo_ds"
+              - prop: "label"
+                named_prop: "rais_agr_cbo_subgrupo_ds"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-rais_agr_cbo_subgrupo_ds-'{0}'"
+                api:
+                  args:
+                    - named_prop: "rais_agr_cbo_subgrupo_ds"
               
-        chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['JD_RAIS_30_BRANCA','JD_RAIS_30_AMARELA','JD_RAIS_30_INDIGENA','JD_RAIS_30_PARDA','JD_RAIS_30_PRETA']
-            year: "max"
-            options:
-              calcs:
-                - id: "bar_description"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed: 
-                        template: "{0} - {1}"
-                        args:
-                          - named_prop: "ds_agreg_primaria"
-                          - named_prop: "vl_indicador"
-                            format: 'monetario'
-                            collapse:
+        charts:
+          - id: "rem_raca_ano_min"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Remuneração Média de Trabalhadores por Raça/Cor - {0}"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_min_rais_agr_ano_nu"
+            type: "BAR"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_raca_ds,'MTE/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_min_rais_agr_ano_nu"
+              options:
+                calcs:
+                  - id: "salario_medio"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "salario_medio_sm"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1} salários mínimos ({2})"
+                          args:
+                            - named_prop: "rais_agr_raca_ds"
+                            - named_prop: "calc_salario_medio_sm"
+                              format: 'real'
+                            - named_prop: "calc_salario_medio"
                               format: 'monetario'
-                            uiTags: false
-              formatters:
-                - id: "vl_indicador"
-                  format: 'monetario'
-                  uiTags: false
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id: "cd_indicador"
-          y: "ds_agreg_primaria"
-          x: "vl_indicador"
-          # orientation: "vertical"
-          text: "calc_bar_description"
-          show_x_axis: false
-          show_y_axis: false
-          hide_legend: true
-          order_field: "vl_indicador"
-          colorScale:
-            name: "BuPu"
-            type: "singleHue"
-            levels: 7
-            order: 'desc'
-        source:
-          desc_field: "ds_fonte"
+                              collapse:
+                                format: 'monetario'
+                formatters:
+                  - id: "calc_salario_medio"
+                    format: 'monetario'
+                    uiTags: false
+                  - id: "calc_salario_medio_sm"
+                    format: 'real'
+            headers:
+              - text: 'Raça'
+                align: 'left'
+                value: 'rais_agr_raca_ds'
+              - text: 'Ano'
+                align: 'left'
+                value: 'rais_agr_ano_nu'
+              - text: 'Remuneração em Salários Mínimos'
+                value: 'fmt_calc_salario_medio_sm'
+              - text: 'Remuneração Média'
+                value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
+            options:
+              id: "rais_agr_raca_ds"
+              y: "rais_agr_raca_ds"
+              x: "calc_salario_medio_sm"
+              # orientation: "vertical"
+              text: "calc_bar_description"
+              show_x_axis: false
+              show_y_axis: false
+              hide_legend: true
+              order_field: "calc_salario_medio_sm"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 7
+                order: 'desc'
+            source:
+              desc_field: "ds_fonte"
+          - id: "rem_raca_ano_max"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Remuneração Média de Trabalhadores por Raça/Cor - {0}"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            type: "BAR"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_raca_ds,'MTE/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+              options:
+                calcs:
+                  - id: "salario_medio"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "salario_medio_sm"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1} salários mínimos ({2})"
+                          args:
+                            - named_prop: "rais_agr_raca_ds"
+                            - named_prop: "calc_salario_medio_sm"
+                              format: 'real'
+                            - named_prop: "calc_salario_medio"
+                              format: 'monetario'
+                              collapse:
+                                format: 'monetario'
+                formatters:
+                  - id: "calc_salario_medio"
+                    format: 'monetario'
+                    uiTags: false
+                  - id: "calc_salario_medio_sm"
+                    format: 'real'
+            headers:
+              - text: 'Raça'
+                align: 'left'
+                value: 'rais_agr_raca_ds'
+              - text: 'Ano'
+                align: 'left'
+                value: 'rais_agr_ano_nu'
+              - text: 'Remuneração em Salários Mínimos'
+                value: 'fmt_calc_salario_medio_sm'
+              - text: 'Remuneração Média'
+                value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
+            options:
+              id: "rais_agr_raca_ds"
+              y: "rais_agr_raca_ds"
+              x: "calc_salario_medio_sm"
+              # orientation: "vertical"
+              text: "calc_bar_description"
+              show_x_axis: false
+              show_y_axis: false
+              hide_legend: true
+              order_field: "calc_salario_medio_sm"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 7
+                order: 'desc'
+            source:
+              desc_field: "ds_fonte"
 
 # ========================================================
       - id: "bar_remuneracao_clt_raca"
+        type: "multiple-charts"
         title: 
           fixed: "Remuneração de Empregados (CLT) por Raça/Cor"
         title_comment:
           template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_18_BRANCA"
-            year: "max"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              fixed: "Sem observações adicionais. Vide descrição."
+              fixed: "É importante notar que houve na série histórica alterações no valor do salário mínimo, a saber: 
+              <table class='table-info'>
+              <th>ANO</th><th>VIGÊNCIA</th><th>VALOR</th><th>ATO LEGAL</th><th>PERCENTUAL</th>
+              <tr><td>2023</td><td>01/2023</td><td>R$ 1302</td><td>MP 1.143/2022</td><td>7,5%</td></tr>
+              <tr><td>2022</td><td>01/2022</td><td>R$ 1212</td><td>MP 1.091/2021</td><td>10,18%</td></tr>
+              <tr><td>2021</td><td>01/2021</td><td>R$ 1100</td><td>Lei 14.158/2021</td><td>5,26%</td></tr>
+              <tr><td>2020</td><td>01/2020</td><td>R$ 1045</td><td>Lei 14.013/2020</td><td>0,58%</td></tr>
+              <tr><td>2020</td><td>01/2020</td><td>R$ 1039</td><td>MP 916/2019</td><td>4,11%</td></tr>
+              <tr><td>2019</td><td>01/2019</td><td>R$ 998</td><td>Dec 9.661/2019</td><td>4,61%</td></tr>
+              <tr><td>2018</td><td>01/2018</td><td>R$ 954</td><td>Dec 9.255/2017</td><td>1,81%</td></tr>
+              <tr><td>2017</td><td>01/2017</td><td>R$ 937</td><td>Dec 8.948/2016</td><td>6,48%</td></tr>
+              <tr><td>2016</td><td>01/2016</td><td>R$ 880</td><td>Dec 8.618/2015</td><td>11,68%</td></tr>
+              <tr><td>2015</td><td>01/2015</td><td>R$ 788</td><td>Dec 8.381/2014</td><td>8,84%</td></tr>
+              <tr><td>2014</td><td>01/2014</td><td>R$ 724</td><td>Dec 8.166/2013</td><td>6,78%</td></tr>
+              <tr><td>2013</td><td>01/2013</td><td>R$ 678</td><td>Dec 7.872/2012</td><td>9,00%</td></tr>
+              <tr><td>2012</td><td>01/2012</td><td>R$ 622</td><td>Dec 7.655/2011</td><td>14,13%</td></tr>
+              <tr><td>2011</td><td>01/2011</td><td>R$ 545</td><td>Lei 12.382/2011</td><td>0,93%</td></tr>
+              <tr><td>2011</td><td>01/2010</td><td>R$ 540</td><td>MP 516/2010</td><td>5,88%</td></tr>
+              <tr><td>2010</td><td>01/2010</td><td>R$ 510</td><td>Lei 12.255/2010</td><td>9,68%</td></tr>
+              </table>"
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  template: "/indicadoresnacionais?categorias=vl_indicador,ds_agreg_primaria&filtros=in-cd_indicador-'JD_RAIS_18_AMARELA'-'JD_RAIS_18_BRANCA'-'JD_RAIS_18_INDIGENA'-'JD_RAIS_18_PARDA'-'JD_RAIS_18_PRETA'&ordenacao=-vl_indicador&limit=1"
-                  # args:
-                  #   - named_prop: "idLocalidade"
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_raca_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                      order_field: "-calc_salario_medio"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'calc_salario_medio'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
-                    uiTags: false
+                    default: "Sem Registros"
                   - prop: "description"
-                    named_prop: 'ds_agreg_primaria'
+                    named_prop: 'cd_indicador'
                   - prop: "comment"
-                    fixed: 'Maior remuneração média'
+                    template: 'Maior remuneração média<br/>{0}'
+                    args:
+                      - id: 'BRANCA'
+                        named_prop: 'rais_agr_ano_nu'
 
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api:
-                  template: "/indicadoresnacionais?categorias=vl_indicador,ds_agreg_primaria&filtros=in-cd_indicador-'JD_RAIS_18_AMARELA'-'JD_RAIS_18_BRANCA'-'JD_RAIS_18_INDIGENA'-'JD_RAIS_18_PARDA'-'JD_RAIS_18_PRETA'&ordenacao=vl_indicador&limit=1"
-                  args:
-                    - named_prop: "idLocalidade"
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_raca_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                      order_field: "calc_salario_medio"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'calc_salario_medio'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
-                    uiTags: false
                     default: "Sem Registros"
                   - prop: "description"
-                    named_prop: 'ds_agreg_primaria'
+                    named_prop: 'cd_indicador'
                   - prop: "comment"
-                    fixed: 'Menor remuneração média'
+                    template: 'Menor remuneração média<br/>{0}'
+                    args:
+                      - id: 'BRANCA'
+                        named_prop: 'rais_agr_ano_nu'
 
           - type: "text"
             title: ""
             content:
               template: "Em destaque, o valor médio da remuneração dos trabalhadores, por raça, de maior e menor renda, somente para os vínculos com carteira assinada (CLT). No gráfico ao lado, comparam-se os valores para os cinco coortes de raça/cor, conforme definidos pelo IBGE. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
 
-        chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['JD_RAIS_18_AMARELA','JD_RAIS_18_BRANCA','JD_RAIS_18_INDIGENA','JD_RAIS_18_PARDA','JD_RAIS_18_PRETA']
-            year: "max"
-            options:
-              calcs:
-                - id: "bar_description"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed: 
-                        template: "{0} - {1}"
-                        args:
-                          - named_prop: "ds_agreg_primaria"
-                          - named_prop: "vl_indicador"
-                            format: 'monetario'
-                            collapse:
+          - id: "select_cargodirecao"
+            cls: "align-end pb-0"
+            type: "check"
+            label: "Em cargos de direção"
+            value: false
+            color: "black"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-rais_agr_cargodir_id-'SIM'"
+                filter_text: "Em cargos de direção"
+          - id: "select_cbo_grupo"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Grupo"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_pri_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_pri_ds&filtros=eq-rais_agr_ano_nu-{0},and,nn-rais_agr_cbo_subgrupo_pri_ds"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            args:
+              - prop: "id"
+                named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+              - prop: "label"
+                named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-rais_agr_cbo_subgrupo_pri_ds-'{0}'"
+                api:
+                  args:
+                    - named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+          - id: "select_cbo_subgrupo"
+            type: "select"
+            placeholder: "Todos"
+            multiple: false
+            label: "Subgrupo"
+            parent: "select_cbo_grupo"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_ds&filtros=eq-rais_agr_ano_nu-{0},and,nn-rais_agr_cbo_subgrupo_ds"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            api_reactive:
+              template: "/thematic/raisagrmun?categorias=rais_agr_cbo_subgrupo_ds&agregacao=distinct&ordenacao=rais_agr_cbo_subgrupo_ds&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_cbo_subgrupo_pri_ds-'{1}',and,nn-rais_agr_cbo_subgrupo_ds"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+                - named_prop: "rais_agr_cbo_subgrupo_pri_ds"
+            args:
+              - prop: "id"
+                named_prop: "rais_agr_cbo_subgrupo_ds"
+              - prop: "label"
+                named_prop: "rais_agr_cbo_subgrupo_ds"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-rais_agr_cbo_subgrupo_ds-'{0}'"
+                api:
+                  args:
+                    - named_prop: "rais_agr_cbo_subgrupo_ds"
+
+        charts:
+          - id: "rem_raca_clt_ano_min"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Remuneração de Empregados (CLT) por Raça/Cor - {0}"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_min_rais_agr_ano_nu"
+            type: "BAR"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_raca_ds,'MTE/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_min_rais_agr_ano_nu"
+              options:
+                calcs:
+                  - id: "salario_medio"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "salario_medio_sm"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1} salários mínimos ({2})"
+                          args:
+                            - named_prop: "rais_agr_raca_ds"
+                            - named_prop: "calc_salario_medio_sm"
+                              format: 'real'
+                            - named_prop: "calc_salario_medio"
                               format: 'monetario'
-                            uiTags: false
-              formatters:
-                - id: "vl_indicador"
-                  format: 'monetario'
-                  uiTags: false
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id: "cd_indicador"
-          y: "ds_agreg_primaria"
-          x: "vl_indicador"
-          # orientation: "vertical"
-          text: "calc_bar_description"
-          show_x_axis: false
-          show_y_axis: false
-          hide_legend: true
-          order_field: "vl_indicador"
-          colorScale:
-            name: "BuPu"
-            type: "singleHue"
-            levels: 7
-            order: 'desc'
-        source:
-          desc_field: "ds_fonte"
+                              collapse:
+                                format: 'monetario'
+                formatters:
+                  - id: "calc_salario_medio"
+                    format: 'monetario'
+                    uiTags: false
+                  - id: "calc_salario_medio_sm"
+                    format: 'real'
+            headers:
+              - text: 'Raça'
+                align: 'left'
+                value: 'rais_agr_raca_ds'
+              - text: 'Ano'
+                align: 'left'
+                value: 'rais_agr_ano_nu'
+              - text: 'Remuneração em Salários Mínimos'
+                value: 'fmt_calc_salario_medio_sm'
+              - text: 'Remuneração Média'
+                value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
+            options:
+              id: "rais_agr_raca_ds"
+              y: "rais_agr_raca_ds"
+              x: "calc_salario_medio_sm"
+              # orientation: "vertical"
+              text: "calc_bar_description"
+              show_x_axis: false
+              show_y_axis: false
+              hide_legend: true
+              order_field: "calc_salario_medio_sm"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 7
+                order: 'desc'
+            source:
+              desc_field: "ds_fonte"
+          - id: "rem_raca_clt_ano_max"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Remuneração de Empregados (CLT) por Raça/Cor - {0}"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            type: "BAR"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_raca_ds,'MTE/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,in-rais_agr_vinculo_tp-'APR'-'DIR'-'CLT',and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+              options:
+                calcs:
+                  - id: "salario_medio"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "salario_medio_sm"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1} salários mínimos ({2})"
+                          args:
+                            - named_prop: "rais_agr_raca_ds"
+                            - named_prop: "calc_salario_medio_sm"
+                              format: 'real'
+                            - named_prop: "calc_salario_medio"
+                              format: 'monetario'
+                              collapse:
+                                format: 'monetario'
+                formatters:
+                  - id: "calc_salario_medio"
+                    format: 'monetario'
+                    uiTags: false
+                  - id: "calc_salario_medio_sm"
+                    format: 'real'
+            headers:
+              - text: 'Raça'
+                align: 'left'
+                value: 'rais_agr_raca_ds'
+              - text: 'Ano'
+                align: 'left'
+                value: 'rais_agr_ano_nu'
+              - text: 'Remuneração em Salários Mínimos'
+                value: 'fmt_calc_salario_medio_sm'
+              - text: 'Remuneração Média'
+                value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
+            options:
+              id: "rais_agr_raca_ds"
+              y: "rais_agr_raca_ds"
+              x: "calc_salario_medio_sm"
+              # orientation: "vertical"
+              text: "calc_bar_description"
+              show_x_axis: false
+              show_y_axis: false
+              hide_legend: true
+              order_field: "calc_salario_medio_sm"
+              colorScale:
+                name: "BuPu"
+                type: "singleHue"
+                levels: 7
+                order: 'desc'
+            source:
+              desc_field: "ds_fonte"
 # ========================================================
       - id: "bar_remuneracao_trabalhadores_sexo_raca"
+        type: "multiple-charts"
         title: 
           fixed: "Diferenças de Remuneração pela Perspectiva Interseccional (Sexo e Raça/Cor) no setor formal"
         title_comment:
           template: "Brasil, em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "JD_RAIS_27_HOMEM_BRANCO"
-            year: "max"
+          api:
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
             content:
-              fixed: "Sem observações adicionais. Vide descrição."
+              fixed: "É importante notar que houve na série histórica alterações no valor do salário mínimo, a saber: 
+              <table class='table-info'>
+              <th>ANO</th><th>VIGÊNCIA</th><th>VALOR</th><th>ATO LEGAL</th><th>PERCENTUAL</th>
+              <tr><td>2023</td><td>01/2023</td><td>R$ 1302</td><td>MP 1.143/2022</td><td>7,5%</td></tr>
+              <tr><td>2022</td><td>01/2022</td><td>R$ 1212</td><td>MP 1.091/2021</td><td>10,18%</td></tr>
+              <tr><td>2021</td><td>01/2021</td><td>R$ 1100</td><td>Lei 14.158/2021</td><td>5,26%</td></tr>
+              <tr><td>2020</td><td>01/2020</td><td>R$ 1045</td><td>Lei 14.013/2020</td><td>0,58%</td></tr>
+              <tr><td>2020</td><td>01/2020</td><td>R$ 1039</td><td>MP 916/2019</td><td>4,11%</td></tr>
+              <tr><td>2019</td><td>01/2019</td><td>R$ 998</td><td>Dec 9.661/2019</td><td>4,61%</td></tr>
+              <tr><td>2018</td><td>01/2018</td><td>R$ 954</td><td>Dec 9.255/2017</td><td>1,81%</td></tr>
+              <tr><td>2017</td><td>01/2017</td><td>R$ 937</td><td>Dec 8.948/2016</td><td>6,48%</td></tr>
+              <tr><td>2016</td><td>01/2016</td><td>R$ 880</td><td>Dec 8.618/2015</td><td>11,68%</td></tr>
+              <tr><td>2015</td><td>01/2015</td><td>R$ 788</td><td>Dec 8.381/2014</td><td>8,84%</td></tr>
+              <tr><td>2014</td><td>01/2014</td><td>R$ 724</td><td>Dec 8.166/2013</td><td>6,78%</td></tr>
+              <tr><td>2013</td><td>01/2013</td><td>R$ 678</td><td>Dec 7.872/2012</td><td>9,00%</td></tr>
+              <tr><td>2012</td><td>01/2012</td><td>R$ 622</td><td>Dec 7.655/2011</td><td>14,13%</td></tr>
+              <tr><td>2011</td><td>01/2011</td><td>R$ 545</td><td>Lei 12.382/2011</td><td>0,93%</td></tr>
+              <tr><td>2011</td><td>01/2010</td><td>R$ 540</td><td>MP 516/2010</td><td>5,88%</td></tr>
+              <tr><td>2010</td><td>01/2010</td><td>R$ 510</td><td>Lei 12.255/2010</td><td>9,68%</td></tr>
+              </table>"
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "JD_RAIS_27_HOMEM_BRANCO"
-                  year: "max"
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_sexo_ds-'Homens',and,eq-rais_agr_raca_ds-'BRANCA' "
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
                 args:
                   - prop: "value"
                     fixed: '100%'
-                    # format: 'monetario'
-                    # collapse:
-                    #   format: 'monetario'
                     uiTags: false
                   - prop: "description"
                     fixed: 'Homens brancos'
-                  # - prop: "comment"
-                  #   fixed: 'Maior remuneração média'
 
               - relevance: 'high'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: ["JD_RAIS_27_HOMEM_BRANCO", JD_RAIS_27_MULHER_BRANCA]
-                  year: "max"
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_raca_ds-'BRANCA' "
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                api_options:
                   combine:
                   - id: "equivalencia_perc"
                     desc: "Equivalência de salários"
                     function: 'calc_percentage'
                     fn_args:
-                      - id: "JD_RAIS_27_MULHER_BRANCA"
-                        named_prop: "vl_indicador"
-                      - id: "JD_RAIS_27_HOMEM_BRANCO"
-                        named_prop: "vl_indicador"
+                      - id: "Mulheres"
+                        named_prop: "calc_salario_medio"
+                      - id: "Homens"
+                        named_prop: "calc_salario_medio"
                 args:
                   - id: "equivalencia_perc"
                     prop: "value"
@@ -459,20 +931,28 @@ secoes:
                   #   fixed: "No setor formal"
               - relevance: 'low'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: ["JD_RAIS_27_HOMEM_BRANCO", JD_RAIS_27_HOMEM_NEGRO]
-                  year: "max"
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_raca_ds-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_sexo_ds-'Homens'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                api_options:
                   combine:
                   - id: "equivalencia_perc"
                     desc: "Equivalência de salários"
                     function: 'calc_percentage'
                     fn_args:
-                      - id: "JD_RAIS_27_HOMEM_NEGRO"
-                        named_prop: "vl_indicador"
-                      - id: "JD_RAIS_27_HOMEM_BRANCO"
-                        named_prop: "vl_indicador"
+                      - id: "PRETA"
+                        named_prop: "calc_salario_medio"
+                      - id: "BRANCA"
+                        named_prop: "calc_salario_medio"
                 args:
                   - id: "equivalencia_perc"
                     prop: "value"
@@ -484,20 +964,39 @@ secoes:
                     fixed: 'Homens negros'
               - relevance: 'low'
                 cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: ["JD_RAIS_27_HOMEM_BRANCO", JD_RAIS_27_MULHER_NEGRA]
-                  year: "max"
+                api:
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'HOMEM_BRANCO'-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_sexo_ds-'Homens',and,eq-rais_agr_raca_ds-'BRANCA'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,'MULHER_PRETA'-cd_indicador&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,eq-rais_agr_sexo_ds-'Mulheres',and,eq-rais_agr_raca_ds-'PRETA'"
+                    args:
+                      - base_object: "rais_agr"
+                        named_prop: "agr_max_rais_agr_ano_nu"
+                    options:
+                      calcs:
+                        - id: "salario_medio"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                            - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                api_options:
                   combine:
-                  - id: "equivalencia_perc"
-                    desc: "Equivalência de salários"
-                    function: 'calc_percentage'
-                    fn_args:
-                      - id: "JD_RAIS_27_MULHER_NEGRA"
-                        named_prop: "vl_indicador"
-                      - id: "JD_RAIS_27_HOMEM_BRANCO"
-                        named_prop: "vl_indicador"
+                    - id: "equivalencia_perc"
+                      desc: "Equivalência de salários"
+                      function: 'calc_percentage'
+                      fn_args:
+                        - id: "MULHER_PRETA"
+                          named_prop: "calc_salario_medio"
+                        - id: "HOMEM_BRANCO"
+                          named_prop: "calc_salario_medio"
                 args:
                   - id: "equivalencia_perc"
                     prop: "value"
@@ -511,71 +1010,181 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Os números em destaque mostram a diferença relativa de rendimentos mensais da população ocupada entre diferentes grupos de sexo e raça/cor, para a perspectiva geográfica selecionada no setor formal da economia, a partir de um enfoque interseccional. Em destaque o percentual da remuneração recebida pelos diferentes grupos (mulheres brancas, homens negros e mulheres negras) em relação ao rendimento médio mensal de homens brancos, utilizado como valor de referência (100%). No gráfico ao lado, de forma complementar comparam-se os valores nominais dos rendimentos médios entre esses grupos. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
+              template: "Os números em destaque mostram a diferença relativa (percentual) de rendimentos mensais da população ocupada no setor formal, celetista (CLT) e estatuários, com enfoque interseccional para grupos de sexo e raça/cor, para a perspectiva geográfica selecionada. Em destaque o percentual da remuneração recebida pelos diferentes grupos (mulheres brancas, homens negros e mulheres negras) em relação ao rendimento médio mensal de homens brancos, utilizado como valor de referência (100%). No gráfico ao lado, de forma complementar comparam-se os valores nominais dos rendimentos médios entre esses grupos. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível), do Ministério da Economia."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'JD_RAIS_33_VL_HOMEM'"
-                options:
-                  calcs:
-                    - id: "proximo_ano"
-                      function: "calc_addition_ids_ds"
-                      fn_args:
-                        - named_prop: "nu_competencia_max"
-                        - fixed: 1
-                        - fixed: 1
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
               args:
-                - named_prop: "nu_competencia_max"
-                - named_prop: "calc_proximo_ano"
+                - named_prop: "agr_max_rais_agr_ano_nu"
               
-        chart_type: "BAR"
-        preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: ['JD_RAIS_27_HOMEM_BRANCO','JD_RAIS_27_HOMEM_NEGRO','JD_RAIS_27_MULHER_BRANCA','JD_RAIS_27_MULHER_NEGRA']
-            year: "max"
-            options:
-              calcs:
-                - id: "bar_description"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed: 
-                        template: "{0} - {1}"
-                        args:
-                          - named_prop: "ds_agreg_primaria"
-                          - named_prop: "vl_indicador"
-                            format: 'monetario'
-                            collapse:
+        charts:
+          - id: "rem_sexo_raca_ano_min"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Diferenças de Remuneração pela Perspectiva Interseccional (Sexo e Raça/Cor) no setor formal - {0}"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_min_rais_agr_ano_nu"
+            type: "BAR"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds,rais_agr_raca_ds,'MTE/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_min_rais_agr_ano_nu"
+              options:
+                calcs:
+                  - id: "salario_medio"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "salario_medio_sm"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
+                  - id: "classificacao"
+                    function: "format_gender_color_ds"
+                    fn_args:
+                      - named_prop: "rais_agr_sexo_ds"
+                      - named_prop: "rais_agr_raca_ds"
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1} salários mínimos ({2})"
+                          args:
+                            - named_prop: "calc_classificacao"
+                            - named_prop: "calc_salario_medio_sm"
+                              format: 'real'
+                            - named_prop: "calc_salario_medio"
                               format: 'monetario'
-                            uiTags: false
-              formatters:
-                - id: "vl_indicador"
-                  format: 'monetario'
-                  uiTags: false
-        headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-        chart_options:
-          id: "cd_indicador"
-          y: "ds_agreg_primaria"
-          x: "vl_indicador"
-          # orientation: "vertical"
-          text: "calc_bar_description"
-          show_x_axis: false
-          show_y_axis: false
-          hide_legend: true
-          order_field: "vl_indicador"
-          colorScale:
-            name: "YlGn"
-            type: "singleHue"
-            levels: 7
-            order: 'desc'
-        source:
-          desc_field: "ds_fonte"
+                              collapse:
+                                format: 'monetario'
+                formatters:
+                  - id: "calc_salario_medio"
+                    format: 'monetario'
+                    uiTags: false
+                  - id: "calc_salario_medio_sm"
+                    format: 'real'
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'calc_classificacao'
+              - text: 'Ano'
+                align: 'left'
+                value: 'rais_agr_ano_nu'
+              - text: 'Remuneração em Salários Mínimos'
+                value: 'fmt_calc_salario_medio_sm'
+              - text: 'Remuneração Média'
+                value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
+            options:
+              id: "calc_classificacao"
+              y: "calc_classificacao"
+              x: "calc_salario_medio_sm"
+              # orientation: "vertical"
+              text: "calc_bar_description"
+              show_x_axis: false
+              show_y_axis: false
+              hide_legend: true
+              order_field: "calc_salario_medio"
+              colorScale:
+                name: "YlGn"
+                type: "singleHue"
+                levels: 7
+                order: 'desc'
+            source:
+              desc_field: "ds_fonte"
+          - id: "rem_sexo_raca_ano_max"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Diferenças de Remuneração pela Perspectiva Interseccional (Sexo e Raça/Cor) no setor formal - {0}"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+            type: "BAR"
+            api:
+              template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_sexo_ds,rais_agr_raca_ds,'MTE/RAIS'-ds_fonte&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_raca_ds-'NÃO INFORMADA'"
+              args:
+                - base_object: "rais_agr"
+                  named_prop: "agr_max_rais_agr_ano_nu"
+              options:
+                calcs:
+                  - id: "salario_medio"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "salario_medio_sm"
+                    function: "calc_proportion_ds"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                      - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                  - id: "qtde_trabalhadores"
+                    function: "get_bin"
+                    fn_args:
+                      - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                      - fixed: [100]
+                  - id: "classificacao"
+                    function: "format_gender_color_ds"
+                    fn_args:
+                      - named_prop: "rais_agr_sexo_ds"
+                      - named_prop: "rais_agr_raca_ds"
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1} salários mínimos ({2})"
+                          args:
+                            - named_prop: "calc_classificacao"
+                            - named_prop: "calc_salario_medio_sm"
+                              format: 'real'
+                            - named_prop: "calc_salario_medio"
+                              format: 'monetario'
+                              collapse:
+                                format: 'monetario'
+                formatters:
+                  - id: "calc_salario_medio"
+                    format: 'monetario'
+                    uiTags: false
+                  - id: "calc_salario_medio_sm"
+                    format: 'real'
+            headers:
+              - text: 'Indicador'
+                align: 'left'
+                value: 'calc_classificacao'
+              - text: 'Ano'
+                align: 'left'
+                value: 'rais_agr_ano_nu'
+              - text: 'Remuneração em Salários Mínimos'
+                value: 'fmt_calc_salario_medio_sm'
+              - text: 'Remuneração Média'
+                value: 'fmt_calc_salario_medio'
+              - text: 'Número de Vínculos'
+                value: 'calc_qtde_trabalhadores'
+            options:
+              id: "calc_classificacao"
+              y: "calc_classificacao"
+              x: "calc_salario_medio_sm"
+              # orientation: "vertical"
+              text: "calc_bar_description"
+              show_x_axis: false
+              show_y_axis: false
+              hide_legend: true
+              order_field: "calc_salario_medio"
+              colorScale:
+                name: "YlGn"
+                type: "singleHue"
+                levels: 7
+                order: 'desc'
+            source:
+              desc_field: "ds_fonte"
 
 # ========================================================
       - id: "mapa_dirigentes_raca"
