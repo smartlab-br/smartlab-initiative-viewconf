@@ -320,3 +320,80 @@ secoes:
           color: "#238B45"
         source:
           desc_field: "ds_fonte"
+# ====================================================          
+      - id: "bar_serie_pnad"
+        title: 
+          fixed: "Incidência Anual de Notificações Relacionadas ao Trabalho (SINAN) - Série Histórica"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_sinan_pnad_incidencia'&limit=1"
+          args:
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'sst_sinan_pnad_incidencia',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    multiplier: 10000
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    # named_prop: "ds_indicador_radical"
+                    fixed: "CASOS A CADA 10.000 TRABALHADORES"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, informações sobre Incidência de Notificações SINAN relacionadas ao trabalho em número de casos a cada 10 mil trabalhadores segundo os dados da série histórica da Pesquisa Nacional por Amostra de Domicílios Contínua - PNAD-C do Instituto Brasileiro de Geografia e Estatística(IBGE) para a população ocupada, a abranger o trabalho formal e informal. No gráfico a seguir, apresenta-se a evolução histórica da incidência segundo quantitativo de notificações do SINAN (notificações anuais) combinadas com dados da PNAD-C para a população ocupada (expostos)."
+        chart_type: "BAR"
+        api:
+          fixed: "/sst/indicadoresnacionais?categorias=nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_sinan_pnad_incidencia'"
+          options:
+            calcs:
+              - id: "bar_description"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed:
+                      template: "{0} casos em 10 mil"
+                      args:
+                        - named_prop: "vl_indicador"
+                          format: "inteiro"
+                          multiplier: 10000
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+                multiplier: 10000
+        headers:
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Nº de casos a cada 10 mil trabalhadores'
+            value: 'fmt_vl_indicador'
+        # footnote: "Municípios - Incidência de Notificações de Acidentes de Trabalho - Casos a cada 10.000 trabalhadores expostos ao risco"
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          text: "calc_bar_description"
+          hide_legend: true
+          orientation: "vertical"
+          show_x_axis: false
+          show_y_axis: false
+          color: "#238B45"
+          fontMax: 14
+        source:
+          desc_field: "ds_fonte"
