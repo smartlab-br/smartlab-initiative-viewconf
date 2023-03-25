@@ -397,3 +397,77 @@ secoes:
           fontMax: 14
         source:
           desc_field: "ds_fonte"
+# ====================================================          
+      - id: "topo_acidente_pnad"
+        title: 
+          fixed: "Incidência Anual de Notificações Relacionadas ao Trabalho (SINAN) - Distribuição Geográfica"
+        title_comment:
+          template: "Brasil, {0}"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_sinan_pnad_incidencia'&limit=1"
+          args:
+            - named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: ""
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'sst_sinan_pnad_incidencia',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    multiplier: 10000
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    # named_prop: "ds_indicador_radical"
+                    fixed: "CASOS A CADA 10.000 TRABALHADORES"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, informações sobre Incidência de Notificações SINAN relacionadas ao trabalho em número de casos a cada 10 mil trabalhadores segundo os dados da série histórica da Pesquisa Nacional por Amostra de Domicílios Contínua - PNAD-C do Instituto Brasileiro de Geografia e Estatística(IBGE) para empregados no setor privado com carteira de trabalho assinada. No mapa, a escala de cores varia do menor valor (branco) ao maior valor (vermelho escuro) de incidência segundo informações de CATs combinadas com dados da PNAD-C."
+        chart_type: "MAP_TOPOJSON"
+        api:
+          fixed: "/sst/indicadoresestaduais?categorias=cd_indicador,ds_indicador,vl_indicador,vl_indicador_br,nm_uf,cd_uf,nu_competencia,nu_competencia_min,nu_competencia_max,rank_br,rank_br_total,ds_fonte&filtros=eq-cd_indicador-'sst_sinan_pnad_incidencia',and,eq-nu_competencia-nu_competencia_max"
+          options:
+            calcs:
+              - id: "bar_description"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed:
+                      template: "{0} casos em 10 mil"
+                      args:
+                        - named_prop: "vl_indicador"
+                          format: "inteiro"
+                          multiplier: 10000
+            formatters:
+              - id: "vl_indicador"
+                format: 'inteiro'
+                multiplier: 10000
+        headers:
+          - text: "UF"
+            align: "left"
+            value: "nm_uf"
+          - text: "Ano"
+            align: "left"
+            value: "nu_competencia"
+          - text: "Taxa de Incidência"
+            value: "calc_bar_description"
+        # footnote: "Municípios - Incidência de Notificações de Acidentes de Trabalho - Casos a cada 10.000 trabalhadores expostos ao risco"
+        chart_options:
+          id_field: "cd_uf"
+          topo_key: "codigo"
+          value_field: "vl_indicador"
+          colorScale: 
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
