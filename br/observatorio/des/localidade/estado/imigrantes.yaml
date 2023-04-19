@@ -4,15 +4,17 @@ principais:
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
+      template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{1}"
       args:
+        - base_object: "rais_agr"
+          named_prop: "agr_max_rais_agr_ano_nu"
         - named_prop: "idLocalidade"
       options:
         calcs:
           - id: "faixa"
             function: "get_bin"
             fn_args:
-              - named_prop: "agr_sum_vl_indicador"
+              - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
     args:
       - prop: "value"
         named_prop: 'calc_faixa'
@@ -21,34 +23,46 @@ principais:
           format: 'real'
         default: "Nenhum"
       - prop: "description"
-        fixed: "Trabalhadores imigrantes estrangeiros Ativos no Mercado de Trabalho Formal"
+        fixed: "Trabalhadores Imigrantes Estrangeiros Ativos no Mercado de Trabalho Formal"
       - prop: 'comment'
-        api:
-          fixed: "/indicadoresnacionais?categorias=nu_competencia_max,ds_fonte&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
-        template: "({0}, {1})"
+        template: "(MTE/RAIS, {0})"
         args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia_max"
+          - named_prop: "rais_agr_ano_nu"
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador_txt&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
-      args:
-        - named_prop: "idLocalidade"
+      - template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial_sm&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{1}"
+        args:
+          - base_object: "rais_agr"
+            named_prop: "agr_max_rais_agr_ano_nu"
+          - named_prop: "idLocalidade"
+        options:
+          calcs:
+            - id: "salario_medio_sm"
+              function: "calc_proportion_ds"
+              fn_args:
+                - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+            - id: "faixa"
+              function: "get_bin"
+              fn_args:
+                - named_prop: "calc_salario_medio_sm"
+                - fixed: [1,1.5,2,3,4,5,7,10,15,20,30,40,50,60,70,80,90,100]
+                - fixed: 2
     args:
       - prop: "value"
-        named_prop: 'vl_indicador_txt'
-        default: "-"
-      - prop: "description"
-        fixed: "Remuneração Média dos trabalhadores imigrantes estrangeiros na UF"
-      - prop: 'comment'
-        api:
-          fixed: "/indicadoresnacionais?categorias=nu_competencia_max,ds_fonte&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG'"
-        template: "({0}, {1})"
+        template: "{0} salários mínimos"
         args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia_max"
+          - named_prop: 'calc_faixa'
+            format: 'real'
+            default: "-"
+      - prop: "description"
+        fixed: "Remuneração Média dos trabalhadores imigrantes estrangeiros no país"
+      - prop: 'comment'
+        template: "(MTE/RAIS, {0})"
+        args:
+          - named_prop: "rais_agr_ano_nu"
 
 # ========================================================
 secoes:
@@ -66,17 +80,19 @@ secoes:
                 cls: 'xs12'
                 rowClass: "pt-0 px-3 pb-5"
                 api:
-                  template: "/indicadoresestaduais?categorias=ds_agreg_secundaria,nu_competencia&valor=vl_indicador&agregacao=SUM&ordenacao=-agr_sum_vl_indicador&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC',and,ge-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&limit=1"
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_nacion_ds&agregacao=sum&valor=rais_agr_vinc_3112_qt&ordenacao=-agr_sum_rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{1}&limit=1"
                   args:
+                    - base_object: "rais_agr"
+                      named_prop: "agr_max_rais_agr_ano_nu"
                     - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
-                    named_prop: 'ds_agreg_secundaria'
+                    named_prop: 'rais_agr_nacion_ds'
                     default: "-"
                   - prop: "description"
                     fixed: "Origem do maior número de imigrantes estrangeiros contratados"
                   - prop: "comment"
-                    named_prop: "nu_competencia"
+                    named_prop: "rais_agr_ano_nu"
                     default: ""
 
           - type: "text"
@@ -84,70 +100,70 @@ secoes:
             content:
               template: "Em destaque, a origem de imigrantes estrangeiros mais contratados no ano de {0}. No diagrama ao lado, apresentam-se os possíveis fluxos migratórios internacionais associados. É importante observar que a migração pode haver ocorrido com outras etapas antecedentes. Os dados processados consideram apenas a origem do migrante de outra nacionalidade e a Unidade Federativa em que ele foi contratado."
               api:
-                fixed: "/indicadoresestaduais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
           - id: "select_origem"
             type: "select"
             label: "Origem/Continente"
             default:
               fixed: "América do Sul ou Central"
             api:
-              fixed: "/indicadoresestaduais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC'"
+              fixed: "/thematic/raisagrmun?categorias=rais_agr_nacion_cont_ds&agregacao=DISTINCT&ordenacao=rais_agr_nacion_cont_ds&filtros=ne-rais_agr_nacion_ds-'Brasil'"
             args:
               - prop: "id"
-                named_prop: "ds_agreg_primaria"
+                named_prop: "rais_agr_nacion_cont_ds"
               - prop: "label"
-                named_prop: "ds_agreg_primaria"
+                named_prop: "rais_agr_nacion_cont_ds"
                 null_value: "(Não informado)"
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                filter: ",and,eq-rais_agr_nacion_cont_ds-'{0}'"
                 api:
                   args:
-                    - named_prop: "ds_agreg_primaria"
+                    - named_prop: "rais_agr_nacion_cont_ds"
 
           - id: "select_pais"
             type: "select"
             label: "País de Origem"
             parent: "select_origem"
             api:
-              fixed: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&ordenacao=ds_agreg_secundaria&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC'"
+              fixed: "/thematic/raisagrmun?categorias=rais_agr_nacion_ds&agregacao=DISTINCT&ordenacao=rais_agr_nacion_ds&filtros=ne-rais_agr_nacion_ds-'Brasil'"
             api_reactive:
-              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=distinct&ordenacao=ds_agreg_secundaria&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC',and,eq-ds_agreg_primaria-'{0}'"
+              template: "/thematic/raisagrmun?categorias=rais_agr_nacion_ds&agregacao=DISTINCT&ordenacao=rais_agr_nacion_ds&filtros=ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_nacion_cont_ds-'{0}'"
               args:
-                - named_prop: "ds_agreg_primaria"
+                - named_prop: "rais_agr_nacion_cont_ds"
             args:
               - prop: "id"
-                named_prop: "ds_agreg_secundaria"
+                named_prop: "rais_agr_nacion_ds"
               - prop: "label"
-                named_prop: "ds_agreg_secundaria"
+                named_prop: "rais_agr_nacion_ds"
                 null_value: "(Não informado)"
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_secundaria-'{0}'"
+                filter: ",and,eq-rais_agr_nacion_ds-'{0}'"
                 api:
                   args:
-                    - named_prop: "ds_agreg_secundaria"
+                    - named_prop: "rais_agr_nacion_ds"
 
           - type: "slider"
             cls: "pl-2"
             id: "slider_periodo"
-            default: 2019
+            default: 2021
             title: ""
             api:
-              fixed: "/indicadoresestaduais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC'"
+              fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
             args:
               - prop: "min"
-                named_prop: "nu_competencia_min"
+                named_prop: "agr_min_rais_agr_ano_nu"
               - prop: "max"
-                named_prop: "nu_competencia_max"
+                named_prop: "agr_max_rais_agr_ano_nu"
             selection:
               event: "selection"
               rules:
-                filter: ",and,eq-nu_competencia-'{0}'"
+                filter: ",and,eq-rais_agr_ano_nu-{0}"
                 api:
                   args:
                     - named_prop: "value"
@@ -155,28 +171,39 @@ secoes:
 
         chart_type: "SANKEYD3"
         api: 
-          template: "/indicadoresestaduais?categorias=ds_agreg_secundaria,nm_uf,vl_indicador&ordenacao=-vl_indicador&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'América do Sul ou Central',and,eq-cd_uf-{0}"
+          template: "/thematic/raisagrmun?categorias=rais_agr_nacion_ds,rais_agr_uf_ibge_ds&agregacao=sum&valor=rais_agr_vinc_3112_qt&ordenacao=-agr_sum_rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,nn-rais_agr_uf_ibge_ds,and,eq-rais_agr_nacion_cont_ds-'América do Sul ou Central',and,eq-rais_agr_uf_ibge_cd-{1}"
           args:
+            - base_object: "rais_agr"
+              named_prop: "agr_max_rais_agr_ano_nu"
             - named_prop: "idLocalidade"
         apiBase: 
-          template: "/indicadoresestaduais?categorias=ds_agreg_secundaria,nm_uf,vl_indicador&ordenacao=-vl_indicador&filtros=eq-cd_indicador-'FLUXOS_MIGRATORIOS_INTERNAC',and,eq-cd_uf-{0}"
+          template: "/thematic/raisagrmun?categorias=rais_agr_nacion_ds,rais_agr_uf_ibge_ds&agregacao=sum&valor=rais_agr_vinc_3112_qt&ordenacao=-agr_sum_rais_agr_vinc_3112_qt&filtros=ne-rais_agr_nacion_ds-'Brasil',and,nn-rais_agr_uf_ibge_ds,and,eq-rais_agr_uf_ibge_cd-{0}"
           args:
             - named_prop: "idLocalidade"
+        api_options:
+          calcs:
+            - id: "faixa"
+              function: "get_bin"
+              fn_args:
+                - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
         headers:
           - text: 'Origem'
             align: 'left'
-            value: 'ds_agreg_secundaria'
+            value: 'rais_agr_nacion_ds'
           - text: 'Destino'
             align: 'left'
-            value: 'nm_uf'
+            value: 'rais_agr_uf_ibge_ds'
           - text: 'Total'
             align: 'left'
-            value: 'vl_indicador'
+            value: 'calc_faixa'
         chart_options:
           id_field: 'id'
-          source_field: 'ds_agreg_secundaria'
-          target_field: 'nm_uf'
-          value_field: 'vl_indicador'
+          source_field: 'rais_agr_nacion_ds'
+          target_field: 'rais_agr_uf_ibge_ds'
+          value_field: 'agr_sum_rais_agr_vinc_3112_qt'
+        source:
+          desc: "MTE/RAIS"
+
 # ====================================================          
       - id: "line_evolucao_origem"
         title: 
@@ -184,19 +211,19 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_max,nu_competencia_min&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "agr_min_rais_agr_ano_nu"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+                  template: "/thematic/raisagrmun?categorias=1&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{0}"
                   args:
                     - named_prop: "idLocalidade"
                   options:
@@ -204,7 +231,7 @@ secoes:
                       - id: "faixa"
                         function: "get_bin"
                         fn_args:
-                          - named_prop: "agr_sum_vl_indicador"
+                          - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
                 args:
                   - prop: "value"
                     named_prop: 'calc_faixa'
@@ -219,48 +246,48 @@ secoes:
             content:
               template: "Em destaque, para a unidade geográfica em realce, o número de trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal brasileiro de {0} a {1}. No gráfico, apresenta-se a evolução histórica da presença desses migrantes por continente de origem. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {1} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {2}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max,nu_competencia_min&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_min"
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_min_rais_agr_ano_nu"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
         chart_type: "LINE"
         footnote: "Evolução Histórica da Inclusão de Imigrantes Estrangeiros no Mercado de Trabalho Formal por Continente de Origem"
         api: 
-          template: "/indicadoresestaduais?categorias=cd_uf,ds_agreg_primaria,ds_indicador_completo,nu_competencia,cd_indicador,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+          template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_nacion_cont_ds,'Contratação de Migrantes de Outras Nacionalidades no Mercado de Trabalho Formal Brasileiro'-ds_indicador&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{0}"
           args:
             - named_prop: "idLocalidade"
           options:
             formatters:
-              - id: "agr_sum_vl_indicador"
+              - id: "agr_sum_rais_agr_vinc_3112_qt"
                 format: 'inteiro'
         headers:
           - text: 'Origem'
             align: 'left'
-            value: 'ds_agreg_primaria'
+            value: 'rais_agr_nacion_cont_ds'
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_completo'
+            value: 'ds_indicador'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'rais_agr_ano_nu'
           - text: 'Qtde'
-            value: 'fmt_agr_sum_vl_indicador'
+            value: 'fmt_agr_sum_rais_agr_vinc_3112_qt'
         chart_options:
-          id: "ds_agreg_primaria"
-          x: "nu_competencia"
-          y: "agr_sum_vl_indicador"
-          text: "fmt_agr_sum_vl_indicador"
+          id: "rais_agr_nacion_cont_ds"
+          x: "rais_agr_ano_nu"
+          y: "agr_sum_rais_agr_vinc_3112_qt"
+          text: "fmt_agr_sum_rais_agr_vinc_3112_qt"
         source:
-          desc_field: "ds_fonte"
+          desc: "MTE/RAIS"
 # ========================================================
       - id: "treemap_origem_imigrantes"
         title:
@@ -268,11 +295,11 @@ secoes:
         title_comment:
           template: "{0}, {1}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -284,15 +311,17 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{1}"
                   args:
+                    - base_object: "rais_agr"
+                      named_prop: "agr_max_rais_agr_ano_nu"
                     - named_prop: "idLocalidade"
                   options:
                     calcs:
                       - id: "faixa"
                         function: "get_bin"
                         fn_args:
-                          - named_prop: "agr_sum_vl_indicador"
+                          - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
                 args:
                   - prop: "value"
                     named_prop: 'calc_faixa'
@@ -308,61 +337,62 @@ secoes:
             content:
               template: "Em destaque, o número de imigrantes estrangeiros ativos no mercado de trabalho formal na Unidade Federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os totais para os continentes de origem dos trabalhadores. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
 
         chart_type: "TREEMAP"
-        preloaded:
-          prop: "centralindicadores"
-          function: "slice"
-          id: ['MIGRA_ATIVOS']
-          year: "max"
+        api:
+          template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_nacion_cont_ds,'Contratação de Migrantes de Outras Nacionalidades no Mercado de Trabalho Formal Brasileiro'-ds_indicador&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{1}"
+          args:
+            - base_object: "rais_agr"
+              named_prop: "agr_max_rais_agr_ano_nu"
+            - named_prop: "idLocalidade"
           options:
             calcs:
               - id: "faixa"
                 function: "get_bin"
                 fn_args:
-                  - named_prop: "vl_indicador"
+                  - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_rais_agr_vinc_3112_qt"
                 format: 'inteiro'
               - id: "calc_faixa"
                 format: "inteiro"
         headers:
           - text: 'Origem'
             align: 'left'
-            value: 'ds_agreg_primaria'
+            value: 'rais_agr_nacion_cont_ds'
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_completo'
+            value: 'ds_indicador'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'rais_agr_ano_nu'
           # - text: 'Qtde'
-          #   value: 'fmt_vl_indicador'
+          #   value: 'vl_indicador'
           - text: 'Qtde'
             value: 'fmt_calc_faixa'
         chart_options:
-          id: "ds_agreg_primaria"
-          text: "ds_agreg_primaria"
-          size: "vl_indicador"
+          id: "rais_agr_nacion_cont_ds"
+          text: "rais_agr_nacion_cont_ds"
+          size: "agr_sum_rais_agr_vinc_3112_qt"
           colorScale:
             name: "Blues"
             type: "singleHue"
             levels: 6
             order: 'asc'
         source:
-          desc_field: "ds_fonte"
+          desc: "MTE/RAIS"
 # ========================================================
       - id: "treemap_presenca_imigrantes"
         title:
@@ -370,11 +400,11 @@ secoes:
         title_comment:
           template: "{0}, {1}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -386,15 +416,17 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{1}"
                   args:
+                    - base_object: "rais_agr"
+                      named_prop: "agr_max_rais_agr_ano_nu"
                     - named_prop: "idLocalidade"
                   options:
                     calcs:
                       - id: "faixa"
                         function: "get_bin"
                         fn_args:
-                          - named_prop: "agr_sum_vl_indicador"
+                          - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
                 args:
                   - prop: "value"
                     named_prop: 'calc_faixa'
@@ -410,78 +442,80 @@ secoes:
             content:
               template: "Em destaque, o número de trabalhadores estrangeiro ativos no mercado de trabalho formal na Unidade Federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os totais de trabalhadores estrageiros para os municípios da Unidade Federativa. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
           - id: "select_origem"
             type: "select"
             label: "Origem/Continente"
             api:
-              fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+              fixed: "/thematic/raisagrmun?categorias=rais_agr_nacion_cont_ds&agregacao=DISTINCT&ordenacao=rais_agr_nacion_cont_ds&filtros=ne-rais_agr_nacion_ds-'Brasil'"
             args:
               - prop: "id"
-                named_prop: "ds_agreg_primaria"
+                named_prop: "rais_agr_nacion_cont_ds"
               - prop: "label"
-                named_prop: "ds_agreg_primaria"
+                named_prop: "rais_agr_nacion_cont_ds"
                 null_value: "(Não informado)"
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                filter: ",and,eq-rais_agr_nacion_cont_ds-'{0}'"
                 api:
                   args:
-                    - named_prop: "ds_agreg_primaria"
+                    - named_prop: "rais_agr_nacion_cont_ds"
 
         chart_type: "TREEMAP"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_indicador,cd_municipio_ibge_dv,nm_municipio,ds_indicador_completo,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS',and,eq-nu_competencia-nu_competencia_max"
+          template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_mun_ibge_ds,'Contratação de Migrantes de Outras Nacionalidades no Mercado de Trabalho Formal Brasileiro'-ds_indicador&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,nn-rais_agr_uf_ibge_ds,and,eq-rais_agr_uf_ibge_cd-{1}"
           args:
-            - named_prop: "cd_uf"
+            - base_object: "rais_agr"
+              named_prop: "agr_max_rais_agr_ano_nu"
+            - named_prop: "idLocalidade"
           options:
             calcs:
               - id: "faixa"
                 function: "get_bin"
                 fn_args:
-                  - named_prop: "agr_sum_vl_indicador"
+                  - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
             formatters:
-              - id: "agr_sum_vl_indicador"
+              - id: "agr_sum_rais_agr_vinc_3112_qt"
                 format: 'inteiro'
               - id: "calc_faixa"
                 format: "inteiro"
         headers:
           - text: 'Município'
             align: 'left'
-            value: 'nm_municipio'
+            value: 'rais_agr_mun_ibge_ds'
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_completo'
+            value: 'ds_indicador'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'rais_agr_ano_nu'
           # - text: 'Qtde'
           #   value: 'fmt_agr_sum_vl_indicador'
           - text: 'Qtde'
             value: 'fmt_calc_faixa'
         chart_options:
-          id: "cd_municipio_ibge_dv"
-          text: "nm_municipio"
-          size: "agr_sum_vl_indicador"
+          id: "rais_agr_mun_ibge_ds"
+          text: "rais_agr_mun_ibge_ds"
+          size: "agr_sum_rais_agr_vinc_3112_qt"
           colorScale:
             name: "BuPu"
             type: "singleHue"
             levels: 6
             order: 'asc'
         source:
-          desc_field: "ds_fonte"
+          desc: "MTE/RAIS"
 # ========================================================
       - id: "bar_remuneracao_trabalhadores_continente"
         title: 
@@ -489,11 +523,11 @@ secoes:
         title_comment:
           template: "{0}, em {1}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -505,99 +539,172 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresestaduais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador&limit=1"
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_nacion_cont_ds&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial_sm&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{1}"
                   args:
+                    - base_object: "rais_agr"
+                      named_prop: "agr_max_rais_agr_ano_nu"
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "salario_medio_sm"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                          - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "calc_salario_medio_sm"
+                          - fixed: [1,1.5,2,3,4,5,7,10,15,20,30,40,50,60,70,80,90,100]
+                          - fixed: 2
+                    order_field: -calc_salario_medio_sm
                 args:
                   - prop: "value"
-                    named_prop: 'ds_agreg_primaria'
+                    named_prop: 'rais_agr_nacion_cont_ds'
                     default: "Nenhum"
                   - prop: "description"
                     fixed: "Origem dos Trabalhadores com maior remuneração média"
                   - prop: "comment"
-                    named_prop: 'vl_indicador_txt'
-                    default: "-"
+                    template: "{0} salários mínimos"
+                    args:
+                      - named_prop: 'calc_faixa'
+                        default: "-"
 
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresestaduais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=vl_indicador&limit=1"
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_nacion_cont_ds&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial_sm&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{1}"
                   args:
+                    - base_object: "rais_agr"
+                      named_prop: "agr_max_rais_agr_ano_nu"
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "salario_medio_sm"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                          - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "calc_salario_medio_sm"
+                          - fixed: [1,1.5,2,3,4,5,7,10,15,20,30,40,50,60,70,80,90,100]
+                          - fixed: 2
+                    order_field: calc_salario_medio_sm
                 args:
                   - prop: "value"
-                    named_prop: 'ds_agreg_primaria'
+                    named_prop: 'rais_agr_nacion_cont_ds'
                     default: "Nenhum"
                   - prop: "description"
                     fixed: "Origem dos Trabalhadores com menor remuneração média"
                   - prop: "comment"
-                    named_prop: 'vl_indicador_txt'
-                    default: "-"
+                    template: "{0} salários mínimos"
+                    args:
+                      - named_prop: 'calc_faixa'
+                        default: "-"
 
           - type: "text"
             title: ""
             content:
               template: "Em destaque, a origem dos trabalhadores de maior e menor remuneração média na unidade federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No gráfico ao lado, comparam-se os valores para as origens dos trabalhadores. As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                 - named_prop: "calc_proximo_ano"
               
         chart_type: "BAR"
         api:
-          template: "/indicadoresestaduais?categorias=vl_indicador,vl_indicador_txt,ds_agreg_primaria,ds_indicador_completo,nu_competencia,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max&ordenacao=-vl_indicador"
+          template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_nacion_cont_ds,'Remuneração Média dos Trabalhadores Estrangeiros com Vínculo de Emprego'-ds_indicador&agregacao=sum,sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial,rais_agr_massa_salarial_sm,rais_agr_vinc_3112_qt&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{1}"
           args:
+            - base_object: "rais_agr"
+              named_prop: "agr_max_rais_agr_ano_nu"
             - named_prop: "idLocalidade"
           options:
             calcs:
+              - id: "salario_medio"
+                function: "calc_proportion_ds"
+                fn_args:
+                  - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                  - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+              - id: "salario_medio_sm"
+                function: "calc_proportion_ds"
+                fn_args:
+                  - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                  - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "calc_salario_medio_sm"
+                  - fixed: [1,1.5,2,3,4,5,7,10,15,20,30,40,50,60,70,80,90,100]
+                  - fixed: 2
+              - id: "qtde_trabalhadores"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: 'agr_sum_rais_agr_vinc_3112_qt'
+                  - fixed: [100]
               - id: "bar_description"
                 function: "applyInterpolReplaceDatasetParam"
                 fn_args:
                   - fixed: 
-                      template: "{0} - {1}"
+                      template: "{0} - {1} salários mínimos"
                       args:
-                        - named_prop: "ds_agreg_primaria"
-                        - named_prop: "vl_indicador_txt"
+                        - named_prop: "rais_agr_nacion_cont_ds"
+                        - named_prop: "calc_faixa"
+              - id: "tooltip_description"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed: 
+                      template: "{0} salários mínimos"
+                      args:
+                        - named_prop: "calc_faixa"
+            # formatters:
+            #   - id: "calc_salario_medio"
+            #     format: 'monetario'
+            #     uiTags: false
+            #   - id: "calc_salario_medio_sm"
+            #     format: 'real'
         headers:
           - text: 'Origem'
             align: 'left'
-            value: 'ds_agreg_primaria'
+            value: 'rais_agr_nacion_cont_ds'
           - text: 'Indicador'
             align: 'left'
-            value: 'ds_indicador_completo'
+            value: 'ds_indicador'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'rais_agr_ano_nu'
           - text: 'Remuneração Média'
-            value: 'vl_indicador_txt'
+            value: 'calc_tooltip_description'
           # - text: 'Remuneração Média (R$)'
           #   value: 'vl_indicador'
           #   format: "monetario"
         chart_options:
-          id: "ds_agreg_primaria"
-          y: "ds_agreg_primaria"
-          x: "vl_indicador"
+          id: "rais_agr_nacion_cont_ds"
+          y: "rais_agr_nacion_cont_ds"
+          x: "calc_salario_medio_sm"
           # orientation: "vertical"
           text: "calc_bar_description"
           show_x_axis: false
           show_y_axis: false
           hide_legend: true
-          order_field: "vl_indicador"
+          order_field: "calc_salario_medio_sm"
           colorScale:
             name: "BuPu"
             type: "singleHue"
             order: 'desc'
+          # color: "#238B45"
         source:
-          desc_field: "ds_fonte"
+          desc: "MTE/RAIS"
 
 # ========================================================
       - id: "mapa_imigrantes_remuneracao"
@@ -606,11 +713,11 @@ secoes:
         title_comment:
           template: "{0}, {1}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_max,nu_competencia_min&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG'"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -624,13 +731,30 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresestaduais?categorias=cd_indicador,ds_fonte,nu_competencia,vl_indicador_txt&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max"
+                  template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu&agregacao=sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial_sm&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{1}"
                   args:
+                    - base_object: "rais_agr"
+                      named_prop: "agr_max_rais_agr_ano_nu"
                     - named_prop: "idLocalidade"
+                  options:
+                    calcs:
+                      - id: "salario_medio_sm"
+                        function: "calc_proportion_ds"
+                        fn_args:
+                          - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                          - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+                      - id: "faixa"
+                        function: "get_bin"
+                        fn_args:
+                          - named_prop: "calc_salario_medio_sm"
+                          - fixed: [1,1.5,2,3,4,5,7,10,15,20,30,40,50,60,70,80,90,100]
+                          - fixed: 2
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_txt'
-                    default: "Nenhum"
+                    template: "{0} salários mínimos"
+                    args:
+                      - named_prop: 'calc_faixa'
+                        default: "Nenhum"
                   - prop: "description"
                     fixed: "Remuneração Média na UF"
           - type: "text"
@@ -638,70 +762,92 @@ secoes:
             content:
               template: "Em destaque, a remuneração média dos trabalhadores imigrantes estrangeiros na unidade federativa selecionada, incluindo vínculos com carteira assinada (CLT) e administrativos ou estatutários. No mapa, comparam-se os diferentes municípios da unidade federativa quanto à remuneração média dos trabalhadores imigrantes estrangeiros. A escala de cores varia do branco (menor quantidade) para o azul escuro (maior quantidade). As informações são baseadas em dados oficiais da Relação Anual de Informações Sociais (RAIS) de {0} (a mais atual disponível). A RAIS de cada ano é divulgada no ano seguinte em relação aos dados do ano anterior. No caso, portanto, a situação corresponde ao cenário com o qual se iniciou o ano de {1}."
               api:
-                fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA'"
+                template: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu&filtros=eq-rais_agr_uf_ibge_cd-{0}"
+                args:
+                  - named_prop: "idLocalidade"
                 options:
                   calcs:
                     - id: "proximo_ano"
                       function: "calc_addition_ids_ds"
                       fn_args:
-                        - named_prop: "nu_competencia_max"
+                        - named_prop: "agr_max_rais_agr_ano_nu"
                         - fixed: 1
                         - fixed: 1
               args:
-                - named_prop: "nu_competencia_max"
+                - named_prop: "agr_max_rais_agr_ano_nu"
                   required: true
                 - named_prop: "calc_proximo_ano"
           - id: "select_origem"
             type: "select"
             label: "Origem/Continente"
             api:
-              fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+              fixed: "/thematic/raisagrmun?categorias=rais_agr_nacion_cont_ds&agregacao=DISTINCT&ordenacao=rais_agr_nacion_cont_ds&filtros=ne-rais_agr_nacion_ds-'Brasil'"
             args:
               - prop: "id"
-                named_prop: "ds_agreg_primaria"
+                named_prop: "rais_agr_nacion_cont_ds"
               - prop: "label"
-                named_prop: "ds_agreg_primaria"
+                named_prop: "rais_agr_nacion_cont_ds"
                 null_value: "(Não informado)"
             selection:
               event: "selection" 
               rules:
+                filter: ",and,eq-rais_agr_nacion_cont_ds-'{0}'"
                 api:
-                  template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_agreg_primaria,ds_fonte,vl_indicador,vl_indicador_txt&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'{0}',and,nn-cd_uf,and,eq-cd_uf-{1}"
                   args:
-                    - named_prop: "ds_agreg_primaria"
-                    - named_prop: "idLocalidade"
+                    - named_prop: "rais_agr_nacion_cont_ds"
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,'Todas'-ds_agreg_primaria,ds_fonte,vl_indicador,vl_indicador_txt&filtros=eq-cd_indicador-'MIGRA_ATIVOS_REM_MEDIA_AGREG',and,eq-nu_competencia-nu_competencia_max,and,nn-cd_uf,and,eq-cd_uf-{0}"
+          template: "/thematic/raisagrmun?categorias=rais_agr_ano_nu,rais_agr_mun_ibge_ds,rais_agr_mun_ibge_cd&agregacao=sum,sum,sum&valor=rais_agr_vinc_medios_crem_qt,rais_agr_massa_salarial_sm,rais_agr_massa_salarial&filtros=eq-rais_agr_ano_nu-{0},and,ne-rais_agr_nacion_ds-'Brasil',and,nn-rais_agr_uf_ibge_ds,and,eq-rais_agr_uf_ibge_cd-{1}"
           args:
-            - named_prop: "cd_uf"
+            - base_object: "rais_agr"
+              named_prop: "agr_max_rais_agr_ano_nu"
+            - named_prop: "idLocalidade"
           options:
             calcs:
-              - id: "deviation"
-                function: "get_log"
-            formatters:
-              - id: "vl_indicador"
-                format: 'monetario'
+              - id: "salario_medio"
+                function: "calc_proportion_ds"
+                fn_args:
+                  - named_prop: 'agr_sum_rais_agr_massa_salarial'
+                  - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+              - id: "salario_medio_sm"
+                function: "calc_proportion_ds"
+                fn_args:
+                  - named_prop: 'agr_sum_rais_agr_massa_salarial_sm'
+                  - named_prop: 'agr_sum_rais_agr_vinc_medios_crem_qt'
+              - id: "faixa"
+                function: "get_bin"
+                fn_args:
+                  - named_prop: "calc_salario_medio_sm"
+                  - fixed: [1,1.5,2,3,4,5,7,10,15,20,30,40,50,60,70,80,90,100]
+                  - fixed: 2
+              - id: "faixa_description"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed: 
+                      template: "{0} salários mínimos"
+                      args:
+                        - named_prop: "calc_faixa"
+              # - id: "deviation"
+              #   function: "get_log"
+              #   fn_args:
+              #     - named_prop: "calc_salario_medio_sm"
         headers:
           - text: 'Município'
             align: 'left'
-            value: 'nm_municipio'
-          - text: 'Origem'
-            align: 'left'
-            value: 'ds_agreg_primaria'
+            value: 'rais_agr_mun_ibge_ds'
+          - text: 'Ano'
+            value: 'rais_agr_ano_nu'
           - text: 'Remuneração Média'
-            value: 'vl_indicador_txt'
-          # - text: 'Remuneração Média (R$)'
-          #   value: 'fmt_vl_indicador'
+            value: 'calc_faixa_description'
         chart_options:
-          id_field: 'cd_municipio_ibge_dv'
+          id_field: 'rais_agr_mun_ibge_cd'
           topo_key: "codarea"
-          value_field: 'calc_deviation'
+          value_field: 'calc_salario_medio'
           colorScale:
             name: 'Reds'
             order: 'desc'
         source:
-          desc_field: "ds_fonte"
+          desc: "MTE/RAIS"
 # ========================================================
       - id: "mapa_imigrantes_admitidos"
         title: 
@@ -709,26 +855,24 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_max,nu_competencia_min&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - fixed: "2015"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "agr_min_rais_agr_ano_nu"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
         #     content:
         #       fixed: "O total de resgates foi calculado com base em informações extraídas do Banco de Dados COETE (Ministério do Trabalho), que inclui beneficiários e não-beneficiários do Seguro-Desemprego modalidade trabalhador resgatado."
-        msgNoData:
-          desc: "No período, não houve trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal no município."
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/indicadoresestaduais?categorias=cd_indicador&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS',and,ge-nu_competencia-'2015'"
+                  template: "/thematic/raisagrmun?categorias=1&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=ne-rais_agr_nacion_ds-'Brasil',and,eq-rais_agr_uf_ibge_cd-{0}"
                   args:
                     - named_prop: "idLocalidade"
                   options:
@@ -736,7 +880,7 @@ secoes:
                       - id: "faixa"
                         function: "get_bin"
                         fn_args:
-                          - named_prop: "agr_sum_vl_indicador"
+                          - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
                 args:
                   - prop: "value"
                     named_prop: 'calc_faixa'
@@ -749,30 +893,28 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal de 2015 a {0}. No mapa ao lado, o município selecionado está em destaque e é comparado a diferentes municípios da mesma unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: ['MIGRA_ATIVOS_CONTRATADOS']
+              template: "Em destaque, o número de trabalhadores imigrantes estrangeiros admitidos no mercado de trabalho formal de {0} a {1}. No mapa ao lado, o município selecionado está em destaque e é comparado a diferentes municípios da mesma unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              api:
+                fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
               args:
-                - named_prop: "nu_competencia_max"
-                  required: true
+                - named_prop: "agr_min_rais_agr_ano_nu"
+                - named_prop: "agr_max_rais_agr_ano_nu"
           - type: "slider"
             cls: "pl-2"
             id: "slider_periodo"
             range: true
             title: ""
             api:
-              fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+              fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
             args:
               - prop: "min"
-                fixed: "2015"
+                named_prop: "agr_min_rais_agr_ano_nu"
               - prop: "max"
-                named_prop: "nu_competencia_max"
+                named_prop: "agr_max_rais_agr_ano_nu"
             selection:
               event: "selection"
               rules:
-                filter: ",and,ge-nu_competencia-'{0}',and,le-nu_competencia-'{1}'"
+                filter: ",and,ge-rais_agr_ano_nu-{0},and,le-rais_agr_ano_nu-{1}"
                 api:
                   args:
                     - named_prop: "value_min"
@@ -781,56 +923,54 @@ secoes:
             type: "select"
             label: "Origem/Continente"
             api:
-              fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+              fixed: "/thematic/raisagrmun?categorias=rais_agr_nacion_cont_ds&agregacao=DISTINCT&ordenacao=rais_agr_nacion_cont_ds&filtros=ne-rais_agr_nacion_ds-'Brasil'"
             args:
               - prop: "id"
-                named_prop: "ds_agreg_primaria"
+                named_prop: "rais_agr_nacion_cont_ds"
               - prop: "label"
-                named_prop: "ds_agreg_primaria"
+                named_prop: "rais_agr_nacion_cont_ds"
                 null_value: "(Não informado)"
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                filter: ",and,eq-rais_agr_nacion_cont_ds-'{0}'"
                 api:
                   args:
-                    - named_prop: "ds_agreg_primaria"
+                    - named_prop: "rais_agr_nacion_cont_ds"
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS',and,ge-nu_competencia-'2015'"
+          template: "/thematic/raisagrmun?categorias=rais_agr_mun_ibge_ds,rais_agr_mun_ibge_cd&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=ne-rais_agr_nacion_ds-'Brasil',and,nn-rais_agr_uf_ibge_ds,and,eq-rais_agr_uf_ibge_cd-{0}"
           args:
-            - named_prop: "cd_uf"
+            - named_prop: "idLocalidade"
           options:
             calcs:
               - id: "faixa"
                 function: "get_bin"
                 fn_args:
-                  - named_prop: "agr_sum_vl_indicador"
+                  - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
               - id: "deviation"
                 function: "get_log"
                 fn_args:
-                  - fixed: "agr_sum_vl_indicador"
+                  - fixed: "agr_sum_rais_agr_vinc_3112_qt"
             formatters:
-              - id: "agr_sum_vl_indicador"
+              - id: "agr_sum_rais_agr_vinc_3112_qt"
                 format: 'inteiro'
               - id: "calc_faixa"
                 format: "inteiro"
         headers:
           - text: 'Município'
             align: 'left'
-            value: 'nm_municipio'
-          # - text: 'Nº de imigrantes estrangeiros admitidos'
-          #   value: 'fmt_agr_sum_vl_indicador'
+            value: 'rais_agr_mun_ibge_ds'
           - text: 'Nº de imigrantes estrangeiros admitidos'
             value: 'fmt_calc_faixa'
         chart_options:
-          id_field: 'cd_municipio_ibge_dv'
-          topo_key: "codarea"
+          id_field: 'rais_agr_mun_ibge_cd'
+          topo_key: 'codarea'
           value_field: 'calc_deviation'
           colorScale:
             name: 'Reds'
         source:
-          desc_field: "ds_fonte"
+          desc: "MTE/RAIS"
 # ========================================================
       - id: "mapa_imigrantes_admitidos_calor"
         chart_type: "MAP_HEAT"
@@ -839,12 +979,12 @@ secoes:
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_max,nu_competencia_min&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+            fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - fixed: "2015"
-            - named_prop: "nu_competencia_max"
+            - named_prop: "agr_min_rais_agr_ano_nu"
+            - named_prop: "agr_max_rais_agr_ano_nu"
         # info:
         #   - type: "text"
         #     title: "Sobre"
@@ -861,16 +1001,16 @@ secoes:
             range: true
             title: ""
             api:
-              fixed: "/indicadoresnacionais?categorias=nu_competencia_max&limit=1&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+              fixed: "/thematic/raisagrmun?categorias=1&agregacao=min,max&valor=rais_agr_ano_nu"
             args:
               - prop: "min"
-                fixed: "2015"
+                named_prop: "agr_min_rais_agr_ano_nu"
               - prop: "max"
-                named_prop: "nu_competencia_max"
+                named_prop: "agr_max_rais_agr_ano_nu"
             selection:
               event: "selection"
               rules:
-                filter: ",and,ge-nu_competencia-'{0}',and,le-nu_competencia-'{1}'"
+                filter: ",and,ge-rais_agr_ano_nu-{0},and,le-rais_agr_ano_nu-{1}"
                 api:
                   args:
                     - named_prop: "value_min"
@@ -879,37 +1019,42 @@ secoes:
             type: "select"
             label: "Origem/Continente"
             api:
-              fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&agregacao=distinct&ordenacao=ds_agreg_primaria&filtros=eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS'"
+              fixed: "/thematic/raisagrmun?categorias=rais_agr_nacion_cont_ds&agregacao=DISTINCT&ordenacao=rais_agr_nacion_cont_ds&filtros=ne-rais_agr_nacion_ds-'Brasil'"
             args:
               - prop: "id"
-                named_prop: "ds_agreg_primaria"
+                named_prop: "rais_agr_nacion_cont_ds"
               - prop: "label"
-                named_prop: "ds_agreg_primaria"
+                named_prop: "rais_agr_nacion_cont_ds"
                 null_value: "(Não informado)"
             selection:
               event: "selection" 
               rules:
-                filter: ",and,eq-ds_agreg_primaria-'{0}'"
+                filter: ",and,eq-rais_agr_nacion_cont_ds-'{0}'"
                 api:
                   args:
-                    - named_prop: "ds_agreg_primaria"
+                    - named_prop: "rais_agr_nacion_cont_ds"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_indicador,cd_municipio_ibge_dv,nm_municipio,ds_fonte,latitude,longitude&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'MIGRA_ATIVOS_CONTRATADOS',and,ge-nu_competencia-'2015'"
+          template: "/thematic/raisagrmun?categorias='MIGRA_ATIVOS_CONTRATADOS'-cd_indicador,rais_agr_uf_ibge_sg,rais_agr_mun_ibge_ds,rais_agr_mun_ibge_cd,rais_agr_mun_latitude-latitude,rais_agr_mun_longitude-longitude&agregacao=sum&valor=rais_agr_vinc_3112_qt&filtros=ne-rais_agr_nacion_ds-'Brasil',and,nn-rais_agr_mun_ibge_cd,and,eq-rais_agr_uf_ibge_cd-{0}"
           args:
-            - named_prop: "cd_uf"
+            - named_prop: "idLocalidade"
           options:
             calcs:
               - id: "faixa"
                 function: "get_bin"
                 fn_args:
-                  - named_prop: "agr_sum_vl_indicador"
+                  - named_prop: "agr_sum_rais_agr_vinc_3112_qt"
             formatters:
+              - id: "agr_sum_rais_agr_vinc_3112_qt"
+                format: 'inteiro'
               - id: "calc_faixa"
                 format: "inteiro"
         headers:
           - text: 'Município'
             align: 'left'
-            value: 'nm_municipio'
+            value: 'rais_agr_mun_ibge_ds'
+          - text: 'UF'
+            align: 'left'
+            value: 'rais_agr_uf_ibge_sg'
           # - text: 'Nº de trabalhadores imigrantes estrangeiros admitidos'
           #   value: 'fmt_agr_sum_vl_indicador'
           - text: 'Nº de trabalhadores imigrantes estrangeiros admitidos'
@@ -920,6 +1065,6 @@ secoes:
           lat: 'latitude'
           long: 'longitude'
           indicadores: ["MIGRA_ATIVOS_CONTRATADOS"]
-          value_field: 'agr_sum_vl_indicador'
+          value_field: 'agr_sum_rais_agr_vinc_3112_qt'
         source:
-          desc_field: "ds_fonte"
+          desc: "MTE/RAIS"
