@@ -77,13 +77,28 @@ prevalencia:
   #     content:
   #       fixed: ""
   api:
-    fixed: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados'-'te_nat'-'te_res'"
+    - fixed: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados'-'te_nat'-'te_res'"
+    - fixed: "/thematic/tefluxointernacional?categorias='te_imigrantes'-cd_indicador,'2003 a 2022'-nu_competencia,fluxos_origem_lat-latitude,fluxos_origem_long-longitude,fluxos_local_origem&valor=fluxos_vl_indicador&agregacao=sum&filtros=ne-fluxos_vl_indicador-0"
+      options:
+        recalc_min_max: true
+        minmax_field: "agr_sum_fluxos_vl_indicador"
+        calcs:
+          - id: "log_norm"
+            function: "get_log_norm"
+            fn_args:
+              - fixed: "agr_sum_fluxos_vl_indicador"
+              - fixed: "minVal"
+              - fixed: "maxVal"
+        clone:
+          - id: "calc_log_norm"
+            new_column: "api_calc_ln_norm_pos_part"
   chart_options:
-    colorArray: ["rgba(25, 125, 25, 0.7)", "rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)"]
-    indicadores: ["te_sit_trab_resgatados","te_nat","te_res"]
+    colorArray: ["rgba(25, 125, 25, 0.7)", "rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)", "#795548"]
+    indicadores: ["te_sit_trab_resgatados", "te_nat", "te_res", "te_imigrantes"]
     lat: 'latitude'
     long: 'longitude'
     tooltip_function: 'obsTETooltip'
+    minZoom: 3
     clickable: true
     height_proportion: 1
     radius:
@@ -102,6 +117,7 @@ prevalencia:
   description:
     - id: "selectlayer"
       type: "switch-group"
+      title: "Brasileiros"
       switches:
         - id: "te_sit_trab_resgatados"
           cls: "xs12"
@@ -160,6 +176,12 @@ prevalencia:
           #         args:
           #           - named_prop: "nu_competencia_min"
           #           - named_prop: "nu_competencia_max"
+        - id: "te_imigrantes"
+          title: "Resgatados de outros países"
+          cls: "xs12"
+          default: false
+          color: "brown"
+          label: "LOCAIS DE ORIGEM"
       event: 'selection'
     - type: "text"
       cls: "ma-0 pa-0"
@@ -283,11 +305,37 @@ prevalencia:
         fixed: "1. Entre 1995 a 2020, segundo a Inspeção do Trabalho (Ministério do Trabalho e Emprego), foram realizados mais de 50 mil resgates. A coleta de dados vem melhorando sobretudo desde 2002, com a Lei 10.608/2002 (seguro-desemprego destinado a resgatados). Este Observatório analisa com mais detalhamento os dados dos benefícios de seguro-desemprego de resgatados requeridos na série histórica desde 2003. A qualidade desses dados é comparativamente melhor por se tratar de despesas oficiais. Não obstante, deficiências e lacunas apuradas têm sido comunicadas às autoridades de inspeção para que promovam mais aprimoramentos na coleta.<br/><br/>"
                 # 2. O total de resgates de 2003 a 2020 foi calculado com base no Radar SIT - Painel de Informações e Estatísticas da Inspeção do Trabalho no Brasil, que também inclui trabalhadores resgatados mas que não receberam o Seguro-Desemprego.<br/><br/>
                 # 3. O total de resgatados com naturalidade e residência declaradas foi calculado com base nos dados do seguro-desemprego e se restringe aos resgatados que se habilitaram ao recebimento do benefício. O foco nesses dado, além de considerar apenas os resgates reconhecidos pelo Estado na forma da Lei 10.608/2002, permite desagregar as informações ao nível municipal, o que é essencial às políticas públicas de prevenção e combate. Além disso, pode-se com eles traçar perfis de vulnerabilidade à exploração."
+    - id: "ranking_list_setores"
+      type: "ranking_list"
+      sectionClass: "pb-2 pl-2"
+      rankings:
+        - title: "Principais Países de origem de resgatados estrangeiros"
+          cls: "xs12"
+          api: 
+            - fixed: "/thematic/tefluxointernacional?categorias=fluxos_pais_origem&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=5"
+          args:
+            - prop: 'localidade'
+              named_prop: "fluxos_pais_origem"
+        - title: "Principais Municípios de entrada de resgatados estrangeiros"
+          cls: "xs12"
+          api: 
+            - fixed: "/thematic/tefluxointernacional?categorias=fluxos_local_entrada&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=5"
+          args:
+            - prop: 'localidade'
+              named_prop: "fluxos_local_entrada"
+        - title: "Principais Origens mais frequentes de resgatados estrangeiros"
+          cls: "xs12"
+          api: 
+            - fixed: "/thematic/tefluxointernacional?categorias=fluxos_local_origem&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=5"
+          args:
+            - prop: 'localidade'
+              named_prop: "fluxos_local_origem"
   mapa_filtros:
     - id: "selectlayer"
       type: "switch-group"
       switches:
         - id: "te_sit_trab_resgatados"
+          title: "Brasileiros"
           cls: "xs12"
           default: true
           color: "green accent-4"
