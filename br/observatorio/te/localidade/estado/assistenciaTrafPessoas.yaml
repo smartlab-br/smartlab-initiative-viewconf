@@ -3,6 +3,46 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "cadunico_cov_now"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: "vl_indicador"
+        format: 'porcentagem'
+        multiplier: 100
+      - prop: "description"
+        named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "cadunico_cov_rescue"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: "vl_indicador"
+        format: 'porcentagem'
+        multiplier: 100
+      - prop: "description"
+        named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
     api:
       template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,eq-vl_indicador-0"
       args:
@@ -85,6 +125,146 @@ secoes:
   - id: "trafico_pessoas_unico"
     name: ""
     cards:
+# ====================================================          
+      - id: "card_cad_unico_regatadas"
+        title: 
+          fixed: "Cobertura atual do Cadastro Único para Programas Sociais para Pessoas Resgatadas"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "cadunico_cov_now"
+            year: "max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "cadunico_cov_now"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: "vl_indicador"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a cobertura na Unidade Federativa selecionada, com base no Cadastro Único, para pessoas resgatadas do trabalho em condição análoga à de escravo. No mapa ao lado, destaca-se a variação dessa cobertura, sendo que o branco indica maior cobertura e o vermelho menor cobertura.<br/>
+                      O Cadastro Único para Programas Sociais do Governo Federal (Cadastro Único) é o principal instrumento de identificação e caracterização da situação socioeconômica das famílias de baixa renda que residem em território nacional. É a inscrição no Cadastro Único que permite às famílias de baixa renda o acesso aos Programas Sociais do Governo Federal como o Bolsa Família, a Tarifa Social de Energia Elétrica, o Benefício de Prestação Continuada (BPC) entre outros, mas vale lembrar que estar no Cadastro Único não significa a entrada automática nesses programas, pois cada um deles tem suas regras específicas."
+        chart_type: "MAP_TOPOJSON"
+        api:
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,vl_indicador,nu_competencia,ds_indicador_curto,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'cadunico_cov_now'"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: "porcentagem"
+                multiplier: 100
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Cobertura'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'vl_indicador'
+          topology: 
+            scope: "uf"
+            range: "br"
+          colorScale:
+            name: "Reds"
+            order: "desc"
+        source:
+          desc_field: "ds_fonte"
+# ====================================================          
+      - id: "card_cad_unico_prev_resgate"
+        title: 
+          fixed: "Cobertura do Cadastro Único para Programas Sociais no momento do Resgate"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "cadunico_cov_now"
+            year: "max"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 xl7'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "cadunico_cov_rescue"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: "vl_indicador"
+                    format: 'porcentagem'
+                    multiplier: 100
+                  - prop: "description"
+                    named_prop: "ds_indicador_curto"
+                  - prop: 'comment'
+                    named_prop: "nu_competencia"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a cobertura na Unidade Federativa selecionada, com base no Cadastro Único, para sobreviventes do trabalho em condição análoga à de escravo, no momento em que o resgate ocorreu. No mapa ao lado, destaca-se a variação dessa cobertura, sendo que o branco indica maior cobertura e o vermelho menor cobertura. A ausência de proteção social por meio de programa sociais é um indicativo adicional de vulnerabilidade dessa população.<br/>
+                      O Cadastro Único para Programas Sociais do Governo Federal (Cadastro Único) é o principal instrumento de identificação e caracterização da situação socioeconômica das famílias de baixa renda que residem em território nacional. É a inscrição no Cadastro Único que permite às famílias de baixa renda o acesso aos Programas Sociais do Governo Federal como o Bolsa Família, a Tarifa Social de Energia Elétrica, o Benefício de Prestação Continuada (BPC) entre outros, mas vale lembrar que estar no Cadastro Único não significa a entrada automática nesses programas, pois cada um deles tem suas regras específicas."
+        chart_type: "MAP_TOPOJSON"
+        api:
+          fixed: "/indicadoresestaduais?categorias=cd_uf,nm_uf,vl_indicador,nu_competencia,ds_indicador_curto,ds_fonte&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'cadunico_cov_rescue'"
+          options:
+            formatters:
+              - id: "vl_indicador"
+                format: "porcentagem"
+                multiplier: 100
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            value: 'ds_indicador_curto'
+          - text: 'Cobertura'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'vl_indicador'
+          topology: 
+            scope: "uf"
+            range: "br"
+          colorScale:
+            name: "Reds"
+            order: "desc"
+        source:
+          desc_field: "ds_fonte"
 # ====================================================          
       - id: "card_trafico_criancas"
         title: 

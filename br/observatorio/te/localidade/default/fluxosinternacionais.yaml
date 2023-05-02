@@ -1,0 +1,377 @@
+# ===================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/thematic/tefluxointernacional?categorias=fluxos_cont_origem&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+    args:
+      - prop: "value"
+        named_prop: 'fluxos_cont_origem'
+      - prop: "description"
+        fixed: "Continente de origem de maior incidência"
+      - prop: "comment"
+        fixed: "de 2003 a 2022"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/thematic/tefluxointernacional?categorias=fluxos_pais_origem&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+    args:
+      - prop: "value"
+        named_prop: 'fluxos_pais_origem'
+      - prop: "description"
+        fixed: "País de origem de maior incidência"
+      - prop: "comment"
+        fixed: "de 2003 a 2022"
+  - relevance: 'lead' 
+    cls: 'xs12'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/thematic/tefluxointernacional?categorias=fluxos_local_entrada&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+    args:
+      - prop: "value"
+        named_prop: 'fluxos_local_entrada'
+      - prop: "description"
+        fixed: "Município de entrada de maior frequência"
+      - prop: "comment"
+        fixed: "de 2003 a 2022"
+# ===================================================
+secoes:
+  - id: "fluxos_internacionais"
+    name: ""
+    cards:
+# ==========================================================
+      - id: "treemap_continente"
+        title: 
+          fixed: "Continente de Origem de pessoas resgatadas de outras nacionalidades"
+        title_comment:
+          fixed: "Brasil, 2003 a 2022"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/thematic/tefluxointernacional?categorias=fluxos_cont_origem&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'fluxos_cont_origem'
+                  - prop: "description"
+                    fixed: "Continente de origem de maior incidência"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o continente de origem de maior incidência nos resgates realizados. No grafico ao lado, apresenta-se a  distribuição percentual de diferentes continentes de origem na população identificada como nacionais de outros países entre os resgatados do trabalho em condição análoga à de escravo no Brasil."
+        chart_type: "TREEMAP"
+        api: 
+          fixed: "/thematic/tefluxointernacional?categorias=fluxos_cont_origem&valor=fluxos_vl_indicador&agregacao=sum"
+          options:
+            recalc_sum: 
+              sum_field: 'agr_sum_fluxos_vl_indicador'
+            calcs:
+              - id: "perc"
+                function: 'calc_percentage_ds'
+                fn_args:
+                  - named_prop: "agr_sum_fluxos_vl_indicador"
+                  - named_prop: "sum_agr_sum_fluxos_vl_indicador"
+                format: "porcentagem"
+        headers:
+          - text: 'Continente'
+            align: 'left'
+            value: 'fluxos_cont_origem'
+          - text: 'Percentual'
+            align: 'left'
+            value: 'calc_perc'
+        chart_options:
+          id: "fluxos_cont_origem"
+          size: "agr_sum_fluxos_vl_indicador"
+          text: "fluxos_cont_origem"
+          colorScale:
+            name: "YlOrRd"
+        source:
+          desc: "Ministério do Trabalho e Emprego (Seguro Desemprego) e Departamento de Polícia Federal (Ministério da Justiça e Segurança Pública - Sistema de Registro Nacional Migratório - SISMIGRA)"
+# ==========================================================
+      - id: "treemap_pais"
+        title: 
+          fixed: "Países de origem de pessoas resgatadas de outras nacionalidades"
+        title_comment:
+          fixed: "Brasil, 2003 a 2022"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/thematic/tefluxointernacional?categorias=fluxos_pais_origem&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'fluxos_pais_origem'
+                  - prop: "description"
+                    fixed: "País de origem de maior incidência"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o país de origem de maior incidência nos resgates realizados. No grafico ao lado, apresenta-se a  distribuição percentual de diferentes países de origem na população identificada como imigrantes de outras nacionalidades entre os resgatados do trabalho em condição análoga à de escravo no Brasil."
+        chart_type: "TREEMAP"
+        api: 
+          fixed: "/thematic/tefluxointernacional?categorias=fluxos_pais_origem&valor=fluxos_vl_indicador&agregacao=sum"
+          options:
+            recalc_sum: 
+              sum_field: 'agr_sum_fluxos_vl_indicador'
+            calcs:
+              - id: "perc"
+                function: 'calc_percentage_ds'
+                fn_args:
+                  - named_prop: "agr_sum_fluxos_vl_indicador"
+                  - named_prop: "sum_agr_sum_fluxos_vl_indicador"
+                format: "porcentagem"
+        headers:
+          - text: 'País'
+            align: 'left'
+            value: 'fluxos_pais_origem'
+          - text: 'Percentual'
+            align: 'left'
+            value: 'calc_perc'
+        chart_options:
+          id: "fluxos_pais_origem"
+          size: "agr_sum_fluxos_vl_indicador"
+          text: "fluxos_pais_origem"
+          colorScale:
+            name: "YlOrRd"
+        source:
+          desc: "Ministério do Trabalho e Emprego (Seguro Desemprego) e Departamento de Polícia Federal (Ministério da Justiça e Segurança Pública - Sistema de Registro Nacional Migratório - SISMIGRA)"
+# ==========================================================
+      - id: "treemap_municipios"
+        title: 
+          fixed: "Municípios brasileiros de entrada de resgatados de outras nacionalidades"
+        title_comment:
+          fixed: "Brasil, 2003 a 2022"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/thematic/tefluxointernacional?categorias=fluxos_local_entrada&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'fluxos_local_entrada'
+                  - prop: "description"
+                    fixed: "Município de entrada de maior frequência"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o município de entrada de maior incidência nos resgates realizados envolvendo nacionais de outros países. No grafico ao lado, apresenta-se a distribuição percentual de diferentes pontos de entrada, no Brasil, da população de imigrantes estrangeiros entre os resgatados."
+        chart_type: "TREEMAP"
+        api: 
+          fixed: "/thematic/tefluxointernacional?categorias=fluxos_local_entrada&valor=fluxos_vl_indicador&agregacao=sum"
+          options:
+            recalc_sum: 
+              sum_field: 'agr_sum_fluxos_vl_indicador'
+            calcs:
+              - id: "perc"
+                function: 'calc_percentage_ds'
+                fn_args:
+                  - named_prop: "agr_sum_fluxos_vl_indicador"
+                  - named_prop: "sum_agr_sum_fluxos_vl_indicador"
+                format: "porcentagem"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'fluxos_local_entrada'
+          - text: 'Percentual'
+            align: 'left'
+            value: 'calc_perc'
+        chart_options:
+          id: "fluxos_local_entrada"
+          size: "agr_sum_fluxos_vl_indicador"
+          text: "fluxos_local_entrada"
+          colorScale:
+            name: "YlOrRd"
+        source:
+          desc: "Ministério do Trabalho e Emprego (Seguro Desemprego) e Departamento de Polícia Federal (Ministério da Justiça e Segurança Pública - Sistema de Registro Nacional Migratório - SISMIGRA)"
+# ==========================================================
+      - id: "treemap_localidade_origem"
+        title: 
+          fixed: "Localidades de origem mais frequentes de resgatados de outras nacionalidades"
+        title_comment:
+          fixed: "Brasil, 2003 a 2022"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/thematic/tefluxointernacional?categorias=fluxos_local_origem&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'fluxos_local_origem'
+                  - prop: "description"
+                    fixed: "Localidade de origem mais frequente"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o município de origem mais frequente nos resgates realizados envolvendo nacionais de outros países. No grafico ao lado, a distribuição percentual de diferentes localidades de origem e respectivos países para a população de imigrantes, entre os resgatados."
+        chart_type: "TREEMAP"
+        api: 
+          fixed: "/thematic/tefluxointernacional?categorias=fluxos_local_origem&valor=fluxos_vl_indicador&agregacao=sum"
+          options:
+            recalc_sum: 
+              sum_field: 'agr_sum_fluxos_vl_indicador'
+            calcs:
+              - id: "perc"
+                function: 'calc_percentage_ds'
+                fn_args:
+                  - named_prop: "agr_sum_fluxos_vl_indicador"
+                  - named_prop: "sum_agr_sum_fluxos_vl_indicador"
+                format: "porcentagem"
+        headers:
+          - text: 'Local de origem'
+            align: 'left'
+            value: 'fluxos_local_origem'
+          - text: 'Percentual'
+            align: 'left'
+            value: 'calc_perc'
+        chart_options:
+          id: "fluxos_local_origem"
+          size: "agr_sum_fluxos_vl_indicador"
+          text: "fluxos_local_origem"
+          colorScale:
+            name: "YlOrRd"
+        source:
+          desc: "Ministério do Trabalho e Emprego (Seguro Desemprego) e Departamento de Polícia Federal (Ministério da Justiça e Segurança Pública - Sistema de Registro Nacional Migratório - SISMIGRA)"
+# ========================================================
+      - id: "mapa_localidade_origem"
+        chart_type: "MAP_BUBBLES"
+        title: 
+          fixed: "Localidades de origem mais frequentes de resgatados de outras nacionalidades"
+        title_comment:
+          fixed: "Brasil, 2003 a 2022"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/thematic/tefluxointernacional?categorias=fluxos_local_origem&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'fluxos_local_origem'
+                  - prop: "description"
+                    fixed: "Localidade de origem mais frequente"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o município de origem mais frequente nos resgates realizados envolvendo nacionais de outros países. No mapa ao lado, destacam-se as localidades, em diferentes partes do mundo (com especial destaque para a América do Sul, Central e Caribe) identificadas como de origem da população de imigrantes resgatada do trabalho escravo no Brasil."
+        api:
+          fixed: "/thematic/tefluxointernacional?categorias='mun_origem_imigrantes'-cd_indicador,fluxos_origem_lat-latitude,fluxos_origem_long-longitude,fluxos_local_origem&valor=fluxos_vl_indicador&agregacao=sum&filtros=ne-fluxos_origem_long-'-'&ordenacao=-agr_sum_fluxos_vl_indicador"
+          options:
+            recalc_sum: 
+              sum_field: 'agr_sum_fluxos_vl_indicador'
+            calcs:
+              - id: "perc"
+                function: 'calc_percentage_ds'
+                fn_args:
+                  - named_prop: "agr_sum_fluxos_vl_indicador"
+                  - named_prop: "sum_agr_sum_fluxos_vl_indicador"
+                format: "porcentagem"
+        headers:
+          - text: 'Local de origem'
+            align: 'left'
+            value: 'fluxos_local_origem'
+          - text: 'Percentual'
+            align: 'left'
+            value: 'calc_perc'
+        chart_options:
+          colorArray: ["rgba(179, 9, 0, 0.7)"]
+          height_proportion: 1.7
+          indicadores: ["mun_origem_imigrantes"]
+          lat: 'latitude'
+          long: 'longitude'
+          value_field: 'agr_sum_fluxos_vl_indicador'
+          minZoom: 3
+          radius:
+            base: 10000
+            multiplier: 2000
+        source:
+          desc: "Ministério do Trabalho e Emprego (Seguro Desemprego) e Departamento de Polícia Federal (Ministério da Justiça e Segurança Pública - Sistema de Registro Nacional Migratório - SISMIGRA)"
+# ====================================================  
+      - id: "card_fluxos_migratorios"
+        title: 
+          fixed: "Fluxos Migratórios Internacionais"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/thematic/tefluxointernacional?categorias=fluxos_pais_origem&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'fluxos_pais_origem'
+                  - prop: "description"
+                    fixed: "País de origem de maior incidência"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/thematic/tefluxointernacional?categorias=fluxos_local_origem&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'fluxos_local_origem'
+                  - prop: "description"
+                    fixed: "Localidade de origem mais frequente"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/thematic/tefluxointernacional?categorias=fluxos_local_entrada&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'fluxos_local_entrada'
+                  - prop: "description"
+                    fixed: "Município de entrada de maior frequência"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Os fluxos migratórios frequentemente percorridos incluem rotas aéreas e, principalmente, terrestres. Os principais países de origem são aqueles que fazem fronteira com o Brasil. Todavia, há também imigrantes resgatados que chegaram ao país por meio de voos internacionais. A migração internacional é um fenômeno complexo e multifacetado, que envolve diversas questões econômicas, políticas e sociais. A vulnerabilidade dos migrantes e refugiados é uma preocupação global e exige ações coordenadas dos governos e da sociedade civil para proteger os direitos humanos e garantir a dignidade dessas pessoas.<br/>
+                      Esses grupos são especialmente vulneráveis devido às dificuldades econômicas e sociais enfrentadas em seus países de origem, que muitas vezes os levam a buscar melhores condições de vida em outros lugares. Ilustrativamente, desde o terremoto de 2010, que devastou grande parte do país, o Haiti enfrenta desafios econômicos, políticos e sociais que têm levado muitos haitianos a buscar refúgio em outros países.<br/>
+                      Ao lado, em destaque, o percurso provável mais frequente de imigrantes estrangeiros resgatados do trabalho escravo no Brasil. À esquerda, destacam-se os países de origem e, no fluxo que caminha para a direita, os municípios de entrada no Brasil e os municípios do território nacional onde houve o resgate. A avaliação sera atualizada periodicamente."
+
+        chart_type: "SANKEYD3"
+        api: 
+          - fixed: "/thematic/tefluxointernacional?categorias='País=>Município de Entrada'-tipo,fluxos_pais_origem-source,fluxos_local_entrada-calc_target&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador"
+          - fixed: "/thematic/tefluxointernacional?categorias='Município de Entrada=>Municíio de Resgate'-tipo,fluxos_local_entrada-source,fluxos_local_resid_brasil_resgate-target&valor=fluxos_vl_indicador&agregacao=sum&ordenacao=-agr_sum_fluxos_vl_indicador"
+            options:
+              calcs:
+                - id: 'target'
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed: 
+                        template: "{0}'"
+                        args:
+                          - named_prop: "target"
+        api_options:
+          calcs:
+            - id: 'frequencia'
+              function: 'get_frequencia_fluxo'
+              fn_args:
+                - named_prop: 'agr_sum_fluxos_vl_indicador'
+        headers:
+          - text: 'Fluxo'
+            align: 'left'
+            value: 'tipo'
+          - text: 'Origem'
+            align: 'left'
+            value: 'source'
+          - text: 'Destino'
+            align: 'left'
+            value: 'calc_target'
+          - text: 'Frequência'
+            align: 'left'
+            value: 'calc_frequencia'
+        chart_options:
+          target_field: 'calc_target'
+          value_field: 'agr_sum_fluxos_vl_indicador'
+          hide_value: true
+        source:
+          desc: "Ministério do Trabalho e Emprego (Seguro Desemprego) e Departamento de Polícia Federal (Ministério da Justiça e Segurança Pública - Sistema de Registro Nacional Migratório - SISMIGRA)"
