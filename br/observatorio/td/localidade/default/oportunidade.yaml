@@ -3200,89 +3200,50 @@ secoes:
             content:
               fixed: "A aprendizagem é um contrato de trabalho especial, ajustado por escrito e por tempo determinado, em que o empregador se compromete a assegurar às pessoas entre 14 e 24 anos formação técnico-profissional metódica, compatível com o seu desenvolvimento físico, moral e psicológico, e o aprendiz, a executar com zelo e diligência, as tarefas necessárias à sua execução."
         title_comment:
-          template: "{0}, {1}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "12_03_06_00"
-            year: 'max'
+          template: "{0}, em {1}"
+          api: 
+            template: "/indicadoresnacionais?categorias=nu_competencia_max&filtros=eq-cd_indicador-'APRZ_21_001'&limit=1"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia"
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - function: "format_scope"
+              fn_args:
+                - named_prop: "nu_competencia_max"
         description:
           - type: "minicards"
             cards:
-              # - relevance: 'high'
-              #   cls: 'xs12'
-              #   preloaded:
-              #     prop: "centralindicadores"
-              #     function: "slice"
-              #     id: "12_03_05_00"
-              #     year: 'max'
-              #   args:
-              #     - prop: "value"
-              #       named_prop: 'vl_indicador'
-              #       format: 'inteiro'
-              #       precision: 1
-              #       collapse:
-              #         format: 'real'
-              #         precision: 1
-              #       default: "Não há"
-              #     - prop: "description"
-              #       fixed: "POTENCIAL DE CONTRATAÇÃO DE APRENDIZES"
               - relevance: 'high'
                 cls: 'xs12'
                 preloaded:
                   prop: "centralindicadores"
                   function: "slice"
-                  id: "12_03_03_00"
+                  id: "APRZ_21_001"
                   year: 'max'
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
                     format: 'inteiro'
-                    precision: 1
                     collapse:
                       format: 'real'
                       precision: 1
                     default: "Não há"
                   - prop: "description"
                     fixed: "TOTAL DE COTAS DE APRENDIZAGEM"
-              # - relevance: 'high'
-              #   cls: 'xs12 md6'
-              #   preloaded:
-              #     prop: "centralindicadores"
-              #     function: "slice"
-              #     id: "12_03_04_00"
-              #     year: 'max'
-              #   args:
-              #     - prop: "value"
-              #       named_prop: 'vl_indicador'
-              #       format: 'inteiro'
-              #       precision: 1
-              #       collapse:
-              #         format: 'real'
-              #         precision: 1
-              #       default: "Não há"
-              #     - prop: "description"
-              #       fixed: "TOTAL DE APRENDIZES CONTRATADOS"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o potencial de cotas para a contratação de aprendizes, de acordo com as informações oriundas da {0}. No mapa ao lado, a escala de cores varia do menor (branco) para o maior número de vagas (azul). Note-se que alguns municípios não possuem empresas obrigadas ao cumprimento da cota."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: '12_03_06_00'
-                year: 'max'
+              template: "Em destaque, o potencial de cotas para a contratação de aprendizes, de acordo com as informações oriundas da Subsecretaria de Inspeção do Trabalho do Ministério do Trabalho e Emprego, com base no eSocial ({0}). No mapa ao lado, a escala de cores varia do menor (branco) para o maior número de vagas (azul). Note-se que os municípios sem informação do potencial da cota de aprendizes, não possuem estabelecimentos enquadrados na Lei da Aprendizagem."
+              api: 
+                template: "/indicadoresnacionais?categorias=nu_competencia_max&filtros=eq-cd_indicador-'APRZ_21_001'&limit=1"
               args:
-                - named_prop: "ds_fonte"
-                - named_prop: "nm_municipio_uf"
+                - function: "format_scope"
+                  fn_args:
+                    - named_prop: "nu_competencia_max"
           - type: "ranking"
             preloaded:
               prop: "centralindicadores"
               function: "slice"
-              id: "12_03_03_00"
+              id: "APRZ_21_001"
               year: 'max'
             args:
               - prop: 'regional_rank'
@@ -3307,39 +3268,41 @@ secoes:
                 default: 0
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'12_03_03_00',and,eq-nu_competencia-nu_competencia_max"
+          template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador&filtros=eq-cd_indicador-'APRZ_21_001',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
           args:
             - named_prop: "cd_uf"
           options:
             calcs:
-              - id: "deviation_empform"
-                function: "get_proportional_indicator_uf"
+              - id: "log"
+                function: "get_log"
+                fn_args:
+                  - fixed: "vl_indicador"
+              - id: "competencia"
+                function: "format_month_ds"
+                fn_args:
+                  - named_prop: "nu_competencia"
             formatters:
               - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "rank_br"
                 format: 'inteiro'
         headers:
           - text: 'Município'
             align: 'left'
             value: 'nm_municipio'
-          - text: 'Ano'
+          - text: 'Mês'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'calc_competencia'
           - text: 'Indicador'
             align: 'left'
             value: 'ds_indicador_radical'
           - text: 'Valor'
             value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
         chart_options:
-          id_field: 'cd_mun_ibge'
+          id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
-          value_field: 'calc_deviation_empform'
+          value_field: 'calc_log'
           colorScale:
             order: "asc"
         source:
-          desc_field: "ds_fonte"          
+          desc: "IDEB – Subsecretaria de Inspeção do Trabalho (SIT) do Ministério do Trabalho e Emprego, com base nas informações do eSocial"
+
+
