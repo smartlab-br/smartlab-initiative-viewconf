@@ -44,82 +44,84 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,eq-vl_indicador-0"
-      args:
-        - named_prop: "cd_uf"
-      options:
-        calcs:
-          - id: "perc_nao_possui"
-            function: "calc_proportion_ds"
-            fn_args:
-              - named_prop: 'agr_count'
-              - named_prop: 'rank_uf_total'
-          - id: "perc_possui"
-            function: "calc_subtraction_ds"
-            fn_args:
-              - fixed: 1
-              - named_prop: 'calc_perc_nao_possui'
-          - id: "qtde_possui"
-            function: "calc_subtraction_ds"
-            fn_args:
-              - named_prop: "rank_uf_total"
-              - named_prop: 'agr_count'
+      - template: "/indicadoresmunicipais?categorias='total'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,ne-vl_indicador-0,and,nn-vl_indicador"
+        args:
+          - named_prop: "cd_uf"
+        options:
+          calcs:
+            - id: "perc_possui"
+              function: "calc_proportion_ds"
+              fn_args:
+                - named_prop: 'agr_count'
+                - named_prop: 'rank_uf_total'
+      - template: "/indicadoresmunicipais?categorias='desc'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018'&limit=1"
+        args:
+          - named_prop: "cd_uf"
     args:
       - prop: "value"
+        id: "total"
         named_prop: "calc_perc_possui"
         format: 'porcentagem'
         multiplier: 100
+        default: '0%'
       - prop: "description"
         template: "dos municípios tem {0}"
         args:
-          - named_prop: "ds_indicador_curto"
+          - id: "desc"
+            named_prop: "ds_indicador_curto"
       - prop: 'comment'
         template: "{0} municípios de {1}<br/>({2}, {3})"
         args:
-          - named_prop: "calc_qtde_possui"
-          - named_prop: "rank_uf_total"
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - id: "total"
+            named_prop: "agr_count"
+            default: 0
+          - id: "desc"
+            named_prop: "rank_uf_total"
+          - id: "desc"
+            named_prop: "ds_fonte"
+          - id: "desc"
+            named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_18sup',and,eq-vl_indicador-0"
-      args:
-        - named_prop: "cd_uf"
-      options:
-        calcs:
-          - id: "perc_nao_possui"
-            function: "calc_proportion_ds"
-            fn_args:
-              - named_prop: 'agr_count'
-              - named_prop: 'rank_uf_total'
-          - id: "perc_possui"
-            function: "calc_subtraction_ds"
-            fn_args:
-              - fixed: 1
-              - named_prop: 'calc_perc_nao_possui'
-          - id: "qtde_possui"
-            function: "calc_subtraction_ds"
-            fn_args:
-              - named_prop: "rank_uf_total"
-              - named_prop: 'agr_count'
+      - template: "/indicadoresmunicipais?categorias='total'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_18sup',and,ne-vl_indicador-0,and,nn-vl_indicador"
+        args:
+          - named_prop: "cd_uf"
+        options:
+          calcs:
+            - id: "perc_possui"
+              function: "calc_proportion_ds"
+              fn_args:
+                - named_prop: 'agr_count'
+                - named_prop: 'rank_uf_total'
+      - template: "/indicadoresmunicipais?categorias='desc'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_18sup'&limit=1"
+        args:
+          - named_prop: "cd_uf"
     args:
       - prop: "value"
+        id: "total"
         named_prop: "calc_perc_possui"
         format: 'porcentagem'
         multiplier: 100
+        default: '0%'
       - prop: "description"
         template: "dos municípios tem {0}"
         args:
-          - named_prop: "ds_indicador_curto"
+          - id: "desc"
+            named_prop: "ds_indicador_curto"
       - prop: 'comment'
         template: "{0} municípios de {1}<br/>({2}, {3})"
         args:
-          - named_prop: "calc_qtde_possui"
-          - named_prop: "rank_uf_total"
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - id: "total"
+            named_prop: "agr_count"
+            default: 0
+          - id: "desc"
+            named_prop: "rank_uf_total"
+          - id: "desc"
+            named_prop: "ds_fonte"
+          - id: "desc"
+            named_prop: "nu_competencia"
 # ===================================================
 secoes:
   - id: "trafico_pessoas_unico"
@@ -286,40 +288,39 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 xl6'
                 api:
-                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,eq-vl_indicador-0"
-                  args:
-                    - named_prop: "cd_uf"
-                  options:
-                    calcs:
-                      - id: "perc_nao_possui"
-                        function: "calc_proportion_ds"
-                        fn_args:
-                          - named_prop: 'agr_count'
-                          - named_prop: 'rank_uf_total'
-                      - id: "perc_possui"
-                        function: "calc_subtraction_ds"
-                        fn_args:
-                          - fixed: 1
-                          - named_prop: 'calc_perc_nao_possui'
-                      - id: "qtde_possui"
-                        function: "calc_subtraction_ds"
-                        fn_args:
-                          - named_prop: "rank_uf_total"
-                          - named_prop: 'agr_count'
+                  - template: "/indicadoresmunicipais?categorias='total'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018',and,ne-vl_indicador-0,and,nn-vl_indicador"
+                    args:
+                      - named_prop: "cd_uf"
+                    options:
+                      calcs:
+                        - id: "perc_possui"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_count'
+                            - named_prop: 'rank_uf_total'
+                  - template: "/indicadoresmunicipais?categorias='desc'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_018'&limit=1"
+                    args:
+                      - named_prop: "cd_uf"
                 args:
                   - prop: "value"
+                    id: "total"
                     named_prop: "calc_perc_possui"
                     format: 'porcentagem'
                     multiplier: 100
+                    default: '0%'
                   - prop: "description"
                     template: "dos municípios tem {0}"
                     args:
-                      - named_prop: "ds_indicador_curto"
+                      - id: "desc"
+                        named_prop: "ds_indicador_curto"
                   - prop: 'comment'
                     template: "{0} municípios de {1}"
                     args:
-                      - named_prop: "calc_qtde_possui"
-                      - named_prop: "rank_uf_total"
+                      - id: "total"
+                        named_prop: "agr_count"
+                        default: 0
+                      - id: "desc"
+                        named_prop: "rank_uf_total"
           - type: "text"
             title: ""
             content:
@@ -368,7 +369,7 @@ secoes:
           colorScale:
             type: "fixed"
             color_array: 
-              'Não': "#BCBCBC"
+              'Sem casos mapeados': "#BCBCBC"
               'Sim': "#E32F27"
         source:
           desc_field: "ds_fonte"
@@ -393,40 +394,39 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 xl6'
                 api:
-                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_18sup',and,eq-vl_indicador-0"
-                  args:
-                    - named_prop: "cd_uf"
-                  options:
-                    calcs:
-                      - id: "perc_nao_possui"
-                        function: "calc_proportion_ds"
-                        fn_args:
-                          - named_prop: 'agr_count'
-                          - named_prop: 'rank_uf_total'
-                      - id: "perc_possui"
-                        function: "calc_subtraction_ds"
-                        fn_args:
-                          - fixed: 1
-                          - named_prop: 'calc_perc_nao_possui'
-                      - id: "qtde_possui"
-                        function: "calc_subtraction_ds"
-                        fn_args:
-                          - named_prop: "rank_uf_total"
-                          - named_prop: 'agr_count'
+                  - template: "/indicadoresmunicipais?categorias='total'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_18sup',and,ne-vl_indicador-0,and,nn-vl_indicador"
+                    args:
+                      - named_prop: "cd_uf"
+                    options:
+                      calcs:
+                        - id: "perc_possui"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_count'
+                            - named_prop: 'rank_uf_total'
+                  - template: "/indicadoresmunicipais?categorias='desc'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS_18sup'&limit=1"
+                    args:
+                      - named_prop: "cd_uf"
                 args:
                   - prop: "value"
+                    id: "total"
                     named_prop: "calc_perc_possui"
                     format: 'porcentagem'
                     multiplier: 100
+                    default: '0%'
                   - prop: "description"
                     template: "dos municípios tem {0}"
                     args:
-                      - named_prop: "ds_indicador_curto"
+                      - id: "desc"
+                        named_prop: "ds_indicador_curto"
                   - prop: 'comment'
                     template: "{0} municípios de {1}"
                     args:
-                      - named_prop: "calc_qtde_possui"
-                      - named_prop: "rank_uf_total"
+                      - id: "total"
+                        named_prop: "agr_count"
+                        default: 0
+                      - id: "desc"
+                        named_prop: "rank_uf_total"
           - type: "text"
             title: ""
             content:
@@ -468,7 +468,7 @@ secoes:
           colorScale:
             type: "fixed"
             color_array: 
-              'Não': "#BCBCBC"
+              'Sem casos mapeados': "#BCBCBC"
               'Sim': "#E32F27"
         source:
           desc_field: "ds_fonte"
@@ -507,40 +507,39 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 xl6'
                 api:
-                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS',and,eq-vl_indicador-0"
-                  args:
-                    - named_prop: "cd_uf"
-                  options:
-                    calcs:
-                      - id: "perc_nao_possui"
-                        function: "calc_proportion_ds"
-                        fn_args:
-                          - named_prop: 'agr_count'
-                          - named_prop: 'rank_uf_total'
-                      - id: "perc_possui"
-                        function: "calc_subtraction_ds"
-                        fn_args:
-                          - fixed: 1
-                          - named_prop: 'calc_perc_nao_possui'
-                      - id: "qtde_possui"
-                        function: "calc_subtraction_ds"
-                        fn_args:
-                          - named_prop: "rank_uf_total"
-                          - named_prop: 'agr_count'
+                  - template: "/indicadoresmunicipais?categorias='total'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS',and,ne-vl_indicador-0,and,nn-vl_indicador"
+                    args:
+                      - named_prop: "cd_uf"
+                    options:
+                      calcs:
+                        - id: "perc_possui"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'agr_count'
+                            - named_prop: 'rank_uf_total'
+                  - template: "/indicadoresmunicipais?categorias='desc'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'g1_CREAS'&limit=1"
+                    args:
+                      - named_prop: "cd_uf"
                 args:
                   - prop: "value"
+                    id: "total"
                     named_prop: "calc_perc_possui"
                     format: 'porcentagem'
                     multiplier: 100
+                    default: '0%'
                   - prop: "description"
                     template: "dos municípios tem {0}"
                     args:
-                      - named_prop: "ds_indicador_curto"
+                      - id: "desc"
+                        named_prop: "ds_indicador_curto"
                   - prop: 'comment'
                     template: "{0} municípios de {1}"
                     args:
-                      - named_prop: "calc_qtde_possui"
-                      - named_prop: "rank_uf_total"
+                      - id: "total"
+                        named_prop: "agr_count"
+                        default: 0
+                      - id: "desc"
+                        named_prop: "rank_uf_total"
           - type: "text"
             title: ""
             content:
@@ -589,7 +588,7 @@ secoes:
           colorScale:
             type: "fixed"
             color_array: 
-              'Não': "#BCBCBC"
+              'Sem casos mapeados': "#BCBCBC"
               'Sim': "#E32F27"
         source:
           desc_field: "ds_fonte"
