@@ -151,6 +151,69 @@ secoes:
         source: 
           desc_field: "ds_fonte"
 # ========================================================
+      - id: "treemap_piores_formas"
+        title: 
+          fixed: "Piores formas de trabalho infantil identificadas"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'TI_SIT_05_TS'&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max&ordenacao=-agr_sum_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: "ds_agreg_secundaria"
+                  - prop: "description"
+                    fixed: "Pior forma de trabalho infantil mais frequente"
+                  - prop: "comment"
+                    template: "Qtde: {0}"
+                    args:
+                      - named_prop: 'agr_sum_vl_indicador'
+                        format: 'inteiro'
+                        collapse:
+                          format: 'real'
+                        default: "Sem Registros"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a pior forma de trabalho na qual crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais de acordo com as informações oriundas da Secretaria de Inspeção do Trabalho do Ministério do Trabalho e Emprego, com base no SFITWEB. No gráfico, a distribuição de crianças e adolescentes encontrados em situação de trabalho infantil por pior forma de trabalho."
+        chart_type: "TREEMAP"
+        api:
+          fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max"
+          options:
+            formatters:
+              - id: "agr_sum_vl_indicador"
+                format: 'inteiro'
+        headers:
+          - text: 'Pior forma de trabalho'
+            align: 'left'
+            value: 'ds_agreg_secundaria'
+          - text: 'Qtde'
+            value: 'fmt_agr_sum_vl_indicador'
+        chart_options:
+          id: "ds_agreg_secundaria"
+          size: "agr_sum_vl_indicador"
+          text: "ds_agreg_secundaria"
+          colorScale:
+            name: "Reds"
+        source: 
+          desc_field: "ds_fonte"
+# ========================================================
       - id: "trabalho_infantil_idade_sexo"
         type: "multiple-charts"
         title: 
@@ -306,8 +369,6 @@ secoes:
               value_field: 'calc_log'
               colorScale:
                 name: 'Reds'
-            source: 
-              desc_field: "ds_fonte"
           - id: "bar_ti_idade_sexo"
             title: "Crianças e Adolescentes encontrados em situação de trabalho infantil por Idade e Sexo na Unidade Federativa"
             cls: "xs12 md6"
@@ -341,8 +402,8 @@ secoes:
               legend_field: "ds_agreg_primaria"
               stacked: true
               show_x_axis: false
-            source: 
-              desc_field: "ds_fonte"
+        source: 
+          desc: "Secretaria de Inspeção do Trabalho - Ministério do Trabalho e Emprego"
 # ========================================================
       - id: "trabalho_infantil_faixa"
         type: "multiple-charts"
