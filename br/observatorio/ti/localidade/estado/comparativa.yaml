@@ -415,26 +415,6 @@ secoes:
                     - named_prop: "ds_indicador_curto"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-          # SIT_TI_CNAE Atividade Econômica com Trabalho Infantil
-          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,'Atividade Econômica com crianças e adolescentes encontrados em situação de trabalho infantil'-ds_indicador_curto,nu_competencia_min,nu_competencia_max,''-ds_indicador_prefixo&valor=vl_indicador,ds_agreg_primaria&agregacao=SUM,GROUP_CONCAT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'SIT_TI_CNAE',and,eq-cd_uf-{0}"
-            args:
-              - named_prop: "cd_uf"
-            options:
-              calcs:
-                - id: "header_label"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed:
-                        template: "{0}<br/>({1})"
-                        args:
-                          - named_prop: "ds_indicador_curto"
-                          - named_prop: "nu_competencia_max"
-                - id: "fmt_value"
-                  function: "get_formatted_value"
-                  fn_args:
-                    - named_prop: "ds_indicador_curto"
-                    - named_prop: "agr_group_concat_ds_agreg_primaria"
-                    - named_prop: "ds_indicador_prefixo"
         headers:
           - text: 'Município'
             align: 'center'
@@ -458,6 +438,171 @@ secoes:
         source:
           #, IBGE - Censo Agropecuário, Disque Direitos Humanos (Disque 100)
           desc: "MTE - RAIS e Novo CAGED, MTE - IDEB/SIT, INSS - CATWEB, MS - SINAN, PRF - MAPEAR, Prova Brasil, Ministério do Desenvolvimento e Assistência Social, Família e Combate à Fome - SAGI/VIS DATA, MTE - SIT."
+# ========================================================
+      - id: "datatable_areas e setores"
+        title:
+          fixed: "Panorama de indicadores sobre o trabalho de crianças e adolescentes, inclusive em suas piores formas"
+        title_comment:
+          api: 
+            template: "/municipios?categorias=nm_uf&filtros=eq-cd_uf-{0}&limit=1"
+            args:
+              - named_prop: "idLocalidade"
+          template: "{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+        description:
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Acrescentar texto..."
+        component_type: "DATATABLE"
+        api:
+          # SIT_TI_CNAE Crianças e Adolescentes encontrados em situação de Trabalho Infantil
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'SIT_TI_CNAE',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "{0}<br/>({1})"
+                        args:
+                          - named_prop: "ds_indicador_curto"
+                          - named_prop: "nu_competencia_max"
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador_curto"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "ds_indicador_prefixo"
+              clone:
+                - id: "calc_fmt_value"
+                  new_column: "descricao"
+          # SIT_TI_CNAE Atividade Econômica com Trabalho Infantil
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia_min,nu_competencia_max,''-ds_indicador_prefixo&valor=vl_indicador,ds_agreg_primaria&agregacao=SUM,GROUP_CONCAT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'SIT_TI_CNAE',and,eq-cd_uf-{0}&ordenacao=-cd_indicador"
+            args:
+              - named_prop: "cd_uf"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "Atividade Econômica com crianças e adolescentes encontrados em situação de trabalho infantil<br/>({0})"
+                        args:
+                          - named_prop: "nu_competencia_max"
+              clone:
+                - id: "agr_group_concat_ds_agreg_primaria"
+                  new_column: "descricao"
+          # TI_SIT_05_TS Piores Formas
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia_min,nu_competencia_max,''-ds_indicador_prefixo&valor=vl_indicador,ds_agreg_secundaria&agregacao=SUM,GROUP_CONCAT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'TI_SIT_05_TS',and,eq-cd_uf-{0}&ordenacao=-cd_indicador"
+            args:
+              - named_prop: "cd_uf"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "Piores formas de trabalho infantil identificadas<br/>({0})"
+                        args:
+                          - named_prop: "nu_competencia_max"
+              clone:
+                - id: "agr_group_concat_ds_agreg_secundaria"
+                  new_column: "descricao"
+          # CENSOAGRO
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'CAGRO_TICA01',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "{0}<br/>({1})"
+                        args:
+                          - named_prop: "ds_indicador"
+                          - named_prop: "nu_competencia_max"
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "ds_indicador_prefixo"
+              clone:
+                - id: "calc_fmt_value"
+                  new_column: "descricao"
+          # CENSO AGRO - Atividades de destaque
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,nu_competencia_max,''-ds_indicador_prefixo&valor=vl_indicador,vl_indicador_txt&agregacao=SUM,GROUP_CONCAT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'CAGRO_TICA13',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "Censo Agropecuário: Atividade de destaque 1º lugar<br/>({0})"
+                        args:
+                          - named_prop: "nu_competencia_max"
+              clone:
+                - id: "agr_group_concat_vl_indicador_txt"
+                  new_column: "descricao"
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,nu_competencia_max,''-ds_indicador_prefixo&valor=vl_indicador,vl_indicador_txt&agregacao=SUM,GROUP_CONCAT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'CAGRO_TICA14',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "Censo Agropecuário: Atividade de destaque 2º lugar<br/>({0})"
+                        args:
+                          - named_prop: "nu_competencia_max"
+              clone:
+                - id: "agr_group_concat_vl_indicador_txt"
+                  new_column: "descricao"
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,nu_competencia_max,''-ds_indicador_prefixo&valor=vl_indicador,vl_indicador_txt&agregacao=SUM,GROUP_CONCAT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'CAGRO_TICA15',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "Censo Agropecuário: Atividade de destaque 3º lugar<br/>({0})"
+                        args:
+                          - named_prop: "nu_competencia_max"
+              clone:
+                - id: "agr_group_concat_vl_indicador_txt"
+                  new_column: "descricao"
+        headers:
+          - text: 'Município'
+            align: 'center'
+            value: 'nm_municipio'
+            item_align: 'center'
+          - text: 'UF'
+            align: 'center'
+            value: 'sg_uf'
+            item_align: 'center'
+        component_options:
+          id: "datatable_sugetoes_ocupacoes"
+          title: "Áreas e Setores Econômicos Prioritários"
+          cls: "xs12 md6 lg4 pa-3"
+          pivot: 
+            col_fields: ["sg_uf","nm_municipio","cd_mun_ibge"]
+            layer_field: "calc_header_label"
+            fmt_value_field: "descricao"
+            value_field: "agr_sum_vl_indicador"
+          search_position: "bottom"
+        source:
+          desc: "MTE - IDEB/SIT e IBGE - Censo Agropecuário, Florestal e Aquícola"
 # ========================================================
       - id: "datatable_infantil_munic"
         title: 
