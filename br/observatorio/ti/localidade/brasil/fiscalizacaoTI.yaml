@@ -214,7 +214,7 @@ secoes:
         source: 
           desc_field: "ds_fonte"
 # ========================================================
-      - id: "trabalho_infantil_idade_sexo"
+      - id: "mapa_trabalho_infantil_idade_sexo"
         type: "multiple-charts"
         title: 
           fixed: "Crianças e Adolescentes encontrados em situação de trabalho infantil"
@@ -275,7 +275,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de crianças e adolescentes alcançados em situação de trabalho infantil pelas ações fiscais de acordo com as informações oriundas da Secretaria de Inspeção do Trabalho do Ministério do Trabalho e Emprego, com base no SFITWEB. No mapa, a escala de cores varia do menor (branco) para o maior número de crianças e adolescentes (vemelho escuro). Note-se que os municípios sem informação são aqueles nos quais não foram realizadas ações fiscais de combate ao trabalho infantil ou não foram alcançados crianças e adolescentes em situação de trabalho infantil. No gráfico, a pirâmide é apresentada com as idades e o sexo. Selecione abaixo um indicador por sexo ou idade para refinar a visualização."
+              fixed: "Em destaque, o número total e por sexo de crianças e adolescentes alcançados em situação de trabalho infantil pelas ações fiscais de acordo com as informações oriundas da Secretaria de Inspeção do Trabalho do Ministério do Trabalho e Emprego, com base no SFITWEB. No mapa, a escala de cores varia do menor (branco) para o maior número de crianças e adolescentes (vemelho escuro). Note-se que os municípios sem informação são aqueles nos quais não foram realizadas ações fiscais de combate ao trabalho infantil ou não foram alcançados crianças e adolescentes em situação de trabalho infantil. Selecione abaixo um indicador por sexo ou idade para refinar a visualização."
           - id: "select_sexo"
             type: "select"
             multiple: true
@@ -324,12 +324,15 @@ secoes:
         charts:
           - id: "map_ti_idade_sexo"
             title: "Crianças e Adolescentes encontrados em situação de trabalho infantil"
-            cls: "xs12 md6"
+            cls: "xs12"
             type: "MAP_TOPOJSON"
             api: 
               - fixed: "/indicadoresestaduais?categorias='total'-cd_indicador,nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max"
               - fixed: "/indicadoresestaduais?categorias='masculino'-cd_indicador,nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'Masculino'"
               - fixed: "/indicadoresestaduais?categorias='feminino'-cd_indicador,nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'Feminino'"
+              - fixed: "/indicadoresestaduais?categorias='ate13'-cd_indicador,nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,lt-cast(ds_agreg_secundaria as smallint)-14"
+              - fixed: "/indicadoresestaduais?categorias='14e15'-cd_indicador,nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,in-ds_agreg_secundaria-'14'-'15'"
+              - fixed: "/indicadoresestaduais?categorias='16e17'-cd_indicador,nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,in-ds_agreg_secundaria-'16'-'17'"
             api_options:
               cast:
                 col_fields: ["nu_competencia","cd_uf","nm_uf","ds_fonte"]
@@ -347,6 +350,12 @@ secoes:
                   format: 'inteiro'
                 - id: "feminino"
                   format: 'inteiro'
+                - id: "ate13"
+                  format: 'inteiro'
+                - id: "14e15"
+                  format: 'inteiro'
+                - id: "16e17"
+                  format: 'inteiro'
             headers:
               - text: 'Unidade Federativa'
                 align: 'left'
@@ -357,21 +366,186 @@ secoes:
               - text: 'Crianças e Adolescentes em situação de trabalho infantil'
                 align: 'left'
                 value: 'fmt_total'
-              - text: 'Crianças e Adolescentes do sexo Masculino'
+              - text: ' - do sexo Masculino'
                 align: 'left'
                 value: 'fmt_masculino'
-              - text: 'Crianças e Adolescentes do sexo Feminino'
+              - text: ' - do sexo Feminino'
                 align: 'left'
                 value: 'fmt_feminino'
+              - text: ' - até 13 anos'
+                align: 'left'
+                value: 'fmt_ate13'
+              - text: ' - de 14 a 15 anos'
+                align: 'left'
+                value: 'fmt_14e15'
+              - text: ' - de 16 a 17 anos'
+                align: 'left'
+                value: 'fmt_16e17'
             options:
               id_field: 'cd_uf'
               topo_key: "codigo"
               value_field: 'calc_log'
               colorScale:
                 name: 'Reds'
+        source:
+          desc: "Secretaria de Inspeção do Trabalho - Ministério do Trabalho e Emprego"
+          # - id: "bar_ti_idade_sexo"
+          #   title: "Crianças e Adolescentes encontrados em situação de trabalho infantil por Idade e Sexo"
+          #   cls: "xs12"
+          #   type: "BAR"
+          #   api: 
+          #     template: "/indicadoresnacionais?categorias=ds_fonte,ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,ne-ds_agreg_primaria-'Indefinido',and,ne-ds_agreg_secundaria-''&ordenacao=ds_agreg_primaria"
+          #     args:
+          #       - named_prop: "idLocalidade"
+          #     options:
+          #       calcs:
+          #         - id: 'count'
+          #           function: 'oppose'
+          #           fn_args:
+          #             - fixed: 'ds_agreg_primaria'
+          #             - fixed: 'Feminino'
+          #             - fixed: 'agr_sum_vl_indicador'
+          #   headers:
+          #     - text: 'Sexo'
+          #       align: 'left'
+          #       value: 'ds_agreg_primaria'
+          #     - text: 'Idade'
+          #       align: 'left'
+          #       value: 'ds_agreg_secundaria'
+          #     - text: 'Qtde'
+          #       value: 'agr_sum_vl_indicador'
+          #   options:
+          #     id: "ds_agreg_primaria"
+          #     x: "calc_count"
+          #     y: "ds_agreg_secundaria"
+          #     text: "ds_agreg_secundaria"
+          #     orientation: "horizontal"
+          #     hide_legend: false
+          #     legend_field: "ds_agreg_primaria"
+          #     stacked: true
+          #     show_x_axis: false
+          #   source:
+          #     desc_field: "ds_fonte"
+# ========================================================
+      - id: "bar_trabalho_infantil_idade_sexo"
+        type: "multiple-charts"
+        title: 
+          fixed: "Crianças e Adolescentes encontrados em situação de trabalho infantil por Idade e Sexo"
+        title_comment:
+          template: "{0}, em {1}"
+          api: 
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_max&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO'&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: ""
+        # msg_nodata:
+        #   desc: "Em função do elevado Coeficiente de Variação associado aos dados amostrais do Censo 2010, não foi possível disponibilizar as informações referentes ao trabalho de crianças e adolescentes na faixa etária de 10 a 17 anos de idade nesse município. Para maiores informações ver as notas metodológicas na p. 4 do relatório municipal de trabalho decente."
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                api: 
+                  fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Crianças e Adolescentes encontrados em situação de trabalho infantil'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'Masculino'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Crianças e Adolescentes do Sexo Masculino em situação de trabalho infantil'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api: 
+                  fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'Feminino'"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                  - prop: "description"
+                    fixed: 'Crianças e Adolescentes do Sexo Feminino em situação de trabalho infantil'
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de crianças e adolescentes alcançados em situação de trabalho infantil pelas ações fiscais de acordo com as informações oriundas da Secretaria de Inspeção do Trabalho do Ministério do Trabalho e Emprego, com base no SFITWEB. Note-se que os municípios sem informação são aqueles nos quais não foram realizadas ações fiscais de combate ao trabalho infantil ou não foram alcançados crianças e adolescentes em situação de trabalho infantil. No gráfico, a pirâmide é apresentada com as idades e o sexo. Selecione abaixo um indicador por sexo ou idade para refinar a visualização."
+        charts:
+          # - id: "map_ti_idade_sexo"
+          #   title: "Crianças e Adolescentes encontrados em situação de trabalho infantil"
+          #   cls: "xs12 md6"
+          #   type: "MAP_TOPOJSON"
+          #   api: 
+          #     - template: "/indicadoresnacionais?categorias='total'-cd_indicador,nu_competencia,cd_uf,nm_municipio,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max"
+          #       args:
+          #         - named_prop: "cd_uf"
+          #     - template: "/indicadoresnacionais?categorias='masculino'-cd_indicador,nu_competencia,cd_uf,nm_municipio,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'Masculino'"
+          #       args:
+          #         - named_prop: "cd_uf"
+          #     - template: "/indicadoresnacionais?categorias='feminino'-cd_indicador,nu_competencia,cd_uf,nm_municipio,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,eq-ds_agreg_primaria-'Feminino'"
+          #       args:
+          #         - named_prop: "cd_uf"
+          #   api_options:
+          #     cast:
+          #       col_fields: ["nu_competencia","cd_uf","nm_municipio","ds_fonte"]
+          #       value_field: "agr_sum_vl_indicador"
+          #       layer_field: "cd_indicador"
+          #     calcs:
+          #       - id: "log"
+          #         function: "get_log"
+          #         fn_args:
+          #           - fixed: "total"
+          #     formatters:
+          #       - id: "total"
+          #         format: 'inteiro'
+          #       - id: "masculino"
+          #         format: 'inteiro'
+          #       - id: "feminino"
+          #         format: 'inteiro'
+          #   headers:
+          #     - text: 'Município'
+          #       align: 'left'
+          #       value: 'nm_municipio'
+          #     - text: 'Ano'
+          #       align: 'left'
+          #       value: 'nu_competencia'
+          #     - text: 'Crianças e Adolescentes em situação de trabalho infantil'
+          #       align: 'left'
+          #       value: 'fmt_total'
+          #     - text: 'Crianças e Adolescentes do sexo Masculino'
+          #       align: 'left'
+          #       value: 'fmt_masculino'
+          #     - text: 'Crianças e Adolescentes do sexo Feminino'
+          #       align: 'left'
+          #       value: 'fmt_feminino'
+          #   options:
+          #     id_field: 'cd_uf'
+          #     topo_key: "codarea"
+          #     value_field: 'calc_log'
+          #     colorScale:
+          #       name: 'Reds'
           - id: "bar_ti_idade_sexo"
-            title: "Crianças e Adolescentes encontrados em situação de trabalho infantil por Idade e Sexo na Unidade Federativa"
-            cls: "xs12 md6"
+            title: "Crianças e Adolescentes encontrados em situação de trabalho infantil por Idade e Sexo"
+            cls: "xs12"
             type: "BAR"
             api: 
               fixed: "/indicadoresnacionais?categorias=ds_fonte,ds_agreg_primaria,ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,ne-ds_agreg_primaria-'Indefinido',and,ne-ds_agreg_secundaria-''&ordenacao=ds_agreg_primaria"
@@ -402,13 +576,13 @@ secoes:
               legend_field: "ds_agreg_primaria"
               stacked: true
               show_x_axis: false
-        source: 
+        source:
           desc: "Secretaria de Inspeção do Trabalho - Ministério do Trabalho e Emprego"
 # ========================================================
       - id: "trabalho_infantil_faixa"
         type: "multiple-charts"
         title: 
-          fixed: "Crianças e Adolescentes em situação de trabalho infantil por Faixa Etária"
+          fixed: "Crianças e Adolescentes encontrados em situação de trabalho infantil por Faixa Etária"
         title_comment:
           template: "{0}, em {1}"
           api: 
@@ -430,9 +604,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  template: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,lt-cast(ds_agreg_secundaria as smallint)-14"
-                  args:
-                    - named_prop: "idLocalidade"
+                  fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,lt-cast(ds_agreg_secundaria as smallint)-14"
                 args:
                   - prop: "value"
                     named_prop: 'agr_sum_vl_indicador'
@@ -444,9 +616,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  template: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,in-ds_agreg_secundaria-'14'-'15'"
-                  args:
-                    - named_prop: "idLocalidade"
+                  fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,in-ds_agreg_secundaria-'14'-'15'"
                 args:
                   - prop: "value"
                     named_prop: 'agr_sum_vl_indicador'
@@ -458,9 +628,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  template: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,in-ds_agreg_secundaria-'16'-'17'"
-                  args:
-                    - named_prop: "idLocalidade"
+                  fixed: "/indicadoresnacionais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,in-ds_agreg_secundaria-'16'-'17'"
                 args:
                   - prop: "value"
                     named_prop: 'agr_sum_vl_indicador'
@@ -472,66 +640,74 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número total de crianças e adolescentes alcançados em situação de trabalho infantil, por faixa etária, pelas ações fiscais de acordo com as informações oriundas da Secretaria de Inspeção do Trabalho do Ministério do Trabalho e Emprego, com base no SFITWEB. No mapa, a escala de cores varia do menor (branco) para o maior número de crianças e adolescentes (vemelho escuro). Note-se que os municípios sem informação são aqueles nos quais não foram realizadas ações de fiscais de combate ao trabalho infantil ou não foram alcançados crianças e adolescentes em situação de trabalho infantil. O gráfico apresenta a distribuição por faixa etária."
+              fixed: "Em destaque, o número por faixa etária de crianças e adolescentes alcançados em situação de trabalho infantil, pelas ações fiscais de acordo com as informações oriundas da Secretaria de Inspeção do Trabalho do Ministério do Trabalho e Emprego, com base no SFITWEB. Note-se que os municípios sem informação são aqueles nos quais não foram realizadas ações de fiscais de combate ao trabalho infantil ou não foram alcançados crianças e adolescentes em situação de trabalho infantil. O gráfico apresenta a distribuição por faixa etária."
         charts:
-          - id: "map_ti_faixa"
-            title: "Crianças e Adolescentes encontrados em situação de trabalho infantil"
-            cls: "xs12 md6"
-            type: "MAP_TOPOJSON"
-            api: 
-              - fixed: "/indicadoresestaduais?categorias='total'-cd_indicador,nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max"
-              - fixed: "/indicadoresestaduais?categorias='ate13'-cd_indicador,nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,lt-cast(ds_agreg_secundaria as smallint)-14"
-              - fixed: "/indicadoresestaduais?categorias='14e15'-cd_indicador,nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,in-ds_agreg_secundaria-'14'-'15'"
-              - fixed: "/indicadoresestaduais?categorias='16e17'-cd_indicador,nu_competencia,cd_uf,nm_uf,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,in-ds_agreg_secundaria-'16'-'17'"
-            api_options:
-              cast:
-                col_fields: ["nu_competencia","cd_uf","nm_uf","ds_fonte"]
-                value_field: "agr_sum_vl_indicador"
-                layer_field: "cd_indicador"
-              calcs:
-                - id: "log"
-                  function: "get_log"
-                  fn_args:
-                    - fixed: "total"
-              formatters:
-                - id: "total"
-                  format: 'inteiro'
-                - id: "ate13"
-                  format: 'inteiro'
-                - id: "14e15"
-                  format: 'inteiro'
-                - id: "16e17"
-                  format: 'inteiro'
-            headers:
-              - text: 'Unidade Federativa'
-                align: 'left'
-                value: 'nm_uf'
-              - text: 'Ano'
-                align: 'left'
-                value: 'nu_competencia'
-              - text: 'Crianças e Adolescentes em situação de trabalho infantil'
-                align: 'left'
-                value: 'fmt_total'
-              - text: 'Crianças e Adolescentes de até 13 anos'
-                align: 'left'
-                value: 'fmt_ate13'
-              - text: 'Crianças e Adolescentes de 14 a 15 anos'
-                align: 'left'
-                value: 'fmt_14e15'
-              - text: 'Crianças e Adolescentes de 16 a 17 anos'
-                align: 'left'
-                value: 'fmt_16e17'
-            options:
-              id_field: 'cd_uf'
-              topo_key: "codigo"
-              value_field: 'calc_log'
-              colorScale:
-                name: 'Reds'
-            source: 
-              desc_field: "ds_fonte"
+          # - id: "map_ti_faixa"
+          #   title: "Crianças e Adolescentes encontrados em situação de trabalho infantil"
+          #   cls: "xs12 md6"
+          #   type: "MAP_TOPOJSON"
+          #   api: 
+          #     - template: "/indicadoresnacionais?categorias='total'-cd_indicador,nu_competencia,cd_uf,nm_municipio,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max"
+          #       args:
+          #         - named_prop: "cd_uf"
+          #     - template: "/indicadoresnacionais?categorias='ate13'-cd_indicador,nu_competencia,cd_uf,nm_municipio,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,lt-cast(ds_agreg_secundaria as smallint)-14"
+          #       args:
+          #         - named_prop: "cd_uf"
+          #     - template: "/indicadoresnacionais?categorias='14e15'-cd_indicador,nu_competencia,cd_uf,nm_municipio,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,in-ds_agreg_secundaria-'14'-'15'"
+          #       args:
+          #         - named_prop: "cd_uf"
+          #     - template: "/indicadoresnacionais?categorias='16e17'-cd_indicador,nu_competencia,cd_uf,nm_municipio,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,in-ds_agreg_secundaria-'16'-'17'"
+          #       args:
+          #         - named_prop: "cd_uf"
+          #   api_options:
+          #     cast:
+          #       col_fields: ["nu_competencia","cd_uf","nm_municipio","ds_fonte"]
+          #       value_field: "agr_sum_vl_indicador"
+          #       layer_field: "cd_indicador"
+          #     calcs:
+          #       - id: "log"
+          #         function: "get_log"
+          #         fn_args:
+          #           - fixed: "total"
+          #     formatters:
+          #       - id: "total"
+          #         format: 'inteiro'
+          #       - id: "ate13"
+          #         format: 'inteiro'
+          #       - id: "14e15"
+          #         format: 'inteiro'
+          #       - id: "16e17"
+          #         format: 'inteiro'
+          #   headers:
+          #     - text: 'Município'
+          #       align: 'left'
+          #       value: 'nm_municipio'
+          #     - text: 'Ano'
+          #       align: 'left'
+          #       value: 'nu_competencia'
+          #     - text: 'Crianças e Adolescentes em situação de trabalho infantil'
+          #       align: 'left'
+          #       value: 'fmt_total'
+          #     - text: 'Crianças e Adolescentes de até 13 anos'
+          #       align: 'left'
+          #       value: 'fmt_ate13'
+          #     - text: 'Crianças e Adolescentes de 14 a 15 anos'
+          #       align: 'left'
+          #       value: 'fmt_14e15'
+          #     - text: 'Crianças e Adolescentes de 16 a 17 anos'
+          #       align: 'left'
+          #       value: 'fmt_16e17'
+          #   options:
+          #     id_field: 'cd_uf'
+          #     topo_key: "codarea"
+          #     value_field: 'calc_log'
+          #     colorScale:
+          #       name: 'Reds'
+          #   source: 
+          #     desc_field: "ds_fonte"
           - id: "treemap_faixa"
-            cls: "xs12 md6"
-            title: "Faixa Etária de Crianças e Adolescentes encontrados em situação de trabalho infantil na Unidade Federativa"
+            cls: "xs12"
+            title: "Faixa Etária de Crianças e Adolescentes encontrados em situação de trabalho infantil"
             type: "TREEMAP"
             api: 
               - fixed: "/indicadoresnacionais?categorias='ate13'-cd_indicador,'Até 13 anos'-ds_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,lt-cast(ds_agreg_secundaria as smallint)-14"
