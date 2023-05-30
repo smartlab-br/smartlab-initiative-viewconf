@@ -97,6 +97,79 @@ secoes:
     name: ""
     cards:
 # ========================================================
+      - id: "treemap_piores_formas"
+        title: 
+          fixed: "Piores formas de trabalho infantil identificadas"
+        title_comment:
+          template: "{0}, de {1} a {2}"
+          api: 
+            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'TI_SIT_05_TS'&limit=1"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: "ds_agreg_secundaria"
+                  - prop: "description"
+                    fixed: "Pior forma de trabalho infantil mais frequente"
+                  # - prop: "comment"
+                  #   template: "Qtde: {0}"
+                  #   args:
+                  #     - named_prop: 'agr_sum_vl_indicador'
+                  #       format: 'inteiro'
+                  #       collapse:
+                  #         format: 'real'
+                  #       default: "Sem Registros"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a pior forma de trabalho na qual crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais de acordo com as informações oriundas da Secretaria de Inspeção do Trabalho do Ministério do Trabalho e Emprego, com base no SFITWEB. No gráfico, a distribuição de crianças e adolescentes encontrados em situação de trabalho infantil por pior forma de trabalho."
+        chart_type: "TREEMAP"
+        api:
+          template: "/indicadoresestaduais?categorias=ds_agreg_secundaria,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+          args:
+            - named_prop: "idLocalidade"
+          options:
+            recalc_sum: 
+              sum_field: 'agr_sum_vl_indicador'
+            calcs:
+              - id: "perc"
+                function: 'calc_percentage_ds'
+                fn_args:
+                  - named_prop: "agr_sum_vl_indicador"
+                  - named_prop: "sum_agr_sum_vl_indicador"
+                format: "porcentagem"
+        headers:
+          - text: 'Pior forma de trabalho'
+            align: 'left'
+            value: 'ds_agreg_secundaria'
+          - text: '%'
+            value: 'calc_perc'
+        chart_options:
+          id: "ds_agreg_secundaria"
+          size: "agr_sum_vl_indicador"
+          text: "ds_agreg_secundaria"
+          colorScale:
+            name: "Reds"
+        source: 
+          desc_field: "ds_fonte"
+# ========================================================
       - id: "treemap_cnae"
         title: 
           fixed: "Atividades Econômicas em que foi constadado Trabalho Infantil"
@@ -158,73 +231,6 @@ secoes:
           id: "ds_agreg_primaria"
           size: "agr_sum_vl_indicador"
           text: "ds_agreg_primaria"
-          colorScale:
-            name: "Reds"
-        source: 
-          desc_field: "ds_fonte"
-# ========================================================
-      - id: "treemap_piores_formas"
-        title: 
-          fixed: "Piores formas de trabalho infantil identificadas"
-        title_comment:
-          template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'TI_SIT_05_TS'&limit=1"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       fixed: "Sem observações adicionais. Vide descrição"
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12'
-                api:
-                  template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
-                  args:
-                    - named_prop: "idLocalidade"
-                args:
-                  - prop: "value"
-                    named_prop: "ds_agreg_secundaria"
-                  - prop: "description"
-                    fixed: "Pior forma de trabalho infantil mais frequente"
-                  - prop: "comment"
-                    template: "Qtde: {0}"
-                    args:
-                      - named_prop: 'agr_sum_vl_indicador'
-                        format: 'inteiro'
-                        collapse:
-                          format: 'real'
-                        default: "Sem Registros"
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, a pior forma de trabalho na qual crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais de acordo com as informações oriundas da Secretaria de Inspeção do Trabalho do Ministério do Trabalho e Emprego, com base no SFITWEB. No gráfico, a distribuição de crianças e adolescentes encontrados em situação de trabalho infantil por pior forma de trabalho."
-        chart_type: "TREEMAP"
-        api:
-          template: "/indicadoresestaduais?categorias=ds_agreg_secundaria,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-          args:
-            - named_prop: "idLocalidade"
-          options:
-            formatters:
-              - id: "agr_sum_vl_indicador"
-                format: 'inteiro'
-        headers:
-          - text: 'Pior forma de trabalho'
-            align: 'left'
-            value: 'ds_agreg_secundaria'
-          - text: 'Qtde'
-            value: 'fmt_agr_sum_vl_indicador'
-        chart_options:
-          id: "ds_agreg_secundaria"
-          size: "agr_sum_vl_indicador"
-          text: "ds_agreg_secundaria"
           colorScale:
             name: "Reds"
         source: 
@@ -319,34 +325,6 @@ secoes:
                 api:
                   args:
                     - named_prop: "ds_agreg_primaria"
-          - id: "select_idade"
-            type: "select"
-            multiple: true
-            label: "Idade"
-            api:
-              template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&agregacao=DISTINCT&filtros=eq-cd_indicador-'SIT_TI_IDADE_SEXO',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=cast(ds_agreg_secundaria as smallint)"
-              args:
-                - named_prop: "idLocalidade"
-              calcs:
-                - id: 'idade'
-                  function: 'concat_values'
-                  fn_args:
-                    - named_prop: "ds_agreg_secundaria"
-                    - fixed: " anos"
-            args:
-              - prop: "id"
-                named_prop: "ds_agreg_secundaria"
-              - prop: "label"
-                named_prop: "ds_agreg_secundaria"
-                null_value: "(Não informado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-ds_agreg_secundaria-{0}"
-                api:
-                  args:
-                    - named_prop: "ds_agreg_secundaria"
-
         charts:
           - id: "map_ti_idade_sexo"
             title: "Crianças e Adolescentes encontrados em situação de trabalho infantil"
