@@ -414,6 +414,34 @@ secoes:
         title_comment:
           fixed: "Brasil"
         description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max&ordenacao=-agr_sum_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: "ds_agreg_secundaria"
+                  - prop: "description"
+                    fixed: "Pior forma de trabalho infantil mais frequente"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_CNAE',and,eq-nu_competencia-nu_competencia_max&ordenacao=-agr_sum_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: "ds_agreg_primaria"
+                  - prop: "description"
+                    fixed: "Atividade Econômica mais frequente"
+                  # - prop: "comment"
+                  #   template: "Qtde: {0}"
+                  #   args:
+                  #     - named_prop: 'agr_sum_vl_indicador'
+                  #       format: 'inteiro'
+                  #       collapse:
+                  #         format: 'real'
+                  #       default: "Sem Registros"
           - type: "text"
             title: ""
             content:
@@ -838,9 +866,20 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "calc_perc_sem"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/ti/indicadoresestaduais?categorias=cd_uf,nm_uf,sg_uf,ds_indicador,nu_competencia,'(Percentual)'-ds_indicador_prefixo,vl_indicador-calc_perc_sem&filtros=eq-nu_competencia-nu_competencia_max,and,in-cd_indicador-'censo_suas_pct_mun_sem_creas'-'censo_suas_pct_mun_sem_cras'"
+          - fixed: "/orgs/assistenciasocial?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,categoria-cd_indicador,categoria-ds_indicador,'(Quantidade)'-ds_indicador_prefixo&agregacao=COUNT&filtros=in-categoria-'CREAS'-'CRAS',and,nn-cd_municipio_ibge_dv"
+          - fixed: "/indicadoresmunicipais?categorias=cd_uf,nm_uf,sg_uf,ds_indicador,nu_competencia,'(Percentual)'-ds_indicador_prefixo,rank_uf_total&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max,and,in-cd_indicador-'SUAS20_CRAS_DG'-'SUAS20_CREAS_DG',and,ne-vl_indicador-0,and,nn-vl_indicador"
             options:
               calcs:
+                - id: "qtde_sem"
+                  function: "calc_subtraction_ds"
+                  fn_args:
+                    - named_prop: "rank_uf_total"
+                    - named_prop: "agr_count"
+                - id: "perc_sem"
+                  function: "calc_proportion_ds"
+                  fn_args:
+                    - named_prop: 'calc_qtde_sem'
+                    - named_prop: 'rank_uf_total'
                 - id: "header_label"
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
