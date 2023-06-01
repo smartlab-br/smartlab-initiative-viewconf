@@ -30,6 +30,9 @@ prevalencia:
     - fixed: "/ti/mapear?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,'mapear'-codigo,cd_indicador&valor=cd_municipio_ibge_dv&calcs=ln_norm_pos_part&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max" 
     # COTAS APRENDIZES
     - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'aprendizes'-codigo,ds_indicador_radical,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'APRZ_23_001',and,eq-nu_competencia-nu_competencia_max"
+    # SOBREVIVENTES ATENDIDOS PELA ASSISTÊNCIA
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,cd_indicador-codigo&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,eq-cd_indicador-'G_CREAS_00_17',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0"
+
 
   headers:
     - text: 'Município'
@@ -45,8 +48,8 @@ prevalencia:
       # value: 'agr_count_cd_municipio_ibge'
       format: "inteiro"
   chart_options:
-    colorArray: ["#303F9F", "#00BCD4", "#9C27B0", "#00C853", "#795548","#F44336", "#FF9800","#03A9F4","#000000","#000000","#000000"]
-    indicadores: ["censo_2010","censo_agro","prova_brasil","aprendizes","cat_menores","sinan","te_nat","te_res","mapear","pnad_infantil","pnad_infantil_perigoso"]
+    colorArray: ["#303F9F", "#00BCD4", "#9C27B0", "#00C853", "#795548","#F44336", "#FF9800","#03A9F4","#000000","#000000","#000000","#00897B"]
+    indicadores: ["censo_2010","censo_agro","prova_brasil","aprendizes","cat_menores","sinan","te_nat","te_res","mapear","pnad_infantil","pnad_infantil_perigoso","G_CREAS_00_17"]
     id_field: 'codigo'
     lat: 'latitude'
     long: 'longitude'
@@ -64,7 +67,7 @@ prevalencia:
       class: "pr-0 pl-2 pb-0 pt-0"
       switches:
         - id: "cat_menores"
-          cls: "xs12 blue-title control-top-align"
+          cls: "xs12 control-top-align"
           default: false
           color: "brown"
           minicards:
@@ -85,7 +88,7 @@ prevalencia:
                   - named_prop: "agr_min_ano_cat"
                   - named_prop: "agr_max_ano_cat"
         - id: "sinan"
-          cls: "xs12 blue-title control-top-align"
+          cls: "xs12 control-top-align"
           default: true
           color: "red"
           minicards:
@@ -108,7 +111,7 @@ prevalencia:
                   - named_prop: "nu_competencia_min"
                   - named_prop: "nu_competencia_max"
         - id: "censo_agro"
-          cls: "xs12 blue-title control-top-align"
+          cls: "xs12 control-top-align"
           default: true
           color: "cyan"
           minicards:
@@ -128,7 +131,7 @@ prevalencia:
                 args:
                   - named_prop: "nu_competencia"
         - id: "te_nat"
-          cls: "xs12 blue-title control-top-align"
+          cls: "xs12 control-top-align"
           default: false
           color: "orange"
           minicards:
@@ -149,7 +152,7 @@ prevalencia:
                   - named_prop: "nu_competencia_min"
                   - named_prop: "nu_competencia_max"
         - id: "prova_brasil"
-          cls: "xs12 blue-title control-top-align"
+          cls: "xs12 control-top-align"
           default: false
           color: "purple"
           minicards:
@@ -196,7 +199,7 @@ prevalencia:
         #   default: false
         #   color: "green accent-4"
         - id: "mapear"
-          cls: "xs12 blue-title control-top-align"
+          cls: "xs12 control-top-align"
           default: false
           color: "black"
           minicards:
@@ -216,7 +219,7 @@ prevalencia:
                 args:
                   - named_prop: "nu_competencia"
         - id: "aprendizes"
-          cls: "xs12 blue-title control-top-align"
+          cls: "xs12 control-top-align"
           default: false
           color: "green accent-4"
           minicards:
@@ -239,7 +242,7 @@ prevalencia:
                     fn_args:
                       - named_prop: "nu_competencia"
         - id: "censo_2010"
-          cls: "xs12 blue-title control-top-align"
+          cls: "xs12 control-top-align"
           default: false
           color: "indigo darken-2"
           minicards:
@@ -262,6 +265,31 @@ prevalencia:
                 template: "Fonte: IBGE - Censo Demográfico, {0}"
                 args:
                   - named_prop: "nu_competencia"
+        - id: "G_CREAS_00_17"
+          cls: "xs12 control-top-align"
+          default: false
+          color: "teal darken-1"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            api:
+              fixed: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'G_CREAS_00_17',and,eq-nu_competencia-nu_competencia_max"
+            # options:
+              # formatters:
+              #   - id: "agr_sum_vl_indicador"
+              #     format: "inteiro"
+            args:
+              - prop: "value"
+                named_prop: 'agr_sum_vl_indicador'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                fixed: "Crianças e adolescentes sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
+              - prop: "comment"
+                template: "Fonte: {0}, {1}"
+                args:
+                  - named_prop: "ds_fonte"
+                  - named_prop: "nu_competencia"
       event: 'selection'
     - type: "minicards"
       class: " pl-2 pt-0"
@@ -270,7 +298,7 @@ prevalencia:
         # - id: "pnad_infantil"
         #   title: "Em breve"
         #   readonly: true
-        #   cls: "xs12 blue-title control-top-align"
+        #   cls: "xs12 control-top-align"
         #   default: false
         #   color: "indigo darken-2"
         #   minicards:
@@ -284,7 +312,7 @@ prevalencia:
               fixed: "Fonte:  IBGE – PNAD Contínua, 2019"
         # - id: "pnad_infantil_perigoso"
         #   readonly: true
-        #   cls: "xs12 blue-title control-top-align"
+        #   cls: "xs12 control-top-align"
         #   default: false
         #   color: "indigo darken-2"
         #   minicards:
@@ -333,7 +361,7 @@ prevalencia:
       class: "pr-0 pl-2 pb-0 pt-0"
       switches:
         - id: "cat_menores"
-          cls: "xs12 blue-title "
+          cls: "xs12 "
           default: false
           color: "brown"
           minicards:
@@ -366,7 +394,7 @@ prevalencia:
                   - named_prop: "nu_competencia_min"
                   - named_prop: "nu_competencia_max"
         - id: "censo_agro"
-          cls: "xs12 blue-title "
+          cls: "xs12 "
           default: true
           color: "cyan"
           minicards:
@@ -377,7 +405,7 @@ prevalencia:
               - prop: "comment"
                 fixed: "Fonte: IBGE - Censo Agropecuário, 2017"
         - id: "te_nat"
-          cls: "xs12 blue-title "
+          cls: "xs12 "
           default: false
           color: "orange"
           minicards:
@@ -414,7 +442,7 @@ prevalencia:
         #   default: false
         #   color: "green accent-4"
         - id: "prova_brasil"
-          cls: "xs12 blue-title "
+          cls: "xs12 "
           default: false
           color: "purple"
           minicards:
@@ -429,7 +457,7 @@ prevalencia:
                 args:
                   - named_prop: "nu_ano_prova_brasil"
         - id: "mapear"
-          cls: "xs12 blue-title "
+          cls: "xs12 "
           default: false
           color: "black"
           minicards:
@@ -444,7 +472,7 @@ prevalencia:
                 args:
                   - named_prop: "nu_competencia"
         - id: "aprendizes"
-          cls: "xs12 blue-title "
+          cls: "xs12 "
           default: false
           color: "green accent-4"
           minicards:
@@ -462,7 +490,7 @@ prevalencia:
                     fn_args:
                       - named_prop: "nu_competencia"
         - id: "censo_2010"
-          cls: "xs12 blue-title "
+          cls: "xs12 "
           default: false
           color: "indigo darken-2"
           minicards:
