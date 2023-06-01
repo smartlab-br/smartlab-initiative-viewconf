@@ -81,7 +81,7 @@ prevalencia:
   api:
   
     - fixed: "/te/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,in-cd_indicador-'te_sit_trab_resgatados'-'te_nat'-'te_res'"
-    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=nn-vl_indicador,and,eq-cd_indicador-'g1_CREAS',and,eq-nu_competencia-nu_competencia_max,and,ne-vl_indicador-0"
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,'G_CREAS'-cd_indicador,ds_fonte&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&partition=ds_fonte&filtros=nn-vl_indicador,and,in-cd_indicador-'G_CREAS_00_17'-'G_CREAS_18_99',and,ne-vl_indicador-0"
     - fixed: "/thematic/tefluxointernacional?categorias='te_imigrantes'-cd_indicador,'2003 a 2022'-nu_competencia,fluxos_origem_lat-latitude,fluxos_origem_long-longitude,fluxos_local_origem&valor=fluxos_vl_indicador&agregacao=sum&filtros=ne-fluxos_vl_indicador-0"
       options:
         recalc_min_max: true
@@ -98,7 +98,7 @@ prevalencia:
             new_column: "api_calc_ln_norm_pos_part"
   chart_options:
     colorArray: ["rgba(25, 125, 25, 0.7)", "rgba(179, 9, 0, 0.7)", "rgba(21, 101, 192, 0.7)", "#795548", "#9C27B0"]
-    indicadores: ["te_sit_trab_resgatados", "te_nat", "te_res", "te_imigrantes","g1_CREAS"]
+    indicadores: ["te_sit_trab_resgatados", "te_nat", "te_res", "te_imigrantes","G_CREAS"]
     lat: 'latitude'
     long: 'longitude'
     tooltip_function: 'obsTETooltip'
@@ -187,7 +187,7 @@ prevalencia:
                   fixed: "Locais de Origem"
                 - prop: "comment"
                   fixed: "Fonte: Ministério do Trabalho e Emprego. Secretaria de Proteção ao Trabalhador (Seguro Desemprego do Trabalhador Resgatado)<br/>(2003 a 2022)"
-        - id: "g1_CREAS"
+        - id: "G_CREAS"
           title: "Sobreviventes atendidos pela Assistência Social"
           cls: "xs12"
           default: false
@@ -199,10 +199,11 @@ prevalencia:
                   fixed: "Sobreviventes do Tráfico de Pessoas"
                 - prop: "comment"
                   api: 
-                    fixed: "/indicadoresnacionais?categorias=nu_competencia_max,ds_fonte&filtros=eq-cd_indicador-'g1_CREAS'&limit=1"
-                  template: "Fonte: {0} ({1})"
+                    fixed: "/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max,ds_fonte&filtros=eq-cd_indicador-'G_CREAS_00_17'&limit=1"
+                  template: "Fonte: {0}<br/>({1} a{2}){3}"
                   args:
                     - named_prop: "ds_fonte"
+                    - named_prop: "nu_competencia_min"
                     - named_prop: "nu_competencia_max"
       event: 'selection'
     - type: "text"
