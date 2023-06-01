@@ -81,12 +81,14 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max&ordenacao=-agr_sum_vl_indicador&limit=1"
+      template: "/indicadoresestaduais?categorias=ds_agreg_secundaria,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
+      args:
+        - named_prop: "cd_uf"
     args:
       - prop: "value"
         named_prop: "ds_agreg_secundaria"
       - prop: "description"
-        fixed: "Pior forma de trabalho infantil mais frequente"
+        fixed: "Pior forma de trabalho onde crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais"
       - prop: "comment"
         template: '({0})'
         args:
@@ -96,17 +98,36 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_CNAE',and,eq-nu_competencia-nu_competencia_max&ordenacao=-agr_sum_vl_indicador&limit=1"
+      template: "/indicadoresestaduais?categorias=ds_agreg_primaria,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_CNAE',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
+      args:
+        - named_prop: "cd_uf"
     args:
       - prop: "value"
         named_prop: "ds_agreg_primaria"
       - prop: "description"
-        fixed: "Atividade Econômica mais frequente"
+        fixed: "Atividade Econômica onde crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais"
       - prop: "comment"
         template: '({0})'
         args:
           - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
+  - relevance: 'lead'
+    cls: 'xs12 xl6'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "CAGRO_TICA13"
+      year: 'max'
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador_txt'
+        default: "-"
+      - prop: "description"
+        fixed: "Atividade econômica com maior número de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
+      - prop: 'comment'
+        template: "({0})"
+        args:
+          - named_prop: "ds_fonte"
 # ========================================================
 secoes:
   - id: 'prioritarias'
@@ -489,23 +510,36 @@ secoes:
                 api:
                   template: "/indicadoresestaduais?categorias=ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
                   args:
-                    - named_prop: "idLocalidade"
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
                     named_prop: "ds_agreg_secundaria"
                   - prop: "description"
-                    fixed: "Pior forma de trabalho infantil mais frequente"
+                    fixed: "Pior forma de trabalho onde crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais"
               - relevance: 'high'
                 cls: 'xs12'
                 api:
                   template: "/indicadoresestaduais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_CNAE',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}&ordenacao=-agr_sum_vl_indicador&limit=1"
                   args:
-                    - named_prop: "idLocalidade"
+                    - named_prop: "cd_uf"
                 args:
                   - prop: "value"
                     named_prop: "ds_agreg_primaria"
                   - prop: "description"
-                    fixed: "Atividade Econômica mais frequente"
+                    fixed: "Atividade Econômica onde crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais"
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA13"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_txt'
+                    default: "-"
+                  - prop: "description"
+                    fixed: "Atividade econômica com maior número de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
                   # - prop: "comment"
                   #   template: "Qtde: {0}"
                   #   args:
