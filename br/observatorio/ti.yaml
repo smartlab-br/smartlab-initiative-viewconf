@@ -497,15 +497,31 @@ prevalencia:
           minicards:
           - relevance: 'low'
             api: 
-              fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,cd_indicador,ds_indicador,nu_competencia,ds_fonte&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&filtros=eq-cd_indicador-'06_01_01_01',and,eq-nu_competencia-nu_competencia_max"
+              fixed: "/indicadoresmunicipais?categorias=nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'06_01_01_01',and,eq-nu_competencia-nu_competencia_max"
             args:
               - prop: "description"
                 fixed: "Crianças e adolescentes ocupados"
               - prop: "comment"
                 template: "Fonte: IBGE - Censo Demográfico, {0}"
                 args:
-                  - id: "06_01_01_01"
-                    named_prop: "nu_competencia"
+                  - named_prop: "nu_competencia"
+        - id: "G_CREAS_00_17"
+          cls: "xs12 "
+          default: false
+          color: "teal darken-1"
+          minicards:
+          - relevance: 'low'
+            api:
+              fixed: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'G_CREAS_00_17'"
+            args:
+              - prop: "description"
+                fixed: "Crianças e adolescentes sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
+              - prop: "comment"
+                template: "Fonte: {0}, de {1} a {2}"
+                args:
+                  - named_prop: "ds_fonte"
+                  - named_prop: "nu_competencia_min"
+                  - named_prop: "nu_competencia_max"
       event: 'selection'
     - id: "select_uf"
       type: "select"
