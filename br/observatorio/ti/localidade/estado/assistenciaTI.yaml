@@ -4,18 +4,26 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_uf_total&valor=cd_municipio_ibge_dv&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0,and,nn-vl_indicador"
-      args:
-        - named_prop: "cd_uf"
-      options:
-        calcs:
-          - id: "perc_possui"
-            function: "calc_proportion_ds"
-            fn_args:
-              - named_prop: 'agr_count_cd_municipio_ibge_dv'
-              - named_prop: 'rank_uf_total'
+      - template: "/indicadoresmunicipais?categorias='total'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_uf_total&valor=nm_municipio_uf&agregacao=group_concat&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0,and,nn-vl_indicador"
+        args:
+          - named_prop: "cd_uf"
+        options:
+          calcs:
+            - id: "qtde_mun"
+              function: "calc_distinct_count_ds"
+              fn_args:
+                - named_prop: "agr_group_concat_nm_municipio_uf"
+            - id: "perc_possui"
+              function: "calc_proportion_ds"
+              fn_args:
+                - named_prop: 'calc_qtde_mun'
+                - named_prop: 'rank_uf_total'
+      - template: "/indicadoresmunicipais?categorias='desc'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'G_CREAS_00_17'&limit=1"
+        args:
+          - named_prop: "cd_uf"
     args:
       - prop: "value"
+        id: "total"
         named_prop: "calc_perc_possui"
         format: 'porcentagem'
         multiplier: 100
@@ -23,16 +31,22 @@ principais:
       - prop: "description"
         template: "dos municípios tem {0}"
         args:
-          - named_prop: "ds_indicador_curto"
+          - id: "desc"
+            named_prop: "ds_indicador_curto"
       - prop: 'comment'
         template: "{0} municípios de {1}<br/>({2}, {3} a {4})"
         args:
-          - named_prop: "agr_count_cd_municipio_ibge_dv"
+          - id: "total"
+            named_prop: "calc_qtde_mun"
             default: 0
-          - named_prop: "rank_uf_total"
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia_min"
-          - named_prop: "nu_competencia_max"
+          - id: "desc"
+            named_prop: "rank_uf_total"
+          - id: "desc"
+            named_prop: "ds_fonte"
+          - id: "desc"
+            named_prop: "nu_competencia_min"
+          - id: "desc"
+            named_prop: "nu_competencia_max"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
@@ -85,7 +99,7 @@ secoes:
         title: 
           fixed: "Crianças e adolescentes sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
         title_comment:
-          template: "{0}, {1}"
+          template: "{0}, {1} a {2}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
@@ -94,7 +108,8 @@ secoes:
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -114,18 +129,26 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 xl6'
                 api:
-                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_uf_total&valor=cd_municipio_ibge_dv&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0,and,nn-vl_indicador"
-                  args:
-                    - named_prop: "cd_uf"
-                  options:
-                    calcs:
-                      - id: "perc_possui"
-                        function: "calc_proportion_ds"
-                        fn_args:
-                          - named_prop: 'agr_count_cd_municipio_ibge_dv'
-                          - named_prop: 'rank_uf_total'
+                  - template: "/indicadoresmunicipais?categorias='total'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_uf_total&valor=nm_municipio_uf&agregacao=group_concat&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0,and,nn-vl_indicador"
+                    args:
+                      - named_prop: "cd_uf"
+                    options:
+                      calcs:
+                        - id: "qtde_mun"
+                          function: "calc_distinct_count_ds"
+                          fn_args:
+                            - named_prop: "agr_group_concat_nm_municipio_uf"
+                        - id: "perc_possui"
+                          function: "calc_proportion_ds"
+                          fn_args:
+                            - named_prop: 'calc_qtde_mun'
+                            - named_prop: 'rank_uf_total'
+                  - template: "/indicadoresmunicipais?categorias='desc'-cd_indicador,ds_indicador_curto,ds_fonte,nu_competencia,rank_uf_total&filtros=eq-cd_uf-{0},and,eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'G_CREAS_00_17'&limit=1"
+                    args:
+                      - named_prop: "cd_uf"
                 args:
                   - prop: "value"
+                    id: "total"
                     named_prop: "calc_perc_possui"
                     format: 'porcentagem'
                     multiplier: 100
@@ -133,13 +156,16 @@ secoes:
                   - prop: "description"
                     template: "dos municípios tem {0}"
                     args:
-                      - named_prop: "ds_indicador_curto"
+                      - id: "desc"
+                        named_prop: "ds_indicador_curto"
                   - prop: 'comment'
                     template: "{0} municípios de {1}"
                     args:
-                      - named_prop: "agr_count_cd_municipio_ibge_dv"
+                      - id: "total"
+                        named_prop: "calc_qtde_mun"
                         default: 0
-                      - named_prop: "rank_uf_total"
+                      - id: "desc"
+                        named_prop: "rank_uf_total"
               # - relevance: 'high'
               #   cls: 'xs12'
               #   api:

@@ -4,13 +4,17 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_br_total&valor=cd_municipio_ibge_dv&agregacao=COUNT&filtros=eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0,and,nn-vl_indicador"
+      fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_br_total&valor=nm_municipio_uf&agregacao=group_concat&filtros=eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0,and,nn-vl_indicador"
       options:
         calcs:
+          - id: "qtde_mun"
+            function: "calc_distinct_count_ds"
+            fn_args:
+              - named_prop: "agr_group_concat_nm_municipio_uf"
           - id: "perc_possui"
             function: "calc_proportion_ds"
             fn_args:
-              - named_prop: 'agr_count_cd_municipio_ibge_dv'
+              - named_prop: 'calc_qtde_mun'
               - named_prop: 'rank_br_total'
     args:
       - prop: "value"
@@ -25,7 +29,7 @@ principais:
       - prop: 'comment'
         template: "{0} municípios de {1}<br/>({2}, {3} a {4})"
         args:
-          - named_prop: "agr_count_cd_municipio_ibge_dv"
+          - named_prop: "calc_qtde_mun"
             default: 0
           - named_prop: "rank_br_total"
           - named_prop: "ds_fonte"
@@ -72,40 +76,32 @@ secoes:
         title: 
           fixed: "Crianças e adolescentes sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
         title_comment:
-          template: "Brasil, {0}"
+          template: "Brasil, {0} a {1}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
             id: "G_CREAS_00_17"
             year: "max"
           args:
-            - named_prop: "nu_competencia"
-        # info:
-        #   - type: "text"
-        #     title: "Sobre a métrica"
-        #     content:
-        #       template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
-        #                   Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
-        #                   Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
-        #       api:
-        #         fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
-        #       args:
-        #         - named_prop: 'cd_indicador'
-        #         - named_prop: 'ds_fonte'
-        #         - named_prop: 'nu_competencia'
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12 xl6'
                 api:
-                  fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_br_total&valor=cd_municipio_ibge_dv&agregacao=COUNT&filtros=eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0,and,nn-vl_indicador"
+                  fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_br_total&valor=nm_municipio_uf&agregacao=group_concat&filtros=eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0,and,nn-vl_indicador"
                   options:
                     calcs:
+                      - id: "qtde_mun"
+                        function: "calc_distinct_count_ds"
+                        fn_args:
+                          - named_prop: "agr_group_concat_nm_municipio_uf"
                       - id: "perc_possui"
                         function: "calc_proportion_ds"
                         fn_args:
-                          - named_prop: 'agr_count_cd_municipio_ibge_dv'
+                          - named_prop: 'calc_qtde_mun'
                           - named_prop: 'rank_br_total'
                 args:
                   - prop: "value"
@@ -120,21 +116,9 @@ secoes:
                   - prop: 'comment'
                     template: "{0} municípios de {1}"
                     args:
-                      - named_prop: "agr_count_cd_municipio_ibge_dv"
+                      - named_prop: "calc_qtde_mun"
                         default: 0
                       - named_prop: "rank_br_total"
-              # - relevance: 'high'
-              #   cls: 'xs12'
-              #   api:
-              #     fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'G_CREAS_00_17'"
-              #   args:
-              #     - prop: "value"
-              #       named_prop: 'agr_sum_vl_indicador'
-              #       format: 'inteiro'
-              #       collapse:
-              #         format: 'real'
-              #     - prop: "description"
-              #       named_prop: "ds_indicador_curto"
           - type: "text"
             title: ""
             content:
@@ -149,25 +133,29 @@ secoes:
                 - named_prop: "ds_indicador_completo"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=cd_uf,nm_uf,sg_uf,ds_indicador_curto,nu_competencia_min,nu_competencia_max,ds_fonte,rank_uf_total&valor=cd_municipio_ibge_dv&agregacao=COUNT&filtros=eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0,and,nn-vl_indicador"
+          fixed: "/indicadoresmunicipais?categorias=cd_uf,nm_uf,sg_uf,ds_indicador_curto,nu_competencia_min,nu_competencia_max,ds_fonte,rank_uf_total&valor=nm_municipio&agregacao=group_concat&filtros=eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0,and,nn-vl_indicador"
           options:
             calcs:
+              - id: "qtde_mun"
+                function: "calc_distinct_count_ds"
+                fn_args:
+                  - named_prop: "agr_group_concat_nm_municipio"
               - id: "perc_possui"
                 function: "calc_proportion_ds"
                 fn_args:
-                  - named_prop: 'agr_count_cd_municipio_ibge_dv'
+                  - named_prop: 'calc_qtde_mun'
                   - named_prop: 'rank_uf_total'
               - id: "desc_qtde_possui"
                 function: "concat_values"
                 fn_args:
-                  - named_prop: "agr_count_cd_municipio_ibge_dv"
+                  - named_prop: "calc_qtde_mun"
                   - fixed: " município(s) de "
                   - named_prop: 'rank_uf_total'
               - id: "periodo"
                 function: "applyInterpolReplaceDatasetParam"
                 fn_args:
                   - fixed:
-                      template: "{0} a ({1})"
+                      template: "{0} a {1}"
                       args:
                         - named_prop: "nu_competencia_min"
                         - named_prop: "nu_competencia_max"

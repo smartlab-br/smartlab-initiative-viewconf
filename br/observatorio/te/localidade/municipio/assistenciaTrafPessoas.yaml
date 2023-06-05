@@ -45,47 +45,47 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "G_CREAS_00_17"
-      year: "max"
+    api:
+      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_uf_total&valor=vl_indicador&agregacao=sum&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'G_CREAS_00_17'"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         function: "get_flag_value"
         fn_args:
-          - named_prop: 'vl_indicador'
+          - named_prop: 'agr_sum_vl_indicador'
       - prop: "description"
         template: "Existência de {0}"
         args:
           - named_prop: "ds_indicador_curto"
       - prop: 'comment'
-        template: "({0}, {1})"
+        template: "({0}, {1} a {2})"
         args:
           - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "G_CREAS_18_99"
-      year: "max"
+    api:
+      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_uf_total&valor=vl_indicador&agregacao=sum&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'G_CREAS_18_99'"
+      args:
+        - named_prop: "idLocalidade"
     args:
       - prop: "value"
         function: "get_flag_value"
         fn_args:
-          - named_prop: 'vl_indicador'
+          - named_prop: 'agr_sum_vl_indicador'
       - prop: "description"
         template: "Existência de {0}"
         args:
           - named_prop: "ds_indicador_curto"
       - prop: 'comment'
-        template: "({0}, {1})"
+        template: "({0}, {1} a {2})"
         args:
           - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - named_prop: "nu_competencia_min"
+          - named_prop: "nu_competencia_max"
 # ===================================================
 secoes:
   - id: "trafico_pessoas_unico"
@@ -235,7 +235,7 @@ secoes:
         title: 
           fixed: "Crianças e adolescentes sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
         title_comment:
-          template: "{0}, {1}"
+          template: "{0}, {1} a {2}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
@@ -244,7 +244,8 @@ secoes:
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -263,16 +264,15 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12 xl6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "G_CREAS_00_17"
-                  year: "max"
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_uf_total&valor=vl_indicador&agregacao=sum&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'G_CREAS_00_17'"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     function: "get_flag_value"
                     fn_args:
-                      - named_prop: 'vl_indicador'
+                      - named_prop: 'agr_sum_vl_indicador'
                   - prop: "description"
                     template: "Existência de {0}"
                     args:
@@ -283,7 +283,7 @@ secoes:
               fixed: "Em destaque, a identificação da existência de crianças e adolescentes sobreviventes de tráfico de pessoas com acompanhamento pelo Serviço de Proteção e Atendimento Especializado a Famílias e Indivíduos (PAEFI) no Centro de Referência Especializado de Assistência Social (CREAS). No mapa, identificam-se os municípios em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. As cores variam entre o cinza (sem casos informados ou registrados) e o vermelho (localidades em que foram identificados registros)."
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'G_CREAS_00_17',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'G_CREAS_00_17',and,eq-cd_uf-{0}"
           args:
             - named_prop: "cd_uf"
           options:
@@ -295,17 +295,25 @@ secoes:
               - id: "possui"
                 function: "get_flag_value_ds"
                 fn_args:
-                  - named_prop: "vl_indicador"
+                  - named_prop: "agr_sum_vl_indicador"
+              - id: "periodo"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed:
+                      template: "{0} a {1}"
+                      args:
+                        - named_prop: "nu_competencia_min"
+                        - named_prop: "nu_competencia_max"
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
         headers:
           - text: 'Município'
             align: 'left'
             value: 'nm_municipio'
-          - text: 'Ano'
+          - text: 'Período'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'calc_periodo'
           - text: 'Indicador'
             value: 'ds_indicador_curto'
           - text: 'Existe'
@@ -327,7 +335,7 @@ secoes:
         title: 
           fixed: "Jovens e adultos sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
         title_comment:
-          template: "{0}, {1}"
+          template: "{0}, {1} a {2}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
@@ -336,7 +344,8 @@ secoes:
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -355,16 +364,15 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12 xl6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "G_CREAS_18_99"
-                  year: "max"
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max,rank_uf_total&valor=vl_indicador&agregacao=sum&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_indicador-'G_CREAS_18_99'"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     function: "get_flag_value"
                     fn_args:
-                      - named_prop: 'vl_indicador'
+                      - named_prop: 'agr_sum_vl_indicador'
                   - prop: "description"
                     template: "Existência de {0}"
                     args:
@@ -375,7 +383,7 @@ secoes:
               fixed: "Em destaque, a identificação da existência de jovens (18 a 24 anos) e adultos (acima de 24 anos) sobreviventes de tráfico de pessoas com acompanhamento pelo Serviço de Proteção e Atendimento Especializado a Famílias e Indivíduos (PAEFI) no Centro de Referência Especializado de Assistência Social (CREAS). No mapa, identificam-se os municípios em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. As cores variam entre o cinza (sem casos informados ou registrados) e o vermelho (localidades em que foram identificados registros)."
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'G_CREAS_18_99',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'G_CREAS_18_99',and,eq-cd_uf-{0}"
           args:
             - named_prop: "cd_uf"
           options:
@@ -387,17 +395,25 @@ secoes:
               - id: "possui"
                 function: "get_flag_value_ds"
                 fn_args:
-                  - named_prop: "vl_indicador"
+                  - named_prop: "agr_sum_vl_indicador"
+              - id: "periodo"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed:
+                      template: "{0} a {1}"
+                      args:
+                        - named_prop: "nu_competencia_min"
+                        - named_prop: "nu_competencia_max"
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
         headers:
           - text: 'Município'
             align: 'left'
             value: 'nm_municipio'
-          - text: 'Ano'
+          - text: 'Período'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'calc_periodo'
           - text: 'Indicador'
             value: 'ds_indicador_curto'
           - text: 'Existe'
@@ -419,16 +435,17 @@ secoes:
         title: 
           fixed: "Sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
         title_comment:
-          template: "{0}, {1}"
+          template: "{0}, {1} a {2}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
-            id: "g1_CREAS"
+            id: "G_CREAS_00_17"
             year: "max"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
-            - named_prop: "nu_competencia"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         # info:
         #   - type: "text"
         #     title: "Sobre a métrica"
@@ -447,27 +464,24 @@ secoes:
             cards:
               - relevance: 'high'
                 cls: 'xs12 xl6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "g1_CREAS"
-                  year: "max"
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_fonte,nu_competencia_min,nu_competencia_max,rank_uf_total&valor=vl_indicador&agregacao=sum&filtros=eq-cd_municipio_ibge_dv-{0},and,in-cd_indicador-'G_CREAS_00_17'-'G_CREAS_18_99'"
+                  args:
+                    - named_prop: "idLocalidade"
                 args:
                   - prop: "value"
                     function: "get_flag_value"
                     fn_args:
-                      - named_prop: 'vl_indicador'
+                      - named_prop: 'agr_sum_vl_indicador'
                   - prop: "description"
-                    template: "Existência de {0}"
-                    args:
-                      - named_prop: "ds_indicador_curto"
+                    fixed: "Existência de sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
           - type: "text"
             title: ""
             content:
               fixed: "Em destaque, a identificação da existência de sobreviventes de tráfico de pessoas com acompanhamento pelo Serviço de Proteção e Atendimento Especializado a Famílias e Indivíduos (PAEFI) no Centro de Referência Especializado de Assistência Social (CREAS). No mapa, identificam-se os municípios em que há registros. A ausência de registros administrativos não implica, necessariamente, a ausência de casos. Por outro lado, a existência de registros pode não representar a total incidência de casos na localidade. As cores variam entre o cinza (sem casos informados ou registrados) e o vermelho (localidades em que foram identificados registros)."
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,ds_indicador_curto,vl_indicador,nu_competencia&filtros=eq-cd_indicador-'g1_CREAS',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+          template: "/indicadoresmunicipais?categorias=ds_fonte,cd_municipio_ibge_dv,nm_municipio,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=in-cd_indicador-'G_CREAS_00_17'-'G_CREAS_18_99',and,eq-cd_uf-{0}"
           args:
             - named_prop: "cd_uf"
           options:
@@ -479,19 +493,32 @@ secoes:
               - id: "possui"
                 function: "get_flag_value_ds"
                 fn_args:
-                  - named_prop: "vl_indicador"
+                  - named_prop: "agr_sum_vl_indicador"
+              - id: "desc_indicador"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed:
+                      fixed: "Sobreviventes de tráfico de pessoas com acompanhamento pelo PAEFI no CREAS"
+              - id: "periodo"
+                function: "applyInterpolReplaceDatasetParam"
+                fn_args:
+                  - fixed:
+                      template: "{0} a {1}"
+                      args:
+                        - named_prop: "nu_competencia_min"
+                        - named_prop: "nu_competencia_max"
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_vl_indicador"
                 format: 'inteiro'
         headers:
           - text: 'Município'
             align: 'left'
             value: 'nm_municipio'
-          - text: 'Ano'
+          - text: 'Período'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'calc_periodo'
           - text: 'Indicador'
-            value: 'ds_indicador_curto'
+            value: 'calc_desc_indicador'
           - text: 'Existe'
             value: 'calc_possui'
         chart_options:
