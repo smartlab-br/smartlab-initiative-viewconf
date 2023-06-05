@@ -32,6 +32,8 @@ prevalencia:
     - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_mun_ibge,nm_municipio_uf,'aprendizes'-codigo,ds_indicador_radical,cd_indicador&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&ordenacao=-agr_sum_vl_indicador&filtros=eq-cd_indicador-'APRZ_23_001',and,eq-nu_competencia-nu_competencia_max"
     # SOBREVIVENTES ATENDIDOS PELA ASSISTÊNCIA
     - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,cd_indicador-codigo&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&ordenacao=-agr_sum_vl_indicador&filtros=nn-vl_indicador,and,eq-cd_indicador-'G_CREAS_00_17',and,ne-vl_indicador-0"
+    # Famílias com situação de trabalho infantil
+    - fixed: "/indicadoresmunicipais?categorias=latitude,longitude,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio_uf,cd_indicador-codigo&valor=vl_indicador&agregacao=sum&calcs=ln_norm_pos_part&ordenacao=-agr_sum_vl_indicador&filtros=nn-vl_indicador,and,eq-cd_indicador-'TICAD_23_001',and,ne-vl_indicador-0"
 
 
   headers:
@@ -48,8 +50,8 @@ prevalencia:
       # value: 'agr_count_cd_municipio_ibge'
       format: "inteiro"
   chart_options:
-    colorArray: ["#303F9F", "#00BCD4", "#9C27B0", "#00C853", "#795548","#F44336", "#FF9800","#03A9F4","#000000","#000000","#000000","#00897B"]
-    indicadores: ["censo_2010","censo_agro","prova_brasil","aprendizes","cat_menores","sinan","te_nat","te_res","mapear","pnad_infantil","pnad_infantil_perigoso","G_CREAS_00_17"]
+    colorArray: ["#303F9F", "#00BCD4", "#9C27B0", "#00C853", "#795548","#F44336", "#FF9800","#03A9F4","#000000","#000000","#000000","#00897B","#AD1457"]
+    indicadores: ["censo_2010","censo_agro","prova_brasil","aprendizes","cat_menores","sinan","te_nat","te_res","mapear","pnad_infantil","pnad_infantil_perigoso","G_CREAS_00_17","TICAD_23_001"]
     id_field: 'codigo'
     lat: 'latitude'
     long: 'longitude'
@@ -291,6 +293,33 @@ prevalencia:
                   - named_prop: "ds_fonte"
                   - named_prop: "nu_competencia_min"
                   - named_prop: "nu_competencia_max"
+        - id: "TICAD_23_001"
+          cls: "xs12 control-top-align"
+          default: false
+          color: "pink darken-3"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            api:
+              fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'TICAD_23_001'"
+            # options:
+              # formatters:
+              #   - id: "agr_sum_vl_indicador"
+              #     format: "inteiro"
+            args:
+              - prop: "value"
+                named_prop: 'agr_sum_vl_indicador'
+                format: 'inteiro'
+                default: "Sem Registros"
+              - prop: "description"
+                named_prop: "ds_indicador_curto"
+              - prop: "comment"
+                template: "Fonte: {0}, {1}"
+                args:
+                  - named_prop: "ds_fonte"
+                  - named_prop: "nu_competencia_max"
+
+
       event: 'selection'
     - type: "minicards"
       class: " pl-2 pt-0"
@@ -522,6 +551,23 @@ prevalencia:
                   - named_prop: "ds_fonte"
                   - named_prop: "nu_competencia_min"
                   - named_prop: "nu_competencia_max"
+        - id: "TICAD_23_001"
+          cls: "xs12 control-top-align"
+          default: false
+          color: "pink darken-3"
+          minicards:
+          - relevance: 'low'
+            rowClass: 'pa-0'
+            api:
+              fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'TICAD_23_001'"
+            args:
+              - prop: "description"
+                named_prop: "ds_indicador_curto"
+              - prop: "comment"
+                template: "Fonte: {0}, {1}"
+                args:
+                  - named_prop: "ds_fonte"
+                  - named_prop: "nu_competencia_max"
       event: 'selection'
     - id: "select_uf"
       type: "select"
@@ -688,6 +734,24 @@ prevalencia:
             - prop: "comment"
               template: "Fonte: IBGE - Censo Demográfico, {0}"
               args:
+                - named_prop: "nu_competencia"
+        - relevance: "lead"
+          cls: "xs12 text-xs-center "
+          color: "pink darken-3 pa-3"
+          reactive: true
+          api:
+            fixed: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'TICAD_23_001',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - prop: "value"
+              named_prop: 'agr_sum_vl_indicador'
+              format: 'inteiro'
+              default: "Sem Registros"
+            - prop: "description"
+              named_prop: "ds_indicador_curto"
+            - prop: "comment"
+              template: "Fonte: {0}, {1}"
+              args:
+                - named_prop: "ds_fonte"
                 - named_prop: "nu_competencia"
 sparklines:
   title:
