@@ -1,3 +1,4 @@
+# ====================================================          
 principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
@@ -62,7 +63,109 @@ secoes:
             title: "Sobre o estudo"
             content:
               cls: "pa-3"
-              fixed: "O mapeamento dos pontos vulneráveis à exploração sexual de crianças e adolescentes nas rodovias e estradas federais (Projeto Mapear) é importante recurso para o aprofundamento das ações para o enfrentamento dessa grave violação de direitos humanos e que constitui, também, uma das piores formas de trabalho infantil conhecidas. As ações realizadas para compor este mapeamento têm vasta abrangência, percorrendo em torno de 71 mil quilômetros de rodovias e estradas federais, distribuídos pelos 26 estados e pelo Distrito Federal. <br/>A atuação no âmbito do MAPEAR tem caráter eminentemente preventivo, a partir da inserção de todos os pontos vulneráveis nas rondas e fiscalizações da Polícia Rodoviária Federal. O projeto é apoiado pelo Ministério Público do Trabalho - que atua para combater o tráfico de pessoas quer para fins de exploração do trabalho, quer para a exploração sexual comercial - e por parceiros como a Organização Internacional do Trabalho, a Childhood Brasil, o Ministério dos Direitos Humanos e o Ministério do Trabalho e Emprego. A atualização é bianual, com o objetivo de subsidiar ações repressivas e preventivas, contribuindo com a melhor orientação de políticas públicas. Nesta plataforma, o MPT visa a contribuir com o projeto por meio de tecnologias de cruzamento e visualização de dados para potencializar as ações e o fluxo de informações de relevância pública, sobretudo pela desagregação e georeferenciamento das informações ao nível dos municípios envolvidos."
+              api:
+                - fixed: "/ti/mapear?categorias=nu_competencia,'ultimo'-cd_indicador&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max"
+                  options:
+                    calcs:
+                      - id: "proximo_ano"
+                        function: "calc_addition_ids_ds"
+                        fn_args:
+                          - named_prop: "nu_competencia"
+                          - fixed: 1
+                          - fixed: 1
+                    formatters:
+                      - id: "agr_count"
+                        format: 'inteiro'
+                - fixed: "/ti/mapear?categorias=nu_competencia,'criticos_ultimo'-cd_indicador&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max,and,eq-spai_ds_risco_nivel-'Crítico'"
+                  options:
+                    formatters:
+                      - id: "agr_count"
+                        format: 'inteiro'
+                - fixed: "/ti/mapear?categorias=nu_competencia,'urbano'-cd_indicador&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max,and,eq-ds_area-'Urbana'"
+                  options:
+                    formatters:
+                      - id: "agr_count"
+                        format: 'inteiro'
+                - template: "/ti/mapear?categorias=nu_competencia,nu_competencia_max,'penultimo'-cd_indicador&agregacao=count&filtros=eq-nu_competencia-'{0}'"
+                  args:
+                    - base_object: "mapear"
+                      named_prop: "calc_nu_competencia_anterior"
+                  options:
+                    formatters:
+                      - id: "agr_count"
+                        format: 'inteiro'
+                - template: "/ti/mapear?categorias=nu_competencia,'criticos_penultimo'-cd_indicador&agregacao=count&filtros=eq-nu_competencia-'{0}',and,eq-spai_ds_risco_nivel-'Crítico'"
+                  args:
+                    - base_object: "mapear"
+                      named_prop: "calc_nu_competencia_anterior"
+                  options:
+                    formatters:
+                      - id: "agr_count"
+                        format: 'inteiro'
+              api_options:
+                combine:
+                  - id: "perc_criticos_ultimo"
+                    desc: "% Pontos críticos ultimo"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "criticos_ultimo"
+                        named_prop: "agr_count"
+                      - id: "ultimo"
+                        named_prop: "agr_count"
+                  - id: "perc_criticos_penultimo"
+                    desc: "% Pontos críticos penultimo"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "criticos_penultimo"
+                        named_prop: "agr_count"
+                      - id: "penultimo"
+                        named_prop: "agr_count"
+                  - id: "perc_aumento"
+                    desc: "% Pontos críticos penultimo"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "ultimo"
+                        named_prop: "agr_count"
+                      - id: "penultimo"
+                        named_prop: "agr_count"
+                  - id: "perc_urbano"
+                    desc: "% Área Urbana"
+                    function: 'calc_percentage'
+                    fn_args:
+                      - id: "urbano"
+                        named_prop: "agr_count"
+                      - id: "ultimo"
+                        named_prop: "agr_count"
+              template: "No biênio {0}/{1} foram mapeados {2} pontos vulneráveis à ESCA nas rodovias federais, dos quais {3} foram classificados como críticos, o que representa {4} do total de pontos catalogados. Comparado ao biênio anterior, no qual foram mapeados um total de {5} pontos, dos quais {6} foram classificados como críticos, houve um aumento de {7} no número global, o que possibilitará a ampliação das ações ao longo das rodovias federais, já que mais pontos totais mapeados significam um planejamento de operações mais próximo de cada necessidade local.<br/>
+                      A realização de ações cada vez em maior escala nos últimos anos foi fator determinante para a redução do percentual de pontos críticos, os quais representavam {8} do total de pontos no biênio anterior, passando a representar {4} no atual mapeamento. Vale ressaltar que os pontos críticos são os de maior interesse operacional, pois reúnem os maiores fatores de vulnerabilidade em uma rodovia federal. Assim como no biênio anterior, constatamos que a maior parte dos pontos mapeados encontram-se em áreas urbanas, totalizando {9} dos casos. Assim como outros crimes, a Exploração Sexual de Crianças e Adolescentes (ESCA) depende de fluxo monetário e de pessoas nos locais, assim como de logística que facilite o acesso das crianças e adolescentes aos locais de exploração. Por se tratar de um tema complexo e ter em suas raízes variadas vulnerabilidades sociais, a ESCA carece de um fortalecimento constante da rede de apoio, que consiste na união de instituições públicas, privadas e da sociedade civil, pois o olhar e ação de apenas parte dessa cadeia de proteção compromete a mudança necessária à vida de uma vítima resgatada, assim como de sua família.<br/>
+                      Toda criança ou adolescente resgatado em situação de vulnerabilidade, seja ela de efetiva exploração sexual, ou outra que a precede, traz consigo um histórico de direitos e acessos negados a cultura, lazer, educação, saúde ou ao convívio familiar sadio. Identificar qual a necessidade e perfil da criança e adolescente resgatado durante as operações que utilizam o Mapear como base de planejamento é um dos grandes objetivos do projeto, para que assim seja possível alimentar a rede de apoio com as informações necessárias à aplicação das mudanças. Neste contexto, somam-se à PRF as importantes parcerias com a Childhood Brasil, MDH, MPT, ASBRAD e Conselhos Tutelares que, através da troca de conhecimentos e atuação conjunta durante as operações, vêm buscando os melhores meios para prover uma entrega de excelência, não só para as crianças e adolescentes que carecem de proteção e tutela, mas para toda a sociedade."
+              args:
+                - id: "ultimo"
+                  named_prop: "nu_competencia"
+                - id: "ultimo"
+                  named_prop: "calc_proximo_ano"
+                - id: "ultimo"
+                  named_prop: "fmt_agr_count"
+                - id: "criticos_ultimo"
+                  named_prop: "fmt_agr_count"
+                - id: "perc_criticos_ultimo"
+                  named_prop: "vl_indicador"
+                  format: "porcentagem"
+                - id: "penultimo"
+                  named_prop: "fmt_agr_count"
+                - id: "criticos_penultimo"
+                  named_prop: "fmt_agr_count"
+                - id: "perc_aumento"
+                  named_prop: "vl_indicador"
+                  format: "porcentagem"
+                  precision: 2
+                - id: "perc_criticos_penultimo"
+                  named_prop: "vl_indicador"
+                  format: "porcentagem"
+                - id: "perc_urbano"
+                  named_prop: "vl_indicador"
+                  format: "porcentagem"
+                  precision: 0
               columns: 3
       - id: "autores_do_estudo"
         title: 
@@ -137,51 +240,62 @@ secoes:
                 api:
                   args:
                     - named_prop: "spai_ds_risco_nivel"
-          - id: "check_drogas"
+          - id: "check_con_tutelar"
             title: "Características Confirmadas:"
             cls: "px-2 py-0"
             type: "check"
-            label: "Consumo de drogas"
+            label: "Ausência de Atuação do Conselho Tutelar Reportada"
+            value: false
+            color: "accent"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_atua_conselho_tutelar-'Sim'"
+                filter_text: "com ausência de atuação do Conselho Tutelar Reportada"
+          - id: "check_drogas"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Consumo de Drogas Identificado"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_reg_traf_consumo_droga-'Sim'"
-                filter_text: "com consumo de drogas"
+                filter_text: "com consumo de drogas identificado"
           - id: "check_prostituicao"
             cls: "px-2 py-0"
             type: "check"
-            label: "Prostituição"
+            label: "Pontos de prostituição"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_prostituicao_adulto-'Sim'"
-                filter_text: "com prostituição"
+                filter_text: "com pontos de prostituição"
           - id: "check_alcool"
             cls: "px-2 py-0"
             type: "check"
-            label: "Consumo de bebida alcóolica"
+            label: "Consumo de Bebidas Alcóolicas Identificado"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_ponto_consumo_alcool -'Sim'"
-                filter_text: "com consumo de bebida alcóolica"
-          - id: "check_penumbra"
-            cls: "px-2 py-0"
-            type: "check"
-            label: "Penumbra"
-            value: false
-            color: "accent"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
-                filter_text: "com pouca iluminação(Penumbra)"
+                filter_text: "com consumo de bebida alcóolica identificado"
+          # - id: "check_penumbra"
+          #   cls: "px-2 py-0"
+          #   type: "check"
+          #   label: "Penumbra"
+          #   value: false
+          #   color: "accent"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
+          #       filter_text: "com pouca iluminação(Penumbra)"
         chart_type: "MAP_TOPOJSON"
         api: 
           template: "/ti/mapear?categorias=cd_uf,nm_uf&agregacao=count&ordenacao=-agr_count&filtros=eq-nu_competencia-nu_competencia_max"
@@ -195,7 +309,7 @@ secoes:
           - text: 'UF'
             align: 'left'
             value: 'nm_uf'
-          - text: 'Nº de pontos vulneráveis'
+          - text: 'Nº de pontos vulneráveis monitorados'
             value: 'agr_count'
         chart_options:
           id_field: 'cd_uf'
@@ -230,7 +344,7 @@ secoes:
                     default: "Nenhum"
                     zero: "Nenhum"
                   - prop: "description"
-                    fixed: "Pontos vulneráveis"
+                    fixed: "Pontos vulneráveis monitorados"
           - type: "text"
             title: ""
             content:
@@ -252,51 +366,62 @@ secoes:
                 api:
                   args:
                     - named_prop: "spai_ds_risco_nivel"
-          - id: "check_drogas"
+          - id: "check_con_tutelar"
             title: "Características Confirmadas:"
             cls: "px-2 py-0"
             type: "check"
-            label: "Consumo de drogas"
+            label: "Ausência de Atuação do Conselho Tutelar Reportada"
+            value: false
+            color: "accent"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_atua_conselho_tutelar-'Sim'"
+                filter_text: "com ausência de atuação do Conselho Tutelar Reportada"
+          - id: "check_drogas"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Consumo de Drogas Identificado"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_reg_traf_consumo_droga-'Sim'"
-                filter_text: "com consumo de drogas"
+                filter_text: "com consumo de drogas identificado"
           - id: "check_prostituicao"
             cls: "px-2 py-0"
             type: "check"
-            label: "Prostituição"
+            label: "Pontos de prostituição"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_prostituicao_adulto-'Sim'"
-                filter_text: "com prostituição"
+                filter_text: "com pontos de prostituição"
           - id: "check_alcool"
             cls: "px-2 py-0"
             type: "check"
-            label: "Consumo de bebida alcóolica"
+            label: "Consumo de Bebidas Alcóolicas Identificado"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_ponto_consumo_alcool -'Sim'"
-                filter_text: "com consumo de bebida alcóolica"
-          - id: "check_penumbra"
-            cls: "px-2 py-0"
-            type: "check"
-            label: "Penumbra"
-            value: false
-            color: "accent"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
-                filter_text: "com pouca iluminação(Penumbra)"
+                filter_text: "com consumo de bebida alcóolica identificado"
+          # - id: "check_penumbra"
+          #   cls: "px-2 py-0"
+          #   type: "check"
+          #   label: "Penumbra"
+          #   value: false
+          #   color: "accent"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
+          #       filter_text: "com pouca iluminação(Penumbra)"
         chart_type: "MAP_CLUSTER"
         api:
           template: "/ti/mapear?categorias='cd_indicador',cd_municipio_ibge_dv,nm_municipio_uf,latitude,longitude&agregacao=count&filtros=nn-cd_municipio_ibge_dv,and,eq-nu_competencia-nu_competencia_max"
@@ -304,7 +429,7 @@ secoes:
           - text: 'Município'
             align: 'left'
             value: 'nm_municipio_uf'
-          - text: 'Número de pontos vulneráveis'
+          - text: 'Número de pontos vulneráveis monitorados'
             value: 'agr_count'
         chart_options:
           id_field: "'cd_indicador'"
@@ -354,51 +479,62 @@ secoes:
                 api:
                   args:
                     - named_prop: "spai_ds_risco_nivel"
-          - id: "check_drogas"
+          - id: "check_con_tutelar"
             title: "Características Confirmadas:"
             cls: "px-2 py-0"
             type: "check"
-            label: "Consumo de drogas"
+            label: "Ausência de Atuação do Conselho Tutelar Reportada"
+            value: false
+            color: "accent"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_atua_conselho_tutelar-'Sim'"
+                filter_text: "com ausência de atuação do Conselho Tutelar Reportada"
+          - id: "check_drogas"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Consumo de Drogas Identificado"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_reg_traf_consumo_droga-'Sim'"
-                filter_text: "com consumo de drogas"
+                filter_text: "com consumo de drogas identificado"
           - id: "check_prostituicao"
             cls: "px-2 py-0"
             type: "check"
-            label: "Prostituição"
+            label: "Pontos de prostituição"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_prostituicao_adulto-'Sim'"
-                filter_text: "com prostituição"
+                filter_text: "com pontos de prostituição"
           - id: "check_alcool"
             cls: "px-2 py-0"
             type: "check"
-            label: "Consumo de bebida alcóolica"
+            label: "Consumo de Bebidas Alcóolicas Identificado"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_ponto_consumo_alcool -'Sim'"
-                filter_text: "com consumo de bebida alcóolica"
-          - id: "check_penumbra"
-            cls: "px-2 py-0"
-            type: "check"
-            label: "Penumbra"
-            value: false
-            color: "accent"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
-                filter_text: "com pouca iluminação(Penumbra)"
+                filter_text: "com consumo de bebida alcóolica identificado"
+          # - id: "check_penumbra"
+          #   cls: "px-2 py-0"
+          #   type: "check"
+          #   label: "Penumbra"
+          #   value: false
+          #   color: "accent"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
+          #       filter_text: "com pouca iluminação(Penumbra)"
         chart_type: "TREEMAP"
         api: 
           template: "/ti/mapear?categorias=ds_br&agregacao=count&ordenacao=-agr_count&filtros=eq-nu_competencia-nu_competencia_max"
@@ -419,115 +555,115 @@ secoes:
             type: "singleHue"
             levels: 5
             order: 'asc'
-# ========================================================
-      - id: "treemap_conc_pontos_caracteristica"
-        title:
-          fixed: "Características principais dos pontos vulneráveis"
-        title_comment:
-          fixed: "Brasil"
-        description: 
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                api:
-                  fixed: "/ti/mapear?categorias=1&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_count'
-                    format: 'inteiro'
-                    default: "Nenhum"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: "Pontos vulneráveis"
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, de acordo com a perspectiva geográfica selecionada, o número de pontos vulneráveis à exploração sexual comercial de crianças e adolescentes. No gráfico ao lado, apresenta-se a distribuição dos pontos de acordo com as principais características dos trechos das rodovias e estradas federais em que houve constatação da vulnerabilidade. Por meio do filtro abaixo, pode-se selecionar o grau de risco e visualizar o gráfico de acordo com a perspectiva escolhida."
-          - id: "select_risco_treemap_caracteristica"
-            type: "select"
-            label: "Grau de Risco de Exploração"
-            api:
-              fixed: "/ti/mapear?categorias=spai_ds_risco_nivel&agregacao=distinct&filtros=eq-nu_competencia-nu_competencia_max"
-            args:
-              - prop: "id"
-                named_prop: "spai_ds_risco_nivel"
-              - prop: "label"
-                named_prop: "spai_ds_risco_nivel"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,eq-spai_ds_risco_nivel-'{0}'"
-                api:
-                  args:
-                    - named_prop: "spai_ds_risco_nivel"
-          - id: "check_drogas"
-            title: "Características Confirmadas:"
-            cls: "px-2 py-0"
-            type: "check"
-            label: "Consumo de drogas"
-            value: false
-            color: "accent"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,eq-spai_id_reg_traf_consumo_droga-'Sim'"
-                filter_text: "com consumo de drogas"
-          - id: "check_prostituicao"
-            cls: "px-2 py-0"
-            type: "check"
-            label: "Prostituição"
-            value: false
-            color: "accent"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,eq-spai_id_prostituicao_adulto-'Sim'"
-                filter_text: "com prostituição"
-          - id: "check_alcool"
-            cls: "px-2 py-0"
-            type: "check"
-            label: "Consumo de bebida alcóolica"
-            value: false
-            color: "accent"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,eq-spai_id_ponto_consumo_alcool -'Sim'"
-                filter_text: "com consumo de bebida alcóolica"
-          - id: "check_penumbra"
-            cls: "px-2 py-0"
-            type: "check"
-            label: "Penumbra"
-            value: false
-            color: "accent"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
-                filter_text: "com pouca iluminação(Penumbra)"
-        chart_type: "TREEMAP"
-        api: 
-          fixed: "/ti/mapear?categorias=spai_ds_classific&agregacao=count&ordenacao=-agr_count&filtros=eq-nu_competencia-nu_competencia_max"
-        headers:
-          - text: 'Característica principal'
-            align: 'left'
-            value: 'spai_ds_classific'
-          - text: 'Qtde'
-            value: 'agr_count'
-        chart_options:
-          id: "spai_ds_classific"
-          text: "spai_ds_classific"
-          size: "agr_count"
-          colorScale:
-            name: "BuGn"
-            type: "singleHue"
-            levels: 5
-            order: 'asc'
+# # ========================================================
+#       - id: "treemap_conc_pontos_caracteristica"
+#         title:
+#           fixed: "Características principais dos pontos vulneráveis monitorados"
+#         title_comment:
+#           fixed: "Brasil"
+#         description: 
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 api:
+#                   fixed: "/ti/mapear?categorias=1&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_count'
+#                     format: 'inteiro'
+#                     default: "Nenhum"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: "Pontos vulneráveis monitorados"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, de acordo com a perspectiva geográfica selecionada, o número de pontos vulneráveis à exploração sexual comercial de crianças e adolescentes. No gráfico ao lado, apresenta-se a distribuição dos pontos de acordo com as principais características dos trechos das rodovias e estradas federais em que houve constatação da vulnerabilidade. Por meio do filtro abaixo, pode-se selecionar o grau de risco e visualizar o gráfico de acordo com a perspectiva escolhida."
+#           - id: "select_risco_treemap_caracteristica"
+#             type: "select"
+#             label: "Grau de Risco de Exploração"
+#             api:
+#               fixed: "/ti/mapear?categorias=spai_ds_risco_nivel&agregacao=distinct&filtros=eq-nu_competencia-nu_competencia_max"
+#             args:
+#               - prop: "id"
+#                 named_prop: "spai_ds_risco_nivel"
+#               - prop: "label"
+#                 named_prop: "spai_ds_risco_nivel"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-spai_ds_risco_nivel-'{0}'"
+#                 api:
+#                   args:
+#                     - named_prop: "spai_ds_risco_nivel"
+#           - id: "check_drogas"
+#             title: "Características Confirmadas:"
+#             cls: "px-2 py-0"
+#             type: "check"
+#             label: "Consumo de Drogas Identificado"
+#             value: false
+#             color: "accent"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-spai_id_reg_traf_consumo_droga-'Sim'"
+#                 filter_text: "com consumo de drogas"
+#           - id: "check_prostituicao"
+#             cls: "px-2 py-0"
+#             type: "check"
+#             label: "Pontos de prostituição"
+#             value: false
+#             color: "accent"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-spai_id_prostituicao_adulto-'Sim'"
+#                 filter_text: "com prostituição"
+#           - id: "check_alcool"
+#             cls: "px-2 py-0"
+#             type: "check"
+#             label: "Consumo de Bebidas Alcóolicas Identificado"
+#             value: false
+#             color: "accent"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-spai_id_ponto_consumo_alcool -'Sim'"
+#                 filter_text: "com consumo de bebida alcóolica"
+#           - id: "check_penumbra"
+#             cls: "px-2 py-0"
+#             type: "check"
+#             label: "Penumbra"
+#             value: false
+#             color: "accent"
+#             selection:
+#               event: "selection" 
+#               rules:
+#                 filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
+#                 filter_text: "com pouca iluminação(Penumbra)"
+#         chart_type: "TREEMAP"
+#         api: 
+#           fixed: "/ti/mapear?categorias=spai_ds_classific&agregacao=count&ordenacao=-agr_count&filtros=eq-nu_competencia-nu_competencia_max"
+#         headers:
+#           - text: 'Característica principal'
+#             align: 'left'
+#             value: 'spai_ds_classific'
+#           - text: 'Qtde'
+#             value: 'agr_count'
+#         chart_options:
+#           id: "spai_ds_classific"
+#           text: "spai_ds_classific"
+#           size: "agr_count"
+#           colorScale:
+#             name: "BuGn"
+#             type: "singleHue"
+#             levels: 5
+#             order: 'asc'
 # ========================================================
       - id: "treemap_conc_pontos_area"
         title:
-          fixed: "Concentração de Pontos Vulneráveis por Área"
+          fixed: "Concentração de Pontos Vulneráveis monitorados por Área"
         title_comment:
           fixed: "Brasil"
         description: 
@@ -606,51 +742,62 @@ secoes:
                 api:
                   args:
                     - named_prop: "spai_ds_risco_nivel"
-          - id: "check_drogas"
+          - id: "check_con_tutelar"
             title: "Características Confirmadas:"
             cls: "px-2 py-0"
             type: "check"
-            label: "Consumo de drogas"
+            label: "Ausência de Atuação do Conselho Tutelar Reportada"
+            value: false
+            color: "accent"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-spai_id_atua_conselho_tutelar-'Sim'"
+                filter_text: "com ausência de atuação do Conselho Tutelar Reportada"
+          - id: "check_drogas"
+            cls: "px-2 py-0"
+            type: "check"
+            label: "Consumo de Drogas Identificado"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_reg_traf_consumo_droga-'Sim'"
-                filter_text: "com consumo de drogas"
+                filter_text: "com consumo de drogas identificado"
           - id: "check_prostituicao"
             cls: "px-2 py-0"
             type: "check"
-            label: "Prostituição"
+            label: "Pontos de prostituição"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_prostituicao_adulto-'Sim'"
-                filter_text: "com prostituição"
+                filter_text: "com pontos de prostituição"
           - id: "check_alcool"
             cls: "px-2 py-0"
             type: "check"
-            label: "Consumo de bebida alcóolica"
+            label: "Consumo de Bebidas Alcóolicas Identificado"
             value: false
             color: "accent"
             selection:
               event: "selection" 
               rules:
                 filter: ",and,eq-spai_id_ponto_consumo_alcool -'Sim'"
-                filter_text: "com consumo de bebida alcóolica"
-          - id: "check_penumbra"
-            cls: "px-2 py-0"
-            type: "check"
-            label: "Penumbra"
-            value: false
-            color: "accent"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
-                filter_text: "com pouca iluminação(Penumbra)"
+                filter_text: "com consumo de bebida alcóolica identificado"
+          # - id: "check_penumbra"
+          #   cls: "px-2 py-0"
+          #   type: "check"
+          #   label: "Penumbra"
+          #   value: false
+          #   color: "accent"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,eq-spai_id_iluminacao_area-'Penumbra'"
+          #       filter_text: "com pouca iluminação(Penumbra)"
         chart_type: "TREEMAP"
         api: 
           fixed: "/ti/mapear?categorias=ds_area&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max"
