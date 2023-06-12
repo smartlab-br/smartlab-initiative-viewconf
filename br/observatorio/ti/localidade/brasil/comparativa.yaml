@@ -641,27 +641,32 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api: 
-                  fixed: "/ti/indicadoresestaduais?categorias=vl_indicador_br&filtros=eq-cd_indicador-'censo_suas_pct_mun_sem_creas',and,eq-nu_competencia-nu_competencia_max&limit=1"
+                  fixed: "/indicadoresmunicipais?categorias=ds_indicador,nu_competencia,'(Percentual)'-ds_indicador_prefixo,rank_br_total&valor=cd_municipio_ibge_dv&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'SUAS20_CREAS_DG',and,ne-vl_indicador-0,and,nn-vl_indicador"
+                  options:
+                    calcs:
+                      - id: "mun_sem"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_br_total"
+                          - named_prop: "agr_count_cd_municipio_ibge_dv"
+                      - id: "perc_sem"
+                        function: "calc_percentage_ds"
+                        fn_args:
+                          - named_prop: 'calc_mun_sem'
+                          - named_prop: 'rank_br_total'
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_br'
+                    named_prop: 'calc_perc_sem'
                     format: "porcentagem"
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
                     fixed: 'DOS MUNICÍPIOS SEM CREAS NO BRASIL'
                   - prop: "comment"
-                    api:
-                      - fixed: "/ti/indicadoresestaduais?categorias=cd_indicador,vl_indicador_br&filtros=eq-cd_indicador-'censo_suas_qtd_mun_sem_creas',and,eq-nu_competencia-nu_competencia_max&limit=1"
-                      - fixed: "/municipios?categorias='total_br'-cd_indicador&agregacao=COUNT"
                     template: "{0} de {1} municípios"
                     args:
-                      - id: "censo_suas_qtd_mun_sem_creas"
-                        named_prop: "vl_indicador_br"
-                        format: "inteiro"
-                      - id: "total_br"
-                        named_prop: "agr_count"
-                        format: "inteiro"
+                      - named_prop: "calc_mun_sem"
+                      - named_prop: "rank_br_total"
           - type: "text"
             title: ""
             content:
@@ -759,7 +764,7 @@ secoes:
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0}<br/>(2017)"
+                        template: "{0}<br/>(2022)"
                         args:
                           - named_prop: "ds_indicador"
                 - id: "fmt_value"
