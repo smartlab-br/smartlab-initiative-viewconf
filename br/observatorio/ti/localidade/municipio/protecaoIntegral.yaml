@@ -1,7 +1,44 @@
 # ========================================================
 principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "SUBREG02"
+      year: "max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'porcentagem'
+      - prop: "description"
+        named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai-cd_indicador,ds_fonte,nu_ano_indicador-nu_competencia,spai_vl_indicador_txt&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador_spai-'Msau53',and,eq-nu_ano_indicador-nu_ano_indicador_max"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'spai_vl_indicador_txt'
+        default: "Sem Registros"
+      - prop: "description"
+        fixed: 'Existência de busca ativa dos casos de nascidos vivos não registrados para promover o registro civil de nascimento'
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
   - relevance: 'lead'
-    cls: 'xs12'
+    cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
       template: "/estadicmunic?categorias=cd_indicador_spai,spai_ds_texto,ds_fonte,nu_ano_indicador-nu_competencia,spai_vl_indicador_txt&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador_spai-'{1}',and,eq-nu_ano_indicador-nu_ano_indicador_max"
@@ -22,7 +59,7 @@ principais:
           - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
   - relevance: 'lead'
-    cls: 'xs12'
+    cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
       template: "/estadicmunic?categorias=cd_indicador_spai,spai_ds_texto,ds_fonte,nu_ano_indicador-nu_competencia,spai_vl_indicador_txt&filtros=eq-cd_mun_ibge-{0},and,eq-cd_indicador_spai-'{1}',and,eq-nu_ano_indicador-nu_ano_indicador_max"
@@ -46,8 +83,170 @@ principais:
 secoes:
 #==================================================================================================
   - id: "acoes_estaduais_trabalho_infantil"
-    name: "Ações municipais"
+    name: "Acesso ao Registro Civil"
     cards:
+# ========================================================
+      - id: "mapa_subnotificacao_nascidos_vivos"
+        title:
+          fixed: "Estimativa de sub-registros/subnotificações de nascidos vivos"
+        title_comment:
+          template: "{0}, {1}"
+          preloaded:
+            prop: "centralindicadores"
+            function: "slice"
+            id: "SUBREG01"
+            year: "max"
+          args:
+            - named_prop: "nm_municipio_uf"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "O produto interno bruto (PIB) representa a soma de todos os bens e serviços finais produzidos numa determinada região durante um período determinado. É um dos indicadores mais utilizados para quantificar a atividade econômica de uma região."
+        # msg_nodata:
+        #   desc: "Dados não encontrados"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "SUBREG01"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'auto'
+                    collapse:
+                      format: 'auto'
+                  - prop: "description"
+                    named_prop: "ds_indicador_curto"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "SUBREG02"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    named_prop: "ds_indicador_curto"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "SUBREG02"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_uf'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: "Média na UF"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "SUBREG02"
+                  year: "max"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_br'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: "Média no Brasil"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, a estimativa de sub-registros/subnotificações do total de nascidos vivos no município e as médias na UF e no Brasil. Mostra quanto do conjunto de nascimentos não foram registrados no mesmo ano de sua ocorrência ou no primeiro trimestre do ano subsequente. Esse indicador é importante para sinalizar quão distante o país está de cumprir com a exigência básica de reconhecer o recém-nascido como cidadão, e, consequentemente, fortalecer as ações de políticas públicas de busca ativa voltadas para o aumento de tais registros. Trata-se de ação relacionada diretamente à proteção integral de crianças e adolescentes. No mapa, {0} está em destaque. A escala de cores varia do menor valor (branco) ao maior valor (vermelho escuro)."
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "SUBREG01"
+                year: "max"
+              args:
+                - named_prop: 'nm_municipio_uf'
+
+          - type: "ranking"
+            preloaded:
+              prop: "centralindicadores"
+              function: "slice"
+              id: "SUBREG02"
+              year: "max"
+            args:
+              - prop: 'regional_rank'
+                named_prop: "rank_uf"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'regional_total'
+                named_prop: "rank_uf_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_rank'
+                named_prop: "rank_br"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+              - prop: 'national_total'
+                named_prop: "rank_br_total"
+                format: 'inteiro'
+                precision: 0
+                default: 0
+          
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_curto,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'SUBREG02',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: "porcentagem"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_curto'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+          colorScale: 
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
+#==================================================================================================
+      - id: "acoes_municipais_trabalho_infantil_headline"
+        type: "headline"
+        title:
+          fixed: "Ações municipais"
+# ========================================================
+      - id: "map_busca_nascidos_munic"
+        title: 
+          fixed: "Busca ativa dos casos de nascidos vivos não registrados para promover o registro civil de nascimento"
+        card_template: "t5"
+        datasource: "estadicmunic"
+        cd_indicador: "Msau53"
 #==================================================================================================
       - id: "map_lei_prim_infancia_mun"
         title: 

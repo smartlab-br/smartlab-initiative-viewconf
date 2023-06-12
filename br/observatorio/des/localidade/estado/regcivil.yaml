@@ -3,6 +3,47 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
+      template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,media_uf&valor=cd_uf&agregacao=DISTINCT&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'SUBREG02',and,eq-nu_competencia-nu_competencia_max&limit=1"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'media_uf'
+        format: 'porcentagem'
+      - prop: "description"
+        template: "Média na UF da {0} nos municípios"
+        args:
+          - named_prop: "ds_indicador_curto"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/estadicmunic?categorias=cd_indicador_spai-cd_indicador,cd_indicador-cd_indicador_externo,spai_ds,spai_ds_texto,ds_fonte,nu_ano_indicador-nu_competencia,vl_indicador,spai_vl_indicador_txt,ds_indicador,tema,sub_tema,spai_vl_indicador,total_br,presenca_total_br,pct_presenca_br,total_uf,presenca_total_uf,pct_presenca_uf,rank_pct_uf,rank_pct_uf_max,nm_municipio,nm_uf,sg_uf,nm_municipio_uf&valor=cd_uf&agregacao=DISTINCT&filtros=eq-cd_uf-{0},and,eq-cd_indicador_spai-'Msau53',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'presenca_total_uf'
+        format: 'inteiro'
+        default: "Sem Registros"
+      - prop: "description"
+        template: "de {0} municípios com busca ativa dos casos de nascidos vivos não registrados para promover o registro civil de nascimento"
+        args:
+          - named_prop: "total_uf"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
       template: "/estadicmunic?categorias=cd_indicador_spai-cd_indicador,cd_indicador-cd_indicador_externo,spai_ds,spai_ds_texto,ds_fonte,nu_ano_indicador-nu_competencia,vl_indicador,spai_vl_indicador_txt,ds_indicador,tema,sub_tema,spai_vl_indicador,total_br,presenca_total_br,pct_presenca_br,total_uf,presenca_total_uf,pct_presenca_uf,rank_pct_uf,rank_pct_uf_max,nm_municipio,nm_uf,sg_uf,nm_municipio_uf&valor=cd_uf&agregacao=DISTINCT&filtros=eq-cd_uf-{0},and,eq-cd_indicador_spai-'MUNIC_NMDHU542',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
       args:
         - named_prop: "idLocalidade"
@@ -41,32 +82,118 @@ principais:
         args:
           - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    api:
-      template: "/estadicmunic?categorias=cd_indicador_spai-cd_indicador,cd_indicador-cd_indicador_externo,spai_ds,spai_ds_texto,ds_fonte,nu_ano_indicador-nu_competencia,vl_indicador,spai_vl_indicador_txt,ds_indicador,tema,sub_tema,spai_vl_indicador,total_br,presenca_total_br,pct_presenca_br,total_uf,presenca_total_uf,pct_presenca_uf,rank_pct_uf,rank_pct_uf_max,nm_municipio,nm_uf,sg_uf,nm_municipio_uf&valor=cd_uf&agregacao=DISTINCT&filtros=eq-cd_uf-{0},and,eq-cd_indicador_spai-'MUNIC_NMSAU53',and,eq-nu_ano_indicador-nu_ano_indicador_max&limit=1"
-      args:
-        - named_prop: "idLocalidade"
-    args:
-      - prop: "value"
-        named_prop: 'presenca_total_uf'
-        format: 'inteiro'
-        default: "Sem Registros"
-      - prop: "description"
-        template: "de {0} municípios com busca ativa dos casos de nascidos vivos não registrados para promover o registro civil de nascimento"
-        args:
-          - named_prop: "total_uf"
-      - prop: 'comment'
-        template: "({0}, {1})"
-        args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
 # ========================================================
 secoes:
   - id: "regcivil_unico"
     name: ""
     cards:
+# ========================================================
+      - id: "mapa_subnotificacao_nascidos_vivos"
+        title:
+          fixed: "Estimativa de sub-registros/subnotificações de nascidos vivos"
+        title_comment:
+          template: "{0}, {1}"
+          api:
+            template: "/indicadoresmunicipais?categorias=ds_indicador_curto,nu_competencia,vl_indicador_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'SUBREG01',and,eq-nu_competencia-nu_competencia_max&limit=1"
+            args:
+              - named_prop: "idLocalidade"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - named_prop: "nu_competencia"
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "O produto interno bruto (PIB) representa a soma de todos os bens e serviços finais produzidos numa determinada região durante um período determinado. É um dos indicadores mais utilizados para quantificar a atividade econômica de uma região."
+        # msg_nodata:
+        #   desc: "Dados não encontrados"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12 md7'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'SUBREG01',and,eq-nu_competencia-nu_competencia_max"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_sum_vl_indicador'
+                    format: 'auto'
+                    collapse:
+                      format: 'auto'
+                  - prop: "description"
+                    named_prop: "ds_indicador_curto"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,media_uf,media_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'SUBREG02',and,eq-nu_competencia-nu_competencia_max&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_uf'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    template: "Média na UF"
+                    args:
+                      - named_prop: "ds_indicador_curto"
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                api:
+                  template: "/indicadoresmunicipais?categorias=ds_indicador_curto,ds_fonte,nu_competencia,media_uf,media_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'SUBREG02',and,eq-nu_competencia-nu_competencia_max&limit=1"
+                  args:
+                    - named_prop: "idLocalidade"
+                args:
+                  - prop: "value"
+                    named_prop: 'media_br'
+                    format: 'porcentagem'
+                  - prop: "description"
+                    fixed: "Média no Brasil"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, a estimativa de sub-registros/subnotificações do total de nascidos vivos na Unidade Federativa e as médias na UF e no Brasil. Mostra quanto do conjunto de nascimentos não foram registrados no mesmo ano de sua ocorrência ou no primeiro trimestre do ano subsequente. Esse indicador é importante para sinalizar quão distante o país está de cumprir com a exigência básica de reconhecer o recém-nascido como cidadão, e, consequentemente, fortalecer as ações de políticas públicas de busca ativa voltadas para o aumento de tais registros. A escala de cores varia do menor valor (branco) ao maior valor (vermelho escuro)."
+        chart_type: "MAP_TOPOJSON"
+        api:
+          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,ds_indicador_curto,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'SUBREG02',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "cd_uf"
+          options:
+            calcs:
+              - id: "deviation"
+                function: "get_proportional_indicator_uf"
+            formatters:
+              - id: "vl_indicador"
+                format: "porcentagem"
+        headers:
+          - text: 'Município'
+            align: 'left'
+            value: 'nm_municipio'
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Indicador'
+            align: 'left'
+            value: 'ds_indicador_curto'
+          - text: 'Valor'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id_field: 'cd_mun_ibge'
+          topo_key: "codarea"
+          value_field: 'calc_deviation'
+          colorScale: 
+            name: "Reds"
+        source:
+          desc_field: "ds_fonte"
+# ========================================================
+      - id: "map_busca_nascidos"
+        title: 
+          fixed: "Busca ativa dos casos de nascidos vivos não registrados para promover o registro civil de nascimento"
+        card_template: "t4"
+        datasource: "estadicmunic"
+        cd_indicador: "Msau53"
 # ========================================================
       - id: "map_comite_subregistro"
         title: 
@@ -81,13 +208,6 @@ secoes:
         card_template: "t4"
         datasource: "estadicmunic"
         cd_indicador: "MUNIC_NMDHU575"
-# ========================================================
-      - id: "map_busca_nascidos"
-        title: 
-          fixed: "Busca ativa dos casos de nascidos vivos não registrados para promover o registro civil de nascimento"
-        card_template: "t4"
-        datasource: "estadicmunic"
-        cd_indicador: "MUNIC_NMSAU53"
 # ========================================================
       - id: "map_comite_subregistro_orcamento_proprio"
         title: 

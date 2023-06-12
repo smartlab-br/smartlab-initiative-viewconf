@@ -78,24 +78,84 @@ secoes:
 #         datasource: "estadicmunic"
 #         cd_indicador: "91_06_02_05"
 # ====================================================          
-      - id: "mapa_atencao_psicossocial"
+      - id: "mapa_centro_convivencia"
         title: 
-          fixed: "Centros de Atenção Psicossocial"
+          fixed: "Centros de Convivência"
         card_template: "tIndicadorTopoJsonMunicipio"
         datasource: "indicadoresmunicipais"
-        cd_indicador: "06_03_04_26"
+        cd_indicador: "SUAS20_CENTRO_CONVIVENCIA_DG"
         term:
           template: "localidade-{0}"
           args:
             - base_object: "localidade"
               named_prop: 'nm_localidade' 
 # ====================================================          
-      - id: "mapa_centro_convivencia"
+      - id: "mapa_centro_ref_assistencia_social"
         title: 
-          fixed: "Centros de Convivência"
+          fixed: "CRAS - Centros de Referência de Assistência Social"
         card_template: "tIndicadorTopoJsonMunicipio"
         datasource: "indicadoresmunicipais"
-        cd_indicador: "06_03_04_10"
+        cd_indicador: "SUAS20_CRAS_DG"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_ref__espec_assistencia_social"
+        title: 
+          fixed: "CREAS - Centros de Referência Especializado de Assistência Social"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "SUAS20_CREAS_DG"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_dia"
+        title: 
+          fixed: "CENTRO DIA - Centros para atedimento das pessoas com deficiência, pessoas idosas com algum grau de dependência e suas famílias"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "SUAS20_CENTRO_DIA_DG"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_centro_pop"
+        title: 
+          fixed: "CENTRO POP - Centros de Referência da População de Rua"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "SUAS20_CENTRO_POP_DG"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_unid_acolhimento"
+        title: 
+          fixed: "Unidades de Acolhimento"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "SUAS20_UNIDADE_ACOLHIMENTO_DG"
+        term:
+          template: "localidade-{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: 'nm_localidade' 
+# ====================================================          
+      - id: "mapa_atencao_psicossocial"
+        title: 
+          fixed: "Centros de Atenção Psicossocial"
+        card_template: "tIndicadorTopoJsonMunicipio"
+        datasource: "indicadoresmunicipais"
+        cd_indicador: "06_03_04_26"
         term:
           template: "localidade-{0}"
           args:
@@ -125,37 +185,13 @@ secoes:
           args:
             - base_object: "localidade"
               named_prop: 'nm_localidade' 
-# ====================================================          
-      - id: "mapa_centro_ref_assistencia_social"
-        title: 
-          fixed: "Centros de Referência de Assistência Social"
-        card_template: "tIndicadorTopoJsonMunicipio"
-        datasource: "indicadoresmunicipais"
-        cd_indicador: "06_03_04_08"
-        term:
-          template: "localidade-{0}"
-          args:
-            - base_object: "localidade"
-              named_prop: 'nm_localidade' 
-# ====================================================          
-      - id: "mapa_centro_ref__espec_assistencia_social"
-        title: 
-          fixed: "Centros de Referência Especializado de Assistência Social"
-        card_template: "tIndicadorTopoJsonMunicipio"
-        datasource: "indicadoresmunicipais"
-        cd_indicador: "06_03_04_09"
-        term:
-          template: "localidade-{0}"
-          args:
-            - base_object: "localidade"
-              named_prop: 'nm_localidade' 
 # ========================================================
       - id: "mapa_cras_creas"
         chart_type: "MAP_CLUSTER"
         title: 
-          fixed: "Localização Aproximada de CRAS e CREAS"
+          fixed: "Localização Aproximada de Unidades de Assistência Social"
         title_comment:
-          template: "{0}, 2017"
+          template: "{0}, 2020"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -173,7 +209,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  template: "/orgs/assistenciasocial?categorias=categoria&agregacao=count&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-categoria-'CRAS'"
+                  template: "/thematic/assistenciasocial?categorias=categoria&agregacao=count&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-categoria-'CRAS'"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -187,7 +223,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12 md6'
                 api: 
-                  template: "/orgs/assistenciasocial?categorias=categoria&agregacao=count&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-categoria-'CREAS'"
+                  template: "/thematic/assistenciasocial?categorias=categoria&agregacao=count&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-categoria-'CREAS'"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -201,21 +237,43 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, para a perspectiva geográfica selecionada, informações sobre a localização aproximada de Centros de Referência de Assistência Social e Centros de Referência Especializado de Assistência Social, de acordo com os dados coletados pelo Censo do Sistema Único de Assistência Social (SUAS). Ao clicar no ponto no mapa, apresenta-se o endereço informado no Censo. Pode-se, ainda, visualizar a localidade com o uso de ferramenta StreetView."
+              fixed: "Em destaque, para o município selecionado, informações sobre a localização aproximada de unidades locais de Assistência Social, de acordo com os dados coletados pelo Censo do Sistema Único de Assistência Social (SUAS). Ao clicar no ponto no mapa, apresenta-se o endereço informado no Censo. Pode-se, ainda, visualizar a localidade com o uso de ferramenta StreetView."
           - type: "switch-group"
             cls: "pt-2 pb-4"
             switches:
               - id: "CRAS"
+                cls: "xs6 sm12 md6"
                 default: true
                 label: "CRAS"
                 color: "blue"
               - id: "CREAS"
+                cls: "xs6 sm12 md6"
                 default: true
                 label: "CREAS"
                 color: "green"
+              - id: "CONV"
+                cls: "xs6 sm12 md6"
+                default: true
+                label: "Centros de Convivência"
+                color: "yellow"
+              - id: "DIA"
+                cls: "xs6 sm12 md6"
+                default: true
+                label: "Centros DIA"
+                color: "orange"
+              - id: "POP"
+                cls: "xs6 sm12 md6"
+                default: true
+                label: "Centros POP"
+                color: "red"
+              - id: "ACOLHIMENTO"
+                cls: "xs6 sm12 md6"
+                default: true
+                label: "Unidades de Acolhimento"
+                color: "grey"
             event: 'selection'
         api:
-          template: "/orgs/assistenciasocial?categorias=categoria-cd_indicador,latitude,longitude,nm_municipio,endereco,bairro,nm_municipio_uf,referencia,cep,nome&filtros=eq-cd_municipio_ibge_dv-{0}"
+          template: "/thematic/assistenciasocial?categorias=categoria-cd_indicador,latitude,longitude,nm_municipio,endereco,bairro,nm_municipio_uf,referencia,cep,nome&filtros=eq-cd_municipio_ibge_dv-{0}"
           # template: "/orgs/assistenciasocial?categorias=categoria-cd_indicador,latitude,longitude,nm_municipio,tipo_logradouro,endereco,numero,complemento,bairro,nm_municipio_uf,referencia,cep,nome&filtros=eq-cd_municipio_ibge_dv-{0}"
           args:
             - named_prop: "idLocalidade"
@@ -248,7 +306,11 @@ secoes:
           markerIcons: 
             "CRAS": "blue" 
             "CREAS": "green"
-          indicadores: ["CRAS","CREAS"]
+            "CONV": "yellow"
+            "DIA": "orange"
+            "POP": "red"
+            "ACOLHIMENTO": "grey"
+          indicadores: ["CRAS","CREAS","CONV","DIA","POP","ACOLHIMENTO"]
           label_field: "cd_indicador"
           show_all: true
           lat: 'latitude'

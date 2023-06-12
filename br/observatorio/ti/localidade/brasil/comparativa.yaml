@@ -71,6 +71,56 @@ principais:
         template: '(PRF - MAPEAR, {0})'
         args:
           - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max&ordenacao=-agr_sum_vl_indicador&limit=1"
+    args:
+      - prop: "value"
+        named_prop: "ds_agreg_secundaria"
+      - prop: "description"
+        fixed: "Pior forma de trabalho onde crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais"
+      - prop: "comment"
+        template: '({0}, {1})'
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria,ds_fonte,nu_competencia&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_CNAE',and,eq-nu_competencia-nu_competencia_max&ordenacao=-agr_sum_vl_indicador&limit=1"
+    args:
+      - prop: "value"
+        named_prop: "ds_agreg_primaria"
+      - prop: "description"
+        fixed: "Atividade Econômica onde crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais"
+      - prop: "comment"
+        template: '({0}, {1})'
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead'
+    cls: 'xs12 xl6'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "CAGRO_TICA13"
+      year: 'max'
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador_txt'
+        default: "-"
+      - prop: "description"
+        fixed: "Atividade econômica com maior número de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
+      - prop: 'comment'
+        template: "({0})"
+        args:
+          - named_prop: "ds_fonte"
+
+
+
 # ========================================================
 secoes:
   - id: 'prioritarias'
@@ -136,7 +186,7 @@ secoes:
               fixed: "Com o fim de auxiliar a estruturação e o monitoramento das políticas públicas e ações para promoção dos direitos de crianças e adolescentes e para a prevenção e erradicação do trabalho infantil, os indicadores apresentados ao lado permitem mostrar a multidimensionalidade do fenômeno do trabalho infantil. Do ponto de vista da prevenção, deve-se dar destaque à aprendizagem profissional como um elemento estratégico do processo de transição escola-trabalho, a favorecer grupos etários de adolescentes e jovens com maiores dificuldades de inclusão sócio-produtiva. Quanto aos demais indicadores, os números, sobretudo quando representativos em mais de uma coluna, revelam sinais de que tais localidades demandam ações prioritárias quanto a ações/programas de combate ao trabalho infantil, inclusive em suas piores formas."
         component_type: "DATATABLE"
         api:
-          - fixed: "/indicadoresmunicipais?categorias='bom'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,'(Quantidade)'-ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'APRZ_21_001'-'APRZ_21_009'&ordenacao=ds_indicador_curto&filtros=nn-cd_municipio_ibge_dv"
+          - fixed: "/indicadoresmunicipais?categorias='bom'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,'(Quantidade)'-ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'APRZ_23_001'-'APRZ_23_002',and,ne-vl_indicador-0&ordenacao=ds_indicador_curto"
             options:
               calcs:
                 - id: "header_label"
@@ -187,7 +237,7 @@ secoes:
               clone:
                 - id: "agr_count"
                   new_column: "agr_sum_vl_indicador"
-          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_13_00',and,ge-nu_competencia-'{0}',and,nn-cd_municipio_ibge_dv"
+          - template: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'06_05_13_00',and,ge-nu_competencia-'{0}',and,nn-cd_municipio_ibge_dv,and,ne-vl_indicador-0"
             args:
               - base_object: "sst_sinan"
                 named_prop: "calc_nu_competencia_ultimos_5"
@@ -210,24 +260,25 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil,and,nn-cd_municipio_ibge_dv'&ordenacao=ds_indicador_curto"
-            options:
-              calcs:
-                - id: "header_label"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed:
-                        template: "{0}<br/>({1}-{2})"
-                        args:
-                          - named_prop: "ds_indicador"
-                          - named_prop: "nu_competencia_min"
-                          - named_prop: "nu_competencia_max"
-                - id: "fmt_value"
-                  function: "get_formatted_value"
-                  fn_args:
-                    - named_prop: "ds_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "ds_indicador_prefixo"
+          # DISQUE100
+          # - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_indicador-'DISQUE100',and,eq-ds_agreg_primaria-'Trabalho Infantil,and,nn-cd_municipio_ibge_dv'&ordenacao=ds_indicador_curto"
+          #   options:
+          #     calcs:
+          #       - id: "header_label"
+          #         function: "applyInterpolReplaceDatasetParam"
+          #         fn_args:
+          #           - fixed:
+          #               template: "{0}<br/>({1}-{2})"
+          #               args:
+          #                 - named_prop: "ds_indicador"
+          #                 - named_prop: "nu_competencia_min"
+          #                 - named_prop: "nu_competencia_max"
+          #       - id: "fmt_value"
+          #         function: "get_formatted_value"
+          #         fn_args:
+          #           - named_prop: "ds_indicador"
+          #           - named_prop: "agr_sum_vl_indicador"
+          #           - named_prop: "ds_indicador_prefixo"
           - fixed: "/ti/mapear?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,'Pontos de Risco de Exploração Sexual Comercial de Crianças e Adolescente'-ds_indicador,nu_competencia&agregacao=COUNT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-cd_municipio_ibge_dv"
             options:
               calcs:
@@ -248,7 +299,8 @@ secoes:
               clone:
                 - id: "agr_count"
                   new_column: "agr_sum_vl_indicador"
-          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf,vl_indicador-agr_sum_vl_indicador&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'CAGRO_TICA01',and,nn-cd_municipio_ibge_dv"
+          # CENSOAGRO
+          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf,vl_indicador-agr_sum_vl_indicador&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'CAGRO_TICA01',and,nn-cd_municipio_ibge_dv,and,ne-vl_indicador-0"
             options:
               calcs:
                 - id: "header_label"
@@ -274,32 +326,34 @@ secoes:
                     - named_prop: "rank_uf"
                     - named_prop: "media_br"
                     - named_prop: "media_uf"
-          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf,vl_indicador-agr_sum_vl_indicador&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'TI_SIT_01',and,nn-cd_municipio_ibge_dv"
-            options:
-              calcs:
-                - id: "header_label"
-                  function: "applyInterpolReplaceDatasetParam"
-                  fn_args:
-                    - fixed:
-                        template: "Trabalho Infantil identificado pela Inspeção ({1})"
-                        args:
-                          - named_prop: "ds_indicador"
-                          - named_prop: "nu_competencia_max"
-                - id: "fmt_value"
-                  function: "get_formatted_value"
-                  fn_args:
-                    - named_prop: "ds_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "ds_indicador_prefixo"
-                - id: "det_value"
-                  function: "get_detail_value"
-                  fn_args:
-                    - named_prop: "class_indicador"
-                    - named_prop: "agr_sum_vl_indicador"
-                    - named_prop: "rank_br"
-                    - named_prop: "rank_uf"
-                    - named_prop: "media_br"
-                    - named_prop: "media_uf"
+
+          # SIT - TRABALHO INFANTIL IDENTIFICADO PELA INSPENÇÃO 2019
+          # - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf,vl_indicador-agr_sum_vl_indicador&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'TI_SIT_01',and,nn-cd_municipio_ibge_dv"
+          #   options:
+          #     calcs:
+          #       - id: "header_label"
+          #         function: "applyInterpolReplaceDatasetParam"
+          #         fn_args:
+          #           - fixed:
+          #               template: "Trabalho Infantil identificado pela Inspeção ({1})"
+          #               args:
+          #                 - named_prop: "ds_indicador"
+          #                 - named_prop: "nu_competencia_max"
+          #       - id: "fmt_value"
+          #         function: "get_formatted_value"
+          #         fn_args:
+          #           - named_prop: "ds_indicador"
+          #           - named_prop: "agr_sum_vl_indicador"
+          #           - named_prop: "ds_indicador_prefixo"
+          #       - id: "det_value"
+          #         function: "get_detail_value"
+          #         fn_args:
+          #           - named_prop: "class_indicador"
+          #           - named_prop: "agr_sum_vl_indicador"
+          #           - named_prop: "rank_br"
+          #           - named_prop: "rank_uf"
+          #           - named_prop: "media_br"
+          #           - named_prop: "media_uf"
           - fixed: "/ti/provabrasil?categorias='ruim'-class_indicador,nu_ano_prova_brasil-nu_competencia,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,ds_indicador,'(Quantidade)'-ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM,RANK_DENSE_SUM,AVG&filtros=nn-vl_indicador,and,ne-vl_indicador-0,and,eq-nu_ano_prova_brasil-2017,and,eq-cd_tr_fora-1,and,nn-cd_municipio_ibge_dv"
             options:
               calcs:
@@ -317,7 +371,7 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'JD_CADUN_02'&ordenacao=-cd_indicador"
+          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'TICAD_23_002',and,ne-vl_indicador-0"
             options:
               calcs:
                 - id: "header_label"
@@ -326,12 +380,12 @@ secoes:
                     - fixed:
                         template: "{0}<br/>({1})"
                         args:
-                          - named_prop: "ds_indicador"
+                          - named_prop: "ds_indicador_curto"
                           - named_prop: "nu_competencia_max"
                 - id: "fmt_value"
                   function: "get_formatted_value"
                   fn_args:
-                    - named_prop: "ds_indicador"
+                    - named_prop: "ds_indicador_curto"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
                 - id: "det_value"
@@ -343,6 +397,43 @@ secoes:
                     - named_prop: "rank_uf"
                     - named_prop: "media_br"
                     - named_prop: "media_uf"
+          # RESGATADOS DO TRABALHO ESCRAVO NATURAIS DO MUNICÍPIO
+          - fixed: "/te/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,'Resgatados do trabalho escravo naturais do município'-ds_indicador_curto,nu_competencia_min,nu_competencia_max,'(Quantidade)'-ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_nat_idade',and,lt-cast(ds_agreg_primaria as smallint)-18,and,ne-vl_indicador-0"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "{0}<br/>({1}-{2})"
+                        args:
+                          - named_prop: "ds_indicador_curto"
+                          - named_prop: "nu_competencia_min"
+                          - named_prop: "nu_competencia_max"
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador_curto"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "ds_indicador_prefixo"
+          # SIT_TI_CNAE Crianças e Adolescentes encontrados em situação de Trabalho Infantil
+          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'SIT_TI_CNAE',and,ne-vl_indicador-0"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "{0}<br/>({1})"
+                        args:
+                          - named_prop: "ds_indicador_curto"
+                          - named_prop: "nu_competencia_max"
+                - id: "fmt_value"
+                  function: "get_formatted_value"
+                  fn_args:
+                    - named_prop: "ds_indicador_curto"
+                    - named_prop: "agr_sum_vl_indicador"
+                    - named_prop: "ds_indicador_prefixo"
         headers:
           - text: 'Município'
             align: 'center'
@@ -364,7 +455,167 @@ secoes:
             det_value_field: "calc_det_value"
           search_position: "bottom"
         source:
-          desc: "ME - RAIS e Novo CAGED, ME - IDEB/SIT, INSS - CATWEB, MS - SINAN, Disque Direitos Humanos (Disque 100), PRF - MAPEAR, IBGE - Censo Agropecuário, ME - SIT, Prova Brasil e Ministério da Cidadania - SAGI/VIS DATA."
+          #, IBGE - Censo Agropecuário, Disque Direitos Humanos (Disque 100)
+          desc: "MTE - RAIS e Novo CAGED, MTE - IDEB/SIT, INSS - CATWEB, MS - SINAN, PRF - MAPEAR, Prova Brasil, Ministério do Desenvolvimento e Assistência Social, Família e Combate à Fome - SAGI/VIS DATA e MTE - SIT."
+# ========================================================
+      - id: "datatable_areas e setores"
+        title:
+          fixed: "Setores Prioritários com Identificação do Trabalho Infantil, inclusive em suas piores formas"
+        title_comment:
+          fixed: "Brasil"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/indicadoresnacionais?categorias=ds_agreg_secundaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'TI_SIT_05_TS',and,eq-nu_competencia-nu_competencia_max&ordenacao=-agr_sum_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: "ds_agreg_secundaria"
+                  - prop: "description"
+                    fixed: "Pior forma de trabalho onde crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais"
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/indicadoresnacionais?categorias=ds_agreg_primaria&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'SIT_TI_CNAE',and,eq-nu_competencia-nu_competencia_max&ordenacao=-agr_sum_vl_indicador&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: "ds_agreg_primaria"
+                  - prop: "description"
+                    fixed: "Atividade Econômica onde crianças e adolescentes em situação de trabalho infantil foram alcançados mais frequentemente pelas ações fiscais"
+              - relevance: 'high'
+                cls: 'xs12'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "CAGRO_TICA13"
+                  year: 'max'
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador_txt'
+                    default: "-"
+                  - prop: "description"
+                    fixed: "Atividade econômica com maior número de pessoas de menos de 14 anos ocupadas em estabelecimentos agropecuários"
+                  # - prop: "comment"
+                  #   template: "Qtde: {0}"
+                  #   args:
+                  #     - named_prop: 'agr_sum_vl_indicador'
+                  #       format: 'inteiro'
+                  #       collapse:
+                  #         format: 'real'
+                  #       default: "Sem Registros"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Com o fim de auxiliar a estruturação e o monitoramento das políticas públicas e ações para promoção dos direitos de crianças e adolescentes e para a prevenção e erradicação do trabalho infantil, os indicadores apresentados ao lado permitem mostrar a multidimensionalidade do fenômeno do trabalho infantil. No quadro ao lado, busca-se apresentar panorama qualitativo do trabalho infantil encontrado em diferentes localidades, inclusive em suas piores formas."
+        component_type: "DATATABLE"
+        api:
+          # SIT_TI_CNAE Crianças e Adolescentes encontrados em situação de Trabalho Infantil
+          # - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'SIT_TI_CNAE'"
+          #   options:
+          #     calcs:
+          #       - id: "header_label"
+          #         function: "applyInterpolReplaceDatasetParam"
+          #         fn_args:
+          #           - fixed:
+          #               template: "{0}<br/>({1})"
+          #               args:
+          #                 - named_prop: "ds_indicador_curto"
+          #                 - named_prop: "nu_competencia_max"
+          #       - id: "fmt_value"
+          #         function: "get_formatted_value"
+          #         fn_args:
+          #           - named_prop: "ds_indicador_curto"
+          #           - named_prop: "agr_sum_vl_indicador"
+          #           - named_prop: "ds_indicador_prefixo"
+          #     clone:
+          #       - id: "calc_fmt_value"
+          #         new_column: "descricao"
+          # SIT_TI_CNAE Atividade Econômica com Trabalho Infantil
+          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia_min,nu_competencia_max,''-ds_indicador_prefixo&valor=vl_indicador,ds_agreg_primaria&agregacao=SUM,GROUP_CONCAT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'SIT_TI_CNAE_PRINCIPAIS'&ordenacao=-cd_indicador"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "Atividade Econômica com crianças e adolescentes encontrados em situação de trabalho infantil<br/>({0})"
+                        args:
+                          - named_prop: "nu_competencia_max"
+              clone:
+                - id: "agr_group_concat_ds_agreg_primaria"
+                  new_column: "descricao"
+          # TI_SIT_05_TS Piores Formas
+          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,nu_competencia_min,nu_competencia_max,''-ds_indicador_prefixo&valor=vl_indicador,ds_agreg_primaria&agregacao=SUM,GROUP_CONCAT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'SIT_TI_PIORES_FORMAS_PRINCIPAIS'&ordenacao=-cd_indicador"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "Piores formas de trabalho infantil identificadas<br/>({0})"
+                        args:
+                          - named_prop: "nu_competencia_max"
+              clone:
+                - id: "agr_group_concat_ds_agreg_primaria"
+                  new_column: "descricao"
+          # CENSOAGRO
+          # - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador,nu_competencia_min,nu_competencia_max,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,eq-cd_indicador-'CAGRO_TICA01'"
+          #   options:
+          #     calcs:
+          #       - id: "header_label"
+          #         function: "applyInterpolReplaceDatasetParam"
+          #         fn_args:
+          #           - fixed:
+          #               template: "{0}<br/>({1})"
+          #               args:
+          #                 - named_prop: "ds_indicador"
+          #                 - named_prop: "nu_competencia_max"
+          #       - id: "fmt_value"
+          #         function: "get_formatted_value"
+          #         fn_args:
+          #           - named_prop: "ds_indicador"
+          #           - named_prop: "agr_sum_vl_indicador"
+          #           - named_prop: "ds_indicador_prefixo"
+          #     clone:
+          #       - id: "calc_fmt_value"
+          #         new_column: "descricao"
+          # CENSO AGRO - Atividades de destaque
+          - fixed: "/indicadoresmunicipais?categorias='ruim'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,nu_competencia_max,''-ds_indicador_prefixo&valor=vl_indicador,vl_indicador_txt&agregacao=SUM,GROUP_CONCAT&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'CAGRO_TICA13'-'CAGRO_TICA14'-'CAGRO_TICA15',and,ne-vl_indicador_txt-'Dado indisponível'"
+            options:
+              calcs:
+                - id: "header_label"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "Censo Agropecuário: Atividades de destaque<br/>({0})"
+                        args:
+                          - named_prop: "nu_competencia_max"
+              clone:
+                - id: "agr_group_concat_vl_indicador_txt"
+                  new_column: "descricao"
+        headers:
+          - text: 'Município'
+            align: 'center'
+            value: 'nm_municipio'
+            item_align: 'center'
+          - text: 'UF'
+            align: 'center'
+            value: 'sg_uf'
+            item_align: 'center'
+        component_options:
+          id: "datatable_sugetoes_ocupacoes"
+          title: "Áreas e Setores Econômicos Prioritários"
+          cls: "xs12 md6 lg4 pa-3"
+          pivot: 
+            col_fields: ["sg_uf","nm_municipio","cd_mun_ibge"]
+            layer_field: "calc_header_label"
+            fmt_value_field: "descricao"
+            value_field: "agr_sum_vl_indicador"
+          search_position: "bottom"
+        source:
+          desc: "MTE - IDEB/SIT e IBGE - Censo Agropecuário, Florestal e Aquícola"
 # ========================================================
       - id: "datatable_infantil_munic"
         title: 
@@ -390,31 +641,36 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api: 
-                  fixed: "/ti/indicadoresestaduais?categorias=vl_indicador_br&filtros=eq-cd_indicador-'censo_suas_pct_mun_sem_creas',and,eq-nu_competencia-nu_competencia_max&limit=1"
+                  fixed: "/indicadoresmunicipais?categorias=ds_indicador,nu_competencia,'(Percentual)'-ds_indicador_prefixo,rank_br_total&valor=cd_municipio_ibge_dv&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max,and,eq-cd_indicador-'SUAS20_CREAS_DG',and,ne-vl_indicador-0,and,nn-vl_indicador"
+                  options:
+                    calcs:
+                      - id: "mun_sem"
+                        function: "calc_subtraction_ds"
+                        fn_args:
+                          - named_prop: "rank_br_total"
+                          - named_prop: "agr_count_cd_municipio_ibge_dv"
+                      - id: "perc_sem"
+                        function: "calc_percentage_ds"
+                        fn_args:
+                          - named_prop: 'calc_mun_sem'
+                          - named_prop: 'rank_br_total'
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador_br'
+                    named_prop: 'calc_perc_sem'
                     format: "porcentagem"
                     default: "Sem Registros"
                     zero: "Nenhum"
                   - prop: "description"
                     fixed: 'DOS MUNICÍPIOS SEM CREAS NO BRASIL'
                   - prop: "comment"
-                    api:
-                      - fixed: "/ti/indicadoresestaduais?categorias=cd_indicador,vl_indicador_br&filtros=eq-cd_indicador-'censo_suas_qtd_mun_sem_creas',and,eq-nu_competencia-nu_competencia_max&limit=1"
-                      - fixed: "/municipios?categorias='total_br'-cd_indicador&agregacao=COUNT"
                     template: "{0} de {1} municípios"
                     args:
-                      - id: "censo_suas_qtd_mun_sem_creas"
-                        named_prop: "vl_indicador_br"
-                        format: "inteiro"
-                      - id: "total_br"
-                        named_prop: "agr_count"
-                        format: "inteiro"
+                      - named_prop: "calc_mun_sem"
+                      - named_prop: "rank_br_total"
           - type: "text"
             title: ""
             content:
-              fixed: "Além de informações obtidas do Censo SUAS, os diferentes módulos da Pesquisa de Informações Básicas Municipais (MUNIC) do IBGE abordam aspectos relevantes de ações de promoção da proteção integral de crianças e adolescentes nos municípios brasileiros. Consideradas essas fontes, o conjunto de indicadores ao lado permite ponderar se os municípios se encontram em estado de alerta quanto à estrutura de políticas públicas. Trata-se de dez indicadores selecionados que podem trazer sinais não apenas da necessidade de aprimoramento das políticas e ações em destaque, mas também da possível vulnerabilidade das crianças e adolescentes nessas localidades. A ausência dessas políticas/programas/ações é, indubitavelmente, um alerta de risco."
+              fixed: "Além de informações obtidas do Censo SUAS, os diferentes módulos da Pesquisa de Informações Básicas Municipais (MUNIC) do IBGE abordam aspectos relevantes de ações de promoção da proteção integral de crianças e adolescentes nos municípios brasileiros. Consideradas essas fontes, o conjunto de indicadores ao lado permite ponderar se os municípios se encontram em estado de alerta quanto à estrutura de políticas públicas. Trata-se de dez indicadores selecionados que podem trazer sinais não apenas da necessidade de aprimoramento das políticas e ações em destaque, mas também da possível vulnerabilidade das crianças e adolescentes nessas localidades. A ausência dessas políticas/programas/ações é, indubitavelmente, um alerta de risco. Destaque-se, entretanto, que a obrigatoriedade da existência do CREAS se aplica a municípios com mais de 20 mil habitantes."
         component_type: "DATATABLE"
         api:
           - fixed: "/indicadoresmunicipais?categorias='neutro'-class_indicador,cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,cd_indicador,ds_indicador_curto-ds_indicador,nu_competencia_min,nu_competencia_max,vl_indicador-agr_sum_vl_indicador,ds_indicador_prefixo,rank_uf,rank_br,media_br,media_uf&filtros=eq-nu_competencia-nu_competencia_max,and,nn-vl_indicador,and,in-cd_indicador-'POP_DOU_01'"
@@ -501,14 +757,14 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "agr_sum_vl_indicador"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/orgs/assistenciasocial?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,categoria-cd_indicador,categoria-ds_indicador,'(Quantidade)'-ds_indicador_prefixo&agregacao=COUNT"
+          - fixed: "/orgs/assistenciasocial?categorias=cd_municipio_ibge_dv-cd_mun_ibge,nm_municipio,sg_uf,categoria-cd_indicador,categoria-ds_indicador,'(Quantidade)'-ds_indicador_prefixo&agregacao=COUNT&filtros=in-categoria-'CREAS'-'CRAS',and,nn-cd_municipio_ibge_dv"
             options:
               calcs:
                 - id: "header_label"
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0}<br/>(2017)"
+                        template: "{0}<br/>(2022)"
                         args:
                           - named_prop: "ds_indicador"
                 - id: "fmt_value"
@@ -581,7 +837,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "O conjunto de indicadores ao lado revela o panorama de algumas das deficiências em ações de enfrentamento do trabalho infantil e proteção integral de crianças e de adolescentes, com foco no percentual de municípios em cada unidade federativa que não possuem a ação em destaque, relacionada à estrutura de implementação dessas políticas públicas. Trata-se de indicadores selecionados que podem trazer sinais não apenas da necessidade de aprimoramento das políticas e ações em destaque, mas também da possível vulnerabilidade das crianças e adolescentes em diversos municípios dessas localidades. A ausência dessas políticas/programas/ações é, indubitavelmente, um alerta de risco."
+              fixed: "O conjunto de indicadores ao lado revela o panorama de algumas das deficiências em ações de enfrentamento do trabalho infantil e proteção integral de crianças e de adolescentes, com foco no percentual de municípios em cada unidade federativa que não possuem a ação em destaque, relacionada à estrutura de implementação dessas políticas públicas. Trata-se de indicadores selecionados que podem trazer sinais não apenas da necessidade de aprimoramento das políticas e ações em destaque, mas também da possível vulnerabilidade das crianças e adolescentes em diversos municípios dessas localidades. A ausência dessas políticas/programas/ações é, indubitavelmente, um alerta de risco. Destaque-se, entretanto, que a obrigatoriedade da existência do CREAS se aplica a municípios com mais de 20 mil habitantes."
         component_type: "DATATABLE"
         api:
           - fixed: "/municipios?categorias=cd_uf,nm_uf,sg_uf,'Total de municípios'-calc_header_label,'(Quantidade)'-ds_indicador_prefixo&agregacao=COUNT"
@@ -678,14 +934,24 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "calc_perc_sem"
                     - named_prop: "ds_indicador_prefixo"
-          - fixed: "/ti/indicadoresestaduais?categorias=cd_uf,nm_uf,sg_uf,ds_indicador,nu_competencia,'(Percentual)'-ds_indicador_prefixo,vl_indicador-calc_perc_sem&filtros=eq-nu_competencia-nu_competencia_max,and,in-cd_indicador-'censo_suas_pct_mun_sem_creas'-'censo_suas_pct_mun_sem_cras'"
+          - fixed: "/indicadoresmunicipais?categorias=cd_uf,nm_uf,sg_uf,ds_indicador,nu_competencia,'(Percentual)'-ds_indicador_prefixo,rank_uf_total&valor=cd_municipio_ibge_dv&agregacao=count&filtros=eq-nu_competencia-nu_competencia_max,and,in-cd_indicador-'SUAS20_CRAS_DG'-'SUAS20_CREAS_DG',and,ne-vl_indicador-0,and,nn-vl_indicador"
             options:
               calcs:
+                - id: "mun_sem"
+                  function: "calc_subtraction_ds"
+                  fn_args:
+                    - named_prop: "rank_uf_total"
+                    - named_prop: "agr_count_cd_municipio_ibge_dv"
+                - id: "perc_sem"
+                  function: "calc_percentage_ds"
+                  fn_args:
+                    - named_prop: 'calc_mun_sem'
+                    - named_prop: 'rank_uf_total'
                 - id: "header_label"
                   function: "applyInterpolReplaceDatasetParam"
                   fn_args:
                     - fixed:
-                        template: "{0}<br/>({1})"
+                        template: "% dos municípios da UF SEM {0}<br/>({1})"
                         args:
                           - named_prop: "ds_indicador"
                           # - function: "capitalize_first_letter"
@@ -698,6 +964,14 @@ secoes:
                     - named_prop: "ds_indicador"
                     - named_prop: "calc_perc_sem"
                     - named_prop: "ds_indicador_prefixo"
+                - id: "fmt_detail"
+                  function: "applyInterpolReplaceDatasetParam"
+                  fn_args:
+                    - fixed:
+                        template: "{0} municípios"
+                        args:
+                          - named_prop: "calc_mun_sem"
+                            format: "inteiro"
         headers:
           - text: 'UF'
             align: 'center'
