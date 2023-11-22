@@ -621,41 +621,54 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
-
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_17_05_00',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            recalc_min_max: true
-            calcs:
-              - id: "deviation_crescimento"
-                function: "get_bipolar_scale"
-                fn_args: 
-                  - fixed: 'vl_indicador'
-            formatters:
-              - id: "vl_indicador"
-                format: 'porcentagem'
-                precision: 2
-                signed: true
-              - id: "rank_br"
-                format: 'inteiro'
+          - template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,vl_indicador,concat(nu_competencia,'_',cd_indicador)-cd_indicador,ds_fonte&filtros=in-cd_indicador-'01_17_05_00'-'01_17_01_00',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+          - template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,vl_indicador_min_uf-vl_indicador,'minVal'-cd_indicador,ds_fonte&filtros=eq-cd_indicador-'01_17_05_00',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+          - template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,vl_indicador_max_uf-vl_indicador,'maxVal'-cd_indicador,ds_fonte&filtros=eq-cd_indicador-'01_17_05_00',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+        api_options:
+          cast:
+            col_fields: ["cd_municipio_ibge_dv","nm_municipio","ds_fonte"]
+            value_field: "vl_indicador"
+            layer_field: "cd_indicador"
+          calcs:
+            - id: "deviation_crescimento"
+              function: "get_bipolar_scale"
+              fn_args: 
+                - fixed: '2022_01_17_05_00'
+          formatters:
+            - id: "2022_01_17_05_00"
+              format: 'porcentagem'
+              precision: 2
+              signed: true
+            - id: "2010_01_17_01_00"
+              format: 'inteiro'
+            - id: "2022_01_17_01_00"
+              format: 'inteiro'
         headers:
           - text: 'Município'
             align: 'left'
             value: 'nm_municipio'
-          - text: 'Indicador'
+          - text: 'População 2010'
             align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Variação da população'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
+            value: 'fmt_2010_01_17_01_00'
+          - text: 'População 2022'
+            align: 'left'
+            value: 'fmt_2022_01_17_01_00'
+          - text: 'Taxa geométrica'
+            value: 'fmt_2022_01_17_05_00'
+          # - text: 'Rank UF'
+          #   value: 'rank_uf'
+          # - text: 'Rank Brasil'
+          #   value: 'fmt_rank_br'
         chart_options:
-          id_field: 'cd_mun_ibge'
+          id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
           value_field: 'calc_deviation_crescimento'
           colorScale:
@@ -805,41 +818,54 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
-
         chart_type: "MAP_TOPOJSON"
         api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_17_04_00',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            recalc_min_max: true
-            calcs:
-              - id: "deviation_crescimento"
-                function: "get_bipolar_scale"
-                fn_args: 
-                  - fixed: 'vl_indicador'
-            formatters:
-              - id: "vl_indicador"
-                format: 'porcentagem'
-                precision: 2
-                signed: true
-              - id: "rank_br"
-                format: 'inteiro'
+          - template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,vl_indicador,concat(nu_competencia,'_',cd_indicador)-cd_indicador,ds_fonte&filtros=in-cd_indicador-'01_17_04_00'-'01_17_01_00',and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+          - template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,vl_indicador_min_uf-vl_indicador,'minVal'-cd_indicador,ds_fonte&filtros=eq-cd_indicador-'01_17_04_00',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+          - template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,vl_indicador_max_uf-vl_indicador,'maxVal'-cd_indicador,ds_fonte&filtros=eq-cd_indicador-'01_17_04_00',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+            args:
+              - named_prop: "cd_uf"
+        api_options:
+          cast:
+            col_fields: ["cd_municipio_ibge_dv","nm_municipio","ds_fonte"]
+            value_field: "vl_indicador"
+            layer_field: "cd_indicador"
+          calcs:
+            - id: "deviation_crescimento"
+              function: "get_bipolar_scale"
+              fn_args: 
+                - fixed: '2022_01_17_04_00'
+          formatters:
+            - id: "2022_01_17_04_00"
+              format: 'porcentagem'
+              precision: 2
+              signed: true
+            - id: "2010_01_17_01_00"
+              format: 'inteiro'
+            - id: "2022_01_17_01_00"
+              format: 'inteiro'
         headers:
           - text: 'Município'
             align: 'left'
             value: 'nm_municipio'
-          - text: 'Indicador'
+          - text: 'População 2010'
             align: 'left'
-            value: 'ds_indicador_radical'
+            value: 'fmt_2010_01_17_01_00'
+          - text: 'População 2022'
+            align: 'left'
+            value: 'fmt_2022_01_17_01_00'
           - text: 'Variação da população'
-            value: 'fmt_vl_indicador'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
+            value: 'fmt_2022_01_17_04_00'
+          # - text: 'Rank UF'
+          #   value: 'rank_uf'
+          # - text: 'Rank Brasil'
+          #   value: 'fmt_rank_br'
         chart_options:
-          id_field: 'cd_mun_ibge'
+          id_field: 'cd_municipio_ibge_dv'
           topo_key: "codarea"
           value_field: 'calc_deviation_crescimento'
           colorScale:

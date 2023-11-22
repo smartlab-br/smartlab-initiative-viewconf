@@ -1,19 +1,29 @@
 # ====================================================          
 master:
-  template: '{0}&nbsp;habitantes ({1}, {2})'
-  preloaded:
-    prop: "centralindicadores"
-    function: "slice"
-    id: "01_17_01_00"
-    year: "max"
+  template: '{0}&nbsp;habitantes em 2022, com variação de {1}% em relação a 2010 ({2}&nbsp;habitantes)<br/>({3})'
+  api:
+    template: "/indicadoresmunicipais?categorias=cd_municipio_ibge_dv,nm_municipio,vl_indicador,concat(nu_competencia,'_',cd_indicador)-cd_indicador,ds_fonte&filtros=in-cd_indicador-'01_17_04_00'-'01_17_01_00',and,eq-cd_municipio_ibge_dv-{0}"
+    args:
+      - named_prop: "idLocalidade"
+    options:
+      cast:
+        col_fields: ["cd_municipio_ibge_dv","nm_municipio","ds_fonte"]
+        value_field: "vl_indicador"
+        layer_field: "cd_indicador"
   args:
-    - named_prop: "vl_indicador"
+    - named_prop: "2022_01_17_01_00"
       format: 'inteiro'
+      uiTags: False
+      collapse:
+        format: 'real'
+        precision: 1
+    - named_prop: "2022_01_17_04_00"
+      format: 'real'
+      precision: 2
+    - named_prop: "2010_01_17_01_00"
+      format: 'inteiro'
+      uiTags: False
       collapse:
         format: 'real'
         precision: 1
     - named_prop: "ds_fonte"
-    - function: "format_scope"
-      fn_args:
-        - named_prop: "nu_competencia"
-        - fixed: "year"
