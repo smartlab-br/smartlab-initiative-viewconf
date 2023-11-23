@@ -1,19 +1,44 @@
 # ====================================================          
 master:
-  template: '{0}&nbsp;habitantes ({1}, {2})'
-  preloaded:
-    prop: "centralindicadores"
-    function: "slice"
-    id: "01_17_01_00"
-    year: "max"
-  args:
-    - named_prop: "vl_indicador"
-      format: 'inteiro'
-      collapse:
-        format: 'real'
-        precision: 1
-    - named_prop: "ds_fonte"
-    - function: "format_scope"
-      fn_args:
-        - named_prop: "nu_competencia"
-        - fixed: "year"
+  - template: '{0}&nbsp;habitantes em {1}, com variação de {2}'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: ["01_17_01_00","01_17_04_00"]
+      year: "max"
+    args:
+      - id: "01_17_01_00"
+        named_prop: "vl_indicador"
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+          precision: 1
+        uiTags: False
+      - function: "format_scope"
+        fn_args:
+          - id: "01_17_01_00"
+            named_prop: "nu_competencia"
+          - fixed: "year"
+      - id: "01_17_04_00"
+        named_prop: "vl_indicador"
+        format: 'porcentagem'
+        precision: 2
+        uiTags: False
+  - template: '{0}&nbsp;habitantes em {1} ({2})'
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "01_17_01_00"
+      year: "2010"
+    args:
+      - named_prop: "vl_indicador"
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+          precision: 1
+        uiTags: False
+      - function: "format_scope"
+        fn_args:
+          - named_prop: "nu_competencia"
+          - fixed: "year"
+      - named_prop: "ds_fonte"
