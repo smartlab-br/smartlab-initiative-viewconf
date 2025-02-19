@@ -1,0 +1,1323 @@
+# ===================================================
+principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - AUXÍLIO-DOENÇA POR ACIDENTE DO TRABALHO (B91)"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - APOSENTADORIA POR INVALIDEZ POR ACIDENTE DO TRABALHO (B92)"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+# ===================================================
+secoes:
+  - id: "perfil_beneficios"
+    name: "Afastamentos Saúde Mental"
+    cards:
+# =====================================================
+  
+      - id: "treemap_doencas"
+        type: "multiple-charts"
+        title: 
+          fixed: "Causas de afastamento associadas à saúde mental"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs6'
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: '{0}<br/>B91'
+                    args:
+                      - named_prop: "cd_agp_cat_cid_agrv_det_doenca"
+                  - prop: "comment"
+                    named_prop: 'ano_beneficio'
+              - relevance: 'high'
+                cls: 'xs6'
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: '{0}<br/>B31'
+                    args:
+                      - named_prop: "cd_agp_cat_cid_agrv_det_doenca"
+                  - prop: "comment"
+                    named_prop: 'ano_beneficio'
+          - type: "text"
+            title: ""
+            content:
+              api: 
+                fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+              template: "Em destaque, os afastamentos com os tipos de doenças mais frequentes registradas para afastamentos acidentários (B91) e não acidentários (B31) no último ano apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No caso, criou-se uma simplificação textual da Classificação Internacional de Doenças para facilitar a compreensão. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto às doenças mais frequentes e a percepção de tendências e distinções quantitativas relevantes."
+              args:
+                - named_prop: "agr_min_ano_beneficio"
+                - named_prop: "agr_max_ano_beneficio"
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+            args:
+              - prop: "min"
+                named_prop: "agr_min_ano_beneficio"
+              - prop: "max"
+                named_prop: "agr_max_ano_beneficio"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+        charts:
+# =====================================================
+          - id: "treemap_doencas_b91"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Tipos de Doenças - B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            type: "TREEMAP"
+            api: 
+              fixed: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_especie_beneficio-91"
+              options:
+                  formatters:
+                    - id: "agr_count"
+                      format: 'inteiro'
+            headers:
+              - text: 'Categoria'
+                value: 'cd_agp_cat_cid_agrv_det_doenca'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "cd_agp_cat_cid_agrv_det_doenca"
+              size: "agr_count"
+              text: "cd_agp_cat_cid_agrv_det_doenca"
+              hide_legend: true
+              colorScale:
+                name: "Reds"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# =====================================================
+          - id: "treemap_doencas_b31"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Tipos de Doenças - B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            type: "TREEMAP"
+            api: 
+              fixed: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_especie_beneficio-31"
+              options:
+                  formatters:
+                    - id: "agr_count"
+                      format: 'inteiro'
+            headers:
+              - text: 'Categoria'
+                value: 'cd_agp_cat_cid_agrv_det_doenca'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "cd_agp_cat_cid_agrv_det_doenca"
+              size: "agr_count"
+              text: "cd_agp_cat_cid_agrv_det_doenca"
+              hide_legend: true
+              colorScale:
+                name: "Blues"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# =====================================================
+      
+          - id: "treemap_afast_doencas_b91"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Afastamentos por CID - B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            type: "TREEMAP"
+            api: 
+              fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-91"
+              options:
+                  formatters:
+                    - id: "agr_count"
+                      format: 'inteiro'
+            headers:
+              - text: 'Categoria'
+                value: 'cd_agrupamento_categoria_cid'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "cd_agrupamento_categoria_cid"
+              size: "agr_count"
+              text: "cd_agrupamento_categoria_cid"
+              hide_legend: true
+              colorScale:
+                name: "Reds"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# =====================================================
+          - id: "treemap_afast_doencas_b31"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Afastamentos por CID - B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            type: "TREEMAP"
+            api: 
+              fixed: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-31"
+              options:
+                  formatters:
+                    - id: "agr_count"
+                      format: 'inteiro'
+            headers:
+              - text: 'Categoria'
+                value: 'cd_agrupamento_categoria_cid'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "cd_agrupamento_categoria_cid"
+              size: "agr_count"
+              text: "cd_agrupamento_categoria_cid"
+              hide_legend: true
+              colorScale:
+                name: "Blues"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# =====================================================
+      - id: "treemap_afast_cod_cid"
+        type: "multiple-charts"
+        title: 
+          fixed: "Causas de afastamento associadas à saúde mental conforme CID 10"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs6'
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: '{0} - {1}<br/>B91'
+                    args:
+                      - named_prop: "cd_categoria_cid_beneficio"
+                      - named_prop: "ds_categoria_cid_beneficio"
+                  - prop: "comment"
+                    named_prop: 'ano_beneficio'
+              - relevance: 'high'
+                cls: 'xs6'
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: '{0} - {1}<br/>B91'
+                    args:
+                      - named_prop: "cd_categoria_cid_beneficio"
+                      - named_prop: "ds_categoria_cid_beneficio"
+                  - prop: "comment"
+                    named_prop: 'ano_beneficio'
+          - type: "text"
+            title: ""
+            content:
+              api: 
+                fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+              template: "Em destaque, os códigos da Classificação Internacional de Doenças (CID) mais frequentemente associados a afastamentos do tipo acidentário (B91) e não acidentário (B31) no último ano apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto ao motivo mais frequente, a percepçaõ de tendências e distinções quantitativas relevantes. Utilize os filtros abaixo para combinar as perspectivas."
+              args:
+                - named_prop: "agr_min_ano_beneficio"
+                - named_prop: "agr_max_ano_beneficio"
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+            args:
+              - prop: "min"
+                named_prop: "agr_min_ano_beneficio"
+              - prop: "max"
+                named_prop: "agr_max_ano_beneficio"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            api:
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe"
+              - prop: "label"
+                named_prop: "ds_cnae_classe"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe"
+          - id: "select_cbo"
+            type: "select"
+            multiple: true
+            label: "Ocupações"
+            api:
+              template: "/sst/beneficios?categorias=ds_cbo2002&agregacao=distinct&ordenacao=ds_cbo2002"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "ds_cbo2002"
+              - prop: "label"
+                named_prop: "ds_cbo2002"
+                null_value: "(Não identificado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cbo2002-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cbo2002"
+        charts:
+# =====================================================
+          - id: "treemap_afast_cod_cid_b91"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Afastamentos por Código CID - B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            type: "TREEMAP"
+            api: 
+              fixed: "/sst/beneficios?categorias=cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'',and,eq-cd_especie_beneficio-91"
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}"
+                          args:
+                            - named_prop: "cd_categoria_cid_beneficio"
+                            - named_prop: "ds_categoria_cid_beneficio"
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+            headers:
+              - text: 'Código CID'
+                value: 'cd_categoria_cid_beneficio'
+              - text: 'Descrição'
+                value: 'ds_categoria_cid_beneficio'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "cd_categoria_cid_beneficio"
+              size: "agr_count"
+              text: "calc_bar_description"
+              hide_legend: true
+              colorScale:
+                name: "Reds"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# =====================================================
+          - id: "treemap_afast_cod_cid_b31"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Afastamentos por Código CID - B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            type: "TREEMAP"
+            api: 
+              fixed: "/sst/beneficios?categorias=cd_categoria_cid_beneficio,ds_categoria_cid_beneficio&agregacao=COUNT&filtros=ne-ds_categoria_cid_beneficio-'',and,eq-cd_especie_beneficio-31"
+              options:
+                calcs:
+                  - id: "bar_description"
+                    function: "applyInterpolReplaceDatasetParam"
+                    fn_args:
+                      - fixed: 
+                          template: "{0} - {1}"
+                          args:
+                            - named_prop: "cd_categoria_cid_beneficio"
+                            - named_prop: "ds_categoria_cid_beneficio"
+                formatters:
+                  - id: "agr_count"
+                    format: 'inteiro'
+            headers:
+              - text: 'Código CID'
+                value: 'cd_categoria_cid_beneficio'
+              - text: 'Descrição'
+                value: 'ds_categoria_cid_beneficio'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "cd_categoria_cid_beneficio"
+              size: "agr_count"
+              text: "calc_bar_description"
+              hide_legend: true
+              colorScale:
+                name: "Blues"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# =====================================================
+      - id: "treemap_benef_setores"
+        type: "multiple-charts"
+        title: 
+          fixed: "Distribuição de afastamentos associados à saúde mental por setor econômico"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs6'
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: '{0}<br/>B91'
+                    args:
+                      - named_prop: "ds_cnae_classe"
+                  - prop: "comment"
+                    named_prop: 'ano_beneficio'
+              - relevance: 'high'
+                cls: 'xs6'
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}&ordenacao=-agr_count&limit=1"
+                  args:
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: '{0}<br/>B31'
+                    args:
+                      - named_prop: "ds_cnae_classe"
+                  - prop: "comment"
+                    named_prop: 'ano_beneficio'
+          - type: "text"
+            title: ""
+            content:
+              api: 
+                fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+              template: "Em destaque, os setores econômicos mais frequentemente relacionados a afastamentos do tipo acidentário (B91) e não acidentário (B31) no último ano apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto ao motivo mais frequente, a percepçaõ de tendências e distinções quantitativas relevantes. Utilize os filtros abaixo para combinar as perspectivas."
+              args:
+                - named_prop: "agr_min_ano_beneficio"
+                - named_prop: "agr_max_ano_beneficio"
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+            args:
+              - prop: "min"
+                named_prop: "agr_min_ano_beneficio"
+              - prop: "max"
+                named_prop: "agr_max_ano_beneficio"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+          - id: "select_cid"
+            type: "select"
+            multiple: true
+            label: "Categoria CID"
+            api:
+              template: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=distinct&ordenacao=cd_agrupamento_categoria_cid"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "cd_agrupamento_categoria_cid"
+              - prop: "label"
+                named_prop: "cd_agrupamento_categoria_cid"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+                api:
+                  args:
+                    - named_prop: "cd_agrupamento_categoria_cid"
+          - id: "select_cbo"
+            type: "select"
+            multiple: true
+            label: "Ocupações"
+            api:
+              template: "/sst/beneficios?categorias=ds_cbo2002&agregacao=distinct&ordenacao=ds_cbo2002"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "ds_cbo2002"
+              - prop: "label"
+                named_prop: "ds_cbo2002"
+                null_value: "(Não identificado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cbo2002-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cbo2002"
+        charts:
+          - id: "treemap_benef_setores_b91"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Atividades Econômicas- B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            type: "TREEMAP"
+            api: 
+              fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91"
+              options:
+                  formatters:
+                    - id: "agr_count"
+                      format: 'inteiro'
+            headers:
+              - text: 'Setor'
+                align: 'left'
+                value: 'ds_cnae_classe'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "ds_cnae_classe"
+              size: "agr_count"
+              text: "ds_cnae_classe"
+              hide_legend: true
+              colorScale:
+                name: "Reds"
+            # source:
+            #   desc_field: "ds_fonte"                    
+          - id: "treemap_benef_setores_b31"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Atividades Econômicas- B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            type: "TREEMAP"
+            api: 
+              fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-31"
+              options:
+                  formatters:
+                    - id: "agr_count"
+                      format: 'inteiro'
+            headers:
+              - text: 'Setor'
+                align: 'left'
+                value: 'ds_cnae_classe'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "ds_cnae_classe"
+              size: "agr_count"
+              text: "ds_cnae_classe"
+              hide_legend: true
+              colorScale:
+                name: "Blues"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# =====================================================
+      - id: "treemap_benef_cbo"
+        type: "multiple-charts"
+        title: 
+          fixed: "Distribuição de afastamentos associados à saúde mental por setor ocupação (CBO)"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              fixed: "Sem observações adicionais. Vide descrição"
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs6'
+                api:
+                  fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,eq-cd_especie_beneficio-91&ordenacao=-agr_count&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: '{0}<br/>B91'
+                    args:
+                      - named_prop: "ds_cbo2002"
+              - relevance: 'high'
+                cls: 'xs6'
+                api:
+                  fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,eq-cd_especie_beneficio-31&ordenacao=-agr_count&limit=1"
+                args:
+                  - prop: "value"
+                    named_prop: 'agr_count'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    template: '{0}<br/>B31'
+                    args:
+                      - named_prop: "ds_cbo2002"
+          - type: "text"
+            title: ""
+            content:
+              api: 
+                fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+              template: "Em destaque, as ocupações mais frequentemente vitimadas por afastamentos do tipo acidentário (B91) e não acidentário (B31) no período apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto ao motivo mais frequente, a percepção de tendências e distinções quantitativas relevantes. Utilize os filtros abaixo para combinar as perspectivas."
+              args:
+                - named_prop: "agr_min_ano_beneficio"
+                - named_prop: "agr_max_ano_beneficio"
+          - id: "slider_ano"
+            type: "slider"
+            range: true
+            api: 
+              fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+            args:
+              - prop: "min"
+                named_prop: "agr_min_ano_beneficio"
+              - prop: "max"
+                named_prop: "agr_max_ano_beneficio"
+            selection:
+              event: "selection"
+              rules:
+                filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
+                api:
+                  args:
+                    - named_prop: "value_min"
+                    - named_prop: "value_max"
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            api:
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe"
+              - prop: "label"
+                named_prop: "ds_cnae_classe"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe"
+          - id: "select_cid"
+            type: "select"
+            multiple: true
+            label: "Categoria CID"
+            api:
+              template: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=distinct&ordenacao=cd_agrupamento_categoria_cid"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "cd_agrupamento_categoria_cid"
+              - prop: "label"
+                named_prop: "cd_agrupamento_categoria_cid"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+                api:
+                  args:
+                    - named_prop: "cd_agrupamento_categoria_cid"
+        charts:
+          - id: "treemap_benef_cbo_b91"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Ocupações- B91 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            type: "TREEMAP"
+            api: 
+              fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,eq-cd_especie_beneficio-91"
+              options:
+                  formatters:
+                    - id: "agr_count"
+                      format: 'inteiro'
+            headers:
+              - text: 'Ocupação'
+                align: 'left'
+                value: 'ds_cbo2002'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "ds_cbo2002"
+              size: "agr_count"
+              text: "ds_cbo2002"
+              hide_legend: true
+              colorScale:
+                name: "Reds"
+            # source:
+            #   desc_field: "ds_fonte"                    
+          - id: "treemap_benef_cbo_b31"
+            cls: "xs12 md6"
+            footnote: 
+              template: "Ocupações- B31 ({0}-{1})"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_min_ano_beneficio"
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            type: "TREEMAP"
+            api: 
+              fixed: "/sst/beneficios?categorias=ds_cbo2002&agregacao=COUNT&filtros=ne-ds_cbo2002-'',and,eq-cd_especie_beneficio-31"
+              options:
+                  formatters:
+                    - id: "agr_count"
+                      format: 'inteiro'
+            headers:
+              - text: 'Ocupação'
+                align: 'left'
+                value: 'ds_cbo2002'
+              - text: 'Qtde'
+                value: 'fmt_agr_count'
+            options:
+              id: "ds_cbo2002"
+              size: "agr_count"
+              text: "ds_cbo2002"
+              hide_legend: true
+              colorScale:
+                name: "Blues"
+            # source:
+            #   desc_field: "ds_fonte"                    
+# ==========================================================
+      - id: "mapa_b91"
+        title: 
+          fixed: "Concessão de Benefícios Previdenciários Acidentários (B91)"
+        title_comment:
+          template: "Brasil, {0}"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - named_prop: 'cd_indicador'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "B91 - Quantidade de concessões"
+          # - type: "ranking_list"
+          #   title: "Maiores Frequências"
+          #   rankings:
+          #     - title: "Municípios"
+          #       cls: "xs12 md6"
+          #       api: 
+          #         fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_br&agregacao=DISTINCT&filtros=in-rank_br-1-2-3,and,eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max&ordenacao=rank_br"
+          #       args:
+          #         - prop: 'localidade'
+          #           named_prop: "nm_municipio_uf"
+          #         - prop: 'vl_indicador'
+          #           named_prop: "vl_indicador"
+          #           format: "inteiro"
+          #         - prop: 'rank'
+          #           named_prop: "rank_br"
+          #     - title: "Unidades Federativas"
+          #       cls: "xs12 md6"
+          #       api: 
+          #         fixed: "/indicadoresestaduais?categorias=nm_uf,vl_indicador,rank_br&agregacao=DISTINCT&filtros=in-rank_br-1-2-3,and,eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max&ordenacao=rank_br"
+          #       args:
+          #         - prop: 'localidade'
+          #           named_prop: "nm_uf"
+          #         - prop: 'vl_indicador'
+          #           named_prop: "vl_indicador"
+          #           format: "inteiro"
+          #         - prop: 'rank'
+          #           named_prop: "rank_br"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade). Utilize os filtros abaixo para combinar as perspectivas."
+          - id: "select_cid_b91"
+            type: "select"
+            multiple: true
+            label: "Categoria CID"
+            api:
+              template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=ne-cd_agrupamento_categoria_cid-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            args:
+              - prop: "id"
+                named_prop: "cd_agrupamento_categoria_cid"
+              - prop: "label"
+                named_prop: "cd_agrupamento_categoria_cid"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+                api:
+                  args:
+                    - named_prop: "cd_agrupamento_categoria_cid"
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            api:
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}"
+              args:
+                - base_object: "sst_beneficio"
+                  named_prop: "agr_max_ano_beneficio"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe"
+              - prop: "label"
+                named_prop: "ds_cnae_classe"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{0}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+          options:
+            calcs:
+              - id: "deviation_b91"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'ano_beneficio'
+          - text: 'Qtde de Benefícios B91 - Auxílio-doença por acidente de trabalho'
+            value: 'fmt_agr_count'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_deviation_b91'
+          colorScale:
+            name: "Reds"
+        # source:
+        #   desc: "INSS/BENEFÍCIOS"
+# ==========================================================
+      - id: "bar_ben_b91"
+        title: 
+          fixed: "Concessão de Benefícios Previdenciários Acidentários (B91) – Série Histórica"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - id: "10_10_01_91"
+              named_prop: "nu_competencia_min"
+            - id: "sst_bene_qtd_especie"
+              named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a 2017<br/>
+                          Nome: {3}<br/>Fonte: {4}<br/>Ano: 2018 a {5}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - id: "10_10_01_91"
+                  named_prop: 'cd_indicador'
+                - id: "10_10_01_91"
+                  named_prop: 'ds_fonte'
+                - id: "10_10_01_91"
+                  named_prop: 'nu_competencia_min'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'cd_indicador'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'ds_fonte'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,gt-nu_competencia-2017"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,le-nu_competencia-'2017'"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_91"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        devault: 0
+                args:
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "B91 - Quantidade acumulada"
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_91',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - id: "10_10_01_91"
+                  named_prop: "nu_competencia_min"
+                - id: "sst_bene_qtd_especie"
+                  named_prop: "nu_competencia_max"
+        chart_type: "BAR"
+        api:
+          - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'91',and,gt-nu_competencia-2017"
+          - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'10_10_01_91',and,le-nu_competencia-'2017'"
+        api_options:
+          formatters:
+            - id: "vl_indicador"
+              format: "inteiro"
+        headers:
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde de Benefícios B91 - Auxílio-doença por acidente de trabalho'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "fmt_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          hide_legend: true
+          color: "#238B45"
+        # source:
+        #   desc_field: "ds_fonte"
+# ==========================================================
+      - id: "mapa_b92"
+        title: 
+          fixed: "Concessão de Aposentadorias por Invalidez Acidentária (B92)"
+        title_comment:
+          template: "Brasil, {0}"
+          api:
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - named_prop: "nu_competencia"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
+              api:
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - named_prop: 'cd_indicador'
+                - named_prop: 'ds_fonte'
+                - named_prop: 'nu_competencia'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "B92 - Quantidade de concessões"
+          # - type: "ranking_list"
+          #   title: "Maiores Frequências"
+          #   rankings:
+          #     - title: "Municípios"
+          #       cls: "xs12 md6"
+          #       api: 
+          #         fixed: "/indicadoresmunicipais?categorias=nm_municipio_uf,vl_indicador,rank_br&agregacao=DISTINCT&filtros=in-rank_br-1-2-3,and,eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max&ordenacao=rank_br"
+          #       args:
+          #         - prop: 'localidade'
+          #           named_prop: "nm_municipio_uf"
+          #         - prop: 'vl_indicador'
+          #           named_prop: "vl_indicador"
+          #           format: "inteiro"
+          #         - prop: 'rank'
+          #           named_prop: "rank_br"
+          #     - title: "Unidades Federativas"
+          #       cls: "xs12 md6"
+          #       api: 
+          #         fixed: "/indicadoresestaduais?categorias=nm_uf,vl_indicador,rank_br&agregacao=DISTINCT&filtros=in-rank_br-1-2-3,and,eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max&ordenacao=rank_br"
+          #       args:
+          #         - prop: 'localidade'
+          #           named_prop: "nm_uf"
+          #         - prop: 'vl_indicador'
+          #           named_prop: "vl_indicador"
+          #           format: "inteiro"
+          #         - prop: 'rank'
+          #           named_prop: "rank_br"
+          - type: "text"
+            title: ""
+            content:
+              fixed: "Em destaque, o número de concessões de benefícios previdenciários do tipo Aposentadoria por Invalidez Acidentária (B92) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+          # - id: "select_cid_b92"
+          #   type: "select"
+          #   multiple: true
+          #   label: "Categoria CID"
+          #   api:
+          #     template: "/sst/beneficios?categorias=cd_uf,cd_agrupamento_categoria_cid&agregacao=DISTINCT&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{0}"
+          #     args:
+          #       - base_object: "sst_beneficio"
+          #         named_prop: "agr_max_ano_beneficio"
+          #   args:
+          #     - prop: "id"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #     - prop: "label"
+          #       named_prop: "cd_agrupamento_categoria_cid"
+          #       null_value: "(Não informado)"
+          #   selection:
+          #     event: "selection" 
+          #     rules:
+          #       filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
+          #       api:
+          #         args:
+          #           - named_prop: "cd_agrupamento_categoria_cid"
+        chart_type: "MAP_TOPOJSON"
+        api: 
+          template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{0}"
+          args:
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"
+          options:
+            calcs:
+              - id: "deviation_b92"
+                function: "get_log"
+                fn_args:
+                  - fixed: "agr_count"
+            formatters:
+              - id: "agr_count"
+                format: 'inteiro'
+        headers:
+          - text: 'UF'
+            align: 'left'
+            value: 'nm_uf'
+          - text: 'Ano'
+            align: 'left'
+            value: 'ano_beneficio'
+          - text: 'Qtde de Benefícios B92 - Aposentadorias por Invalidez Acidentária'
+            value: 'fmt_agr_count'
+        chart_options:
+          id_field: 'cd_uf'
+          topo_key: "codigo"
+          value_field: 'calc_deviation_b92'
+          colorScale:
+            name: "Reds"
+        # source:
+        #   desc: "INSS/BENEFÍCIOS"
+# ==========================================================
+      - id: "bar_ben_b92"
+        title: 
+          fixed: "Concessão de Aposentadorias por Invalidez Acidentária (B92) – Série Histórica"
+        title_comment:
+          template: "Brasil, de {0} a {1}"
+          api:
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max"
+          args:
+            - id: "10_10_01_92"
+              named_prop: "nu_competencia_min"
+            - id: "sst_bene_qtd_especie"
+              named_prop: "nu_competencia_max"
+        info:
+          - type: "text"
+            title: "Sobre a métrica"
+            content:
+              template: "Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a 2017<br/>
+                          Nome: {3}<br/>Fonte: {4}<br/>Ano: 2018 a {5}"
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max,ds_fonte&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - id: "10_10_01_92"
+                  named_prop: 'cd_indicador'
+                - id: "10_10_01_92"
+                  named_prop: 'ds_fonte'
+                - id: "10_10_01_92"
+                  named_prop: 'nu_competencia_min'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'cd_indicador'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'ds_fonte'
+                - id: "sst_bene_qtd_especie"
+                  named_prop: 'nu_competencia_max'
+        description:
+          - type: "minicards"
+            cards:
+              - relevance: 'high'
+                cls: 'xs12'
+                api:
+                  - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,gt-nu_competencia-2017"
+                  - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,le-nu_competencia-'2017'"
+                api_options:
+                  combine:
+                  - id: "total"
+                    desc: "total_concessao"
+                    function: 'calc_addition'
+                    fn_args:
+                      - id: "10_10_01_92"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                      - id: "sst_bene_qtd_especie"
+                        named_prop: "agr_sum_vl_indicador"
+                        default: 0
+                args:
+                  - id: "total"
+                    prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: 'B92 - Quantidade acumulada'
+          - type: "text"
+            title: ""
+            content:
+              template: "Em destaque, o número acumulado de concessões de benefícios previdenciários do tipo Aposentadorias por Invalidez Acidentária (B92) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
+              api:
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,eq-nu_competencia-nu_competencia_max"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'10_10_01_92',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - id: "10_10_01_92"
+                  named_prop: "nu_competencia_min"
+                - id: "sst_bene_qtd_especie"
+                  named_prop: "nu_competencia_max"
+        chart_type: "BAR"
+        api:
+          - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_bene_qtd_especie',and,eq-ds_agreg_primaria-'92',and,gt-nu_competencia-2017"
+          - fixed: "/indicadoresnacionais?categorias=cd_indicador,nu_competencia,vl_indicador&filtros=eq-cd_indicador-'10_10_01_92',and,le-nu_competencia-'2017'"
+        api_options:
+          formatters:
+            - id: "vl_indicador"
+              format: "inteiro"
+        headers:
+          - text: 'Ano'
+            align: 'left'
+            value: 'nu_competencia'
+          - text: 'Qtde de Benefícios B92 - Aposentadorias por Invalidez Acidentária'
+            value: 'fmt_vl_indicador'
+        chart_options:
+          id: "nu_competencia"
+          x: "nu_competencia"
+          y: "vl_indicador"
+          orientation: "vertical"
+          text: "fmt_vl_indicador"
+          show_x_axis: true
+          show_y_axis: false
+          hide_legend: true
+          color: "#238B45"
+        # source:
+        #   desc_field: "ds_fonte"
