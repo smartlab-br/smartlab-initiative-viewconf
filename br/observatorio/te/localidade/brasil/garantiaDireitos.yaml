@@ -1,26 +1,26 @@
 principais:
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "trabalho_escravo_agr"
-      function: "slice"
-      id: ['te_ope']
-    args:
-      - prop: "value"
-        named_prop: 'agr_sum_vl_indicador'
-        format: 'inteiro'
-        default: 'Nenhuma'
-        zero: 'Nenhuma'
-      - prop: "description"
-        fixed: "Operações de Combate ao Trabalho Escravo"
-      - prop: 'comment'
-        template: "(De {0} a {1})"
-        api: 
-          fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_ope'"
-        args:
-          - named_prop: "nu_competencia_min"
-          - named_prop: "nu_competencia_max"
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   preloaded:
+  #     prop: "trabalho_escravo_agr"
+  #     function: "slice"
+  #     id: ['te_ope']
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'agr_sum_vl_indicador'
+  #       format: 'inteiro'
+  #       default: 'Nenhuma'
+  #       zero: 'Nenhuma'
+  #     - prop: "description"
+  #       fixed: "Operações de Combate ao Trabalho Escravo"
+  #     - prop: 'comment'
+  #       template: "(De {0} a {1})"
+  #       api: 
+  #         fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_ope'"
+  #       args:
+  #         - named_prop: "nu_competencia_min"
+  #         - named_prop: "nu_competencia_max"
   - relevance: 'lead' 
     cls: 'xs12'
     rowClass: "pt-0 px-3 pb-5"
@@ -90,10 +90,11 @@ secoes:
                   fixed: "/te/indicadoresnacionais?categorias=ds_indicador,nu_competencia_min,nu_competencia_max&valor=vl_indicador&agregacao=sum&filtros=eq-cd_indicador-'te_sit_trab_resgatados'"
                 args:
                   - prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
+                    fixed: "65.598"
+                    # named_prop: 'agr_sum_vl_indicador'
+                    # format: 'inteiro'
+                    # default: "Sem Registros"
+                    # zero: "Nenhum"
                   - prop: "description"
                     fixed: 'Resgatados'
                   - prop: "comment"
@@ -168,115 +169,115 @@ secoes:
           hide_legend: true
           color: "#238B45"
           fontMax: 18
-# ========================================================
-      - id: "mapa_op_resgatados_escravo"
-        title: 
-          fixed: "Operações de Combate ao Trabalho Escravo e Resgates"
-        title_comment:
-          template: "{0}, de {1} a {2}"
-          api: 
-            fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_ope'"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: ""
-        msgNoData:
-          desc: "No período, não houve operações de resgates de trabalhadores em condição análoga à de escravo no país."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "trabalho_escravo_agr"
-                  function: "slice"
-                  id: ['te_ope', 'te_inspecoes']
-                args:
-                  - id: "te_ope"
-                    prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: 'OPERAÇÕES'
-                  - prop: "comment"
-                    template: "{0} inspeções"
-                    args:
-                      - id: "te_inspecoes"
-                        named_prop: "agr_sum_vl_indicador"
-                        format: 'inteiro'
-                        default: "Sem Registros"
-                        zero: "Nenhum"
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "trabalho_escravo_agr"
-                  function: "slice"
-                  id: ['te_rgt', 'te_insp_rgt']
-                  options:
-                    combine:
-                    - id: "resg_inspecao"
-                      desc: "Resgatados por inspeção"
-                      function: "calc_proportion"
-                      fn_args:
-                        - id: "te_rgt"
-                          named_prop: "agr_sum_vl_indicador"
-                        - id: "te_insp_rgt"
-                          named_prop: "agr_sum_vl_indicador"
-                args:
-                  - id: "te_insp_rgt"
-                    prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: 'INSPEÇÕES COM RESGATE'
-                  - prop: "comment"
-                    template: "{0} resgatados/inspeção"
-                    args:
-                      - id: "resg_inspecao"
-                        named_prop: "vl_indicador"
-                        format: 'real'
-                        default: "Sem Registros"
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Em destaque, o número de operações de combate ao trabalho escravo no país. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade) de inspeções com resgate."
-        chart_type: "MAP_TOPOJSON"
-        api: 
-          fixed: "/te/indicadoresestaduais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_insp_rgt'"
-          options:
-            calcs:
-              - id: "deviation_resg"
-                function: "get_log"
-                fn_args:
-                  - fixed: "agr_sum_vl_indicador"
-            formatters:
-              - id: "agr_sum_vl_indicador"
-                format: 'inteiro'
-        headers:
-          - text: 'UF'
-            align: 'left'
-            value: 'nm_uf'
-          - text: 'Nº inspeções do trabalho escravo com resgate'
-            value: 'fmt_agr_sum_vl_indicador'
-        chart_options:
-          id_field: 'cd_uf'
-          topo_key: "codigo"
-          value_field: 'calc_deviation_resg'
-          colorScale:
-            name: 'Reds'
-        source:
-          desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério do Trabalho e Emprego do Brasil."
-          link: ""
+# # ========================================================
+#       - id: "mapa_op_resgatados_escravo"
+#         title: 
+#           fixed: "Operações de Combate ao Trabalho Escravo e Resgates"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           api: 
+#             fixed: "/te/indicadoresnacionais?categorias=nu_competencia_min,nu_competencia_max&limit=1&filtros=eq-cd_indicador-'te_ope'"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - named_prop: "nu_competencia_min"
+#             - named_prop: "nu_competencia_max"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: ""
+#         msgNoData:
+#           desc: "No período, não houve operações de resgates de trabalhadores em condição análoga à de escravo no país."
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "trabalho_escravo_agr"
+#                   function: "slice"
+#                   id: ['te_ope', 'te_inspecoes']
+#                 args:
+#                   - id: "te_ope"
+#                     prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: 'OPERAÇÕES'
+#                   - prop: "comment"
+#                     template: "{0} inspeções"
+#                     args:
+#                       - id: "te_inspecoes"
+#                         named_prop: "agr_sum_vl_indicador"
+#                         format: 'inteiro'
+#                         default: "Sem Registros"
+#                         zero: "Nenhum"
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "trabalho_escravo_agr"
+#                   function: "slice"
+#                   id: ['te_rgt', 'te_insp_rgt']
+#                   options:
+#                     combine:
+#                     - id: "resg_inspecao"
+#                       desc: "Resgatados por inspeção"
+#                       function: "calc_proportion"
+#                       fn_args:
+#                         - id: "te_rgt"
+#                           named_prop: "agr_sum_vl_indicador"
+#                         - id: "te_insp_rgt"
+#                           named_prop: "agr_sum_vl_indicador"
+#                 args:
+#                   - id: "te_insp_rgt"
+#                     prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: 'INSPEÇÕES COM RESGATE'
+#                   - prop: "comment"
+#                     template: "{0} resgatados/inspeção"
+#                     args:
+#                       - id: "resg_inspecao"
+#                         named_prop: "vl_indicador"
+#                         format: 'real'
+#                         default: "Sem Registros"
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Em destaque, o número de operações de combate ao trabalho escravo no país. No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade) de inspeções com resgate."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           fixed: "/te/indicadoresestaduais?categorias=cd_uf,nm_uf&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'te_insp_rgt'"
+#           options:
+#             calcs:
+#               - id: "deviation_resg"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'UF'
+#             align: 'left'
+#             value: 'nm_uf'
+#           - text: 'Nº inspeções do trabalho escravo com resgate'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_uf'
+#           topo_key: "codigo"
+#           value_field: 'calc_deviation_resg'
+#           colorScale:
+#             name: 'Reds'
+#         source:
+#           desc: "Bancos de dados do Seguro-Desemprego do Trabalhador Resgatado, do Sistema de Acompanhamento do Trabalho Escravo (SISACTE) e do Sistema COETE (Controle de Erradicação do Trabalho Escravo), referentes ao período iniciado em 2003 (Primeiro Plano Nacional de Erradicação do Trabalho Escravo). Os dados brutos foram fornecidos pelo Ministério do Trabalho e Emprego do Brasil."
+#           link: ""
 # ===============================================
       - id: "garantia_acoes_municipais_headline"
         type: "headline"

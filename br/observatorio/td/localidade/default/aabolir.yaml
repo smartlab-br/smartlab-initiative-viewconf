@@ -1269,125 +1269,125 @@ secoes:
           value_field: 'calc_deviation_resg'
           colorScale:
             name: 'Reds'
-# ========================================================
-      - id: "mapa_op_resgatados_escravo"
-        title: 
-          fixed: "Operações de combate ao trabalho escravo e resgates"
-        title_comment:
-          template: "{0}, de {1} a {2}"
-          api: 
-            template: "/te/indicadoresnacionais?categorias=nu_competencia_min, nu_competencia_max&filtros=eq-cd_indicador-'te_ope'&limit=1"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: ""
-        msgNoData:
-          desc: "No período, não houve operações de resgates de trabalhadores em condição análoga à de escravo no município. Para mais informações visite o <a class='accent--text' href='/trabalhoescravo' target='_blank'>Observatório da Erradicação do Trabalho Escravo e do Tráfico de Pessoas</a>."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "trabalho_escravo_agr"
-                  function: "slice"
-                  id: ['te_ope', 'te_inspecoes']
-                args:
-                  - id: "te_ope"
-                    prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    template: "Operações<br/>{0}"
-                    args:
-                      - id: "te_ope"
-                        named_prop: 'nm_municipio_uf'
-                  - prop: "comment"
-                    template: "{0} inspeções"
-                    args:
-                      - id: "te_inspecoes"
-                        named_prop: "agr_sum_vl_indicador"
-                        format: 'inteiro'
-                        default: "Sem Registros"
-                        zero: "Nenhum"
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "trabalho_escravo_agr"
-                  function: "slice"
-                  id: ['te_rgt', 'te_insp_rgt']
-                  options:
-                    combine:
-                    - id: "resg_inspecao"
-                      desc: "Resgatados por inspeção"
-                      function: "calc_proportion"
-                      fn_args:
-                        - id: "te_rgt"
-                          named_prop: "agr_sum_vl_indicador"
-                        - id: "te_insp_rgt"
-                          named_prop: "agr_sum_vl_indicador"
-                args:
-                  - id: "te_insp_rgt"
-                    prop: "value"
-                    named_prop: 'agr_sum_vl_indicador'
-                    format: 'inteiro'
-                    default: "Sem Registros"
-                    zero: "Nenhum"
-                  - prop: "description"
-                    fixed: 'INSPEÇÕES COM RESGATE'
-                  - prop: "comment"
-                    template: "{0} resgatados/inspeção"
-                    args:
-                      - id: "resg_inspecao"
-                        named_prop: "vl_indicador"
-                        format: 'real'
-                        default: "Sem Registros"
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, o número de operações de combate ao trabalho escravo que alcançaram o município. No mapa, {0} está em destaque. A escala de cores varia da menor quantidade (branco) para maior quantidade (vermelho escuro) de operações com resgate."
-              preloaded:
-                prop: "trabalho_escravo_agr"
-                function: "slice"
-                id: 'te_ope'
-              args:
-                - named_prop: "nm_municipio_uf"
-                  required: true
-          - type: "text"
-            title: ""
-            content:
-              fixed: "Para mais informações, visite o <a class='accent--text'  href='/trabalhoescravo' target='_blank'>Observatório da Erradicação do Trabalho Escravo e do Tráfico de Pessoas</a>."
-        chart_type: "MAP_TOPOJSON"
-        api: 
-          template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_uf-{0},and,eq-cd_indicador-'te_insp_rgt'"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation_resg"
-                function: "get_log"
-                fn_args:
-                  - fixed: "agr_sum_vl_indicador"
-            formatters:
-              - id: "agr_sum_vl_indicador"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio'
-          - text: 'Nº inspeções do trabalho escravo com resgate'
-            value: 'fmt_agr_sum_vl_indicador'
-        chart_options:
-          id_field: 'cd_mun_ibge_dv'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_resg'
-          colorScale:
-            name: 'Reds'
+# # ========================================================
+#       - id: "mapa_op_resgatados_escravo"
+#         title: 
+#           fixed: "Operações de combate ao trabalho escravo e resgates"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           api: 
+#             template: "/te/indicadoresnacionais?categorias=nu_competencia_min, nu_competencia_max&filtros=eq-cd_indicador-'te_ope'&limit=1"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - named_prop: "nu_competencia_min"
+#             - named_prop: "nu_competencia_max"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: ""
+#         msgNoData:
+#           desc: "No período, não houve operações de resgates de trabalhadores em condição análoga à de escravo no município. Para mais informações visite o <a class='accent--text' href='/trabalhoescravo' target='_blank'>Observatório da Erradicação do Trabalho Escravo e do Tráfico de Pessoas</a>."
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "trabalho_escravo_agr"
+#                   function: "slice"
+#                   id: ['te_ope', 'te_inspecoes']
+#                 args:
+#                   - id: "te_ope"
+#                     prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     template: "Operações<br/>{0}"
+#                     args:
+#                       - id: "te_ope"
+#                         named_prop: 'nm_municipio_uf'
+#                   - prop: "comment"
+#                     template: "{0} inspeções"
+#                     args:
+#                       - id: "te_inspecoes"
+#                         named_prop: "agr_sum_vl_indicador"
+#                         format: 'inteiro'
+#                         default: "Sem Registros"
+#                         zero: "Nenhum"
+#               - relevance: 'high'
+#                 cls: 'xs12 md6'
+#                 preloaded:
+#                   prop: "trabalho_escravo_agr"
+#                   function: "slice"
+#                   id: ['te_rgt', 'te_insp_rgt']
+#                   options:
+#                     combine:
+#                     - id: "resg_inspecao"
+#                       desc: "Resgatados por inspeção"
+#                       function: "calc_proportion"
+#                       fn_args:
+#                         - id: "te_rgt"
+#                           named_prop: "agr_sum_vl_indicador"
+#                         - id: "te_insp_rgt"
+#                           named_prop: "agr_sum_vl_indicador"
+#                 args:
+#                   - id: "te_insp_rgt"
+#                     prop: "value"
+#                     named_prop: 'agr_sum_vl_indicador'
+#                     format: 'inteiro'
+#                     default: "Sem Registros"
+#                     zero: "Nenhum"
+#                   - prop: "description"
+#                     fixed: 'INSPEÇÕES COM RESGATE'
+#                   - prop: "comment"
+#                     template: "{0} resgatados/inspeção"
+#                     args:
+#                       - id: "resg_inspecao"
+#                         named_prop: "vl_indicador"
+#                         format: 'real'
+#                         default: "Sem Registros"
+#           - type: "text"
+#             title: ""
+#             content:
+#               template: "Em destaque, o número de operações de combate ao trabalho escravo que alcançaram o município. No mapa, {0} está em destaque. A escala de cores varia da menor quantidade (branco) para maior quantidade (vermelho escuro) de operações com resgate."
+#               preloaded:
+#                 prop: "trabalho_escravo_agr"
+#                 function: "slice"
+#                 id: 'te_ope'
+#               args:
+#                 - named_prop: "nm_municipio_uf"
+#                   required: true
+#           - type: "text"
+#             title: ""
+#             content:
+#               fixed: "Para mais informações, visite o <a class='accent--text'  href='/trabalhoescravo' target='_blank'>Observatório da Erradicação do Trabalho Escravo e do Tráfico de Pessoas</a>."
+#         chart_type: "MAP_TOPOJSON"
+#         api: 
+#           template: "/te/indicadoresmunicipais?categorias=cd_mun_ibge_dv,nm_municipio&valor=vl_indicador&agregacao=SUM&filtros=nn-vl_indicador,and,eq-cd_uf-{0},and,eq-cd_indicador-'te_insp_rgt'"
+#           args:
+#             - named_prop: "cd_uf"
+#           options:
+#             calcs:
+#               - id: "deviation_resg"
+#                 function: "get_log"
+#                 fn_args:
+#                   - fixed: "agr_sum_vl_indicador"
+#             formatters:
+#               - id: "agr_sum_vl_indicador"
+#                 format: 'inteiro'
+#         headers:
+#           - text: 'Município'
+#             align: 'left'
+#             value: 'nm_municipio'
+#           - text: 'Nº inspeções do trabalho escravo com resgate'
+#             value: 'fmt_agr_sum_vl_indicador'
+#         chart_options:
+#           id_field: 'cd_mun_ibge_dv'
+#           topo_key: "codarea"
+#           value_field: 'calc_deviation_resg'
+#           colorScale:
+#             name: 'Reds'
