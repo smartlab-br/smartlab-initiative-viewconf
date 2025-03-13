@@ -17,7 +17,7 @@ principais:
         named_prop: "ds_indicador_radical"
         # fixed: "TAXA GEOMÉTRICA DE CRESCIMENTO ANUAL DA POPULAÇÃO DE 2010 A 2018"
       - prop: 'comment'
-        template: "({0}, {1})"
+        template: "({0},{1})"
         args:
           - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
@@ -106,6 +106,7 @@ secoes:
     cards:
 # ========================================================
       - id: "mapa_populacao_municipio_max"
+        type: "multiple-charts"
         title:
           template: "População residente em {0}"
           preloaded:
@@ -138,6 +139,24 @@ secoes:
                   prop: "centralindicadores"
                   function: "slice"
                   id: "01_17_01_00"
+                  year: "2010"
+                args:
+                  - prop: "value"
+                    named_prop: 'vl_indicador'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "Habitantes"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"  
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                preloaded:
+                  prop: "centralindicadores"
+                  function: "slice"
+                  id: "01_17_01_00"
                   year: "max"
                 args:
                   - prop: "value"
@@ -148,6 +167,8 @@ secoes:
                     default: "Sem Registros"
                   - prop: "description"
                     fixed: "Habitantes"
+                  - prop: "comment"
+                    named_prop: "nu_competencia"        
               - relevance: 'low'
                 cls: 'xs12 md6'
                 preloaded:
@@ -206,7 +227,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, a população do município em {0}. A densidade populacional em {1} era de {2} hab./km2. De acordo com a concentração populacional, é possível situar a localidade no ranking e em relação à média da UF e do Brasil. No mapa, {3} está em destaque. A escala de cores varia da menor quantidade (branco) para a maior quantidade de habitantes (azul escuro)."
+              template: "Em destaque, a população do município em 2010 e {0}, comparativamente. A densidade populacional em {1} era de {2} hab./km2. De acordo com a concentração populacional, é possível situar a localidade no ranking e em relação à média da UF e do Brasil. Nos mapas, {3} está em destaque. A escala de cores varia da menor quantidade (branco) para a maior quantidade de habitantes (azul escuro)."
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
@@ -249,235 +270,297 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
-
-        chart_type: "MAP_TOPOJSON"
-        api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_17_01_00',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation_pop"
-                function: "get_proportional_indicator_uf"
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "pct_uf"
-                format: 'porcentagem'
-                precision: 2
-              - id: "rank_br"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Total'
-            value: 'fmt_vl_indicador'
-          - text: 'Participação na UF'
-            value: 'fmt_pct_uf'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_pop'
-        source:
-          desc_field: "ds_fonte"
-# ========================================================
-      - id: "mapa_populacao_municipio"
-        title:
-          template: "População residente em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "01_17_01_00"
-            year: "2010"
-          args:
-            - named_prop: "nu_competencia"
-        title_comment:
-          template: "{0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "01_17_01_00"
-            year: "2010"
-          args:
-            - named_prop: "nm_municipio_uf"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "A população total é oriunda do recenseamento populacional, que corresponde ao total de habitantes residentes na localidade."
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "01_17_01_00"
-                  year: "2010"
-                args:
-                  - prop: "value"
-                    named_prop: 'vl_indicador'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Habitantes"
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "01_17_01_00"
-                  year: "2010"
-                args:
-                  - prop: "value"
-                    named_prop: 'media_uf'
-                    format: 'real'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Média da UF"
-                  - prop: "comment"
-                    template: "{0} ({1})"
-                    args:
-                      - function: "calcIndexPercentage" 
-                        fn_args:
-                          - named_prop: "vl_indicador"
-                          - named_prop: 'media_uf'
-                      - named_prop: "nu_competencia"
-                    # fixed: "Comentário opcional"
-                    color_changing: 
-                      base_value_prop: 'media_uf'
-                      compared_value_prop: 'vl_indicador'
-              - relevance: 'low'
-                cls: 'xs12 md6'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "01_17_01_00"
-                  year: "2010"
-                args:
-                  - prop: "value"
-                    named_prop: 'media_br'
-                    format: 'real'
-                    collapse: 
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    fixed: "Média nacional"
-                  - prop: "comment"
-                    template: "{0} ({1})"
-                    args:
-                      - function: "calcIndexPercentage" 
-                        fn_args:
-                          - named_prop: "vl_indicador"
-                          - named_prop: 'media_br'
-                      - named_prop: "nu_competencia"
-                    color_changing: 
-                      base_value_prop: 'media_br'
-                      compared_value_prop: 'vl_indicador'
-          - type: "text"
-            title: ""
-            content:
-              template: "Em destaque, a população do município em {0}. A densidade populacional em {1} era de {2} hab./km2. De acordo com a concentração populacional, é possível situar a localidade no ranking e em relação à média da UF e do Brasil. No mapa, {3} está em destaque. A escala de cores varia da menor quantidade (branco) para a maior quantidade de habitantes (azul escuro)."
+        charts: 
+          
+          - id: "map_pop_min"
+            footnote: 
               preloaded:
                 prop: "centralindicadores"
                 function: "slice"
-                id: ["01_17_01_00", "06_03_01_08"]
+                id: "01_17_01_00"
                 year: "2010"
+              template: "População residente em {0}"
               args:
-                - id: "01_17_01_00"
-                  named_prop: "nu_competencia"
-                - id: "06_03_01_08"
-                  named_prop: "nu_competencia"
-                - id: "06_03_01_08"
-                  named_prop: "vl_indicador"
-                  format: "real"
-                - id: "01_17_01_00"
-                  named_prop: "nm_municipio_uf"
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "01_17_01_00"
-              year: "2010"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
-        chart_type: "MAP_TOPOJSON"
-        api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_17_01_00',and,eq-nu_competencia-'2010'"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation_pop"
-                function: "get_proportional_indicator_uf"
-            formatters:
-              - id: "vl_indicador"
-                format: 'inteiro'
-              - id: "pct_uf"
-                format: 'porcentagem'
-                precision: 2
-              - id: "rank_br"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
-          - text: 'Total'
-            value: 'fmt_vl_indicador'
-          - text: 'Participação na UF'
-            value: 'fmt_pct_uf'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_pop'
+                - named_prop: "nu_competencia"
+            cls: "xs12 md6"
+            type: "MAP_TOPOJSON"
+            api:
+              template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_17_01_00',and,eq-nu_competencia-'2010'"
+              args:
+                - named_prop: "cd_uf"
+              options:
+                calcs:
+                  - id: "deviation_pop"
+                    function: "get_proportional_indicator_uf"
+                formatters:
+                  - id: "vl_indicador"
+                    format: 'inteiro'
+                  - id: "pct_uf"
+                    format: 'porcentagem'
+                    precision: 2
+                  - id: "rank_br"
+                    format: 'inteiro'
+            headers:
+              - text: 'Município'
+                align: 'left'
+                value: 'nm_municipio'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Total'
+                value: 'fmt_vl_indicador'
+              - text: 'Participação na UF'
+                value: 'fmt_pct_uf'
+              - text: 'Rank UF'
+                value: 'rank_uf'
+              - text: 'Rank Brasil'
+                value: 'fmt_rank_br'
+            options:
+              id_field: 'cd_mun_ibge'
+              topo_key: "codarea"
+              value_field: 'calc_deviation_pop'
+          - id: "map_pop_max"
+            footnote: 
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "01_17_01_00"
+                year: "max"
+              template: "População residente em {0}"
+              args:
+                - named_prop: "nu_competencia"
+            cls: "xs12 md6"
+            type: "MAP_TOPOJSON"
+            api:
+              template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_17_01_00',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - named_prop: "cd_uf"
+              options:
+                calcs:
+                  - id: "deviation_pop"
+                    function: "get_proportional_indicator_uf"
+                formatters:
+                  - id: "vl_indicador"
+                    format: 'inteiro'
+                  - id: "pct_uf"
+                    format: 'porcentagem'
+                    precision: 2
+                  - id: "rank_br"
+                    format: 'inteiro'
+            headers:
+              - text: 'Município'
+                align: 'left'
+                value: 'nm_municipio'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_radical'
+              - text: 'Total'
+                value: 'fmt_vl_indicador'
+              - text: 'Participação na UF'
+                value: 'fmt_pct_uf'
+              - text: 'Rank UF'
+                value: 'rank_uf'
+              - text: 'Rank Brasil'
+                value: 'fmt_rank_br'
+            options:
+              id_field: 'cd_mun_ibge'
+              topo_key: "codarea"
+              value_field: 'calc_deviation_pop'     
         source:
           desc_field: "ds_fonte"
+# ========================================================
+      # - id: "mapa_populacao_municipio"
+      #   title:
+      #     template: "População residente em {0}"
+      #     preloaded:
+      #       prop: "centralindicadores"
+      #       function: "slice"
+      #       id: "01_17_01_00"
+      #       year: "2010"
+      #     args:
+      #       - named_prop: "nu_competencia"
+      #   title_comment:
+      #     template: "{0}"
+      #     preloaded:
+      #       prop: "centralindicadores"
+      #       function: "slice"
+      #       id: "01_17_01_00"
+      #       year: "2010"
+      #     args:
+      #       - named_prop: "nm_municipio_uf"
+      #   info:
+      #     - type: "text"
+      #       title: "Sobre a métrica"
+      #       content:
+      #         fixed: "A população total é oriunda do recenseamento populacional, que corresponde ao total de habitantes residentes na localidade."
+      #   description:
+      #     - type: "minicards"
+      #       cards:
+      #         - relevance: 'high'
+      #           cls: 'xs12 md6'
+      #           preloaded:
+      #             prop: "centralindicadores"
+      #             function: "slice"
+      #             id: "01_17_01_00"
+      #             year: "2010"
+      #           args:
+      #             - prop: "value"
+      #               named_prop: 'vl_indicador'
+      #               format: 'inteiro'
+      #               collapse:
+      #                 format: 'real'
+      #               default: "Sem Registros"
+      #             - prop: "description"
+      #               fixed: "Habitantes"
+      #         - relevance: 'low'
+      #           cls: 'xs12 md6'
+      #           preloaded:
+      #             prop: "centralindicadores"
+      #             function: "slice"
+      #             id: "01_17_01_00"
+      #             year: "2010"
+      #           args:
+      #             - prop: "value"
+      #               named_prop: 'media_uf'
+      #               format: 'real'
+      #               collapse:
+      #                 format: 'real'
+      #               default: "Sem Registros"
+      #             - prop: "description"
+      #               fixed: "Média da UF"
+      #             - prop: "comment"
+      #               template: "{0} ({1})"
+      #               args:
+      #                 - function: "calcIndexPercentage" 
+      #                   fn_args:
+      #                     - named_prop: "vl_indicador"
+      #                     - named_prop: 'media_uf'
+      #                 - named_prop: "nu_competencia"
+      #               # fixed: "Comentário opcional"
+      #               color_changing: 
+      #                 base_value_prop: 'media_uf'
+      #                 compared_value_prop: 'vl_indicador'
+      #         - relevance: 'low'
+      #           cls: 'xs12 md6'
+      #           preloaded:
+      #             prop: "centralindicadores"
+      #             function: "slice"
+      #             id: "01_17_01_00"
+      #             year: "2010"
+      #           args:
+      #             - prop: "value"
+      #               named_prop: 'media_br'
+      #               format: 'real'
+      #               collapse: 
+      #                 format: 'real'
+      #               default: "Sem Registros"
+      #             - prop: "description"
+      #               fixed: "Média nacional"
+      #             - prop: "comment"
+      #               template: "{0} ({1})"
+      #               args:
+      #                 - function: "calcIndexPercentage" 
+      #                   fn_args:
+      #                     - named_prop: "vl_indicador"
+      #                     - named_prop: 'media_br'
+      #                 - named_prop: "nu_competencia"
+      #               color_changing: 
+      #                 base_value_prop: 'media_br'
+      #                 compared_value_prop: 'vl_indicador'
+      #     - type: "text"
+      #       title: ""
+      #       content:
+      #         template: "Em destaque, a população do município em {0}. A densidade populacional em {1} era de {2} hab./km2. De acordo com a concentração populacional, é possível situar a localidade no ranking e em relação à média da UF e do Brasil. No mapa, {3} está em destaque. A escala de cores varia da menor quantidade (branco) para a maior quantidade de habitantes (azul escuro)."
+      #         preloaded:
+      #           prop: "centralindicadores"
+      #           function: "slice"
+      #           id: ["01_17_01_00", "06_03_01_08"]
+      #           year: "2010"
+      #         args:
+      #           - id: "01_17_01_00"
+      #             named_prop: "nu_competencia"
+      #           - id: "06_03_01_08"
+      #             named_prop: "nu_competencia"
+      #           - id: "06_03_01_08"
+      #             named_prop: "vl_indicador"
+      #             format: "real"
+      #           - id: "01_17_01_00"
+      #             named_prop: "nm_municipio_uf"
+      #     - type: "ranking"
+      #       preloaded:
+      #         prop: "centralindicadores"
+      #         function: "slice"
+      #         id: "01_17_01_00"
+      #         year: "2010"
+      #       args:
+      #         - prop: 'regional_rank'
+      #           named_prop: "rank_uf"
+      #           format: 'inteiro'
+      #           precision: 0
+      #           default: 0
+      #         - prop: 'regional_total'
+      #           named_prop: "rank_uf_total"
+      #           format: 'inteiro'
+      #           precision: 0
+      #           default: 0
+      #         - prop: 'national_rank'
+      #           named_prop: "rank_br"
+      #           format: 'inteiro'
+      #           precision: 0
+      #           default: 0
+      #         - prop: 'national_total'
+      #           named_prop: "rank_br_total"
+      #           format: 'inteiro'
+      #           precision: 0
+      #           default: 0
+
+      #   chart_type: "MAP_TOPOJSON"
+      #   api:
+      #     template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'01_17_01_00',and,eq-nu_competencia-'2010'"
+      #     args:
+      #       - named_prop: "cd_uf"
+      #     options:
+      #       calcs:
+      #         - id: "deviation_pop"
+      #           function: "get_proportional_indicator_uf"
+      #       formatters:
+      #         - id: "vl_indicador"
+      #           format: 'inteiro'
+      #         - id: "pct_uf"
+      #           format: 'porcentagem'
+      #           precision: 2
+      #         - id: "rank_br"
+      #           format: 'inteiro'
+      #   headers:
+      #     - text: 'Município'
+      #       align: 'left'
+      #       value: 'nm_municipio'
+      #     - text: 'Ano'
+      #       align: 'left'
+      #       value: 'nu_competencia'
+      #     - text: 'Indicador'
+      #       align: 'left'
+      #       value: 'ds_indicador_radical'
+      #     - text: 'Total'
+      #       value: 'fmt_vl_indicador'
+      #     - text: 'Participação na UF'
+      #       value: 'fmt_pct_uf'
+      #     - text: 'Rank UF'
+      #       value: 'rank_uf'
+      #     - text: 'Rank Brasil'
+      #       value: 'fmt_rank_br'
+      #   chart_options:
+      #     id_field: 'cd_mun_ibge'
+      #     topo_key: "codarea"
+      #     value_field: 'calc_deviation_pop'
+      #   source:
+      #     desc_field: "ds_fonte"
 # ========================================================
       - id: "mapa_taxa_geometrica"
         title:
