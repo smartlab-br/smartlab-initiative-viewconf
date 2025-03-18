@@ -108,14 +108,15 @@ secoes:
       - id: "mapa_populacao_municipio_max"
         type: "multiple-charts"
         title:
-          template: "População residente em {0}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "01_17_01_00"
-            year: "max"
-          args:
-            - named_prop: "nu_competencia"
+          fixed: "População residente"
+          # template: "População residente em {0}"
+          # preloaded:
+          #   prop: "centralindicadores"
+          #   function: "slice"
+          #   id: "01_17_01_00"
+          #   year: "max"
+          # args:
+          #   - named_prop: "nu_competencia"
         title_comment:
           template: "{0}"
           preloaded:
@@ -936,18 +937,19 @@ secoes:
           desc_field: "ds_fonte"
 # ========================================================
       - id: "mapa_pib_brasil"
+        type: "multiple-charts"
         title:
           fixed: "Produto Interno Bruto - PIB"
         title_comment:
-          template: "{0}, {1}"
+          template: "{0}"
           preloaded:
             prop: "centralindicadores"
             function: "slice"
             id: "PIB_00001"
-            year: "max"
+            # year: "max"
           args:
             - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia"
+            # - named_prop: "nu_competencia"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -1078,46 +1080,109 @@ secoes:
                 format: 'inteiro'
                 precision: 0
                 default: 0
-          
-        chart_type: "MAP_TOPOJSON"
-        api:
-          template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_curto,ds_indicador_prefixo,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'PIB_00001',and,eq-nu_competencia-nu_competencia_max"
-          args:
-            - named_prop: "cd_uf"
-          options:
-            calcs:
-              - id: "deviation_pib"
-                function: "get_proportional_indicator_uf"
-            formatters:
-              - id: "vl_indicador"
-                format: "auto"
-              - id: "pct_uf"
-                format: 'porcentagem'
-                precision: 2
-              - id: "rank_br"
-                format: 'inteiro'
-        headers:
-          - text: 'Município'
-            align: 'left'
-            value: 'nm_municipio'
-          - text: 'Ano'
-            align: 'left'
-            value: 'nu_competencia'
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_curto'
-          - text: 'Valor'
-            value: 'fmt_vl_indicador'
-          - text: 'Participação na UF'
-            value: 'fmt_pct_uf'
-          - text: 'Rank UF'
-            value: 'rank_uf'
-          - text: 'Rank Brasil'
-            value: 'fmt_rank_br'
-        chart_options:
-          id_field: 'cd_mun_ibge'
-          topo_key: "codarea"
-          value_field: 'calc_deviation_pib'
+        charts:   
+          - id: "map_pib_min"
+            footnote: 
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "PIB_00001"
+                year: "2019"
+              template: "Produto Interno Bruto - PIB em {0}"
+              args:
+                - named_prop: "nu_competencia"
+            cls: "xs12 md6"
+            type: "MAP_TOPOJSON"
+            api:
+              template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_curto,ds_indicador_prefixo,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'PIB_00001',and,eq-nu_competencia-'2019'"
+              args:
+                - named_prop: "cd_uf"
+              options:
+                calcs:
+                  - id: "deviation_pib"
+                    function: "get_proportional_indicator_uf"
+                formatters:
+                  - id: "vl_indicador"
+                    format: "auto"
+                  - id: "pct_uf"
+                    format: 'porcentagem'
+                    precision: 2
+                  - id: "rank_br"
+                    format: 'inteiro'
+            headers:
+              - text: 'Município'
+                align: 'left'
+                value: 'nm_municipio'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_curto'
+              - text: 'Valor'
+                value: 'fmt_vl_indicador'
+              - text: 'Participação na UF'
+                value: 'fmt_pct_uf'
+              - text: 'Rank UF'
+                value: 'rank_uf'
+              - text: 'Rank Brasil'
+                value: 'fmt_rank_br'
+            options:
+              id_field: 'cd_mun_ibge'
+              topo_key: "codarea"
+              value_field: 'calc_deviation_pib'
+
+          - id: "map_pib_max"
+            footnote: 
+              preloaded:
+                prop: "centralindicadores"
+                function: "slice"
+                id: "PIB_00001"
+                year: "max"
+              template: "Produto Interno Bruto - PIB em {0}"
+              args:
+                - named_prop: "nu_competencia"
+            cls: "xs12 md6"
+            type: "MAP_TOPOJSON"
+            api:
+              template: "/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_dimensao,ds_indicador_radical,ds_indicador_curto,ds_indicador_prefixo,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,pct_uf,rank_uf,rank_br,latitude,longitude&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'PIB_00001',and,eq-nu_competencia-nu_competencia_max"
+              args:
+                - named_prop: "cd_uf"
+              options:
+                calcs:
+                  - id: "deviation_pib"
+                    function: "get_proportional_indicator_uf"
+                formatters:
+                  - id: "vl_indicador"
+                    format: "auto"
+                  - id: "pct_uf"
+                    format: 'porcentagem'
+                    precision: 2
+                  - id: "rank_br"
+                    format: 'inteiro'
+            headers:
+              - text: 'Município'
+                align: 'left'
+                value: 'nm_municipio'
+              - text: 'Ano'
+                align: 'left'
+                value: 'nu_competencia'
+              - text: 'Indicador'
+                align: 'left'
+                value: 'ds_indicador_curto'
+              - text: 'Valor'
+                value: 'fmt_vl_indicador'
+              - text: 'Participação na UF'
+                value: 'fmt_pct_uf'
+              - text: 'Rank UF'
+                value: 'rank_uf'
+              - text: 'Rank Brasil'
+                value: 'fmt_rank_br'
+            options:
+              id_field: 'cd_mun_ibge'
+              topo_key: "codarea"
+              value_field: 'calc_deviation_pib'
+
         source:
           desc_field: "ds_fonte"
 # ========================================================
