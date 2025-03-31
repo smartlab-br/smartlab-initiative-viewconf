@@ -46,7 +46,7 @@ title:
   template: "{}"
   args:
     - base_object: "desc_data"
-      named_prop: "spai_ds_texto"
+      named_prop: "spai_ds"
 title_comment:
   template: "Brasil, em {}, na época da pesquisa"
   args:
@@ -156,46 +156,8 @@ description:
                  As informações são baseadas em dados da época da pesquisa do IBGE. Em algumas unidades geográficas podem ser identificadas modificações posteriores de cenário, a serem captadas globalmente em novo ciclo de pesquisas. Observe-se que, mesmo com diferenças pontuais no cenário representado, pode-se dizer que medidas mais recentes tendem a enfrentar mais desafios quanto à implementação de novas dimensões da rede de proteção social. Por outro lado, a mera existência dessas ações não implica, necessariamente, sua efetividade."
       args:
         - base_object: "desc_data"
-          named_prop: "spai_ds"
-charts: 
-  
-  - id: "map_combate_max"
-    type: "MAP_TOPOJSON"
-    title: 
-      fixed: "Teste"
-    footnote: 
-      template: "Combate e reinserção de vítimas em {}"
-      args:
-        - base_object: "desc_data"
-          named_prop: nu_ano_indicador
-    cls: "xs12 md6"
-    chart_data: "chart_data"
-    reform_options:
-      calcs:
-        - id: "log"
-          function: "get_log"
-          fn_args:
-            - fixed: "pct_presenca_uf"
-    headers:
-      - text: "UF"
-        align: "left"
-        value: "nm_uf"
-      - text: "Ano"
-        align: "left"
-        value: "nu_ano_indicador"  
-      - text: "Indicador"
-        align: "left"
-        value: "spai_ds"
-      - text: "Porcentagem de municípios"
-        value: "fmt_pct_presenca_uf"
-      - text: "Número de municípios"
-        value: "fmt_presenca_total_uf"
-    options: 
-      id_field: "cd_uf"
-      topo_key: "codigo"
-      value_field: "calc_log"
-      tiles_url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
-
+          named_prop: "spai_ds_texto"
+charts:  
   - id: "map_combate_min"
     type: "MAP_TOPOJSON"
     footnote: 
@@ -230,5 +192,41 @@ charts:
       topo_key: "codigo"
       value_field: "calc_log"
       tiles_url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"      
+
+  - id: "map_combate_max"
+    type: "MAP_TOPOJSON"
+    footnote: 
+      template: "Combate e reinserção de vítimas em {}"
+      args:
+        - base_object: "desc_data"
+          named_prop: nu_ano_indicador
+    cls: "xs12 md6"
+    chart_data: "chart_data"
+    reform_options:
+      calcs:
+        - id: "log"
+          function: "get_log"
+          fn_args:
+            - fixed: "pct_presenca_uf"
+    headers:
+      - text: "UF"
+        align: "left"
+        value: "nm_uf"
+      - text: "Ano"
+        align: "left"
+        value: "nu_ano_indicador"  
+      - text: "Indicador"
+        align: "left"
+        value: "spai_ds"
+      - text: "Porcentagem de municípios"
+        value: "fmt_pct_presenca_uf"
+      - text: "Número de municípios"
+        value: "fmt_presenca_total_uf"
+    options: 
+      id_field: "cd_uf"
+      topo_key: "codigo"
+      value_field: "calc_log"
+      tiles_url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+
 source: 
   desc_field: "ds_fonte"
