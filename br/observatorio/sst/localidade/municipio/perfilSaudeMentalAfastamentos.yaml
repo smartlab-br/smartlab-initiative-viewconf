@@ -51,163 +51,163 @@ secoes:
     cards:
 # =====================================================
           
-      - id: "treemap_doencas"
-        type: "multiple-charts"
-        title: 
-          fixed: "Causas de afastamento associadas à saúde mental"
-        title_comment:
-          template: "{0}, de {1} a {2}"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_min_ano_beneficio"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_max_ano_beneficio"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição"
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs6'
-                api:
-                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1},and,lk-cd_categoria_cid_beneficio-'F%25'&ordenacao=-agr_count&limit=1"
-                  args:
-                    - named_prop: "idLocalidade"
-                    - base_object: "sst_beneficio"
-                      named_prop: "agr_max_ano_beneficio"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_count'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    template: '{0}<br/>B91'
-                    args:
-                      - named_prop: "cd_agp_cat_cid_agrv_det_doenca"
-                  - prop: "comment"
-                    named_prop: 'ano_beneficio'
-              - relevance: 'high'
-                cls: 'xs6'
-                api:
-                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1},and,lk-cd_categoria_cid_beneficio-'F%25'&ordenacao=-agr_count&limit=1"
-                  args:
-                    - named_prop: "idLocalidade"
-                    - base_object: "sst_beneficio"
-                      named_prop: "agr_max_ano_beneficio"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_count'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    template: '{0}<br/>B31'
-                    args:
-                      - named_prop: "cd_agp_cat_cid_agrv_det_doenca"
-                  - prop: "comment"
-                    named_prop: 'ano_beneficio'
-          - type: "text"
-            title: ""
-            content:
-              api: 
-                template: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
-                args:
-                  - named_prop: "idLocalidade"
-              template: "Em destaque, especificamente no que se refere à saúde mental, os afastamentos com os tipos de doenças mais frequentes registradas para afastamentos acidentários (B91) e não acidentários (B31) no último ano apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No caso, criou-se uma simplificação textual da Classificação Internacional de Doenças para facilitar a compreensão. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto às doenças mais frequentes e a percepção de tendências e distinções quantitativas relevantes."
-              args:
-                - named_prop: "agr_min_ano_beneficio"
-                - named_prop: "agr_max_ano_beneficio"
-          - id: "slider_ano"
-            type: "slider"
-            range: true
-            api: 
-              fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
-            args:
-              - prop: "min"
-                named_prop: "agr_min_ano_beneficio"
-              - prop: "max"
-                named_prop: "agr_max_ano_beneficio"
-            selection:
-              event: "selection"
-              rules:
-                filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
-                api:
-                  args:
-                    - named_prop: "value_min"
-                    - named_prop: "value_max"
-        charts:
-# =====================================================
-          - id: "treemap_doencas_b91"
-            cls: "xs12 md6"
-            footnote: 
-              template: "Tipos de Doenças - B91 ({0}-{1})"
-              args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_min_ano_beneficio"
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
-            type: "TREEMAP"
-            api: 
-              template: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-91,and,lk-cd_categoria_cid_beneficio-'F%25'"
-              args:
-                - named_prop: "idLocalidade"
-              options:
-                  formatters:
-                    - id: "agr_count"
-                      format: 'inteiro'
-            headers:
-              - text: 'Categoria'
-                value: 'cd_agp_cat_cid_agrv_det_doenca'
-              - text: 'Qtde'
-                value: 'fmt_agr_count'
-            options:
-              id: "cd_agp_cat_cid_agrv_det_doenca"
-              size: "agr_count"
-              text: "cd_agp_cat_cid_agrv_det_doenca"
-              hide_legend: true
-              colorScale:
-                name: "Reds"
-            # source:
-            #   desc_field: "ds_fonte"                    
-# =====================================================
-          - id: "treemap_doencas_b31"
-            cls: "xs12 md6"
-            footnote: 
-              template: "Tipos de Doenças - B31 ({0}-{1})"
-              args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_min_ano_beneficio"
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
-            type: "TREEMAP"
-            api: 
-              template: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"
-              args:
-                - named_prop: "idLocalidade"
-              options:
-                  formatters:
-                    - id: "agr_count"
-                      format: 'inteiro'
-            headers:
-              - text: 'Categoria'
-                value: 'cd_agp_cat_cid_agrv_det_doenca'
-              - text: 'Qtde'
-                value: 'fmt_agr_count'
-            options:
-              id: "cd_agp_cat_cid_agrv_det_doenca"
-              size: "agr_count"
-              text: "cd_agp_cat_cid_agrv_det_doenca"
-              hide_legend: true
-              colorScale:
-                name: "Blues"
+#       - id: "treemap_doencas"
+#         type: "multiple-charts"
+#         title: 
+#           fixed: "Causas de afastamento associadas à saúde mental"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - base_object: "sst_beneficio"
+#               named_prop: "agr_min_ano_beneficio"
+#             - base_object: "sst_beneficio"
+#               named_prop: "agr_max_ano_beneficio"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: "Sem observações adicionais. Vide descrição"
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs6'
+#                 api:
+#                   template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1},and,lk-cd_categoria_cid_beneficio-'F%25'&ordenacao=-agr_count&limit=1"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                     - base_object: "sst_beneficio"
+#                       named_prop: "agr_max_ano_beneficio"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_count'
+#                     format: 'inteiro'
+#                     collapse:
+#                       format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     template: '{0}<br/>B91'
+#                     args:
+#                       - named_prop: "cd_agp_cat_cid_agrv_det_doenca"
+#                   - prop: "comment"
+#                     named_prop: 'ano_beneficio'
+#               - relevance: 'high'
+#                 cls: 'xs6'
+#                 api:
+#                   template: "/sst/beneficios?categorias=ano_beneficio,cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1},and,lk-cd_categoria_cid_beneficio-'F%25'&ordenacao=-agr_count&limit=1"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                     - base_object: "sst_beneficio"
+#                       named_prop: "agr_max_ano_beneficio"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_count'
+#                     format: 'inteiro'
+#                     collapse:
+#                       format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     template: '{0}<br/>B31'
+#                     args:
+#                       - named_prop: "cd_agp_cat_cid_agrv_det_doenca"
+#                   - prop: "comment"
+#                     named_prop: 'ano_beneficio'
+#           - type: "text"
+#             title: ""
+#             content:
+#               api: 
+#                 template: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX&filtros=eq-cd_municipio_ibge_dv-{0}"
+#                 args:
+#                   - named_prop: "idLocalidade"
+#               template: "Em destaque, especificamente no que se refere à saúde mental, os afastamentos com os tipos de doenças mais frequentes registradas para afastamentos acidentários (B91) e não acidentários (B31) no último ano apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No caso, criou-se uma simplificação textual da Classificação Internacional de Doenças para facilitar a compreensão. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto às doenças mais frequentes e a percepção de tendências e distinções quantitativas relevantes."
+#               args:
+#                 - named_prop: "agr_min_ano_beneficio"
+#                 - named_prop: "agr_max_ano_beneficio"
+#           - id: "slider_ano"
+#             type: "slider"
+#             range: true
+#             api: 
+#               fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+#             args:
+#               - prop: "min"
+#                 named_prop: "agr_min_ano_beneficio"
+#               - prop: "max"
+#                 named_prop: "agr_max_ano_beneficio"
+#             selection:
+#               event: "selection"
+#               rules:
+#                 filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
+#                 api:
+#                   args:
+#                     - named_prop: "value_min"
+#                     - named_prop: "value_max"
+#         charts:
+# # =====================================================
+#           - id: "treemap_doencas_b91"
+#             cls: "xs12 md6"
+#             footnote: 
+#               template: "Tipos de Doenças - B91 ({0}-{1})"
+#               args:
+#                 - base_object: "sst_beneficio"
+#                   named_prop: "agr_min_ano_beneficio"
+#                 - base_object: "sst_beneficio"
+#                   named_prop: "agr_max_ano_beneficio"
+#             type: "TREEMAP"
+#             api: 
+#               template: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-91,and,lk-cd_categoria_cid_beneficio-'F%25'"
+#               args:
+#                 - named_prop: "idLocalidade"
+#               options:
+#                   formatters:
+#                     - id: "agr_count"
+#                       format: 'inteiro'
+#             headers:
+#               - text: 'Categoria'
+#                 value: 'cd_agp_cat_cid_agrv_det_doenca'
+#               - text: 'Qtde'
+#                 value: 'fmt_agr_count'
+#             options:
+#               id: "cd_agp_cat_cid_agrv_det_doenca"
+#               size: "agr_count"
+#               text: "cd_agp_cat_cid_agrv_det_doenca"
+#               hide_legend: true
+#               colorScale:
+#                 name: "Reds"
+#             # source:
+#             #   desc_field: "ds_fonte"                    
+# # =====================================================
+#           - id: "treemap_doencas_b31"
+#             cls: "xs12 md6"
+#             footnote: 
+#               template: "Tipos de Doenças - B31 ({0}-{1})"
+#               args:
+#                 - base_object: "sst_beneficio"
+#                   named_prop: "agr_min_ano_beneficio"
+#                 - base_object: "sst_beneficio"
+#                   named_prop: "agr_max_ano_beneficio"
+#             type: "TREEMAP"
+#             api: 
+#               template: "/sst/beneficios?categorias=cd_agp_cat_cid_agrv_det_doenca&agregacao=COUNT&filtros=ne-cd_agp_cat_cid_agrv_det_doenca-'',and,eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"
+#               args:
+#                 - named_prop: "idLocalidade"
+#               options:
+#                   formatters:
+#                     - id: "agr_count"
+#                       format: 'inteiro'
+#             headers:
+#               - text: 'Categoria'
+#                 value: 'cd_agp_cat_cid_agrv_det_doenca'
+#               - text: 'Qtde'
+#                 value: 'fmt_agr_count'
+#             options:
+#               id: "cd_agp_cat_cid_agrv_det_doenca"
+#               size: "agr_count"
+#               text: "cd_agp_cat_cid_agrv_det_doenca"
+#               hide_legend: true
+#               colorScale:
+#                 name: "Blues"
             # source:
             #   desc_field: "ds_fonte"                    
 # =====================================================
