@@ -48,7 +48,7 @@ secoes:
 # ====================================================          
       - id: "mapa_acidente_trabalho"
         title: 
-          fixed: "Distribuição Geográfica dos Acidentes de Trabalho (CAT)"
+          fixed: "Notificações de Acidentes de Trabalho - Distribuição Geográfica"
         title_comment:
           template: "{0}, {1}"
           api:
@@ -108,7 +108,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de acidentes de trabalho notificados na unidade federativa para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa dos municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade de acidentes no ano). Utilize o filtro abaixo para visualizar o número de acidentes por setor econômico."
+              template: "Em destaque, o número de notificações de acidentes de trabalho na unidade federativa entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT). No mapa, apresenta-se uma perspectiva comparativa entre os municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) ao vermelho (maior quantidade). Utilize o filtro abaixo para visualizar o número de acidentes por setor econômico. É importante considerar que os números referentes ao ano anterior tendem a ser complementados por notificações registradas com atraso, geralmente no ano seguinte."
           - type: "ranking"
             api:
               template: "/sst/indicadoresestaduais?categorias=rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
@@ -182,10 +182,12 @@ secoes:
           value_field: 'calc_log_cat'
           colorScale:
             name: "Reds"
+        source:
+          desc: "Previdência Social"
 # ====================================================          
       - id: "treemap_acidente_trabalho"
         title: 
-          fixed: "Distribuição dos Acidentes de Trabalho (CAT)"
+          fixed: "Distribuição das Notificações de Acidentes de Trabalho (CAT) - Municípios"
         title_comment:
           template: "{0}, {1}"
           api:
@@ -249,7 +251,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, o número de acidentes de trabalho notificados na unidade federativa para a população com vínculo de emprego regular. O gráfico mostra a distribuição das notificações de acidente de trabalho nos municípios da unidade federativa."
+              template: "Em destaque, o número de notificações de acidentes de trabalho entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT). O gráfico mostra a distribuição das notificações de acidente de trabalho nos municípios da unidade federativa. É importante considerar que os números referentes ao ano anterior tendem a ser complementados por notificações registradas com atraso, geralmente no ano seguinte."
           - type: "ranking"
             api:
               template: "/sst/indicadoresestaduais?categorias=rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
@@ -268,7 +270,7 @@ secoes:
                 default: 0
         chart_type: "TREEMAP"
         api: 
-          template: "/sst/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_indicador,nu_competencia,ds_fonte,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_indicador,nu_competencia,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -297,15 +299,15 @@ secoes:
           colorScale:
             name: 'Reds'
         source:
-          desc_field: "ds_fonte"
+          desc: "Previdência Social"
 # ====================================================          
       - id: "bar_cat"
         title: 
-          fixed: "Série Histórica dos Acidentes de Trabalho (CAT)"
+          fixed: "Notificações de Acidentes de Trabalho (com CAT e sem CAT) - Série"
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
             - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
           args:
             - base_object: "localidade"
@@ -324,7 +326,7 @@ secoes:
                           Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}<br/>
                           Nome: {4}<br/>Fonte: {5}<br/>Ano: 2018 a {6}"
               api:
-                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
                 - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
               args:
                 - id: "09_01_01_00"
@@ -379,17 +381,17 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de acidentes de trabalho notificados no município para a população com vínculo de emprego regular. No gráfico, apresenta-se a evolução histórica do número de notificações no período."
+              fixed: "Em destaque, o número de notificações de acidentes de trabalho entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT). No gráfico, apresenta-se a evolução histórica do número de notificações no período, com base no Anuário Estatístico de Acidentes do Trabalho (AEAT, 2002 a 2023) e em dados da Previdência Social (2024). É importante considerar que os números referentes ao ano anterior tendem a ser complementados por notificações registradas com atraso, geralmente no ano seguinte."
         chart_type: "BAR"
         api: 
-          - template: "/indicadoresestaduais?categorias=cd_uf,ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_01_00'"
+          - template: "/indicadoresestaduais?categorias='cat_aeat'-id,cd_uf,ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_01_00'"
             args:
               - named_prop: "idLocalidade"
             options:
               formatters:
                 - id: "vl_indicador"
                   format: 'inteiro'
-          - template: "/sst/indicadoresestaduais?categorias=cd_uf,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+          - template: "/sst/indicadoresestaduais?categorias='cat'-id,cd_uf,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
             args:
               - named_prop: "idLocalidade"
             options:
@@ -403,7 +405,7 @@ secoes:
           - text: 'Nº de Notificações de Acidente de Trabalho'
             value: 'fmt_vl_indicador'
         chart_options:
-          id: "cd_uf"
+          id: "id"
           x: "nu_competencia"
           y: "vl_indicador"
           orientation: "vertical"
@@ -411,18 +413,18 @@ secoes:
           show_x_axis: true
           show_y_axis: false
           hide_legend: true
-          color: "#238B45"
+          colorArray: ["#238B45", "377EB8"]
           removed_text_list: ["(SPAI_REC)"]
         source:
-          desc: "INSS (2000-2017, AEAT; a partir de 2018, CATWEB)"
+          desc: "AEAT e Previdência Social"
 # ===================================================
       - id: "bar_cat_obito"
         title: 
-          fixed: "Série Histórica de Acidentes de Trabalho com Óbito (CAT)"
+          fixed: "Notificações de Acidentes de Trabalho com Óbito (CAT) - Série"
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
-            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
             - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
           args:
             - base_object: "localidade"
@@ -441,7 +443,7 @@ secoes:
                           Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}<br/>
                           Nome: {4}<br/>Fonte: {5}<br/>Ano: 2018 a {6}"
               api:
-                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
                 - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
               args:
                 - id: "09_01_01_00"
@@ -496,17 +498,17 @@ secoes:
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de acidentes de trabalho com morte notificados no município para a população com vínculo de emprego regular. No gráfico, apresenta-se a evolução histórica do número de notificações sobre óbitos derivados de acidentes do trabalho no período."
+              fixed: "Em destaque, o número de notificações de acidentes de trabalho fatal entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT). No gráfico, apresenta-se a evolução histórica do número de notificações com óbito no período, com base no Anuário Estatístico de Acidentes do Trabalho (AEAT, 2002 a 2023) e em dados da Previdência Social (2024). É importante considerar que os números referentes ao ano anterior tendem a ser complementados por notificações registradas com atraso, geralmente no ano seguinte."
         chart_type: "BAR"
         api: 
-          - template: "/indicadoresestaduais?categorias=cd_uf,ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_06_00'"
+          - template: "/indicadoresestaduais?categorias='cat_aeat'-id,cd_uf,ds_indicador_radical,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_06_00'"
             args:
               - named_prop: "idLocalidade"
             options:
               formatters:
                 - id: "vl_indicador"
                   format: 'inteiro'
-          - template: "/sst/indicadoresestaduais?categorias=cd_uf,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2017"
+          - template: "/sst/indicadoresestaduais?categorias='cat'-id,cd_uf,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2023"
             args:
               - named_prop: "idLocalidade"
             options:
@@ -514,16 +516,16 @@ secoes:
                 - id: "vl_indicador"
                   format: 'inteiro'
         headers:
-          - text: 'Indicador'
-            align: 'left'
-            value: 'ds_indicador_radical'
+          # - text: 'Indicador'
+          #   align: 'left'
+          #   value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
           - text: 'Nº de Notificações de Acidente de Trabalho com Óbito'
             value: 'fmt_vl_indicador'
         chart_options:
-          id: "cd_uf"
+          id: "id"
           x: "nu_competencia"
           y: "vl_indicador"
           orientation: "vertical"
@@ -531,14 +533,14 @@ secoes:
           show_x_axis: true
           show_y_axis: false
           hide_legend: true
-          color: "#238B45"
+          colorArray: ["#238B45", "377EB8"]
           removed_text_list: ["(SPAI_REC)"]
         source:
-          desc: "INSS (2000-2017, AEAT; a partir de 2018, CATWEB)"
+          desc: "AEAT e Previdência Social"
 # ====================================================          
       - id: "bar_subnotificacao"
         title: 
-          fixed: "Estimativa de Subnotificação de Acidentes de Trabalho (CAT)"
+          fixed: "Estimativa de Subnotificação - Afastamentos sem CAT"
         title_comment:
           template: "{0}, de {1} a {2}"
           api:
@@ -656,7 +658,7 @@ secoes:
           - template: "/indicadoresestaduais?categorias=ds_indicador_radical-ds_indicador,cast(nu_competencia as integer)-nu_competencia,vl_indicador,cd_indicador,'Total de Acidentes'-grupo,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_01_00',and,gt-nu_competencia-'2011'"
             args:
               - named_prop: "idLocalidade"
-          - template: "/sst/indicadoresestaduais?categorias=ds_indicador,nu_competencia,vl_indicador,cd_indicador,'Total de Acidentes'-grupo,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2017"
+          - template: "/sst/indicadoresestaduais?categorias=ds_indicador,nu_competencia,vl_indicador,cd_indicador,'Total de Acidentes'-grupo,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
             args:
               - named_prop: "idLocalidade"
           - template: "/sst/indicadoresestaduais?categorias=ds_indicador,nu_competencia,vl_indicador,cd_indicador,'Acidentes sem CAT emitido'-grupo,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_subnotificacao'"
@@ -692,4 +694,4 @@ secoes:
             order: 'desc'
               #color: "#238B45"  #  "#66C2A4"
         source:
-          desc: "INSS (2012-2017, AEAT; a partir de 2018, INSS/CATWEB)"
+          desc: "AEAT e Previdência Social"
