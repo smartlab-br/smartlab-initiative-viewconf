@@ -48,7 +48,21 @@ api_obj_collection:
       - name: 'min_uf_data'
         type: 'min'
         named_prop: 'pct_presenca_uf'
-
+  - name: "br_data2"
+    endpoint: 
+      categorias: 'spai_ds,ds_fonte,nm_uf,cd_uf,nu_ano_indicador,tema,sub_tema,ds_indicador,cd_indicador,spai_ds_texto,presenca_total_br,pct_presenca_br,presenca_total_uf,pct_presenca_uf,cd_indicador_spai,total_br,sg_uf,total_uf'
+      agregacao: 'distinct'
+      filtros:
+        template: 'eq-cd_indicador_spai-{},and,eq-nu_ano_indicador-nu_ano_indicador_min'
+        args:
+          - prop: 'cd_indicador'
+    instances:
+      - name: 'max_uf_data2'
+        type: 'max'
+        named_prop: 'pct_presenca_uf'
+      - name: 'min_uf_data2'
+        type: 'min'
+        named_prop: 'pct_presenca_uf'
 type: "multiple-charts"
 title: 
   template: "{}"
@@ -98,7 +112,72 @@ info:
 description:
   - type: "minicards"
     cards:
+      - relevance: "low"
+        cls: "xs12 md6"
+        args:
+          - prop: "value"
+            base_object: "desc_data2"
+            named_prop: "presenca_total_uf"
+            format: "inteiro"
+          - prop: "description"
+            template: "de {0} municípios<br/>{1}<br/> em 2019"
+            args:
+              - base_object: "desc_data2"
+                named_prop: "total_uf"
+                format: "inteiro"
+              - base_object: "desc_data2"
+                named_prop: "nm_uf"
+      - relevance: "low"
+        cls: "xs12 md6"
+        args: 
+          - prop: "value"
+            base_object: "desc_data2"
+            named_prop: "pct_presenca_uf"
+            format: 'porcentagem'
+            precision: 1
+          - prop: "description"
+            fixed: "do total dos<br/>municípios na UF<br/>em 2019"
       - relevance: "high"
+        cls: "xs12 md6"
+        args: 
+          - prop: "value"
+            base_object: "max_uf_data2"
+            named_prop: "sg_uf"
+          - prop: "description"
+            fixed: "TEM A MAIOR % DE<br/>MUNICÍPIOS COM A AÇÃO<br/>em 2019"
+          - prop: "comment"
+            template: "{0}, {1} de {2} municípios"
+            args:
+              - base_object: "max_uf_data2"
+                named_prop: "pct_presenca_uf"
+                format: "porcentagem"
+              - base_object: "max_uf_data2"
+                named_prop: "presenca_total_uf"
+                format: "inteiro"
+              - base_object: "max_uf_data2"
+                named_prop: "total_uf"
+                format: "inteiro"
+      - relevance: "high"
+        cls: "xs12 md6"
+        args: 
+          - prop: "value"
+            base_object: "min_uf_data2"
+            named_prop: "sg_uf"
+          - prop: "description"
+            fixed: "TEM A MENOR % DE<br/>MUNICÍPIOS COM A AÇÃO<br/>em 2019"
+          - prop: "comment"
+            template: "{0}, {1} de {2} municípios"
+            args:
+              - base_object: "min_uf_data2"
+                named_prop: "pct_presenca_uf"
+                format: "porcentagem"
+              - base_object: "min_uf_data2"
+                named_prop: "presenca_total_uf"
+                format: "inteiro"
+              - base_object: "min_uf_data2"
+                named_prop: "total_uf"
+                format: "inteiro"
+      - relevance: "low"
         cls: "xs12 md6"
         args:
           - prop: "value"
@@ -106,14 +185,14 @@ description:
             named_prop: "presenca_total_uf"
             format: "inteiro"
           - prop: "description"
-            template: "de {0} municípios<br/>{1}"
+            template: "de {0} municípios<br/>{1}<br/> em 2023"
             args:
               - base_object: "desc_data"
                 named_prop: "total_uf"
                 format: "inteiro"
               - base_object: "desc_data"
                 named_prop: "nm_uf"
-      - relevance: "high"
+      - relevance: "low"
         cls: "xs12 md6"
         args: 
           - prop: "value"
@@ -122,7 +201,7 @@ description:
             format: 'porcentagem'
             precision: 1
           - prop: "description"
-            fixed: "do total dos<br/>municípios na UF"
+            fixed: "do total dos<br/>municípios na UF<br/>em 2023"
       - relevance: "high"
         cls: "xs12 md6"
         args: 
@@ -130,7 +209,7 @@ description:
             base_object: "max_uf_data"
             named_prop: "sg_uf"
           - prop: "description"
-            fixed: "TEM A MAIOR % DE<br/>MUNICÍPIOS COM A AÇÃO"
+            fixed: "TEM A MAIOR % DE<br/>MUNICÍPIOS COM A AÇÃO<br/>em 2023"
           - prop: "comment"
             template: "{0}, {1} de {2} municípios"
             args:
@@ -143,6 +222,7 @@ description:
               - base_object: "max_uf_data"
                 named_prop: "total_uf"
                 format: "inteiro"
+
       - relevance: "high"
         cls: "xs12 md6"
         args: 
@@ -150,7 +230,7 @@ description:
             base_object: "min_uf_data"
             named_prop: "sg_uf"
           - prop: "description"
-            fixed: "TEM A MENOR % DE<br/>MUNICÍPIOS COM A AÇÃO"
+            fixed: "TEM A MENOR % DE<br/>MUNICÍPIOS COM A AÇÃO<br/>em 2023"
           - prop: "comment"
             template: "{0}, {1} de {2} municípios"
             args:
@@ -163,6 +243,8 @@ description:
               - base_object: "min_uf_data"
                 named_prop: "total_uf"
                 format: "inteiro"
+
+  
   - type: "text"
     title: ""
     content:
@@ -174,6 +256,7 @@ description:
 charts:
   - id: "map_comite_min"          
     type: "MAP_TOPOJSON"
+    cls: "xs12 md6"
     chart_data: "chart_data2"
     headers:
       - text: "Município"
@@ -202,6 +285,7 @@ charts:
 
   - id: "map_comite_max"          
     type: "MAP_TOPOJSON"
+    cls: "xs12 md6"
     chart_data: "chart_data"
     headers:
       - text: "Município"
