@@ -1,32 +1,49 @@
 # ===================================================
 principais:
+  # - relevance: 'lead' 
+  #   cls: 'xs12 xl6'
+  #   rowClass: "pt-0 px-3 pb-5"
+  #   api:
+  #     template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}"
+  #     args:
+  #       - base_object: "sst_beneficio"
+  #         named_prop: "agr_max_ano_beneficio"
+  #   args:
+  #     - prop: "value"
+  #       named_prop: 'agr_sum_qt_despesa_total'
+  #       format: 'real'
+  #       collapse:
+  #         format: 'real'
+  #     - prop: "description"
+  #       fixed: "Gastos previdenciários com AUXÍLIO-DOENÇA (B31)"
+  #     - prop: 'comment'
+  #       template: "(Instituto Nacional do Seguro Social (INSS), {0})"
+  #       args:
+  #         - base_object: "sst_beneficio"
+  #           named_prop: "agr_max_ano_beneficio"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-
-    # preloaded:
-    #   prop: "centralindicadores"
-    #   function: "slice"
-    #   id: "10_11_01_01"
-    #   year: "max"
-    api:
-      template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0}"
-      args:
-        - base_object: "sst_beneficio"
-          named_prop: "agr_max_ano_beneficio"
+    preloaded:
+      prop: "centralindicadores"
+      function: "slice"
+      id: "10_11_01_01"
+      year: "max"
     args:
       - prop: "value"
-        named_prop: 'agr_sum_qt_despesa_total'
+        named_prop: 'vl_indicador'
         format: 'real'
         collapse:
           format: 'real'
       - prop: "description"
-        fixed: "Gastos previdenciários com AUXÍLIO-DOENÇA (B31)"
-      - prop: 'comment'
-        template: "(Instituto Nacional do Seguro Social (INSS), {0})"
+        template: "Gastos previdenciários com {0}"
         args:
-          - base_object: "sst_beneficio"
-            named_prop: "agr_max_ano_beneficio"
+          - named_prop: "ds_agreg_primaria"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
