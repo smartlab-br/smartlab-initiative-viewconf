@@ -15,7 +15,7 @@ principais:
         collapse:
           format: 'real'
       - prop: "description"
-        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - AUXÍLIO-DOENÇA POR SAÚDE MENTAL (B91)"
+        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - AUXÍLIO-DOENÇA POR ACIDENTE DE TRABALHO (B91) - SAÚDE MENTAL"
       - prop: 'comment'
         template: "(INSS/BENEFÍCIOS, {0})"
         args:
@@ -25,7 +25,7 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{0},and,lk-cd_categoria_cid_beneficio-'F%25'"
+      template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0},and,lk-cd_categoria_cid_beneficio-'F%25'"
       args:
         - base_object: "sst_beneficio"
           named_prop: "agr_max_ano_beneficio"
@@ -36,7 +36,7 @@ principais:
         collapse:
           format: 'real'
       - prop: "description"
-        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - APOSENTADORIA POR INVALIDEZ - SAÚDE MENTAL (B92)"
+        fixed: "CONCESSÕES DE BENEFÍCIO PREVIDENCIÁRIO - AUXÍLIO-DOENÇA (B31) - SAÚDE MENTAL"
       - prop: 'comment'
         template: "(INSS/BENEFÍCIOS, {0})"
         args:
@@ -882,7 +882,7 @@ secoes:
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, especificamente no que se refere à saúde mental, o número acumulado de concessões de benefícios previdenciários do tipo Concessão de Benefícios Previdenciários Acidentários (B91) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
+              template: "Em destaque, especificamente no que se refere à saúde mental, o número acumulado de concessões de benefícios previdenciários do tipo  Auxílio-doença por Acidente de Trabalho (B91) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
               api: 
                 fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
               args:
@@ -914,9 +914,9 @@ secoes:
         # source:
         #   desc_field: "ds_fonte"
 # ==========================================================
-      - id: "mapa_b92"
+      - id: "mapa_b31"
         title: 
-          fixed: "Concessão de Aposentadorias por Invalidez Acidentária associadas à saúde mental (B92)"
+          fixed: "Concessão de Benefícios Previdenciários associados à saúde mental (B31)"
         title_comment:
           template: "Brasil, {0}"
           args:
@@ -928,7 +928,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{0},and,lk-cd_categoria_cid_beneficio-'F%25'"
+                  template: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0},and,lk-cd_categoria_cid_beneficio-'F%25'"
                   args:
                     - base_object: "sst_beneficio"
                       named_prop: "agr_max_ano_beneficio"
@@ -940,11 +940,11 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "B92 - Quantidade de concessões"
+                    fixed: "B31 - Quantidade de concessões"
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, especificamente no que se refere à saúde mental, o número de concessões de benefícios previdenciários do tipo Aposentadoria por Invalidez Acidentária (B92) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
+              fixed: "Em destaque, especificamente no que se refere à saúde mental, o número de concessões de benefícios previdenciários do tipo Auxílio-doença (B31) no Brasil para a população com vínculo de emprego regular.  No mapa, apresenta-se a perspectiva comparativa das unidades federativas. A escala de cores varia do branco (menor quantidade) para o vermelho (maior quantidade)."
           # - id: "select_cid_b92"
           #   type: "select"
           #   multiple: true
@@ -969,13 +969,13 @@ secoes:
           #           - named_prop: "cd_agrupamento_categoria_cid"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{0},and,lk-cd_categoria_cid_beneficio-'F%25'"
+          template: "/sst/beneficios?categorias=cd_uf,nm_uf,ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{0},and,lk-cd_categoria_cid_beneficio-'F%25'"
           args:
             - base_object: "sst_beneficio"
               named_prop: "agr_max_ano_beneficio"
           options:
             calcs:
-              - id: "deviation_b92"
+              - id: "deviation_b31"
                 function: "get_log"
                 fn_args:
                   - fixed: "agr_count"
@@ -989,20 +989,20 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'ano_beneficio'
-          - text: 'Qtde de Benefícios B92 - Aposentadorias por Invalidez Acidentária - Saúde mental'
+          - text: 'Qtde de Benefícios B31 - Auxílio-doença - Saúde mental'
             value: 'fmt_agr_count'
         chart_options:
           id_field: 'cd_uf'
           topo_key: "codigo"
-          value_field: 'calc_deviation_b92'
+          value_field: 'calc_deviation_b31'
           colorScale:
             name: "Reds"
         # source:
         #   desc: "INSS/BENEFÍCIOS"
 # ==========================================================
-      - id: "bar_ben_b92"
+      - id: "bar_ben_b31"
         title: 
-          fixed: "Concessão de Aposentadorias por Invalidez Acidentária associadas à saúde mental (B92) – Série Histórica"
+          fixed: "Concessão de Benefícios Previdenciários associados à saúde mental (B31) – Série Histórica"
         title_comment:
           template: "Brasil, de {0} a {1}"
           args:
@@ -1016,7 +1016,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  - fixed: "/sst/beneficios?categorias=''&agregacao=COUNT&filtros=eq-cd_especie_beneficio-92,and,lk-cd_categoria_cid_beneficio-'F%25'"
+                  - fixed: "/sst/beneficios?categorias=''&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"
                 args:
                   - prop: "value"
                     named_prop: 'agr_count'
@@ -1025,11 +1025,11 @@ secoes:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'B92 - Quantidade acumulada'
+                    fixed: 'B31- Quantidade acumulada'
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, especificamente no que se refere à saúde mental, o número acumulado de concessões de benefícios previdenciários do tipo Aposentadorias por Invalidez Acidentária (B92) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
+              template: "Em destaque, especificamente no que se refere à saúde mental, o número acumulado de concessões de benefícios previdenciários do tipo Auxílio-doença (B31) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
               api:
                 - fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"  
               args:
@@ -1037,7 +1037,7 @@ secoes:
                 - named_prop: "agr_max_ano_beneficio"
         chart_type: "BAR"
         api:
-          - fixed: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-92,and,lk-cd_categoria_cid_beneficio-'F%25'"  
+          - fixed: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"  
         api_options:
           formatters:
             - id: "agr_count"
@@ -1046,7 +1046,7 @@ secoes:
           - text: 'Ano'
             align: 'left'
             value: 'ano_beneficio'
-          - text: 'Qtde de Benefícios B92 - Aposentadorias por Invalidez Acidentária - Saúde mental'
+          - text: 'Qtde de Benefícios B31- Auxílio-doença - Saúde mental'
             value: 'fmt_agr_count'
         chart_options:
           id: "ano_beneficio"
