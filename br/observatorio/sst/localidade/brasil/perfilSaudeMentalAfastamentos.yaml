@@ -1035,9 +1035,28 @@ secoes:
               args:
                 - named_prop: "agr_min_ano_beneficio"
                 - named_prop: "agr_max_ano_beneficio"
+          - id: "select_cnae"
+            type: "select"
+            multiple: true
+            label: "Setor Econômico"
+            api:
+              fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"
+            args:
+              - prop: "id"
+                named_prop: "ds_cnae_classe"
+              - prop: "label"
+                named_prop: "ds_cnae_classe"
+                null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cnae_classe-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cnae_classe"
         chart_type: "BAR"
         api:
-          - fixed: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"  
+          fixed: "/sst/beneficios?categorias=ano_beneficio&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"  
         api_options:
           formatters:
             - id: "agr_count"
