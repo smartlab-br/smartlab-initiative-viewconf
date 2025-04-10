@@ -253,7 +253,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12'
+                cls: 'xs12 md6'
                 api:
                   fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
                 args:
@@ -267,38 +267,64 @@ secoes:
                     fixed: "ACIDENTES NO PAÍS"
                   - prop: "comment"
                     named_prop: 'nu_competencia'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                args:
+                  - prop: "value"
+                    fixed: '742116'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "ACIDENTES NO PAÍS<br/>ESTIMATIVA PROJETADA"
+                  - prop: "comment"
+                    fixed: '2024'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de notificações de acidentes de trabalho entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT). No gráfico, apresenta-se a evolução histórica do número de notificações no período, com base no Anuário Estatístico de Acidentes do Trabalho (AEAT, 2002 a 2023) e em dados da Previdência Social (2024). Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes."
+              fixed: "Em destaque, o número de notificações de acidentes de trabalho entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT) e a estimativa projetada para o mesmo ano.<br/>
+                      No gráfico, apresenta-se a evolução histórica do número de notificações no período, com base no Anuário Estatístico de Acidentes do Trabalho (AEAT, 2002 a 2023) e em dados da Previdência Social (2024). Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes.<br/>
+                      Com base na análise da maturação temporal dos dados históricos desde 2024 até 2014 (em retrospecto, excetuado o ano da pandemia), realizou-se uma projeção estatística para o valor final do indicador em 2024, ainda em apuração. <br/>
+                      Utilizou-se o ano de 2023 como referência para modelar a dinâmica de crescimento: estimou-se um fator multiplicativo que representa a evolução do dado desde seu estágio preliminar (correspondente a ~1-3 meses de apuração, como o atual valor de 2024) até sua consolidação final (~1 ano), calibrando este fator a partir do crescimento observado em 2023 entre seu valor de anuário e o valor atual, sob uma suposição sobre a intensidade relativa do crescimento no período inicial. Este fator de crescimento foi então aplicado ao valor preliminar conhecido de 2024 para obter a estimativa pontual projetada.<br/>
+                      É importante notar, ainda, que o tempo de processamento das informações via e-social aumentou. Pretende-se, portanto, atualizar esses números nas próximas edições."
         chart_type: "BAR"
         api: 
-          - fixed: "/indicadoresnacionais?categorias='cat_aeat'-id,nu_competencia,vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_indicador-'09_01_01_00'"
+          - fixed: "/indicadoresnacionais?categorias=vl_indicador-vl_texto,'cat_aeat'-id,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'09_01_01_00'"
             options:
               formatters:
-                - id: "vl_indicador"
+                - id: "vl_texto"
                   format: 'inteiro'
-          - fixed: "/sst/indicadoresnacionais?categorias='cat'-id,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
+          - fixed: "/sst/indicadoresnacionais?categorias=742116-vl_texto,'cat_projecao'-id,2024-nu_competencia,152121-vl_indicador,'Estimativa Projetada Smartlab'-ds_fonte&limit=1"
             options:
               formatters:
-                - id: "vl_indicador"
+                - id: "vl_texto"
+                  format: 'inteiro'
+          - fixed: "/sst/indicadoresnacionais?categorias=vl_indicador-vl_texto,'cat'-id,nu_competencia,vl_indicador,cd_indicador,ds_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
+            options:
+              formatters:
+                - id: "vl_texto"
                   format: 'inteiro'
         headers:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
+          - text: 'Fonte'
+            align: 'left'
+            value: 'ds_fonte'
           - text: 'Nº de Notificações de Acidente de Trabalho'
-            value: 'fmt_vl_indicador'
+            value: 'fmt_vl_texto'
         chart_options:
           id: "id"
           x: "nu_competencia"
           y: "vl_indicador"
           orientation: "vertical"
-          text: "fmt_vl_indicador"
+          text: "fmt_vl_texto"
+          stacked: true
           show_x_axis: true
           show_y_axis: false
           hide_legend: true
-          colorArray: ["#238B45", "377EB8"]
+          colorArray: ["#238B45", "ff7f0e", "377EB8"]
         source:
           desc: "AEAT e Previdência Social"
 # ===================================================
@@ -346,7 +372,7 @@ secoes:
           - type: "minicards"
             cards:
               - relevance: 'high'
-                cls: 'xs12'
+                cls: 'xs12 md6'
                 api:
                   fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max"
                 args:
@@ -360,38 +386,64 @@ secoes:
                     fixed: "ACIDENTES COM ÓBITO NO PAÍS"      
                   - prop: "comment"
                     named_prop: 'nu_competencia'
+              - relevance: 'high'
+                cls: 'xs12 md6'
+                args:
+                  - prop: "value"
+                    fixed: '2409'
+                    format: 'inteiro'
+                    collapse:
+                      format: 'real'
+                    default: "Sem Registros"
+                  - prop: "description"
+                    fixed: "ACIDENTES COM ÓBITO NO PAÍS<br/>ESTIMATIVA PROJETADA"
+                  - prop: "comment"
+                    fixed: '2024'
           - type: "text"
             title: ""
             content:
-              fixed: "Em destaque, o número de notificações de acidentes de trabalho fatal entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT). No gráfico, apresenta-se a evolução histórica do número de notificações com óbito no período, com base no Anuário Estatístico de Acidentes do Trabalho (AEAT, 2002 a 2023) e em dados da Previdência Social (2024). Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes."
+              fixed: "Em destaque, o número de notificações de acidentes de trabalho fatal entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT) e a estimativa projetada para o mesmo ano.<br/>
+                      No gráfico, apresenta-se a evolução histórica do número de notificações com óbito no período, com base no Anuário Estatístico de Acidentes do Trabalho (AEAT, 2002 a 2023) e em dados da Previdência Social (2024). Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes.<br/>                      
+                      Com base na análise da maturação temporal dos dados históricos desde 2024 até 2014 (em retrospecto, excetuado o ano da pandemia), realizou-se uma projeção estatística para o valor final do indicador em 2024, ainda em apuração. <br/>
+                      Utilizou-se o ano de 2023 como referência para modelar a dinâmica de crescimento: estimou-se um fator multiplicativo que representa a evolução do dado desde seu estágio preliminar (correspondente a ~1-3 meses de apuração, como o atual valor de 2024) até sua consolidação final (~1 ano), calibrando este fator a partir do crescimento observado em 2023 entre seu valor de anuário e o valor atual, sob uma suposição sobre a intensidade relativa do crescimento no período inicial. Este fator de crescimento foi então aplicado ao valor preliminar conhecido de 2024 para obter a estimativa pontual projetada.<br/>
+                      É importante notar, ainda, que o tempo de processamento das informações via e-social aumentou. Pretende-se, portanto, atualizar esses números nas próximas edições."
         chart_type: "BAR"
         api: 
-          - fixed: "/indicadoresnacionais?categorias='cat_aeat'-id,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'09_01_06_00'"
+          - fixed: "/indicadoresnacionais?categorias=vl_indicador-vl_texto,'cat_aeat'-id,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'09_01_06_00'"
             options:
               formatters:
-                - id: "vl_indicador"
+                - id: "vl_texto"
                   format: 'inteiro'
-          - fixed: "/sst/indicadoresnacionais?categorias='cat'-id,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2023"
+          - fixed: "/sst/indicadoresnacionais?categorias=2409-vl_texto,'cat_projecao'-id,2024-nu_competencia,494-vl_indicador,'Estimativa Projetada Smartlab'-ds_fonte&limit=1"
             options:
               formatters:
-                - id: "vl_indicador"
+                - id: "vl_texto"
+                  format: 'inteiro'
+          - fixed: "/sst/indicadoresnacionais?categorias=vl_indicador-vl_texto,'cat'-id,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2023"
+            options:
+              formatters:
+                - id: "vl_texto"
                   format: 'inteiro'
         headers:
           - text: 'Ano'
             align: 'left'
             value: 'nu_competencia'
+          - text: 'Fonte'
+            align: 'left'
+            value: 'ds_fonte'
           - text: 'Nº de Notificações de Acidente de Trabalho com Óbito'
-            value: 'fmt_vl_indicador'
+            value: 'fmt_vl_texto'
         chart_options:
           id: "id"
           x: "nu_competencia"
           y: "vl_indicador"
           orientation: "vertical"
-          text: "fmt_vl_indicador"
+          text: "fmt_vl_texto"
+          stacked: true
           show_x_axis: true
           show_y_axis: false
           hide_legend: true
-          colorArray: ["#238B45", "377EB8"]
+          colorArray: ["#238B45", "ff7f0e", "377EB8"]
         source:
           desc: "AEAT e Previdência Social"
 # ====================================================          
