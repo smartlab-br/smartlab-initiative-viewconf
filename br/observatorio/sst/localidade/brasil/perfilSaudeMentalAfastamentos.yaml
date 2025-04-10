@@ -946,27 +946,32 @@ secoes:
               fixed: "Em destaque, o total de dias perdidos em razão de afastamentos previdenciários acidentários em função de transtornos mentais e comportamentais na série histórica considerada. No gráfico ao lado, a evolução da série histórica de dias perdidos, ano a ano. Foram somados todos os dias em que as pessoas não trabalharam em virtude de afastamentos previdenciários acidentários, período que se considera, igualmente, como vivido com déficits de saúde mental. Somaram-se todos os dias de afastamento individualmente ocorridos - muitos, é claro, ao mesmo tempo. Trata-se de métrica usual para medir por aproximação (proxy) os prejuízos de produtividade para a economia formal e, ainda, a quantidade total de dias vividos com transtornos mentais, no âmbito da população afastada."
         chart_type: "BAR"
         api:
-          fixed: "/sst/beneficios?categorias=ano_beneficio&agregacao=sum&valor=qt_dias_perdidos&filtros=eq-cd_especie_beneficio-91,and,lk-cd_categoria_cid_beneficio-'F%25'"
+          fixed: "/sst/beneficios?categorias='dias'-id,ano_beneficio,'Dias Perdidos'-ds_indicador_radical&agregacao=sum&valor=qt_dias_perdidos&filtros=eq-cd_especie_beneficio-91,and,lk-cd_categoria_cid_beneficio-'F%25'"
+        api_options:
         api_options:
           formatters:
             - id: "agr_sum_qt_dias_perdidos"
               format: "inteiro"
         headers:
+          - text: 'Indicador'
+            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'ano_beneficio'
-          - text: 'Dias Perdidos - Benefícios B91 - Auxílio-doença por acidente de trabalho - Saúde mental'
-            value: 'fmt_agr_count'
+          - text: 'Dias Perdidos - Benefícios B91 - Auxílio-doença - Saúde mental'
+            value: 'bar_label'
         chart_options:
-          id: "ano_beneficio"
+          id: "id"
           x: "ano_beneficio"
           y: "agr_sum_qt_dias_perdidos"
           orientation: "vertical"
           text: "fmt_agr_sum_qt_dias_perdidos"
+          legend_field: "ds_indicador_radical"
           show_x_axis: true
           show_y_axis: false
           hide_legend: true
-          color: "#238B45"
+          stacked: true
+          accum: true
         # source:
         #   desc_field: "ds_fonte"
 # ==========================================================
@@ -1136,6 +1141,94 @@ secoes:
         # source:
         #   desc_field: "ds_fonte"
 # ==========================================================
+      # - id: "stacked_ben_b31"
+      #   title: 
+      #     fixed: "Concessão de Benefícios Previdenciários associados à saúde mental (B31) por Atividade Econômica – Série Histórica"
+      #   title_comment:
+      #     template: "Brasil, de {0} a {1}"
+      #     args:
+      #       - base_object: "sst_beneficio"
+      #         named_prop: "agr_min_ano_beneficio"
+      #       - base_object: "sst_beneficio"
+      #         named_prop: "agr_max_ano_beneficio" 
+      #   description:
+      #     - type: "minicards"
+      #       cards:
+      #         - relevance: 'high'
+      #           cls: 'xs12'
+      #           api:
+      #             - fixed: "/sst/beneficios?categorias=''&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"
+      #           args:
+      #             - prop: "value"
+      #               named_prop: 'agr_count'
+      #               format: 'inteiro'
+      #               collapse:
+      #                 format: 'real'
+      #               default: "Sem Registros"
+      #             - prop: "description"
+      #               fixed: 'B31- Quantidade acumulada'
+      #     - type: "text"
+      #       title: ""
+      #       content:
+      #         template: "Em destaque, especificamente no que se refere à saúde mental, o número acumulado de concessões de benefícios previdenciários do tipo Auxílio-doença (B31) de {0} a {1}. No gráfico, apresenta-se a evolução histórica do número de concessões no período."
+      #         api:
+      #           - fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"  
+      #         args:
+      #           - named_prop: "agr_min_ano_beneficio"
+      #           - named_prop: "agr_max_ano_beneficio"
+      #     - id: "select_cnae"
+      #       type: "select"
+      #       multiple: true
+      #       label: "Setor Econômico"
+      #       api:
+      #         fixed: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=distinct&ordenacao=ds_cnae_classe&filtros=ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"
+      #       args:
+      #         - prop: "id"
+      #           named_prop: "ds_cnae_classe"
+      #         - prop: "label"
+      #           named_prop: "ds_cnae_classe"
+      #           null_value: "(Não informado)"
+      #       selection:
+      #         event: "selection" 
+      #         rules:
+      #           filter: ",and,in-ds_cnae_classe-{0}"
+      #           api:
+      #             args:
+      #               - named_prop: "ds_cnae_classe"
+      #   chart_type: "STACKED"
+      #   api:
+      #     - fixed: "/sst/beneficios?categorias='setor'-id,ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25',and,ne-ds_cnae_classe-''"  
+      #     - fixed: "/sst/beneficios?categorias='total'-id,ano_beneficio,''-ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25',and,ne-ds_cnae_classe-''"  
+      #   api_options:
+      #     calcs:
+      #       - 
+      #     formatters:
+      #       - id: "agr_count"
+      #         format: "inteiro"
+          
+      #   headers:
+      #     - text: 'Ano'
+      #       align: 'left'
+      #       value: 'ano_beneficio'
+      #     - text: 'Setor Econômico'
+      #       align: 'left'
+      #       value: 'ds_cnae_classe'
+      #     - text: 'Qtde de Benefícios B31- Auxílio-doença - Saúde mental'
+      #       value: 'fmt_agr_count'
+      #   chart_options:
+      #     id: "ds_cnae_classe"
+      #     x: "ano_beneficio"
+      #     y: "agr_count"
+      #     orientation: "vertical"
+      #     text: "fmt_agr_count"
+      #     stacked: true
+      #     show_x_axis: true
+      #     show_y_axis: false
+      #     hide_legend: true
+      #     # color: "#238B45"
+      #   # source:
+      #   #   desc_field: "ds_fonte"
+# ==========================================================
       - id: "bar_ben_b31_dias_perdidos"
         title: 
           fixed: "Dias Perdidos de Vida Saudável e de Atividade Produtiva por Problemas de Saúde Mental (B31)"
@@ -1168,27 +1261,31 @@ secoes:
               fixed: "Em destaque, o total de dias perdidos em razão de afastamentos previdenciários em função de transtornos mentais e comportamentais na série histórica considerada. No gráfico ao lado, a evolução da série histórica de dias perdidos, ano a ano. Foram somados todos os dias em que as pessoas não trabalharam em virtude de afastamentos previdenciários, período que se considera, igualmente, como vivido com déficits de saúde mental. Somaram-se todos os dias de afastamento individualmente ocorridos - muitos, é claro, ao mesmo tempo. Trata-se de métrica usual para medir por aproximação (proxy) os prejuízos de produtividade para a economia formal e, ainda, a quantidade total de dias vividos com transtornos mentais, no âmbito da população afastada."
         chart_type: "BAR"
         api:
-          fixed: "/sst/beneficios?categorias=ano_beneficio&agregacao=sum&valor=qt_dias_perdidos&filtros=eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"
+          fixed: "/sst/beneficios?categorias='dias'-id,ano_beneficio,'Dias Perdidos'-ds_indicador_radical&agregacao=sum&valor=qt_dias_perdidos&filtros=eq-cd_especie_beneficio-31,and,lk-cd_categoria_cid_beneficio-'F%25'"
         api_options:
           formatters:
             - id: "agr_sum_qt_dias_perdidos"
               format: "inteiro"
         headers:
+          - text: 'Indicador'
+            value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
             value: 'ano_beneficio'
           - text: 'Dias Perdidos - Benefícios B31 - Auxílio-doença - Saúde mental'
-            value: 'fmt_agr_count'
+            value: 'bar_label'
         chart_options:
-          id: "ano_beneficio"
+          id: "id"
           x: "ano_beneficio"
           y: "agr_sum_qt_dias_perdidos"
           orientation: "vertical"
           text: "fmt_agr_sum_qt_dias_perdidos"
+          legend_field: "ds_indicador_radical"
           show_x_axis: true
           show_y_axis: false
           hide_legend: true
-          color: "#238B45"
+          stacked: true
+          accum: true
         # source:
         #   desc_field: "ds_fonte"
 
