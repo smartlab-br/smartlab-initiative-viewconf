@@ -3,87 +3,95 @@ principais:
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "10_11_01_01"
-      year: "max"
+    api:
+      template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1}"
+      args:
+        - named_prop: "idLocalidade"
+        - base_object: "sst_beneficio"
+          named_prop: "agr_max_ano_beneficio"
+    # preloaded:
+    #   prop: "centralindicadores"
+    #   function: "slice"
+    #   id: "10_11_01_01"
+    #   year: "max"
     args:
       - prop: "value"
-        named_prop: 'vl_indicador'
+        named_prop: 'agr_sum_qt_despesa_total'
         format: 'real'
         collapse:
           format: 'real'
       - prop: "description"
-        template: "Gastos previdenciários com {0}"
-        args:
-          - named_prop: "ds_agreg_primaria"
+        fixed: "Gastos previdenciários com AUXÍLIO-DOENÇA (B31)"
       - prop: 'comment'
-        template: "({0}, {1})"
+        template: "(Instituto Nacional do Seguro Social (INSS), {0})"
         args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - base_object: "sst_beneficio"
+            named_prop: "agr_max_ano_beneficio"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
-    preloaded:
-      prop: "centralindicadores"
-      function: "slice"
-      id: "10_11_01_02"
-      year: "max"
+    api:
+      template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-32,and,eq-ano_beneficio-{1}"
+      args:
+        - named_prop: "idLocalidade"
+        - base_object: "sst_beneficio"
+          named_prop: "agr_max_ano_beneficio"
+    # preloaded:
+    #   prop: "centralindicadores"
+    #   function: "slice"
+    #   id: "10_11_01_02"
+    #   year: "max"
     args:
       - prop: "value"
-        named_prop: 'vl_indicador'
+        named_prop: 'agr_sum_qt_despesa_total'
         format: 'real'
         collapse:
           format: 'real'
       - prop: "description"
-        template: "Gastos previdenciários com {0}"
-        args:
-          - named_prop: "ds_agreg_primaria"
+        fixed: "Gastos previdenciários com  APOSENTADORIA POR INVALIDEZ (B32)"
       - prop: 'comment'
-        template: "({0}, {1})"
+        template: "(Instituto Nacional do Seguro Social (INSS), {0})"
         args:
-          - named_prop: "ds_fonte"
-          - named_prop: "nu_competencia"
+          - base_object: "sst_beneficio"
+            named_prop: "agr_max_ano_beneficio"
 # ===================================================
 secoes:
   - id: "duracao_unica"
     name: ""
     cards:
+
 # ========================================================
       - id: "bar_despesa_auxilio_doenca_acidente"
         title: 
           fixed: "Despesa Previdenciária - Auxílio-doença por acidente do trabalho (B91)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_11_01_03"
-            year: "max"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "" 
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"          
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "" 
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_11_01_03"
-                  year: "max"
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'agr_sum_qt_despesa_total'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
@@ -92,56 +100,19 @@ secoes:
                   - prop: "description"
                     fixed: "Em gastos com o benefício"
                   - prop: "comment"
-                    named_prop: "nu_competencia"
-
+                    named_prop: "ano_beneficio"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_11_01_03"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
-
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_11_01_03"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
+              fixed: "Em destaque, informações sobre a despesa previdenciária para custeio do  benefício - Auxílio doença por acidente do trabalho (B91). Ao lado, é possível ver o valor pago para benefícios iniciados em cada ano de referência, bem como o acumulado no período considerado."
         chart_type: "BAR"
-        preloaded:
-          prop: "centralindicadores"
-          function: "slice"
-          id: ['10_11_01_03']
-          options:
+        api:
+          template: "/sst/beneficios?categorias='auxilio'-id,'Auxílio doença por acidente do trabalho (B91)'-ds_agreg_primaria,'Despesa Previdenciária  Auxílio doença por acidente do trabalho (B91)'-ds_indicador_radical,ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-91"
+          args:
+            - named_prop: "idLocalidade"
+        options:
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_qt_despesa_total"
                 collapse:
                   format: 'real'
                   precision: 1
@@ -151,12 +122,12 @@ secoes:
             value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'ano_beneficio'
           - text: 'Valor'
             value: 'bar_label'
         chart_options:
-          x: "nu_competencia"
-          y: "vl_indicador"
+          x: "ano_beneficio"
+          y: "agr_sum_qt_despesa_total"
           id: "id"
           orientation: "vertical"
           accum: true
@@ -168,40 +139,39 @@ secoes:
           show_y_axis: false
           legend_field: "ds_agreg_primaria"
         source:
-          desc_field: "ds_fonte"
+          desc_text: "Instituto Nacional do Seguro Social (INSS)"
 # ===================================================
       - id: "bar_despesa_aposentadoria_acidente"
         title: 
           fixed: "Despesa Previdenciária - Aposentadoria por invalidez por acidente do trabalho (B92)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_11_01_04"
-            year: "max"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "" 
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"          
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "" 
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_11_01_04"
-                  year: "max"
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-92,and,eq-ano_beneficio-{1}"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'agr_sum_qt_despesa_total'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
@@ -210,56 +180,19 @@ secoes:
                   - prop: "description"
                     fixed: "Em gastos com o benefício"
                   - prop: "comment"
-                    named_prop: "nu_competencia"
-
+                    named_prop: "ano_beneficio"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_11_01_04"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
-
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_11_01_04"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
+              fixed: "Em destaque, informações sobre a despesa previdenciária para custeio do  benefício - Aposentadoria por invalidez por acidente do trabalho (B92). Ao lado, é possível ver o valor pago para benefícios iniciados em cada ano de referência, bem como o acumulado no período considerado."
         chart_type: "BAR"
-        preloaded:
-          prop: "centralindicadores"
-          function: "slice"
-          id: ['10_11_01_04']
-          options:
+        api:
+          template: "/sst/beneficios?categorias='auxilio'-id,'Aposentadoria por invalidez por acidente do trabalho (B92)'-ds_agreg_primaria,'Despesa Previdenciária  Aposentadoria por invalidez por acidente do trabalho (B92)'-ds_indicador_radical,ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-92"
+          args:
+            - named_prop: "idLocalidade"
+        options:
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_qt_despesa_total"
                 collapse:
                   format: 'real'
                   precision: 1
@@ -269,12 +202,12 @@ secoes:
             value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'ano_beneficio'
           - text: 'Valor'
             value: 'bar_label'
         chart_options:
-          x: "nu_competencia"
-          y: "vl_indicador"
+          x: "ano_beneficio"
+          y: "agr_sum_qt_despesa_total"
           id: "id"
           orientation: "vertical"
           accum: true
@@ -286,40 +219,39 @@ secoes:
           show_y_axis: false
           legend_field: "ds_agreg_primaria"
         source:
-          desc_field: "ds_fonte"
+          desc_text: "Instituto Nacional do Seguro Social (INSS)"
 # ===================================================
       - id: "bar_despesa_pensao_acidente"
         title: 
           fixed: "Despesa Previdenciária - Pensão por morte por acidente do trabalho (B93)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_11_01_05"
-            year: "max"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "" 
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"          
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "" 
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_11_01_05"
-                  year: "max"
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-93,and,eq-ano_beneficio-{1}"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'agr_sum_qt_despesa_total'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
@@ -328,56 +260,19 @@ secoes:
                   - prop: "description"
                     fixed: "Em gastos com o benefício"
                   - prop: "comment"
-                    named_prop: "nu_competencia"
-
+                    named_prop: "ano_beneficio"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_11_01_05"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
-
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_11_01_05"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
+              fixed: "Em destaque, informações sobre a despesa previdenciária para custeio do  benefício - Pensão por morte por acidente do trabalho (B93). Ao lado, é possível ver o valor pago para benefícios iniciados em cada ano de referência, bem como o acumulado no período considerado."   
         chart_type: "BAR"
-        preloaded:
-          prop: "centralindicadores"
-          function: "slice"
-          id: ['10_11_01_05']
-          options:
+        api:
+          template: "/sst/beneficios?categorias='auxilio'-id,'Pensão por morte por acidente do trabalho (B93)'-ds_agreg_primaria,'Despesa Previdenciária  Pensão por morte por acidente do trabalho (B93)'-ds_indicador_radical,ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-93"
+          args:
+            - named_prop: "idLocalidade"
+        options:
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_qt_despesa_total"
                 collapse:
                   format: 'real'
                   precision: 1
@@ -387,12 +282,12 @@ secoes:
             value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'ano_beneficio'
           - text: 'Valor'
             value: 'bar_label'
         chart_options:
-          x: "nu_competencia"
-          y: "vl_indicador"
+          x: "ano_beneficio"
+          y: "agr_sum_qt_despesa_total"
           id: "id"
           orientation: "vertical"
           accum: true
@@ -404,40 +299,39 @@ secoes:
           show_y_axis: false
           legend_field: "ds_agreg_primaria"
         source:
-          desc_field: "ds_fonte"
-# ===================================================
+          desc_text: "Instituto Nacional do Seguro Social (INSS)"
+# ===================================================          
       - id: "bar_despesa_auxilio_acidente_acidente"
         title: 
           fixed: "Despesa Previdenciária - Auxílio-acidente por acidente do trabalho (B94)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_11_01_06"
-            year: "max"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "" 
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"          
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "" 
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_11_01_06"
-                  year: "max"
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-94,and,eq-ano_beneficio-{1}"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'agr_sum_qt_despesa_total'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
@@ -446,56 +340,19 @@ secoes:
                   - prop: "description"
                     fixed: "Em gastos com o benefício"
                   - prop: "comment"
-                    named_prop: "nu_competencia"
-
+                    named_prop: "ano_beneficio"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_11_01_06"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
-
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_11_01_06"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
+              fixed: "Em destaque, informações sobre a despesa previdenciária para custeio do  benefício - Auxílio acidente por acidente do trabalho (B94). Ao lado, é possível ver o valor pago para benefícios iniciados em cada ano de referência, bem como o acumulado no período considerado." 
         chart_type: "BAR"
-        preloaded:
-          prop: "centralindicadores"
-          function: "slice"
-          id: ['10_11_01_06']
-          options:
+        api:
+          template: "/sst/beneficios?categorias='auxilio'-id,'Auxílio acidente por acidente do trabalho (B94)'-ds_agreg_primaria,'Despesa Previdenciária  Auxílio acidente por acidente do trabalho (B94)'-ds_indicador_radical,ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-94"
+          args:
+            - named_prop: "idLocalidade"
+        options:
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_qt_despesa_total"
                 collapse:
                   format: 'real'
                   precision: 1
@@ -505,12 +362,12 @@ secoes:
             value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'ano_beneficio'
           - text: 'Valor'
             value: 'bar_label'
         chart_options:
-          x: "nu_competencia"
-          y: "vl_indicador"
+          x: "ano_beneficio"
+          y: "agr_sum_qt_despesa_total"
           id: "id"
           orientation: "vertical"
           accum: true
@@ -522,40 +379,39 @@ secoes:
           show_y_axis: false
           legend_field: "ds_agreg_primaria"
         source:
-          desc_field: "ds_fonte"
+          desc_text: "Instituto Nacional do Seguro Social (INSS)"     
 # ===================================================
       - id: "bar_despesa_auxilio_doenca"
         title: 
           fixed: "Despesa Previdenciária - Auxílio-doença (B31)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_11_01_01"
-            year: "max"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "" 
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"          
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "" 
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_11_01_01"
-                  year: "max"
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1}"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'agr_sum_qt_despesa_total'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
@@ -564,56 +420,19 @@ secoes:
                   - prop: "description"
                     fixed: "Em gastos com o benefício"
                   - prop: "comment"
-                    named_prop: "nu_competencia"
-
+                    named_prop: "ano_beneficio"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_11_01_01"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
-
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_11_01_01"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
+              fixed: "Em destaque, informações sobre a despesa previdenciária para custeio do  benefício - Auxílio-doença (B31). Ao lado, é possível ver o valor pago para benefícios iniciados em cada ano de referência, bem como o acumulado no período considerado." 
         chart_type: "BAR"
-        preloaded:
-          prop: "centralindicadores"
-          function: "slice"
-          id: ['10_11_01_01']
-          options:
+        api:
+          template: "/sst/beneficios?categorias='auxilio'-id,'Auxílio doença (B31)'-ds_agreg_primaria,'Despesa Previdenciária  Auxílio doença (B31)'-ds_indicador_radical,ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-31"
+          args:
+            - named_prop: "idLocalidade"
+        options:
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_qt_despesa_total"
                 collapse:
                   format: 'real'
                   precision: 1
@@ -623,12 +442,12 @@ secoes:
             value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'ano_beneficio'
           - text: 'Valor'
             value: 'bar_label'
         chart_options:
-          x: "nu_competencia"
-          y: "vl_indicador"
+          x: "ano_beneficio"
+          y: "agr_sum_qt_despesa_total"
           id: "id"
           orientation: "vertical"
           accum: true
@@ -640,40 +459,39 @@ secoes:
           show_y_axis: false
           legend_field: "ds_agreg_primaria"
         source:
-          desc_field: "ds_fonte"
+          desc_text: "Instituto Nacional do Seguro Social (INSS)"
 # ===================================================
       - id: "bar_despesa_aposentadoria_invalidez"
         title: 
           fixed: "Despesa Previdenciária - Aposentadoria por invalidez (B32)"
         title_comment:
           template: "{0}, de {1} a {2}"
-          preloaded:
-            prop: "centralindicadores"
-            function: "slice"
-            id: "10_11_01_02"
-            year: "max"
           args:
-            - named_prop: "nm_municipio_uf"
-            - named_prop: "nu_competencia_min"
-            - named_prop: "nu_competencia_max"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "" 
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_min_ano_beneficio"
+            - base_object: "sst_beneficio"
+              named_prop: "agr_max_ano_beneficio"          
+        # info:
+        #   - type: "text"
+        #     title: "Sobre a métrica"
+        #     content:
+        #       fixed: "" 
         description:
           - type: "minicards"
             cards:
               - relevance: 'high'
                 cls: 'xs12'
-                preloaded:
-                  prop: "centralindicadores"
-                  function: "slice"
-                  id: "10_11_01_02"
-                  year: "max"
+                api:
+                  template: "/sst/beneficios?categorias=ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-32,and,eq-ano_beneficio-{1}"
+                  args:
+                    - named_prop: "idLocalidade"
+                    - base_object: "sst_beneficio"
+                      named_prop: "agr_max_ano_beneficio"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: 'agr_sum_qt_despesa_total'
                     format: 'monetario'
                     collapse:
                       format: 'monetario'
@@ -682,56 +500,19 @@ secoes:
                   - prop: "description"
                     fixed: "Em gastos com o benefício"
                   - prop: "comment"
-                    named_prop: "nu_competencia"
-
+                    named_prop: "ano_beneficio"
           - type: "text"
             title: ""
             content:
-              template: "Em destaque, informações sobre {0}. Ao lado, é possível ver o valor pago a cada ano, bem como o acumulado no período considerado."
-              preloaded:
-                prop: "centralindicadores"
-                function: "slice"
-                id: "10_11_01_02"
-                year: "max"
-              args:
-                - named_prop: "ds_indicador_radical"
-
-          - type: "ranking"
-            preloaded:
-              prop: "centralindicadores"
-              function: "slice"
-              id: "10_11_01_02"
-              year: "max"
-            args:
-              - prop: 'regional_rank'
-                named_prop: "rank_uf"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'regional_total'
-                named_prop: "rank_uf_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_rank'
-                named_prop: "rank_br"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-              - prop: 'national_total'
-                named_prop: "rank_br_total"
-                format: 'inteiro'
-                precision: 0
-                default: 0
-
+              fixed: "Em destaque, informações sobre a despesa previdenciária para custeio do  benefício - Aposentadoria por invalidez (B32). Ao lado, é possível ver o valor pago para benefícios iniciados em cada ano de referência, bem como o acumulado no período considerado." 
         chart_type: "BAR"
-        preloaded:
-          prop: "centralindicadores"
-          function: "slice"
-          id: ['10_11_01_02']
-          options:
+        api:
+          template: "/sst/beneficios?categorias='auxilio'-id,'Aposentadoria por invalidez (B32)'-ds_agreg_primaria,'Despesa Previdenciária  Aposentadoria por invalidez (B32)'-ds_indicador_radical,ano_beneficio&valor=qt_despesa_total&agregacao=SUM&ordenacao=ano_beneficio&filtros=eq-cd_municipio_ibge_dv-{0},and,eq-cd_especie_beneficio-32"
+          args:
+            - named_prop: "idLocalidade"
+        options:
             formatters:
-              - id: "vl_indicador"
+              - id: "agr_sum_qt_despesa_total"
                 collapse:
                   format: 'real'
                   precision: 1
@@ -741,12 +522,12 @@ secoes:
             value: 'ds_indicador_radical'
           - text: 'Ano'
             align: 'left'
-            value: 'nu_competencia'
+            value: 'ano_beneficio'
           - text: 'Valor'
             value: 'bar_label'
         chart_options:
-          x: "nu_competencia"
-          y: "vl_indicador"
+          x: "ano_beneficio"
+          y: "agr_sum_qt_despesa_total"
           id: "id"
           orientation: "vertical"
           accum: true
@@ -758,5 +539,4 @@ secoes:
           show_y_axis: false
           legend_field: "ds_agreg_primaria"
         source:
-          desc_field: "ds_fonte"
-# ===================================================
+          desc_text: "Instituto Nacional do Seguro Social (INSS)"     
