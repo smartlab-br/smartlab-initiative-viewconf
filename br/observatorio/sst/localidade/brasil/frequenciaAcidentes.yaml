@@ -22,6 +22,27 @@ principais:
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
+      fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+    args:
+      - prop: "value"
+        function: 'calc_multiplication_ds'
+        fn_args:
+          - fixed: 1
+          - named_prop: "vl_indicador"
+          - fixed: 1.258
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES<br/>ESTIMATIVA PROJETADA"
+      - prop: 'comment'
+        template: "(Smartlab, {0})"
+        args:
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
       fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max"
     args:
       - prop: "value"
@@ -35,6 +56,27 @@ principais:
         template: "({0}, {1})"
         args:
           - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max"
+    args:
+      - prop: "value"
+        function: 'calc_multiplication_ds'
+        fn_args:
+          - fixed: 1
+          - named_prop: "vl_indicador"
+          - fixed: 1.258
+        format: 'inteiro'
+        collapse: 
+          format: 'real'
+      - prop: "description"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - ACIDENTES COM ÓBITO<br/>ESTIMATIVA PROJETADA"
+      - prop: 'comment'
+        template: "(Smartlab, {0})"
+        args:
           - named_prop: "nu_competencia"
 # ===================================================
 secoes:
@@ -269,17 +311,23 @@ secoes:
                     named_prop: 'nu_competencia'
               - relevance: 'high'
                 cls: 'xs12 md6'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    fixed: '742116'
+                    function: 'calc_multiplication_ds'
+                    fn_args:
+                      - fixed: 1
+                      - named_prop: "vl_indicador"
+                      - fixed: 1.258
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "ACIDENTES NO PAÍS<br/>ESTIMATIVA PROJETADA"
+                    fixed: "ACIDENTES NO PAÍS<br/>ESTIMATIVA PROJETADA"      
                   - prop: "comment"
-                    fixed: '2024'
+                    named_prop: 'nu_competencia'
           - type: "text"
             title: ""
             content:
@@ -290,20 +338,31 @@ secoes:
                       É importante notar, ainda, que o tempo de processamento das informações via e-social aumentou. Pretende-se, portanto, atualizar esses números nas próximas edições."
         chart_type: "BAR"
         api: 
-          - fixed: "/indicadoresnacionais?categorias=vl_indicador-vl_texto,'cat_aeat'-id,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'09_01_01_00'"
+          - fixed: "/indicadoresnacionais?categorias=vl_indicador-calc_vl_texto,'cat_aeat'-id,nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'09_01_01_00'"
             options:
               formatters:
-                - id: "vl_texto"
+                - id: "calc_vl_texto"
                   format: 'inteiro'
-          - fixed: "/sst/indicadoresnacionais?categorias=742116-vl_texto,'cat_projecao'-id,2024-nu_competencia,152121-vl_indicador,'Estimativa Projetada Smartlab'-ds_fonte&limit=1"
+          - fixed: "/sst/indicadoresnacionais?categorias=vl_indicador-calc_vl_texto,'cat'-id,nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,ds_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
             options:
               formatters:
-                - id: "vl_texto"
+                - id: "calc_vl_texto"
                   format: 'inteiro'
-          - fixed: "/sst/indicadoresnacionais?categorias=vl_indicador-vl_texto,'cat'-id,nu_competencia,vl_indicador,cd_indicador,ds_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
+          - fixed: "/sst/indicadoresnacionais?categorias='cat_projecao'-id,nu_competencia,vl_indicador,cd_indicador,ds_indicador,'Estimativa Projetada Smartlab'-ds_fonte&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
             options:
-              formatters:
+              calcs:
                 - id: "vl_texto"
+                  function: "calc_multiplication_ds"
+                  fn_args:
+                    - named_prop: "vl_indicador"
+                    - fixed: 1.258
+                - id: "vl_indicador"
+                  function: "calc_subtraction_ds"
+                  fn_args:
+                    - named_prop: "calc_vl_texto"
+                    - named_prop: "vl_indicador"
+              formatters:
+                - id: "calc_vl_texto"
                   format: 'inteiro'
         headers:
           - text: 'Ano'
@@ -313,13 +372,13 @@ secoes:
             align: 'left'
             value: 'ds_fonte'
           - text: 'Nº de Notificações de Acidente de Trabalho'
-            value: 'fmt_vl_texto'
+            value: 'fmt_calc_vl_texto'
         chart_options:
           id: "id"
           x: "nu_competencia"
-          y: "vl_indicador"
+          y: "calc_vl_indicador"
           orientation: "vertical"
-          text: "fmt_vl_texto"
+          text: "fmt_calc_vl_texto"
           stacked: true
           show_x_axis: true
           show_y_axis: false
@@ -388,9 +447,15 @@ secoes:
                     named_prop: 'nu_competencia'
               - relevance: 'high'
                 cls: 'xs12 md6'
+                api:
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    fixed: '2409'
+                    function: 'calc_multiplication_ds'
+                    fn_args:
+                      - fixed: 1
+                      - named_prop: "vl_indicador"
+                      - fixed: 1.258
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -398,7 +463,7 @@ secoes:
                   - prop: "description"
                     fixed: "ACIDENTES COM ÓBITO NO PAÍS<br/>ESTIMATIVA PROJETADA"
                   - prop: "comment"
-                    fixed: '2024'
+                    named_prop: 'nu_competencia'
           - type: "text"
             title: ""
             content:
@@ -409,20 +474,31 @@ secoes:
                       É importante notar, ainda, que o tempo de processamento das informações via e-social aumentou. Pretende-se, portanto, atualizar esses números nas próximas edições."
         chart_type: "BAR"
         api: 
-          - fixed: "/indicadoresnacionais?categorias=vl_indicador-vl_texto,'cat_aeat'-id,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'09_01_06_00'"
+          - fixed: "/indicadoresnacionais?categorias=vl_indicador-calc_vl_texto,'cat_aeat'-id,nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'09_01_06_00'"
             options:
               formatters:
-                - id: "vl_texto"
+                - id: "calc_vl_texto"
                   format: 'inteiro'
-          - fixed: "/sst/indicadoresnacionais?categorias=2409-vl_texto,'cat_projecao'-id,2024-nu_competencia,494-vl_indicador,'Estimativa Projetada Smartlab'-ds_fonte&limit=1"
+          - fixed: "/sst/indicadoresnacionais?categorias=vl_indicador-calc_vl_texto,'cat'-id,nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2023"
             options:
               formatters:
-                - id: "vl_texto"
+                - id: "calc_vl_texto"
                   format: 'inteiro'
-          - fixed: "/sst/indicadoresnacionais?categorias=vl_indicador-vl_texto,'cat'-id,nu_competencia,vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2023"
+          - fixed: "/sst/indicadoresnacionais?categorias=vl_indicador-vl_texto,'cat_projecao'-id,nu_competencia,vl_indicador,cd_indicador,ds_indicador,'Estimativa Projetada Smartlab'-ds_fonte&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max"
             options:
-              formatters:
+              calcs:
                 - id: "vl_texto"
+                  function: "calc_multiplication_ds"
+                  fn_args:
+                    - named_prop: "vl_indicador"
+                    - fixed: 1.258
+                - id: "vl_indicador"
+                  function: "calc_subtraction_ds"
+                  fn_args:
+                    - named_prop: "calc_vl_texto"
+                    - named_prop: "vl_indicador"
+              formatters:
+                - id: "calc_vl_texto"
                   format: 'inteiro'
         headers:
           - text: 'Ano'
@@ -432,13 +508,13 @@ secoes:
             align: 'left'
             value: 'ds_fonte'
           - text: 'Nº de Notificações de Acidente de Trabalho com Óbito'
-            value: 'fmt_vl_texto'
+            value: 'fmt_calc_vl_texto'
         chart_options:
           id: "id"
           x: "nu_competencia"
-          y: "vl_indicador"
+          y: "calc_vl_indicador"
           orientation: "vertical"
-          text: "fmt_vl_texto"
+          text: "fmt_calc_vl_texto"
           stacked: true
           show_x_axis: true
           show_y_axis: false
