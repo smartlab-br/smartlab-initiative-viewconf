@@ -1,5 +1,25 @@
 # ====================================================          
 principais:
+  - relevance: 'lead' 
+    cls: 'xs12 xl6'
+    rowClass: "pt-0 px-3 pb-5"
+    api:
+      template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023,and,eq-cd_uf-{0}"
+      args:
+        - named_prop: "idLocalidade"
+    args:
+      - prop: "value"
+        named_prop: 'vl_indicador'
+        format: 'inteiro'
+        collapse:
+          format: 'real'
+      - prop: "description"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES"
+      - prop: 'comment'
+        template: "({0}, {1})"
+        args:
+          - named_prop: "ds_fonte"
+          - named_prop: "nu_competencia"
   # - relevance: 'lead' 
   #   cls: 'xs12 xl6'
   #   rowClass: "pt-0 px-3 pb-5"
@@ -9,39 +29,39 @@ principais:
   #       - named_prop: "idLocalidade"
   #   args:
   #     - prop: "value"
-  #       named_prop: 'vl_indicador'
+  #       function: 'calc_multiplication_ds'
+  #       fn_args:
+  #         - fixed: 1
+  #         - named_prop: "vl_indicador"
+  #         - fixed: 1.258
   #       format: 'inteiro'
   #       collapse:
   #         format: 'real'
   #     - prop: "description"
-  #       fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES"
+  #       fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES<br/>PROJEÇÃO"
   #     - prop: 'comment'
-  #       template: "({0}, {1})"
+  #       template: "(Smartlab, {0})"
   #       args:
-  #         - named_prop: "ds_fonte"
   #         - named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
     rowClass: "pt-0 px-3 pb-5"
     api:
-      template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+      template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-2023,and,eq-cd_uf-{0}"
       args:
         - named_prop: "idLocalidade"
     args:
       - prop: "value"
-        function: 'calc_multiplication_ds'
-        fn_args:
-          - fixed: 1
-          - named_prop: "vl_indicador"
-          - fixed: 1.258
+        named_prop: 'vl_indicador'
         format: 'inteiro'
-        collapse:
+        collapse: 
           format: 'real'
       - prop: "description"
-        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES<br/>PROJEÇÃO"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - ACIDENTES COM ÓBITO "
       - prop: 'comment'
-        template: "(Smartlab, {0})"
+        template: "({0}, {1})"
         args:
+          - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
   # - relevance: 'lead' 
   #   cls: 'xs12 xl6'
@@ -52,40 +72,20 @@ principais:
   #       - named_prop: "idLocalidade"
   #   args:
   #     - prop: "value"
-  #       named_prop: 'vl_indicador'
+  #       function: 'calc_multiplication_ds'
+  #       fn_args:
+  #         - fixed: 1
+  #         - named_prop: "vl_indicador"
+  #         - fixed: 1.258
   #       format: 'inteiro'
   #       collapse: 
   #         format: 'real'
   #     - prop: "description"
-  #       fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - ACIDENTES COM ÓBITO "
+  #       fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - ACIDENTES COM ÓBITO<br/>PROJEÇÃO"
   #     - prop: 'comment'
-  #       template: "({0}, {1})"
+  #       template: "(Smartlab, {0})"
   #       args:
-  #         - named_prop: "ds_fonte"
   #         - named_prop: "nu_competencia"
-  - relevance: 'lead' 
-    cls: 'xs12 xl6'
-    rowClass: "pt-0 px-3 pb-5"
-    api:
-      template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
-      args:
-        - named_prop: "idLocalidade"
-    args:
-      - prop: "value"
-        function: 'calc_multiplication_ds'
-        fn_args:
-          - fixed: 1
-          - named_prop: "vl_indicador"
-          - fixed: 1.258
-        format: 'inteiro'
-        collapse: 
-          format: 'real'
-      - prop: "description"
-        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - ACIDENTES COM ÓBITO<br/>PROJEÇÃO"
-      - prop: 'comment'
-        template: "(Smartlab, {0})"
-        args:
-          - named_prop: "nu_competencia"
 # ====================================================          
 secoes:
   - id: "frequencia_acidentes"
@@ -98,7 +98,7 @@ secoes:
         title_comment:
           template: "{0}, {1}"
           api:
-            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -111,7 +111,7 @@ secoes:
                           Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
                           Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
               api:
-                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023"
               args:
                 - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
@@ -122,7 +122,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023,and,eq-cd_uf-{0}"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -139,7 +139,7 @@ secoes:
               - relevance: 'low'
                 cls: 'xs12'
                 api:
-                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -157,7 +157,7 @@ secoes:
               template: "Em destaque, o número de notificações de acidentes de trabalho na unidade federativa entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT). No mapa, apresenta-se uma perspectiva comparativa entre os municípios da unidade federativa. A escala de cores varia do branco (menor quantidade) ao vermelho (maior quantidade). Utilize o filtro abaixo para visualizar o número de acidentes por setor econômico. Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes."
           - type: "ranking"
             api:
-              template: "/sst/indicadoresestaduais?categorias=rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+              template: "/sst/indicadoresestaduais?categorias=rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023,and,eq-cd_uf-{0}"
               args:
                 - named_prop: "idLocalidade"
             args:
@@ -176,7 +176,7 @@ secoes:
             multiple: true
             label: "Setor Econômico"
             api:
-              template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=distinct&ordenacao=ds_cnae_classe_cat&filtros=ne-ds_cnae_classe_cat-'',and,eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
+              template: "/sst/cats?categorias=ds_cnae_classe_cat&agregacao=distinct&ordenacao=ds_cnae_classe_cat&filtros=ne-ds_cnae_classe_cat-'',and,eq-cd_uf-{0},and,eq-ano_cat-2023,and,nn-cd_uf"
               args:
                 - named_prop: "idLocalidade"
                 - base_object: "sst_cat"
@@ -196,7 +196,7 @@ secoes:
                     - named_prop: "ds_cnae_classe_cat"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/sst/cats?categorias=cd_municipio_ibge_dv,nm_municipio,nm_uf,ano_cat, nm_cerest&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-ano_cat-{1},and,nn-cd_uf"
+          template: "/sst/cats?categorias=cd_municipio_ibge_dv,nm_municipio,nm_uf,ano_cat, nm_cerest&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-ano_cat-2023,and,nn-cd_uf"
           args:
             - named_prop: "idLocalidade"
             - base_object: "sst_cat"
@@ -237,7 +237,7 @@ secoes:
         title_comment:
           template: "{0}, {1}"
           api:
-            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -250,7 +250,7 @@ secoes:
                           Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
                           Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>Nome: {0}<br/>Fonte: {1}<br/>Ano: {2}"
               api:
-                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+                fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023"
               args:
                 - named_prop: 'cd_indicador'
                 - named_prop: 'ds_fonte'
@@ -261,11 +261,11 @@ secoes:
               - relevance: 'high'
                 cls: 'xs12'
                 api:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023,and,eq-cd_uf-{0}"
                   args:
                     - named_prop: "idLocalidade"
                 api_reactive:
-                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+                  template: "/sst/indicadoresestaduais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023,and,eq-cd_uf-{0}"
                   args:
                     - named_prop: "idLocalidade"
                 args:
@@ -282,7 +282,7 @@ secoes:
               - relevance: 'low'
                 cls: 'xs12'
                 api:
-                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+                  fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023"
                 args:
                   - prop: "value"
                     named_prop: 'vl_indicador'
@@ -300,7 +300,7 @@ secoes:
               template: "Em destaque, o número de notificações de acidentes de trabalho entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT). O gráfico mostra a distribuição das notificações de acidente de trabalho nos municípios da unidade federativa. Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes."
           - type: "ranking"
             api:
-              template: "/sst/indicadoresestaduais?categorias=rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,eq-cd_uf-{0}"
+              template: "/sst/indicadoresestaduais?categorias=rank_br,rank_br_total&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023,and,eq-cd_uf-{0}"
               args:
                 - named_prop: "idLocalidade"
             args:
@@ -316,7 +316,7 @@ secoes:
                 default: 0
         chart_type: "TREEMAP"
         api: 
-          template: "/sst/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_indicador,nu_competencia,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+          template: "/sst/indicadoresmunicipais?categorias=cd_mun_ibge,nm_municipio,cd_indicador,nu_competencia,vl_indicador,media_uf,media_br,rank_uf,rank_br&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-2023"
           args:
             - named_prop: "idLocalidade"
           options:
@@ -351,10 +351,10 @@ secoes:
         title: 
           fixed: "Notificações de Acidentes de Trabalho (com CAT e sem CAT) - Série"
         title_comment:
-          template: "{0}, de 2012 a {2}"
+          template: "{0}, de {1} a {2}"
           api:
-            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2011"
-            - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00',and,gt-nu_competencia-'2011'"
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -369,11 +369,11 @@ secoes:
               template: "Define-se como acidente do trabalho aquele que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados especiais, provocando lesão corporal ou perturbação funcional, permanente ou temporária, que cause a morte, a perda ou a redução da capacidade para o trabalho.<br/>
                           Consideram-se acidente do trabalho a doença profissional e a doença do trabalho. Equiparam-se também ao acidente do trabalho: o acidente ligado ao trabalho que, embora não tenha sido a causa única, haja contribuído diretamente para a ocorrência da lesão; certos acidentes sofridos pelo segurado no local e no horário de trabalho; a doença proveniente de contaminação acidental do empregado no exercício de sua atividade; e o acidente sofrido a serviço da empresa ou no trajeto entre a residência e o local de trabalho do segurado e vice-versa.<br/>
                           Os dados brutos analisados têm as seguintes referências fundamentais, para consulta e conferência:<br/>
-                          Nome: {0}<br/>Fonte: {1}<br/>Ano: 2012 a {3}<br/>
-                          Nome: {4}<br/>Fonte: {5}<br/>Ano: 2012 a {6}"
+                          Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}<br/>
+                          Nome: {4}<br/>Fonte: {5}<br/>Ano: 2018 a {6}"
               api:
-                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2011"
-                - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00',and,gt-nu_competencia-'2011'"
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
               args:
                 - id: "09_01_01_00"
                   named_prop: 'cd_indicador'
@@ -436,13 +436,17 @@ secoes:
                   fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    function: 'calc_multiplication_ds'
+                    fn_args:
+                      - fixed: 1
+                      - named_prop: "vl_indicador"
+                      - fixed: 1.258
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: "ACIDENTES NO PAÍS"
+                    fixed: "ACIDENTES NO PAÍS<br/>PROJEÇÃO"
                   - prop: "comment"
                     named_prop: 'nu_competencia'
               - relevance: 'low'
@@ -468,27 +472,27 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o número de notificações de acidentes de trabalho entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT) e a estimativa projetada para o mesmo ano.<br/>
-                      No gráfico, apresenta-se a evolução histórica do número de notificações no período, com base no Anuário Estatístico de Acidentes do Trabalho (AEAT, 2012 a 2023) e em dados da Previdência Social (2024). Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes.<br/>
+                      No gráfico, apresenta-se a evolução histórica do número de notificações no período, com base no Anuário Estatístico de Acidentes do Trabalho (AEAT, 2002 a 2023) e em dados da Previdência Social (2024). Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes.<br/>
                       Com base na análise da maturação temporal dos dados históricos desde 2024 até 2014 (em retrospecto, excetuado o ano da pandemia), realizou-se uma projeção estatística para o valor final do indicador em 2024, ainda em apuração. <br/>
                       Utilizou-se o ano de 2023 como referência para modelar a dinâmica de crescimento: estimou-se um fator multiplicativo que representa a evolução do dado desde seu estágio preliminar (correspondente a ~1-3 meses de apuração, como o atual valor de 2024) até sua consolidação final (~1 ano), calibrando este fator a partir do crescimento observado em 2023 entre seu valor de anuário e o valor atual, sob uma suposição sobre a intensidade relativa do crescimento no período inicial. Este fator de crescimento foi então aplicado ao valor preliminar conhecido de 2024 para obter a estimativa pontual projetada.<br/>
                       É importante notar, ainda, que o tempo de processamento das informações via e-social aumentou. Pretende-se, portanto, atualizar esses números nas próximas edições."
         chart_type: "BAR"
         api: 
-          - template: "/indicadoresestaduais?categorias=vl_indicador-calc_vl_texto,'cat_aeat'-id,cd_uf,ds_indicador_radical,cast(nu_competencia as integer)-nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,ds_agreg_primaria,'AEAT'-ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_01_00',and,gt-nu_competencia-'2011'"
+          - template: "/indicadoresestaduais?categorias=vl_indicador-calc_vl_texto,'cat_aeat'-id,cd_uf,ds_indicador_radical,nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_01_00'"
             args:
               - named_prop: "idLocalidade"
             options:
               formatters:
                 - id: "calc_vl_texto"
                   format: 'inteiro'
-          - template: "/sst/indicadoresestaduais?categorias=vl_indicador-calc_vl_texto,'cat'-id,cd_uf,nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,'Previdência Social'-ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2011"
+          - template: "/sst/indicadoresestaduais?categorias=vl_indicador-calc_vl_texto,'cat'-id,cd_uf,nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
             args:
               - named_prop: "idLocalidade"
             options:
               formatters:
                 - id: "calc_vl_texto"
                   format: 'inteiro'
-          - template: "/sst/indicadoresestaduais?categorias='cat_projecao'-id,cd_uf,nu_competencia,vl_indicador,cd_indicador,'Projeção'-ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+          - template: "/sst/indicadoresestaduais?categorias='cat_projecao'-id,cd_uf,nu_competencia,vl_indicador,cd_indicador,'Estimativa Projetada Smartlab'-ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
             args:
               - named_prop: "idLocalidade"
             options:
@@ -518,10 +522,10 @@ secoes:
         chart_options:
           id: "id"
           x: "nu_competencia"
-          y: "calc_vl_texto"
+          y: "calc_vl_indicador"
           orientation: "vertical"
           text: "fmt_calc_vl_texto"
-          # stacked: true
+          stacked: true
           show_x_axis: true
           show_y_axis: false
           hide_legend: true
@@ -533,10 +537,10 @@ secoes:
         title: 
           fixed: "Notificações de Acidentes de Trabalho com Óbito (CAT) - Série"
         title_comment:
-          template: "{0}, de 2012 a {2}"
+          template: "{0}, de {1} a {2}"
           api:
-            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2011"
-            - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00',and,gt-nu_competencia-'2011'"
+            - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
+            - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
           args:
             - base_object: "localidade"
               named_prop: "nm_localidade"
@@ -554,8 +558,8 @@ secoes:
                           Nome: {0}<br/>Fonte: {1}<br/>Ano: {2} a {3}<br/>
                           Nome: {4}<br/>Fonte: {5}<br/>Ano: 2018 a {6}"
               api:
-                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2011"
-                - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00',and,gt-nu_competencia-'2011'"
+                - fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,gt-nu_competencia-2023"
+                - fixed: "/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'09_01_01_00'"
               args:
                 - id: "09_01_01_00"
                   named_prop: 'cd_indicador'
@@ -618,7 +622,7 @@ secoes:
                   fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    named_prop: "vl_indicador"
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -650,27 +654,27 @@ secoes:
             title: ""
             content:
               fixed: "Em destaque, o número de notificações de acidentes de trabalho fatal entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT) e a estimativa projetada para o mesmo ano.<br/>
-                      No gráfico, apresenta-se a evolução histórica do número de notificações com óbito no período, com base no Anuário Estatístico de Acidentes do Trabalho (AEAT, 2012 a 2023) e em dados da Previdência Social (2024). Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes.<br/>                      
+                      No gráfico, apresenta-se a evolução histórica do número de notificações com óbito no período, com base no Anuário Estatístico de Acidentes do Trabalho (AEAT, 2002 a 2023) e em dados da Previdência Social (2024). Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes.<br/>                      
                       Com base na análise da maturação temporal dos dados históricos desde 2024 até 2014 (em retrospecto, excetuado o ano da pandemia), realizou-se uma projeção estatística para o valor final do indicador em 2024, ainda em apuração. <br/>
                       Utilizou-se o ano de 2023 como referência para modelar a dinâmica de crescimento: estimou-se um fator multiplicativo que representa a evolução do dado desde seu estágio preliminar (correspondente a ~1-3 meses de apuração, como o atual valor de 2024) até sua consolidação final (~1 ano), calibrando este fator a partir do crescimento observado em 2023 entre seu valor de anuário e o valor atual, sob uma suposição sobre a intensidade relativa do crescimento no período inicial. Este fator de crescimento foi então aplicado ao valor preliminar conhecido de 2024 para obter a estimativa pontual projetada.<br/>
                       É importante notar, ainda, que o tempo de processamento das informações via e-social aumentou. Pretende-se, portanto, atualizar esses números nas próximas edições."
         chart_type: "BAR"
         api: 
-          - template: "/indicadoresestaduais?categorias=vl_indicador-calc_vl_texto,'cat_aeat'-id,cd_uf,ds_indicador_radical,cast(nu_competencia as integer)-nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,ds_agreg_primaria,'AEAT'-ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_06_00',and,gt-nu_competencia-'2011'"
+          - template: "/indicadoresestaduais?categorias=vl_indicador-calc_vl_texto,'cat_aeat'-id,cd_uf,ds_indicador_radical,nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,ds_agreg_primaria,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'09_01_06_00'"
             args:
               - named_prop: "idLocalidade"
             options:
               formatters:
                 - id: "calc_vl_texto"
                   format: 'inteiro'
-          - template: "/sst/indicadoresestaduais?categorias=vl_indicador-calc_vl_texto,'cat'-id,cd_uf,nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,'Previdência Social'-ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2011"
+          - template: "/sst/indicadoresestaduais?categorias=vl_indicador-calc_vl_texto,'cat'-id,cd_uf,nu_competencia,vl_indicador-calc_vl_indicador,cd_indicador,ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2023"
             args:
               - named_prop: "idLocalidade"
             options:
               formatters:
                 - id: "calc_vl_texto"
                   format: 'inteiro'
-          - template: "/sst/indicadoresestaduais?categorias=vl_indicador-calc_vl_texto,'cat_projecao'-id,cd_uf,nu_competencia,vl_indicador,cd_indicador,'Projeção'-ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2023"
+          - template: "/sst/indicadoresestaduais?categorias=vl_indicador-calc_vl_texto,'cat_projecao'-id,cd_uf,nu_competencia,vl_indicador,cd_indicador,'Estimativa Projetada Smartlab'-ds_fonte&filtros=eq-cd_uf-{0},and,eq-cd_indicador-'sst_cat_obito',and,gt-nu_competencia-2023"
             args:
               - named_prop: "idLocalidade"
             options:
@@ -700,10 +704,10 @@ secoes:
         chart_options:
           id: "id"
           x: "nu_competencia"
-          y: "calc_vl_texto"
+          y: "calc_vl_indicador"
           orientation: "vertical"
           text: "fmt_calc_vl_texto"
-          # stacked: true
+          stacked: true
           show_x_axis: true
           show_y_axis: false
           hide_legend: true
