@@ -186,11 +186,12 @@ secoes:
         title: 
           fixed: "Distribuição das Notificações de Acidentes de Trabalho (CAT) - UFs"
         title_comment:
-          template: "Brasil, {0}"
+          template: "Brasil, {0} a {1}"
           api:
-            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -213,7 +214,11 @@ secoes:
                   fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    function: 'calc_multiplication_ds'
+                    fn_args:
+                      - fixed: 1
+                      - named_prop: "vl_indicador"
+                      - fixed: 1.258
                     format: 'inteiro'
                     collapse:
                       format: 'real'
@@ -226,7 +231,7 @@ secoes:
               fixed: "Em destaque, o número de notificações de acidentes de trabalho entre a população com vínculo de emprego regular no ano indicado, incluindo tanto as Comunicações de Acidente de Trabalho (CAT) quanto os benefícios acidentários concedidos sem comunicação prévia (acidentes identificados no momento da concessão do benefício, sem registro de CAT). O gráfico mostra a distribuição das notificações de acidente de trabalho nas unidades federativas. Considera-se o momento da compilação dos dados. Os números referentes a anos anteriores tendem a ser complementados de acordo com a chegada de notificações atrasadas nos anos subsequentes."
         chart_type: "TREEMAP"
         api: 
-          fixed: "/sst/indicadoresestaduais?categorias=cd_uf,sg_uf,nm_uf,cd_indicador,nu_competencia,media_br,rank_br&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max,and,nn-cd_uf"
+          fixed: "/sst/indicadoresestaduais?categorias=cd_uf,sg_uf,nm_uf,cd_indicador,nu_competencia,media_br,rank_br&valor=vl_indicador&agregacao=SUM&filtros=eq-cd_indicador-'sst_cat_total',and,nn-cd_uf"
           options:
             formatters:
               - id: "agr_sum_vl_indicador"
