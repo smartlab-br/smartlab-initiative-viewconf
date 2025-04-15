@@ -46,10 +46,170 @@ secoes:
     name: "Afastamentos Previdenciários"
     cards:
 # =====================================================
-      - id: "treemap_agravo"
+#       - id: "treemap_agravo"
+#         type: "multiple-charts"
+#         title: 
+#           fixed: "Afastamentos por Agravo"
+#         title_comment:
+#           template: "{0}, de {1} a {2}"
+#           args:
+#             - base_object: "localidade"
+#               named_prop: "nm_localidade"
+#             - base_object: "sst_beneficio"
+#               named_prop: "agr_min_ano_beneficio"
+#             - base_object: "sst_beneficio"
+#               named_prop: "agr_max_ano_beneficio"
+#         info:
+#           - type: "text"
+#             title: "Sobre a métrica"
+#             content:
+#               fixed: "Sem observações adicionais. Vide descrição"
+#         description:
+#           - type: "minicards"
+#             cards:
+#               - relevance: 'high'
+#                 cls: 'xs6'
+#                 api:
+#                   template: "/sst/beneficios?categorias=ano_beneficio,cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                     - base_object: "sst_beneficio"
+#                       named_prop: "agr_max_ano_beneficio"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_count'
+#                     format: 'inteiro'
+#                     collapse:
+#                       format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     template: '{0}<br/>B91'
+#                     args:
+#                       - named_prop: "cd_agrup_categoria_cid_agravo"
+#                   - prop: "comment"
+#                     named_prop: 'ano_beneficio'
+#               - relevance: 'high'
+#                 cls: 'xs6'
+#                 api:
+#                   template: "/sst/beneficios?categorias=ano_beneficio,cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
+#                   args:
+#                     - named_prop: "idLocalidade"
+#                     - base_object: "sst_beneficio"
+#                       named_prop: "agr_max_ano_beneficio"
+#                 args:
+#                   - prop: "value"
+#                     named_prop: 'agr_count'
+#                     format: 'inteiro'
+#                     collapse:
+#                       format: 'real'
+#                     default: "Sem Registros"
+#                   - prop: "description"
+#                     template: '{0}<br/>B31'
+#                     args:
+#                       - named_prop: "cd_agrup_categoria_cid_agravo"
+#                   - prop: "comment"
+#                     named_prop: 'ano_beneficio'
+#           - type: "text"
+#             title: ""
+#             content:
+#               api: 
+#                 template: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX&filtros=eq-cd_uf-{0}"
+#                 args:
+#                   - named_prop: "idLocalidade"
+#               template: "Em destaque, os motivos (por tipo de agravo, acidente ou doença) mais frequentes dos afastamentos acidentários (B91) e não acidentários (B31) no último ano apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto ao motivo mais frequente, a percepçaõ de tendências e distinções quantitativas relevantes."
+#               args:
+#                 - named_prop: "agr_min_ano_beneficio"
+#                 - named_prop: "agr_max_ano_beneficio"
+#           - id: "slider_ano"
+#             type: "slider"
+#             range: true
+#             api: 
+#               fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+#             args:
+#               - prop: "min"
+#                 named_prop: "agr_min_ano_beneficio"
+#               - prop: "max"
+#                 named_prop: "agr_max_ano_beneficio"
+#             selection:
+#               event: "selection"
+#               rules:
+#                 filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
+#                 api:
+#                   args:
+#                     - named_prop: "value_min"
+#                     - named_prop: "value_max"
+#         charts:
+# # =====================================================
+#           - id: "treemap_agravo_b91"
+#             cls: "xs12 md6"
+#             footnote: 
+#               template: "Afastamentos por Agravo - B91 ({0}-{1})"
+#               args:
+#                 - base_object: "sst_beneficio"
+#                   named_prop: "agr_min_ano_beneficio"
+#                 - base_object: "sst_beneficio"
+#                   named_prop: "agr_max_ano_beneficio"
+#             type: "TREEMAP"
+#             api: 
+#               template: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91"
+#               args:
+#                 - named_prop: "idLocalidade"
+#               options:
+#                   formatters:
+#                     - id: "agr_count"
+#                       format: 'inteiro'
+#             headers:
+#               - text: 'Categoria'
+#                 value: 'cd_agrup_categoria_cid_agravo'
+#               - text: 'Qtde'
+#                 value: 'fmt_agr_count'
+#             options:
+#               id: "cd_agrup_categoria_cid_agravo"
+#               size: "agr_count"
+#               text: "cd_agrup_categoria_cid_agravo"
+#               hide_legend: true
+#               colorScale:
+#                 name: "Reds"
+#             # source:
+#             #   desc_field: "ds_fonte"                              
+# # =====================================================
+#           - id: "treemap_agravo_b31"
+#             cls: "xs12 md6"
+#             footnote: 
+#               template: "Afastamentos por Agravo - B31 ({0}-{1})"
+#               args:
+#                 - base_object: "sst_beneficio"
+#                   named_prop: "agr_min_ano_beneficio"
+#                 - base_object: "sst_beneficio"
+#                   named_prop: "agr_max_ano_beneficio"
+#             type: "TREEMAP"
+#             api: 
+#               template: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-31"
+#               args:
+#                 - named_prop: "idLocalidade"
+#               options:
+#                   formatters:
+#                     - id: "agr_count"
+#                       format: 'inteiro'
+#             headers:
+#               - text: 'Categoria'
+#                 value: 'cd_agrup_categoria_cid_agravo'
+#               - text: 'Qtde'
+#                 value: 'fmt_agr_count'
+#             options:
+#               id: "cd_agrup_categoria_cid_agravo"
+#               size: "agr_count"
+#               text: "cd_agrup_categoria_cid_agravo"
+#               hide_legend: true
+#               colorScale:
+#                 name: "Blues"
+#             # source:
+#             #   desc_field: "ds_fonte"                              
+# =====================================================
+      - id: "treemap_benef_setores"
         type: "multiple-charts"
         title: 
-          fixed: "Afastamentos por Agravo"
+          fixed: "Atividades Econômicas"
         title_comment:
           template: "{0}, de {1} a {2}"
           args:
@@ -70,7 +230,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "sst_beneficio"
@@ -85,13 +245,13 @@ secoes:
                   - prop: "description"
                     template: '{0}<br/>B91'
                     args:
-                      - named_prop: "cd_agrup_categoria_cid_agravo"
+                      - named_prop: "ds_cnae_classe"
                   - prop: "comment"
                     named_prop: 'ano_beneficio'
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "sst_beneficio"
@@ -106,7 +266,7 @@ secoes:
                   - prop: "description"
                     template: '{0}<br/>B31'
                     args:
-                      - named_prop: "cd_agrup_categoria_cid_agravo"
+                      - named_prop: "ds_cnae_classe"
                   - prop: "comment"
                     named_prop: 'ano_beneficio'
           - type: "text"
@@ -116,7 +276,7 @@ secoes:
                 template: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX&filtros=eq-cd_uf-{0}"
                 args:
                   - named_prop: "idLocalidade"
-              template: "Em destaque, os motivos (por tipo de agravo, acidente ou doença) mais frequentes dos afastamentos acidentários (B91) e não acidentários (B31) no último ano apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto ao motivo mais frequente, a percepçaõ de tendências e distinções quantitativas relevantes."
+              template: "Em destaque, os setores econômicos mais frequentemente relacionados a afastamentos do tipo acidentário (B91) e não acidentário (B31) no último ano apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto ao motivo mais frequente, a percepçaõ de tendências e distinções quantitativas relevantes. Utilize os filtros abaixo para combinar as perspectivas."
               args:
                 - named_prop: "agr_min_ano_beneficio"
                 - named_prop: "agr_max_ano_beneficio"
@@ -138,172 +298,53 @@ secoes:
                   args:
                     - named_prop: "value_min"
                     - named_prop: "value_max"
-        charts:
-# =====================================================
-          - id: "treemap_agravo_b91"
-            cls: "xs12 md6"
-            footnote: 
-              template: "Afastamentos por Agravo - B91 ({0}-{1})"
-              args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_min_ano_beneficio"
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
-            type: "TREEMAP"
-            api: 
-              template: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-91"
+          - id: "select_cid"
+            type: "select"
+            multiple: true
+            label: "Categoria CID"
+            api:
+              template: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=distinct&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0}"
               args:
                 - named_prop: "idLocalidade"
-              options:
-                  formatters:
-                    - id: "agr_count"
-                      format: 'inteiro'
-            headers:
-              - text: 'Categoria'
-                value: 'cd_agrup_categoria_cid_agravo'
-              - text: 'Qtde'
-                value: 'fmt_agr_count'
-            options:
-              id: "cd_agrup_categoria_cid_agravo"
-              size: "agr_count"
-              text: "cd_agrup_categoria_cid_agravo"
-              hide_legend: true
-              colorScale:
-                name: "Reds"
-            # source:
-            #   desc_field: "ds_fonte"                              
-# =====================================================
-          - id: "treemap_agravo_b31"
-            cls: "xs12 md6"
-            footnote: 
-              template: "Afastamentos por Agravo - B31 ({0}-{1})"
-              args:
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_min_ano_beneficio"
-                - base_object: "sst_beneficio"
-                  named_prop: "agr_max_ano_beneficio"
-            type: "TREEMAP"
-            api: 
-              template: "/sst/beneficios?categorias=cd_agrup_categoria_cid_agravo&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-cd_agrup_categoria_cid_agravo-'',and,eq-cd_especie_beneficio-31"
-              args:
-                - named_prop: "idLocalidade"
-              options:
-                  formatters:
-                    - id: "agr_count"
-                      format: 'inteiro'
-            headers:
-              - text: 'Categoria'
-                value: 'cd_agrup_categoria_cid_agravo'
-              - text: 'Qtde'
-                value: 'fmt_agr_count'
-            options:
-              id: "cd_agrup_categoria_cid_agravo"
-              size: "agr_count"
-              text: "cd_agrup_categoria_cid_agravo"
-              hide_legend: true
-              colorScale:
-                name: "Blues"
-            # source:
-            #   desc_field: "ds_fonte"                              
-# =====================================================
-      - id: "treemap_graves"
-        type: "multiple-charts"
-        title: 
-          fixed: "Afastamentos por Causas Externas"
-        title_comment:
-          template: "{0}, de {1} a {2}"
-          args:
-            - base_object: "localidade"
-              named_prop: "nm_localidade"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_min_ano_beneficio"
-            - base_object: "sst_beneficio"
-              named_prop: "agr_max_ano_beneficio"
-        info:
-          - type: "text"
-            title: "Sobre a métrica"
-            content:
-              fixed: "Sem observações adicionais. Vide descrição"
-        description:
-          - type: "minicards"
-            cards:
-              - relevance: 'high'
-                cls: 'xs6'
-                api:
-                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
-                  args:
-                    - named_prop: "idLocalidade"
-                    - base_object: "sst_beneficio"
-                      named_prop: "agr_max_ano_beneficio"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_count'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    template: '{0}<br/>B91'
-                    args:
-                      - named_prop: "cd_agrupamento_categoria_cid"
-                  - prop: "comment"
-                    named_prop: 'ano_beneficio'
-              - relevance: 'high'
-                cls: 'xs6'
-                api:
-                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
-                  args:
-                    - named_prop: "idLocalidade"
-                    - base_object: "sst_beneficio"
-                      named_prop: "agr_max_ano_beneficio"
-                args:
-                  - prop: "value"
-                    named_prop: 'agr_count'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-                  - prop: "description"
-                    template: '{0}<br/>B31'
-                    args:
-                      - named_prop: "cd_agrupamento_categoria_cid"
-                  - prop: "comment"
-                    named_prop: 'ano_beneficio'
-          - type: "text"
-            title: ""
-            content:
-              api: 
-                template: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX&filtros=eq-cd_uf-{0}"
-                args:
-                  - named_prop: "idLocalidade"
-              template: "Em destaque, o número de afastamentos acidentários (B91) e não acidentários (B31) no último ano apurado para a unidade geográfica selecionada, em casos relacionados a lesões, envenenamentos e outras conseqüências de causas externas, (Capítulo XIX da Classificação Internacional de Doenças), considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto à causa mais frequente ou a percepção de sua persistência."
-              args:
-                - named_prop: "agr_min_ano_beneficio"
-                - named_prop: "agr_max_ano_beneficio"
-          - id: "slider_ano"
-            type: "slider"
-            range: true
-            api: 
-              fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
             args:
-              - prop: "min"
-                named_prop: "agr_min_ano_beneficio"
-              - prop: "max"
-                named_prop: "agr_max_ano_beneficio"
+              - prop: "id"
+                named_prop: "cd_agrupamento_categoria_cid"
+              - prop: "label"
+                named_prop: "cd_agrupamento_categoria_cid"
+                null_value: "(Não informado)"
             selection:
-              event: "selection"
+              event: "selection" 
               rules:
-                filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
+                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
                 api:
                   args:
-                    - named_prop: "value_min"
-                    - named_prop: "value_max"
+                    - named_prop: "cd_agrupamento_categoria_cid"
+          - id: "select_cbo"
+            type: "select"
+            multiple: true
+            label: "Ocupações"
+            api:
+              template: "/sst/beneficios?categorias=ds_cbo2002&agregacao=distinct&ordenacao=ds_cbo2002&filtros=eq-cd_uf-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            args:
+              - prop: "id"
+                named_prop: "ds_cbo2002"
+              - prop: "label"
+                named_prop: "ds_cbo2002"
+                null_value: "(Não identificado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,in-ds_cbo2002-{0}"
+                api:
+                  args:
+                    - named_prop: "ds_cbo2002"
         charts:
-# =====================================================
-          - id: "treemap_graves_b91"
+          - id: "treemap_benef_setores_b91"
             cls: "xs12 md6"
             footnote: 
-              template: "Afastamentos por Causas Externas - B91 ({0}-{1})"
+              template: "Atividades Econômicas- B91 ({0}-{1})"
               args:
                 - base_object: "sst_beneficio"
                   named_prop: "agr_min_ano_beneficio"
@@ -311,7 +352,7 @@ secoes:
                   named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              template: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-91"
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -319,24 +360,22 @@ secoes:
                     - id: "agr_count"
                       format: 'inteiro'
             headers:
-              - text: 'Categoria'
-                value: 'cd_agrupamento_categoria_cid'
+              - text: 'Setor'
+                align: 'left'
+                value: 'ds_cnae_classe'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
-              id: "cd_agrupamento_categoria_cid"
+              id: "ds_cnae_classe"
               size: "agr_count"
-              text: "cd_agrupamento_categoria_cid"
+              text: "ds_cnae_classe"
               hide_legend: true
               colorScale:
                 name: "Reds"
-            # source:
-            #   desc_field: "ds_fonte"          
-# =====================================================
-          - id: "treemap_graves_b31"
+          - id: "treemap_benef_setores_b31"
             cls: "xs12 md6"
             footnote: 
-              template: "Afastamentos por Causas Externas - B31 ({0}-{1})"
+              template: "Atividades Econômicas- B31 ({0}-{1})"
               args:
                 - base_object: "sst_beneficio"
                   named_prop: "agr_min_ano_beneficio"
@@ -344,7 +383,7 @@ secoes:
                   named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              template: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-31"
+              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-31"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -352,20 +391,20 @@ secoes:
                     - id: "agr_count"
                       format: 'inteiro'
             headers:
-              - text: 'Categoria'
-                value: 'cd_agrupamento_categoria_cid'
+              - text: 'Setor'
+                align: 'left'
+                value: 'ds_cnae_classe'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
-              id: "cd_agrupamento_categoria_cid"
+              id: "ds_cnae_classe"
               size: "agr_count"
-              text: "cd_agrupamento_categoria_cid"
+              text: "ds_cnae_classe"
               hide_legend: true
               colorScale:
                 name: "Blues"
-            # source:
-            #   desc_field: "ds_fonte"          
-# =====================================================
+
+     # =====================================================
       - id: "treemap_doencas"
         type: "multiple-charts"
         title: 
@@ -953,10 +992,11 @@ secoes:
             # source:
             #   desc_field: "ds_fonte"                    
 # =====================================================
-      - id: "treemap_benef_setores"
+        # =====================================================
+      - id: "treemap_graves"
         type: "multiple-charts"
         title: 
-          fixed: "Atividades Econômicas"
+          fixed: "Afastamentos por Causas Externas"
         title_comment:
           template: "{0}, de {1} a {2}"
           args:
@@ -977,7 +1017,7 @@ secoes:
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-91,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "sst_beneficio"
@@ -992,13 +1032,13 @@ secoes:
                   - prop: "description"
                     template: '{0}<br/>B91'
                     args:
-                      - named_prop: "ds_cnae_classe"
+                      - named_prop: "cd_agrupamento_categoria_cid"
                   - prop: "comment"
                     named_prop: 'ano_beneficio'
               - relevance: 'high'
                 cls: 'xs6'
                 api:
-                  template: "/sst/beneficios?categorias=ano_beneficio,ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
+                  template: "/sst/beneficios?categorias=ano_beneficio,cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-31,and,eq-ano_beneficio-{1}&ordenacao=-agr_count&limit=1"
                   args:
                     - named_prop: "idLocalidade"
                     - base_object: "sst_beneficio"
@@ -1013,7 +1053,7 @@ secoes:
                   - prop: "description"
                     template: '{0}<br/>B31'
                     args:
-                      - named_prop: "ds_cnae_classe"
+                      - named_prop: "cd_agrupamento_categoria_cid"
                   - prop: "comment"
                     named_prop: 'ano_beneficio'
           - type: "text"
@@ -1023,7 +1063,7 @@ secoes:
                 template: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX&filtros=eq-cd_uf-{0}"
                 args:
                   - named_prop: "idLocalidade"
-              template: "Em destaque, os setores econômicos mais frequentemente relacionados a afastamentos do tipo acidentário (B91) e não acidentário (B31) no último ano apurado para a unidade geográfica selecionada, considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto ao motivo mais frequente, a percepçaõ de tendências e distinções quantitativas relevantes. Utilize os filtros abaixo para combinar as perspectivas."
+              template: "Em destaque, o número de afastamentos acidentários (B91) e não acidentários (B31) no último ano apurado para a unidade geográfica selecionada, em casos relacionados a lesões, envenenamentos e outras conseqüências de causas externas, (Capítulo XIX da Classificação Internacional de Doenças), considerado o universo de trabalhadores com vínculo de emprego. No gráfico ao lado, comparam-se, para o período de {0} a {1}, as diferenças entre os benefícios acidentários e não acidentários. Isso permite, inclusive, a identificação de mudanças de padrão quanto à causa mais frequente ou a percepção de sua persistência."
               args:
                 - named_prop: "agr_min_ano_beneficio"
                 - named_prop: "agr_max_ano_beneficio"
@@ -1045,53 +1085,12 @@ secoes:
                   args:
                     - named_prop: "value_min"
                     - named_prop: "value_max"
-          - id: "select_cid"
-            type: "select"
-            multiple: true
-            label: "Categoria CID"
-            api:
-              template: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=distinct&ordenacao=cd_agrupamento_categoria_cid&filtros=eq-cd_uf-{0}"
-              args:
-                - named_prop: "idLocalidade"
-            args:
-              - prop: "id"
-                named_prop: "cd_agrupamento_categoria_cid"
-              - prop: "label"
-                named_prop: "cd_agrupamento_categoria_cid"
-                null_value: "(Não informado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-cd_agrupamento_categoria_cid-{0}"
-                api:
-                  args:
-                    - named_prop: "cd_agrupamento_categoria_cid"
-          - id: "select_cbo"
-            type: "select"
-            multiple: true
-            label: "Ocupações"
-            api:
-              template: "/sst/beneficios?categorias=ds_cbo2002&agregacao=distinct&ordenacao=ds_cbo2002&filtros=eq-cd_uf-{0}"
-              args:
-                - named_prop: "idLocalidade"
-            args:
-              - prop: "id"
-                named_prop: "ds_cbo2002"
-              - prop: "label"
-                named_prop: "ds_cbo2002"
-                null_value: "(Não identificado)"
-            selection:
-              event: "selection" 
-              rules:
-                filter: ",and,in-ds_cbo2002-{0}"
-                api:
-                  args:
-                    - named_prop: "ds_cbo2002"
         charts:
-          - id: "treemap_benef_setores_b91"
+# =====================================================
+          - id: "treemap_graves_b91"
             cls: "xs12 md6"
             footnote: 
-              template: "Atividades Econômicas- B91 ({0}-{1})"
+              template: "Afastamentos por Causas Externas - B91 ({0}-{1})"
               args:
                 - base_object: "sst_beneficio"
                   named_prop: "agr_min_ano_beneficio"
@@ -1099,7 +1098,7 @@ secoes:
                   named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-91"
+              template: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-91"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -1107,22 +1106,24 @@ secoes:
                     - id: "agr_count"
                       format: 'inteiro'
             headers:
-              - text: 'Setor'
-                align: 'left'
-                value: 'ds_cnae_classe'
+              - text: 'Categoria'
+                value: 'cd_agrupamento_categoria_cid'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
-              id: "ds_cnae_classe"
+              id: "cd_agrupamento_categoria_cid"
               size: "agr_count"
-              text: "ds_cnae_classe"
+              text: "cd_agrupamento_categoria_cid"
               hide_legend: true
               colorScale:
                 name: "Reds"
-          - id: "treemap_benef_setores_b31"
+            # source:
+            #   desc_field: "ds_fonte"          
+# =====================================================
+          - id: "treemap_graves_b31"
             cls: "xs12 md6"
             footnote: 
-              template: "Atividades Econômicas- B31 ({0}-{1})"
+              template: "Afastamentos por Causas Externas - B31 ({0}-{1})"
               args:
                 - base_object: "sst_beneficio"
                   named_prop: "agr_min_ano_beneficio"
@@ -1130,7 +1131,7 @@ secoes:
                   named_prop: "agr_max_ano_beneficio"
             type: "TREEMAP"
             api: 
-              template: "/sst/beneficios?categorias=ds_cnae_classe&agregacao=COUNT&filtros=eq-cd_uf-{0},and,ne-ds_cnae_classe-'',and,eq-cd_especie_beneficio-31"
+              template: "/sst/beneficios?categorias=cd_agrupamento_categoria_cid&agregacao=COUNT&filtros=eq-cd_uf-{0},and,eq-cd_agrup_categoria_cid_agravo-'Acidentes',and,eq-cd_especie_beneficio-31"
               args:
                 - named_prop: "idLocalidade"
               options:
@@ -1138,18 +1139,20 @@ secoes:
                     - id: "agr_count"
                       format: 'inteiro'
             headers:
-              - text: 'Setor'
-                align: 'left'
-                value: 'ds_cnae_classe'
+              - text: 'Categoria'
+                value: 'cd_agrupamento_categoria_cid'
               - text: 'Qtde'
                 value: 'fmt_agr_count'
             options:
-              id: "ds_cnae_classe"
+              id: "cd_agrupamento_categoria_cid"
               size: "agr_count"
-              text: "ds_cnae_classe"
+              text: "cd_agrupamento_categoria_cid"
               hide_legend: true
               colorScale:
                 name: "Blues"
+            # source:
+            #   desc_field: "ds_fonte"          
+
 # =====================================================
       - id: "treemap_benef_cbo"
         type: "multiple-charts"
@@ -1217,24 +1220,24 @@ secoes:
               args:
                 - named_prop: "agr_min_ano_beneficio"
                 - named_prop: "agr_max_ano_beneficio"
-          - id: "slider_ano"
-            type: "slider"
-            range: true
-            api: 
-              fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
-            args:
-              - prop: "min"
-                named_prop: "agr_min_ano_beneficio"
-              - prop: "max"
-                named_prop: "agr_max_ano_beneficio"
-            selection:
-              event: "selection"
-              rules:
-                filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
-                api:
-                  args:
-                    - named_prop: "value_min"
-                    - named_prop: "value_max"
+          # - id: "slider_ano"
+          #   type: "slider"
+          #   range: true
+          #   api: 
+          #     fixed: "/sst/beneficios?categorias=1&valor=ano_beneficio&agregacao=MIN,MAX"
+          #   args:
+          #     - prop: "min"
+          #       named_prop: "agr_min_ano_beneficio"
+          #     - prop: "max"
+          #       named_prop: "agr_max_ano_beneficio"
+          #   selection:
+          #     event: "selection"
+          #     rules:
+          #       filter: ",and,ge-ano_beneficio-{0},and,le-ano_beneficio-{1}"
+          #       api:
+          #         args:
+          #           - named_prop: "value_min"
+          #           - named_prop: "value_max"
           - id: "select_cnae"
             type: "select"
             multiple: true

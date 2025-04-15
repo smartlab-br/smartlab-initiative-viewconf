@@ -285,151 +285,151 @@ secoes:
         source:
           desc: "ME – Novo CAGED "
 # # ===============================================
-#       - id: "bar_termometro_cbo"
-#         type: "multiple-charts"
-#         title: 
-#           fixed: "Empregos Celetistas (CLT) por ocupação"
-#         title_comment:
-#           template: "{0}"
-#           args:
-#             - base_object: "localidade"
-#               named_prop: "nm_localidade"
-#         description:
-#           - id: "select_competencia"
-#             type: "select"
-#             clearable: false
-#             label: "Competência"
-#             api:
-#               fixed: "/thematic/cagedtermometro?categorias=competencia_mov&agregacao=DISTINCT&ordenacao=-competencia_mov&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
-#               options:
-#                 calcs:
-#                   - id: "mes_formatado"
-#                     function: "format_quarter_ds"
-#                     fn_args:
-#                       - named_prop: "competencia_mov"
-#             args:
-#               - prop: "id"
-#                 named_prop: "competencia_mov"
-#               - prop: "label"
-#                 named_prop: "calc_mes_formatado"
-#                 # null_value: "(Não informado)"
-#             selection:
-#               event: "selection" 
-#               rules:
-#                 filter: ",and,eq-competencia_mov-{0}"
-#                 api:
-#                   args:
-#                     - named_prop: "competencia_mov"
+      - id: "bar_termometro_cbo"
+        type: "multiple-charts"
+        title: 
+          fixed: "Empregos Celetistas (CLT) por ocupação"
+        title_comment:
+          template: "{0}"
+          args:
+            - base_object: "localidade"
+              named_prop: "nm_localidade"
+        description:
+          - id: "select_competencia"
+            type: "select"
+            clearable: false
+            label: "Competência"
+            api:
+              fixed: "/thematic/cagedtermometro?categorias=competencia_mov&agregacao=DISTINCT&ordenacao=-competencia_mov&filtros=eq-termometro_grupo-'cbo',and,ge-competencia_mov-201901,and,le-competencia_mov-max_competencia"
+              options:
+                calcs:
+                  - id: "mes_formatado"
+                    function: "format_quarter_ds"
+                    fn_args:
+                      - named_prop: "competencia_mov"
+            args:
+              - prop: "id"
+                named_prop: "competencia_mov"
+              - prop: "label"
+                named_prop: "calc_mes_formatado"
+                # null_value: "(Não informado)"
+            selection:
+              event: "selection" 
+              rules:
+                filter: ",and,eq-competencia_mov-{0}"
+                api:
+                  args:
+                    - named_prop: "competencia_mov"
 
-#           - type: "text"
-#             title: ""
-#             content:
-#               fixed: ""
-#         charts:
-#           - id: "bar_cbo_ganho"
-#             cls: "xs12 md6"
-#             title: "Ocupações com maior número de postos formais criados"
-#             type: "BAR"
-#             api:
-#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
-#               args:
-#                 - named_prop: "idLocalidade"
-#               options:
-#                 calcs:
-#                   - id: "competencia"
-#                     function: "format_quarter_ds"
-#                     fn_args:
-#                       - named_prop: "competencia_mov"
-#                   - id: "desc_cbo"
-#                     function: "to_upper_ds"
-#                     fn_args:
-#                       - fixed: "termometro_descricao"
-#                 formatters:
-#                   - id: "admitidos"
-#                     format: 'inteiro'
-#                   - id: "desligados"
-#                     format: 'inteiro'
-#                   - id: "saldo"
-#                     format: 'inteiro'
-#             apiBase:
-#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
-#               args:
-#                 - named_prop: "idLocalidade"
-#             headers:
-#               - text: 'Ocupação'
-#                 align: 'left'
-#                 value: 'termometro_descricao'
-#               - text: 'Competencia declarada'
-#                 align: 'left'
-#                 value: 'calc_competencia'
-#               - text: 'Admitidos'
-#                 value: 'fmt_admitidos'
-#               - text: 'Desligados'
-#                 value: 'fmt_desligados'
-#               - text: 'Vagas criadas'
-#                 value: 'fmt_saldo'
-#             options:
-#               id: "termometro_codigo"
-#               x: "saldo"
-#               y: "calc_desc_cbo"
-#               show_y_axis: true
-#               order_field: "saldo"
-#               # text: "termometro_descricao"
-#               color: "#084594"
-#               hide_legend: true
-#           - id: "bar_cbo_perda"
-#             cls: "xs12 md6"
-#             title: "Ocupações com maior número de postos formais perdidos"
-#             type: "BAR"
-#             api:
-#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
-#               args:
-#                 - named_prop: "idLocalidade"
-#               options:
-#                 calcs:
-#                   - id: "competencia"
-#                     function: "format_quarter_ds"
-#                     fn_args:
-#                       - named_prop: "competencia_mov"
-#                   - id: "desc_cbo"
-#                     function: "to_upper_ds"
-#                     fn_args:
-#                       - fixed: "termometro_descricao"
-#                 formatters:
-#                   - id: "admitidos"
-#                     format: 'inteiro'
-#                   - id: "desligados"
-#                     format: 'inteiro'
-#                   - id: "saldo_absoluto"
-#                     format: 'inteiro'
-#             apiBase:
-#               template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0}"
-#               args:
-#                 - named_prop: "idLocalidade"
-#             headers:
-#               - text: 'Ocupação'
-#                 align: 'left'
-#                 value: 'termometro_descricao'
-#               - text: 'Competencia declarada'
-#                 align: 'left'
-#                 value: 'calc_competencia'
-#               - text: 'Admitidos'
-#                 value: 'fmt_admitidos'
-#               - text: 'Desligados'
-#                 value: 'fmt_desligados'
-#               - text: 'Vagas perdidas'
-#                 value: 'fmt_saldo_absoluto'
-#             options:
-#               id: "termometro_codigo"
-#               x: "saldo_absoluto"
-#               y: "calc_desc_cbo"
-#               show_y_axis: true
-#               order_field: "saldo_absoluto"
-#               # text: "termometro_descricao"
-#               color: "#cb181d"
-#               hide_legend: true
-#         source:
-#           desc: "ME – Novo CAGED "
+          - type: "text"
+            title: ""
+            content:
+              fixed: ""
+        charts:
+          - id: "bar_cbo_ganho"
+            cls: "xs12 md6"
+            title: "Ocupações com maior número de postos formais criados"
+            type: "BAR"
+            api:
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: "competencia"
+                    function: "format_quarter_ds"
+                    fn_args:
+                      - named_prop: "competencia_mov"
+                  - id: "desc_cbo"
+                    function: "to_upper_ds"
+                    fn_args:
+                      - fixed: "termometro_descricao"
+                formatters:
+                  - id: "admitidos"
+                    format: 'inteiro'
+                  - id: "desligados"
+                    format: 'inteiro'
+                  - id: "saldo"
+                    format: 'inteiro'
+            apiBase:
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo&ordenacao=-saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,eq-cd_municipio_ibge_dv-{0},and,gt-saldo-0"
+              args:
+                - named_prop: "idLocalidade"
+            headers:
+              - text: 'Ocupação'
+                align: 'left'
+                value: 'termometro_descricao'
+              - text: 'Competencia declarada'
+                align: 'left'
+                value: 'calc_competencia'
+              - text: 'Admitidos'
+                value: 'fmt_admitidos'
+              - text: 'Desligados'
+                value: 'fmt_desligados'
+              - text: 'Vagas criadas'
+                value: 'fmt_saldo'
+            options:
+              id: "termometro_codigo"
+              x: "saldo"
+              y: "calc_desc_cbo"
+              show_y_axis: false
+              order_field: "saldo"
+              text: "termometro_descricao"
+              color: "#084594"
+              hide_legend: true
+          - id: "bar_cbo_perda"
+            cls: "xs12 md6"
+            title: "Ocupações com maior número de postos formais perdidos"
+            type: "BAR"
+            api:
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-competencia_mov-max_competencia,and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
+              options:
+                calcs:
+                  - id: "competencia"
+                    function: "format_quarter_ds"
+                    fn_args:
+                      - named_prop: "competencia_mov"
+                  - id: "desc_cbo"
+                    function: "to_upper_ds"
+                    fn_args:
+                      - fixed: "termometro_descricao"
+                formatters:
+                  - id: "admitidos"
+                    format: 'inteiro'
+                  - id: "desligados"
+                    format: 'inteiro'
+                  - id: "saldo_absoluto"
+                    format: 'inteiro'
+            apiBase:
+              template: "/thematic/cagedtermometro?categorias=competencia_mov,termometro_codigo,termometro_descricao,admitidos,desligados,saldo_absoluto&ordenacao=saldo&limit=10&filtros=eq-termometro_grupo-'cbo',and,lt-saldo-0,and,eq-cd_municipio_ibge_dv-{0}"
+              args:
+                - named_prop: "idLocalidade"
+            headers:
+              - text: 'Ocupação'
+                align: 'left'
+                value: 'termometro_descricao'
+              - text: 'Competencia declarada'
+                align: 'left'
+                value: 'calc_competencia'
+              - text: 'Admitidos'
+                value: 'fmt_admitidos'
+              - text: 'Desligados'
+                value: 'fmt_desligados'
+              - text: 'Vagas perdidas'
+                value: 'fmt_saldo_absoluto'
+            options:
+              id: "termometro_codigo"
+              x: "saldo_absoluto"
+              y: "calc_desc_cbo"
+              show_y_axis: false
+              order_field: "saldo_absoluto"
+              text: "termometro_descricao"
+              color: "#cb181d"
+              hide_legend: true
+        source:
+          desc: "ME – Novo CAGED "
 # # ===============================================
 #       - id: "bar_termometro_cnae"
 #         type: "multiple-charts"

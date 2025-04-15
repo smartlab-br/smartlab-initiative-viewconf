@@ -7,16 +7,19 @@ principais:
       fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
     args:
       - prop: "value"
-        named_prop: 'vl_indicador'
+        function: 'calc_multiplication_ds'
+        fn_args:
+          - fixed: 1
+          - named_prop: "vl_indicador"
+          - fixed: 1.258
         format: 'inteiro'
         collapse:
           format: 'real'
       - prop: "description"
-        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES"
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - TOTAL DE ACIDENTES<br/>PROJEÇÃO"
       - prop: 'comment'
-        template: "({0}, {1})"
+        template: "(Smartlab, {0})"
         args:
-          - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
   - relevance: 'lead' 
     cls: 'xs12 xl6'
@@ -25,16 +28,19 @@ principais:
       fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_obito',and,eq-nu_competencia-nu_competencia_max"
     args:
       - prop: "value"
-        named_prop: 'vl_indicador'
+        function: 'calc_multiplication_ds'
+        fn_args:
+          - fixed: 1
+          - named_prop: "vl_indicador"
+          - fixed: 1.258
         format: 'inteiro'
         collapse: 
           format: 'real'
       - prop: "description"
-        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - ACIDENTES COM ÓBITO "
+        fixed: "NOTIFICAÇÕES DE ACIDENTES DE TRABALHO (CAT) - ACIDENTES COM ÓBITO<br/>PROJEÇÃO"
       - prop: 'comment'
-        template: "({0}, {1})"
+        template: "(Smartlab, {0})"
         args:
-          - named_prop: "ds_fonte"
           - named_prop: "nu_competencia"
 # ===================================================
 secoes:
@@ -881,24 +887,24 @@ secoes:
               args:
                 - named_prop: "agr_min_ano_cat"
                 - named_prop: "agr_max_ano_cat"
-          - id: "slider_ano"
-            type: "slider"
-            range: true
-            api: 
-              fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
-            args:
-              - prop: "min"
-                named_prop: "agr_min_nu_competencia"
-              - prop: "max"
-                named_prop: "agr_max_nu_competencia"
-            selection:
-              event: "selection"
-              rules:
-                filter: ",and,ge-ano_cat-{0},and,le-ano_cat-{1}"
-                api:
-                  args:
-                    - named_prop: "value_min"
-                    - named_prop: "value_max"
+          # - id: "slider_ano"
+          #   type: "slider"
+          #   range: true
+          #   api: 
+          #     fixed: "/sst/indicadoresnacionais?categorias=1&valor=nu_competencia&agregacao=min,max&filtros=eq-cd_indicador-'sst_cat_total'"
+          #   args:
+          #     - prop: "min"
+          #       named_prop: "agr_min_nu_competencia"
+          #     - prop: "max"
+          #       named_prop: "agr_max_nu_competencia"
+          #   selection:
+          #     event: "selection"
+          #     rules:
+          #       filter: ",and,ge-ano_cat-{0},and,le-ano_cat-{1}"
+          #       api:
+          #         args:
+          #           - named_prop: "value_min"
+          #           - named_prop: "value_max"
           - id: "select_cnae"
             type: "select"
             multiple: true
@@ -1351,54 +1357,54 @@ secoes:
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
-              - relevance: 'high'
-                cls: 'xs12 sm6'
-                api:
-                  template: "/sst/cats?categorias=st_dia_semana_acidente&agregacao=COUNT&filtros=in-st_dia_semana_acidente-'sáb'-'dom',and,ge-ano_cat-{0},and,le-ano_cat-{1}&ordenacao=-agr_count&limit=1"
-                  args:
-                    - function: "calc_subtraction"
-                      fn_args:
-                        - base_object: "sst_cat"
-                          named_prop: "agr_max_ano_cat"
-                        - fixed: 2
-                    - base_object: "sst_cat"
-                      named_prop: "agr_max_ano_cat"
-                args:
-                  - prop: "value"
-                    function: "getWeekDay"
-                    fn_args:
-                      - named_prop: "st_dia_semana_acidente"
-                  - prop: "description"
-                    fixed: 'DIA COM MAIS CASOS EM FINS DE SEMANA'
-                  - prop: "comment"
-                    named_prop: 'agr_count'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
-              - relevance: 'low'
-                cls: 'xs12'
-                api:
-                  template: "/sst/cats?categorias=st_acidente_feriado&agregacao=COUNT&filtros=ne-st_acidente_feriado-'',and,ge-ano_cat-{0},and,le-ano_cat-{1}&ordenacao=-agr_count&limit=1"
-                  args:
-                    - function: "calc_subtraction"
-                      fn_args:
-                        - base_object: "sst_cat"
-                          named_prop: "agr_max_ano_cat"
-                        - fixed: 2
-                    - base_object: "sst_cat"
-                      named_prop: "agr_max_ano_cat"
-                args:
-                  - prop: "value"
-                    named_prop: "st_acidente_feriado"
-                  - prop: "description"
-                    fixed: 'Feriado com mais ocorrëncias'
-                  - prop: "comment"
-                    named_prop: 'agr_count'
-                    format: 'inteiro'
-                    collapse:
-                      format: 'real'
-                    default: "Sem Registros"
+              # - relevance: 'high'
+              #   cls: 'xs12 sm6'
+              #   api:
+              #     template: "/sst/cats?categorias=st_dia_semana_acidente&agregacao=COUNT&filtros=in-st_dia_semana_acidente-'sáb'-'dom',and,ge-ano_cat-{0},and,le-ano_cat-{1}&ordenacao=-agr_count&limit=1"
+              #     args:
+              #       - function: "calc_subtraction"
+              #         fn_args:
+              #           - base_object: "sst_cat"
+              #             named_prop: "agr_max_ano_cat"
+              #           - fixed: 2
+              #       - base_object: "sst_cat"
+              #         named_prop: "agr_max_ano_cat"
+              #   args:
+              #     - prop: "value"
+              #       function: "getWeekDay"
+              #       fn_args:
+              #         - named_prop: "st_dia_semana_acidente"
+              #     - prop: "description"
+              #       fixed: 'DIA COM MAIS CASOS EM FINS DE SEMANA'
+              #     - prop: "comment"
+              #       named_prop: 'agr_count'
+              #       format: 'inteiro'
+              #       collapse:
+              #         format: 'real'
+              #       default: "Sem Registros"
+              # - relevance: 'low'
+              #   cls: 'xs12'
+              #   api:
+              #     template: "/sst/cats?categorias=st_acidente_feriado&agregacao=COUNT&filtros=ne-st_acidente_feriado-'',and,ge-ano_cat-{0},and,le-ano_cat-{1}&ordenacao=-agr_count&limit=1"
+              #     args:
+              #       - function: "calc_subtraction"
+              #         fn_args:
+              #           - base_object: "sst_cat"
+              #             named_prop: "agr_max_ano_cat"
+              #           - fixed: 2
+              #       - base_object: "sst_cat"
+              #         named_prop: "agr_max_ano_cat"
+              #   args:
+              #     - prop: "value"
+              #       named_prop: "st_acidente_feriado"
+              #     - prop: "description"
+              #       fixed: 'Feriado com mais ocorrëncias'
+              #     - prop: "comment"
+              #       named_prop: 'agr_count'
+              #       format: 'inteiro'
+              #       collapse:
+              #         format: 'real'
+              #       default: "Sem Registros"
           - type: "text"
             title: ""
             content:
