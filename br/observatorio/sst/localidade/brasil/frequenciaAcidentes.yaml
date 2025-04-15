@@ -89,11 +89,12 @@ secoes:
         title: 
           fixed: "Notificações de Acidentes de Trabalho - Distribuição Geográfica"
         title_comment:
-          template: "Brasil, {0}"
+          template: "Brasil, {0} a {1}"
           api:
-            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
+            fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia_min,nu_competencia_max&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
           args:
-            - named_prop: "nu_competencia"
+            - named_prop: "nu_competencia_min"
+            - named_prop: "nu_competencia_max"
         info:
           - type: "text"
             title: "Sobre a métrica"
@@ -116,13 +117,17 @@ secoes:
                   fixed: "/sst/indicadoresnacionais?categorias=cd_indicador,vl_indicador,ds_fonte,nu_competencia&filtros=eq-cd_indicador-'sst_cat_total',and,eq-nu_competencia-nu_competencia_max"
                 args:
                   - prop: "value"
-                    named_prop: 'vl_indicador'
+                    function: 'calc_multiplication_ds'
+                    fn_args:
+                      - fixed: 1
+                      - named_prop: "vl_indicador"
+                      - fixed: 1.258
                     format: 'inteiro'
                     collapse:
                       format: 'real'
                     default: "Sem Registros"
                   - prop: "description"
-                    fixed: 'Quantidade de acidentes de trabalho'
+                    fixed: 'TOTAL de acidentes de trabalho<br/>PROJEÇÃO'
           - type: "text"
             title: ""
             content:
@@ -148,10 +153,7 @@ secoes:
                     - named_prop: "ds_cnae_classe_cat"
         chart_type: "MAP_TOPOJSON"
         api: 
-          template: "/sst/cats?categorias=cd_uf,sg_uf,nm_uf,ano_cat&agregacao=COUNT&filtros=eq-ano_cat-{0},and,nn-cd_uf"
-          args:
-            - base_object: "sst_cat"
-              named_prop: "agr_max_ano_cat"
+          fixed: "/sst/cats?categorias=cd_uf,sg_uf,nm_uf,ano_cat&agregacao=COUNT&filtros=nn-cd_uf"
           options:
             calcs:
               - id: "log_cat"
